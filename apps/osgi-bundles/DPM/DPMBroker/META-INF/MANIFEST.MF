@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-Name: DPMBroker
+Bundle-SymbolicName: Broker
+Bundle-Version: 0.1
+Bundle-Description: DMP broker for messages
+Bundle-Vendor: NetBEAMS.org
+Bundle-Activator: org.netbeams.dmp.broker.impl.Activator
+Bundle-Category: DPM
+Import-Package: org.osgi.framework

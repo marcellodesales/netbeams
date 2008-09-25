@@ -1,0 +1,115 @@
+Sun Aug 06 14:21:35 PDT 2006	Error on line 1 of document file:/D:/jetty-4.2.24/webapps/netbeams2/admin/sensors.xml: Document root element is missing.
+Sun Aug 06 14:22:15 PDT 2006	Error on line 1 of document file:/D:/jetty-4.2.24/webapps/netbeams2/admin/sensors.xml: Document root element is missing.
+Sun Aug 06 14:22:59 PDT 2006	Error on line 1 of document file:/D:/jetty-4.2.24/webapps/netbeams2/admin/sensors.xml: Document root element is missing.
+Sun Aug 06 15:55:22 PDT 2006	Can not find data producer name 'org.dp.NRSSDataProducer'. Make sure you load all the data producers configuration before loading the sensors configuration.
+Sun Aug 06 15:55:22 PDT 2006	Can not find data producer name 'org.dp.NRSSDataProducer'. Make sure you load all the data producers configuration before loading the sensors configuration.
+Wed Aug 16 20:20:44 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Wed Aug 16 20:20:44 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Wed Aug 16 20:20:44 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Sat Aug 19 13:37:53 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Sat Aug 19 13:39:13 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Sat Aug 19 13:39:34 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Sat Aug 19 13:44:36 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Sat Aug 19 13:44:57 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Sat Aug 26 14:47:40 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=981'
+Sun Sep 03 20:10:03 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Sun Sep 03 20:10:03 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Sun Sep 03 20:10:03 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Sun Sep 03 20:10:03 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Sun Sep 03 20:10:03 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Sun Sep 03 20:10:03 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Sun Sep 03 20:10:03 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Sun Sep 03 20:10:03 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Sun Sep 03 20:13:52 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=987'
+Sun Sep 03 20:13:52 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Sun Sep 03 20:13:52 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Sun Sep 03 20:15:52 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=958'
+Sun Sep 03 20:15:52 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Sun Sep 03 20:15:52 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Sun Sep 03 20:15:52 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Sun Sep 03 20:15:52 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Sun Sep 03 20:15:52 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Tue Sep 26 19:46:08 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Tue Sep 26 19:46:29 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Tue Sep 26 19:46:50 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Tue Sep 26 19:47:11 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Tue Sep 26 19:47:32 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Tue Sep 26 19:47:53 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Tue Sep 26 19:48:14 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Tue Sep 26 19:48:35 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Tue Sep 26 20:26:51 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Tue Sep 26 20:27:11 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Tue Sep 26 20:27:33 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Tue Sep 26 20:27:54 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Tue Sep 26 20:28:14 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Sat Sep 30 14:30:55 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=965'
+Mon Oct 02 15:08:14 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 15:08:35 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 15:08:56 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 15:09:17 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 15:09:38 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Mon Oct 02 15:09:59 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Mon Oct 02 15:10:20 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Mon Oct 02 15:10:41 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Mon Oct 02 20:02:20 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 20:02:20 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 20:02:20 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 20:02:20 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 20:02:20 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Mon Oct 02 20:02:20 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Mon Oct 02 20:02:20 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Mon Oct 02 20:02:20 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Mon Oct 02 20:07:27 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 20:07:27 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 20:07:27 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 20:07:27 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 20:07:27 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Mon Oct 02 20:07:27 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Mon Oct 02 20:07:27 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Mon Oct 02 20:07:27 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Mon Oct 02 20:10:38 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 20:10:38 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 20:10:38 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 20:10:38 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 20:10:38 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Mon Oct 02 20:10:38 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Mon Oct 02 20:10:38 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Mon Oct 02 20:10:38 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Mon Oct 02 20:12:10 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 20:12:10 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 20:12:10 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 20:12:10 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 20:12:10 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Mon Oct 02 20:12:10 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Mon Oct 02 20:12:10 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Mon Oct 02 20:12:10 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Mon Oct 02 20:19:26 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 20:19:47 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 20:20:08 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 20:20:29 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 20:20:50 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Mon Oct 02 20:21:11 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Mon Oct 02 20:21:32 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Mon Oct 02 20:21:53 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Mon Oct 02 20:27:16 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 20:27:37 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 20:27:58 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 20:28:19 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 20:31:59 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 20:32:19 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 20:32:40 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 20:33:02 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 21:17:36 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 21:17:57 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 21:18:18 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 21:18:40 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 21:19:01 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Mon Oct 02 21:35:26 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248'
+Mon Oct 02 21:35:47 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=977'
+Mon Oct 02 21:36:08 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=959'
+Mon Oct 02 21:36:29 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006'
+Mon Oct 02 21:36:50 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=974'
+Mon Oct 02 21:37:11 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=982'
+Mon Oct 02 21:37:32 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=992'
+Mon Oct 02 21:37:53 PDT 2006	Can not make a connection to the URL 'http://jddac.labs.agilent.com:8080/nrss/feed?mid=962'
+Tue Oct 03 22:44:12 PDT 2006	The Data Producer class does not exist: org.dp.SDMLDataProducer

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sensors>
+  <sensor id="352714540982467584" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="60000">
+    <name>Romberg Tiburon Center</name>
+    <description>Sea water condition at RTC</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1253&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1252&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1249&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1254&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1250&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1251</configurations>
+  </sensor>
+  <sensor id="2038566943289958400" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="60000">
+    <name>San Jose Airport</name>
+    <description>Weather condition at San Jose Airport</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=977&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=978&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=981&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=976&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=975&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=979&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=980</configurations>
+  </sensor>
+
+</sensors>
+

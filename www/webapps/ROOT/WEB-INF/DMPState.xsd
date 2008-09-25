@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema jxb:version="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:ci="http://jaxb.dev.java.net/plugin/code-injector">
+    
+	<xsd:annotation>
+		<xsd:appinfo>
+			<jxb:globalBindings fixedAttributeAsConstantProperty="false"
+				typesafeEnumBase="xsd:NCName"
+				choiceContentProperty="false"
+				typesafeEnumMemberName="generateError"
+				enableFailFastCheck="true"
+				underscoreBinding="asCharInWord" />
+		</xsd:appinfo>
+	</xsd:annotation>
+	
+    
+    <!-- 
+    	This schema defines the data structure for serializing the current's DMP state. The NetBeams app is a
+    	web app and we need a way to keep the current state of the DMP so that if we shut down the app and
+    	restart it, we don't need to MANUALLY add data producers and data consumers to the DMP. What we can
+    	do is store the DMP's state to a file. This file contains information about the plugins that are
+    	currently in the DMP. When we restart the app, we can read the file and AUTOMATICALLY add the
+    	plugins back to the DMP.
+    	To make a file format that is easy for us to write to and read back, we will use JAXB. So this is
+    	why we define this schema. We will use JAXB to compile this schema to Java Classes. We will
+    	instantiate objects of those generated class to store the DMP's state and then write those objects
+    	to an XML file, again using JAXB. Then when the app restart, we will use JAXB again to read in the
+    	XML file and restore the DMP's state using the information in the XML file.
+     -->
+    <xsd:element name="DMPState">
+		<xsd:complexType>
+	    	<xsd:sequence>
+	    		<xsd:element name="PluginType" type="PluginType" maxOccurs="unbounded" minOccurs="0">
+					<xsd:annotation>
+						<xsd:appinfo>
+							<jxb:property name="PluginTypes"></jxb:property>
+						</xsd:appinfo>
+					</xsd:annotation>	    		
+	    		</xsd:element>
+	    		<xsd:element name="PlugInstance" type="PluginInstance" maxOccurs="unbounded" minOccurs="0">
+					<xsd:annotation>
+						<xsd:appinfo>
+							<jxb:property name="PlugInstances"></jxb:property>
+						</xsd:appinfo>
+					</xsd:annotation>
+	    		</xsd:element>
+	    	</xsd:sequence>
+	    </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="PluginType">
+    	<xsd:attribute name="className" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="PluginInstance">
+    	<xsd:sequence>
+    		<xsd:element name="Configuration" type="Configuration"
+    			maxOccurs="1" minOccurs="0">
+    		</xsd:element>
+    	</xsd:sequence>
+    	<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="id" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="name" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="description" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="Configuration">
+    	<xsd:sequence>
+    		<xsd:element name="Parameter" type="Parameter" maxOccurs="unbounded" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<jxb:property name="Parameters">
+				 		</jxb:property>
+					</xsd:appinfo>
+				</xsd:annotation>
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Parameter">
+    	<xsd:attribute name="name" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="value" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+</xsd:schema>

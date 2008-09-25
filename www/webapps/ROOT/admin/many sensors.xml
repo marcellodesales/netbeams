@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sensors>
+  <sensor id="352714540982467584" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="60000">
+    <name>Romberg Tiburon Center</name>
+    <description>Sea water condition at RTC</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1253&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1252&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1249&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1254&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1250&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1251</configurations>
+  </sensor>
+  <sensor id="2038566943289958400" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="60000">
+    <name>San Jose Airport</name>
+    <description>Weather condition at San Jose Airport</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=977&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=978&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=981&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=976&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=975&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=979&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=980</configurations>
+  </sensor>
+  <sensor id="2213028132660532224" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="60000">
+    <name>San Francisco Airport</name>
+    <description>Weather condition at San Francisco Airport</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=959&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=955&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=960&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=958&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=957&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=956&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=954</configurations>
+  </sensor>
+  <sensor id="4413414772802040832" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="300000">
+    <name>Travis Air Force Base</name>
+    <description>Weather condition at Travis Air Force Base</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1005&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1003&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1004&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1009&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1008&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=1007</configurations>
+  </sensor>
+  <sensor id="5543684170475452416" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="300000">
+    <name>Oakland Airport</name>
+    <description>Weather condition at Oakland Airport</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=974&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=970&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=971&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=969&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=968&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=973&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=972</configurations>
+  </sensor>
+  <sensor id="4823296959176023040" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="300000">
+    <name>Hayward Air Terminal</name>
+    <description>Weather condition at Hayward Air Terminal</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=982&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=988&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=985&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=987&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=986&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=984&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=983</configurations>
+  </sensor>
+  <sensor id="6363079896317364224" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="300000">
+    <name>San Carlos Airport</name>
+    <description>Weather condition at San Carlos Airport</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=992&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=989&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=991&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=993&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=990&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=995&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=994</configurations>
+  </sensor>
+  <sensor id="1947924825885791232" public="true" dataProducerName="org.dp.NRSSDataProducer" updateFrequency="300000">
+    <name>Palo Alto Airport</name>
+    <description>Weather condition at Palo Alto Airport</description>
+    <configurations>http://jddac.labs.agilent.com:8080/nrss/feed?mid=962&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=964&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=966&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=965&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=961&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=967&#xD;
+http://jddac.labs.agilent.com:8080/nrss/feed?mid=963</configurations>
+  </sensor>
+  <sensor id="120149764669902848" public="true" dataProducerName="org.dp.SDMLDataProducer" updateFrequency="60000">
+    <name>SF and OAK Weather Temperature</name>
+    <description>Weather temperature between SF and OAK</description>
+    <configurations>http://localhost/netbeams/admin/kpi/kpi_data.jsp?kpiName=SF%20And%20OAK%20Average%20Weather%20Temperature</configurations>
+  </sensor>
+  <sensor id="3591573908506030080" public="true" dataProducerName="org.dp.SDMLDataProducer" updateFrequency="30000">
+    <name>San Francisco Weather Temperature</name>
+    <description>San Francisco Temperature</description>
+    <configurations>http://localhost/netbeams/admin/kpi/kpi_data.jsp?kpiName=San%20Francisco%20Weather%20Temperature&#xD;
+http://localhost/netbeams/admin/kpi/kpi_data.jsp?kpiName=NetBEAMS%20Total%20Memory&#xD;
+http://localhost/netbeams/admin/kpi/kpi_data.jsp?kpiName=NetBEAMS%20Free%20Memory&#xD;
+http://localhost/netbeams/admin/kpi/kpi_data.jsp?kpiName=NetBEAMS%20Consumed%20Memory</configurations>
+  </sensor>
+</sensors>
+

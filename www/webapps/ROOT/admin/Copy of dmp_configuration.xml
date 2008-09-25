@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:DMPState xmlns:ns2="http://www.example.org/DMPSetting/">
+    <PluginType className="edu.sfsu.dmp.NRSSDataProducer"/>
+    <PlugInstance type="edu.sfsu.dmp.NRSSDataProducer" name="San Carlos Airport" id="4437325226241560576" description="Weather condition at San Carlos Airport.">
+        <Configuration>
+            <Parameter value="30000" name="frequency"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=992" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=989" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=991" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=993" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=990" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=995" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=994" name="url"/>
+        </Configuration>
+    </PlugInstance>
+    <PlugInstance type="edu.sfsu.dmp.NRSSDataProducer" name="San Jose Airport" id="8736421268162779136" description="Weather condition at San Jose Airport.">
+        <Configuration>
+            <Parameter value="30000" name="frequency"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=977" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=978" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=981" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=976" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=975" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=979" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=980" name="url"/>
+        </Configuration>
+    </PlugInstance>
+    <PlugInstance type="edu.sfsu.dmp.NRSSDataProducer" name="Romberg Tiburon Center" id="3508888679135157248" description="Water condition at Romberg Tiburon Center.">
+        <Configuration>
+            <Parameter value="30000" name="frequency"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1248" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1253" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1252" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1249" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1254" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1250" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1251" name="url"/>
+        </Configuration>
+    </PlugInstance>
+    <PlugInstance type="edu.sfsu.dmp.NRSSDataProducer" name="Travis Air Force Base" id="4724189382639275008" description="Weather condition at Travis Air Force Base.">
+        <Configuration>
+            <Parameter value="30000" name="frequency"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1006" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1005" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1003" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1004" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1009" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1008" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=1007" name="url"/>
+        </Configuration>
+    </PlugInstance>
+    <PlugInstance type="edu.sfsu.dmp.NRSSDataProducer" name="Oakland Airport" id="6154524050595136512" description="Weather condition at Oakland Airport.">
+        <Configuration>
+            <Parameter value="30000" name="frequency"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=974" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=970" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=971" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=969" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=968" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=973" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=972" name="url"/>
+        </Configuration>
+    </PlugInstance>
+    <PlugInstance type="edu.sfsu.dmp.NRSSDataProducer" name="Palo Alto Airport" id="1256697130807542784" description="Weather condition at Palo Alto Airport.">
+        <Configuration>
+            <Parameter value="30000" name="frequency"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=962" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=964" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=966" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=965" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=961" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=967" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=963" name="url"/>
+        </Configuration>
+    </PlugInstance>
+    <PlugInstance type="edu.sfsu.dmp.NRSSDataProducer" name="Hayward Air Terminal" id="7857988299066939392" description="Weather condition at Hayward Air Terminal.">
+        <Configuration>
+            <Parameter value="30000" name="frequency"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=982" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=988" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=985" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=987" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=986" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=984" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=983" name="url"/>
+        </Configuration>
+    </PlugInstance>
+    <PlugInstance type="edu.sfsu.dmp.NRSSDataProducer" name="San Francisco Airport" id="8338856470299054080" description="Weather condition at San Francisco Airport.">
+        <Configuration>
+            <Parameter value="30000" name="frequency"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=959" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=955" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=960" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=958" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=957" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=956" name="url"/>
+            <Parameter value="http://jddac.labs.agilent.com:8080/nrss/feed?mid=954" name="url"/>
+        </Configuration>
+    </PlugInstance>
+</ns2:DMPState>

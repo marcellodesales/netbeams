@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataProducers>
+  <dataProducer>org.dp.NRSSDataProducer</dataProducer>
+  <dataProducer>org.dp.SDMLDataProducer</dataProducer>
+</dataProducers>
+

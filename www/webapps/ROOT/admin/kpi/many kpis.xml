@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kpis>
+  <kpi name="NetBEAMS Consumed Memory" description="Consumed memory measurement for NetBEAMS website" trigger="30" sensors="">
+    <rule>from java.lang import Runtime&#xD;
+&#xD;
+def kpi ():&#xD;
+    return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())</rule>
+    <metadata name="altitude" value="0.0" />
+    <metadata name="units" value="Bytes" />
+    <metadata name="name" value="Consumed Memory" />
+    <metadata name="longitude" value="-122.365" />
+    <metadata name="latitude" value="37.6197" />
+  </kpi>
+  <kpi name="NetBEAMS Free Memory" description="Free memory measurement for NetBEAMS website" trigger="30" sensors="">
+    <rule>from java.lang import Runtime&#xD;
+&#xD;
+def kpi ():&#xD;
+    return Runtime.getRuntime().freeMemory()</rule>
+    <metadata name="altitude" value="0.0" />
+    <metadata name="units" value="Bytes" />
+    <metadata name="name" value="Free memory" />
+    <metadata name="longitude" value="-122.365" />
+    <metadata name="latitude" value="37.6197" />
+  </kpi>
+  <kpi name="NetBEAMS Total Memory" description="Total memory measurement for NetBEAMS website" trigger="30" sensors="">
+    <rule>from java.lang import Runtime&#xD;
+&#xD;
+def kpi ():&#xD;
+    return Runtime.getRuntime().freeMemory()</rule>
+    <metadata name="altitude" value="0.0" />
+    <metadata name="units" value="Bytes" />
+    <metadata name="name" value="Total Memory" />
+    <metadata name="longitude" value="-122.365" />
+    <metadata name="latitude" value="37.6197" />
+  </kpi>
+  <kpi name="SF And OAK Average Weather Temperature" description="Weather temperature between SF and OAK" trigger="30" sensors="2213028132660532224,5543684170475452416">
+    <rule>#BEGIN KPI CONFIGURATION&#xD;
+#&lt;KPI_Configuration&gt;&lt;Function x="200" y="50" w="937" h="200" name="kpi" parameters="San_Francisco_Airport,Oakland_Airport"&gt;&lt;AssignmentStatement x="10" y="10" w="907" h="25" variableName="sfTemp" expression="float(San_Francisco_Airport.getData().getSDML().getMeasurementsByName(&amp;quot;Temperature&amp;quot;)[0].getValues()[0].getValueString())"/&gt;&lt;AssignmentStatement x="38" y="50" w="852" h="25" variableName="oakTemp" expression="float(Oakland_Airport.getData().getSDML().getMeasurementsByName(&amp;quot;Temperature&amp;quot;)[0].getValues()[0].getValueString())"/&gt;&lt;AssignmentStatement x="295" y="90" w="338" h="25" variableName="aveTemp" expression="(sfTemp + oakTemp) / 2"/&gt;&lt;ReturnStatement x="364" y="130" w="200" h="25" expression="aveTemp"/&gt;&lt;/Function&gt;&lt;/KPI_Configuration&gt;&#xD;
+#END KPI CONFIGURATION&#xD;
+&#xD;
+def kpi (San_Francisco_Airport,Oakland_Airport):&#xD;
+  sfTemp = float(San_Francisco_Airport.getData().getSDML().getMeasurementsByName("Temperature")[0].getValues()[0].getValueString())&#xD;
+  oakTemp = float(Oakland_Airport.getData().getSDML().getMeasurementsByName("Temperature")[0].getValues()[0].getValueString())&#xD;
+  aveTemp = (sfTemp + oakTemp) / 2&#xD;
+  return aveTemp</rule>
+    <metadata name="altitude" value="0.0" />
+    <metadata name="units" value="Celsius" />
+    <metadata name="name" value="Temperature" />
+    <metadata name="description" value="Weather temperature between SF and OAK" />
+    <metadata name="category" value="Seabird" />
+    <metadata name="longitude" value="-122.3" />
+    <metadata name="latitude" value="37.66955" />
+  </kpi>
+  <kpi name="San Francisco Weather Temperature" description="Weather temperature of San Francisco" trigger="30" sensors="2213028132660532224">
+    <rule>#BEGIN KPI CONFIGURATION&#xD;
+#&lt;KPI_Configuration&gt;&lt;Function x="200" y="50" w="1270" h="225" name="kpi" parameters="San_Francisco_Airport"&gt;&lt;AssignmentStatement x="167" y="10" w="926" h="25" variableName="temperature" expression="float(San_Francisco_Airport.getData().getSDML().getMeasurementsByName(&amp;quot;Temperature&amp;quot;)[0].getValues()[0].getValueString())"/&gt;&lt;Branch x="10" y="50" w="1240" h="130"&gt;&lt;IfCondition x="10" y="10" w="230" h="85" type="if" condition="temperature &amp;lt; 0"&gt;&lt;ReturnStatement x="10" y="10" w="200" h="25" expression="&amp;quot;Too Cold !!!&amp;quot;"/&gt;&lt;/IfCondition&gt;&lt;IfCondition x="255" y="10" w="230" h="85" type="else if" condition="temperature &amp;lt; 60"&gt;&lt;ReturnStatement x="10" y="10" w="200" h="25" expression="&amp;quot;Cold&amp;quot;"/&gt;&lt;/IfCondition&gt;&lt;IfCondition x="500" y="10" w="230" h="85" type="else if" condition="temperature &amp;lt; 90"&gt;&lt;ReturnStatement x="10" y="10" w="200" h="25" expression="&amp;quot;Warm&amp;quot;"/&gt;&lt;/IfCondition&gt;&lt;IfCondition x="745" y="10" w="230" h="85" type="else if" condition="temperature &amp;lt; 110"&gt;&lt;ReturnStatement x="10" y="10" w="200" h="25" expression="&amp;quot;Hot&amp;quot;"/&gt;&lt;/IfCondition&gt;&lt;IfCondition x="990" y="10" w="230" h="85" type="else" condition=""&gt;&lt;ReturnStatement x="10" y="10" w="200" h="25" expression="&amp;quot;Too Hot !!!&amp;quot;"/&gt;&lt;/IfCondition&gt;&lt;/Branch&gt;&lt;/Function&gt;&lt;/KPI_Configuration&gt;&#xD;
+#END KPI CONFIGURATION&#xD;
+&#xD;
+def kpi (San_Francisco_Airport):&#xD;
+  temperature = float(San_Francisco_Airport.getData().getSDML().getMeasurementsByName("Temperature")[0].getValues()[0].getValueString())&#xD;
+&#xD;
+  if temperature &lt; 0:&#xD;
+    return "Too Cold !!!"&#xD;
+  elif temperature &lt; 60:&#xD;
+    return "Cold"&#xD;
+  elif temperature &lt; 90:&#xD;
+    return "Warm"&#xD;
+  elif temperature &lt; 110:&#xD;
+    return "Hot"&#xD;
+  else:&#xD;
+    return "Too Hot !!!"</rule>
+    <metadata name="altitude" value="0.0" />
+    <metadata name="units" value="NA" />
+    <metadata name="name" value="Temperature" />
+    <metadata name="longitude" value="-122.4415" />
+    <metadata name="latitude" value="37.7203" />
+  </kpi>
+</kpis>
+

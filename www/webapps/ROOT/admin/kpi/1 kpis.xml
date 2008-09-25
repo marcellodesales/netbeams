@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kpis>
+  <kpi name="NetBEAMS Consumed Memory" description="Consumed memory measurement for NetBEAMS website" trigger="30" sensors="">
+    <rule>from java.lang import Runtime&#xD;
+&#xD;
+def kpi ():&#xD;
+    return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())</rule>
+    <metadata name="units" value="Bytes" />
+    <metadata name="name" value="Consumed Memory" />
+  </kpi>
+</kpis>
+

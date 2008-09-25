@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:nrss="http://www.nrss.org">
+<channel>
+<title>
+Pressure
+</title>
+<description>
+Measurements on public JDDAC server (http://jddac.labs.agilent.com)
+</description>
+<language>
+en-us
+</language>
+<copyright>
+Copyright 2005-2006 Agilent Technologies, Inc.
+</copyright>
+<generator>
+JDDAC
+</generator>
+<category>
+miscellaneous
+</category>
+<item>
+<title>
+netbeams3:NUQ:NUQTim:Pressure
+</title>
+<link>
+http://jddac.labs.agilent.com:8080/nrss/feed?info=1&amp;mid=1011
+</link>
+<guid>
+1011
+</guid>
+<pubdate>
+2006-08-05 19:41:12.506Z
+</pubdate>
+<description>
+<nrss:metadata>
+<nrss:arg n="name">
+Pressure
+</nrss:arg>
+<nrss:arg n="category">
+weather
+</nrss:arg>
+<nrss:arg n="metaType">
+Channel
+</nrss:arg>
+<nrss:arg n="midt">
+778
+</nrss:arg>
+<nrss:arg n="locationDesc">
+Moffet Field
+</nrss:arg>
+<nrss:arg n="units">
+hPa
+</nrss:arg>
+<nrss:arg n="dataType">
+Float64
+</nrss:arg>
+<nrss:arg n="mid">
+mountai42RGDgqlXbnc46g:4
+</nrss:arg>
+<nrss:arg n="description">
+Pressure
+</nrss:arg>
+<nrss:arg n="id">
+jddac://00976*99454*03509*21036:NUQ@jddac.labs.agilent.com/i/NUQTim?ch=Pressure
+</nrss:arg>
+<nrss:arg n="fullName">
+netbeams3:NUQ:NUQTim:Pressure
+</nrss:arg>
+<nrss:arg n="size">
+9307
+</nrss:arg>
+<nrss:arg n="mark">
+216974
+</nrss:arg>
+<nrss:arg n="startTime">
+2005-12-15 19:18:49.000Z
+</nrss:arg>
+<nrss:arg n="stopTime">
+2006-08-05 19:31:24.000Z
+</nrss:arg>
+<nrss:arg n="metaData">
+&lt;argArray l="11">
+ &lt;argArray l="12" t="vector" n="operations">
+  &lt;arg>GetDescription&lt;/arg>
+  &lt;arg>SetProperty&lt;/arg>
+  &lt;arg>GetOwningBlockObjectTag&lt;/arg>
+  &lt;arg>GetClassName&lt;/arg>
+  &lt;arg>GetInstanceName&lt;/arg>
+  &lt;arg>GetProperty&lt;/arg>
+  &lt;arg>GetObjectProperties&lt;/arg>
+  &lt;arg>SetInstanceName&lt;/arg>
+  &lt;arg>GetMetaData&lt;/arg>
+  &lt;arg>GetBlockMajorState&lt;/arg>
+  &lt;arg>GetGroupIDs&lt;/arg>
+  &lt;arg>GetAllMetaData&lt;/arg>
+ &lt;/argArray>
+ &lt;arg n="name">NUQ&lt;/arg>
+ &lt;arg n="category">weather&lt;/arg>
+ &lt;arg n="class">class net.java.jddac.jmdi.fblock.BasicNCAPBlock&lt;/arg>
+ &lt;arg n="networkID">jddac://00976*99454*03509*21036:NUQ@jddac.labs.agilent.com&lt;/arg>
+ &lt;arg n="modelNumber">JddacClient 1.1&lt;/arg>
+ &lt;arg n="osVersion">JDDAC 0.6&lt;/arg>
+ &lt;arg n="serialNumber">
+	    &lt;/arg>
+ &lt;arg n="manufacturer">Agilent Technologies&lt;/arg>
+ &lt;arg n="mid">SFziqlpm2RGqyJHsXkl3Fg:1&lt;/arg>
+ &lt;arg n="description">Weather Info&lt;/arg>
+&lt;/argArray>
+
+</nrss:arg>
+<nrss:arg n="From">
+jddac://00976*99454*03509*21036:NUQ@jddac.labs.agilent.com
+</nrss:arg>
+<nrss:arg n="poweron">
+true
+</nrss:arg>
+</nrss:metadata>
+<nrss:data>
+<nrss:representation>
+<nrss:arg n="format">
+csv1
+</nrss:arg>
+<nrss:arg n="url">
+http://jddac.labs.agilent.com:8080/nrss/data/csv?mid=1011
+</nrss:arg>
+</nrss:representation>
+<nrss:content>
+<nrss:arg n="url">
+http://jddac.labs.agilent.com:8080/nrss/data/csv?mid=1011
+</nrss:arg>
+<nrss:argArray n="current">
+<nrss:arg n="value">
+1015.0
+</nrss:arg>
+<nrss:arg n="timestamp">
+2006-08-05 19:31:24.000Z
+</nrss:arg>
+<nrss:argArray n="location">
+<nrss:arg n="latitude">
+37.4053
+</nrss:arg>
+<nrss:arg n="longitude">
+-122.048
+</nrss:arg>
+<nrss:arg n="altitude">
+0.0
+</nrss:arg>
+</nrss:argArray>
+</nrss:argArray>
+<nrss:argArray n="max">
+<nrss:arg n="value">
+1032.0
+</nrss:arg>
+<nrss:arg n="timestamp">
+2006-01-16 20:03:06.000Z
+</nrss:arg>
+<nrss:argArray n="location">
+<nrss:arg n="latitude">
+37.4053
+</nrss:arg>
+<nrss:arg n="longitude">
+-122.048
+</nrss:arg>
+<nrss:arg n="altitude">
+0.0
+</nrss:arg>
+</nrss:argArray>
+</nrss:argArray>
+<nrss:argArray n="min">
+<nrss:arg n="value">
+0.0
+</nrss:arg>
+<nrss:arg n="timestamp">
+2006-01-22 10:03:06.000Z
+</nrss:arg>
+<nrss:argArray n="location">
+<nrss:arg n="latitude">
+37.4053
+</nrss:arg>
+<nrss:arg n="longitude">
+-122.048
+</nrss:arg>
+<nrss:arg n="altitude">
+0.0
+</nrss:arg>
+</nrss:argArray>
+</nrss:argArray>
+</nrss:content>
+</nrss:data>
+</description>
+</item>
+</channel>
+</rss>

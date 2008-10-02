@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPRegistry/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPComponentManager/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPStockProducer/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPStockConsumer/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPPlatform/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPMatcher/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPFramework/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPMessageMatcher/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPBroker/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/knopflerfish/2.1/framework.jar"/>
+	<classpathentry kind="lib" path="www/webapps/ROOT/WEB-INF/lib/jdom.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

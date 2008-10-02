@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.core.stockconsumer.Activator
+Bundle-Category: DSP
+Bundle-Description: Stock Tick Consumer example implementation
+Bundle-ManifestVersion: 2
+Bundle-Name: Stock Consumer
+Bundle-SymbolicName: DSPStockConsumer
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.osgi.framework, org.netbeams.dsp, org.netbeams.dsp.broker, org.dsp.netbeams.platform.osgi, org.netbeams.dsp.util, org.jdom
+DMP-Component: org.netbeams.dsp.core.stockconsumer.StockConsumer

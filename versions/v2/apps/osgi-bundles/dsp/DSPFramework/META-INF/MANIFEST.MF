@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.core.broker.Activator
+Bundle-Category: DSP
+Bundle-ClassPath: ., lib/jdom.jar, lib/xerces.jar, lib/xml-apis.jar
+Bundle-Description: Contains core DSP framework libraries
+Bundle-ManifestVersion: 2
+Bundle-Name: Framework
+Bundle-SymbolicName: DMPFramework
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.netbeams.dsp.core.broker, org.netbeams.dsp.management.component, org.netbeams.dsp.match, org.netbeams.dsp.util, org.netbeams.dsp.xml, org.netbeams.dsp.registry, org.netbeams.dsp.xml, org.netbeams.dsp, org.jdom.input, org.jdom

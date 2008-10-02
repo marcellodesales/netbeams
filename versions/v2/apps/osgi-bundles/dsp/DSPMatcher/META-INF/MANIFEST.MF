@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.core.matcher.Activator
+Bundle-Category: DSP
+Bundle-Description: Infrastructure resposinble for matches between producer and consumers
+Bundle-ManifestVersion: 2
+Bundle-Name: Matcher
+Bundle-SymbolicName: DSPMatcher
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.osgi.framework, org.netbeams.dsp, org.netbeams.dsp.broker, org.netbeams.dsp.match, org.netbeams.dsp.registry, org.netbeams.dsp.util
+DMP-platform-component: org.netbeams.dsp.core.matcher.Matcher
+

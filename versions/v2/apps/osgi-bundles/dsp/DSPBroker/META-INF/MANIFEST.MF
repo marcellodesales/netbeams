@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.core.broker.Activator
+Bundle-Category: DSP
+Bundle-Description: Basic message broker
+Bundle-ManifestVersion: 2
+Bundle-Name: Broker
+Bundle-SymbolicName: DSPBroker
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.osgi.framework, org.netbeams.dsp.core.broker, org.netbeams.dsp.management.component, org.netbeams.dsp.match, org.netbeams.dsp.util, org.netbeams.dsp, org.jdom

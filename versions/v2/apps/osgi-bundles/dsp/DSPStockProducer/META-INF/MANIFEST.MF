@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.core.stockproducer.Activator
+Bundle-Category: DSP
+Bundle-Description: Stock Tick Producer example
+Bundle-ManifestVersion: 2
+Bundle-Name: Stock Producer
+Bundle-SymbolicName: DSPStockProducer
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.osgi.framework, org.netbeams.dsp, org.netbeams.dsp.broker, org.netbeams.dsp.util, org.jdom, org.netbeams.dsp.platform.osgi
+dsp-Component: org.netbeams.dsp.core.stockproducer.StockProducer
+

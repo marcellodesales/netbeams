@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.platform.Activator
+Bundle-Category: DSP
+Bundle-Description: DSP Platform implementation
+Bundle-ManifestVersion: 2
+Bundle-Name: Basic Platform
+Bundle-SymbolicName: DSPPlatform
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.osgi.framework, org.netbeams.dsp, org.netbeams.dsp.broker, org.netbeams.dsp.management.component, org.netbeams.dsp.match, org.netbeams.dsp.registry, org.netbeams.dsp.util, org.jdom, org.jdom.input
+Export-Package: org.netbeams.dsp.platform.osgi

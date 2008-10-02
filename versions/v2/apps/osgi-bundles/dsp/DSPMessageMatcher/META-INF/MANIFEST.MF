@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.platform.Activator
+Bundle-Category: DSM
+Bundle-Description: DSP Platform implementation
+Bundle-ManifestVersion: 2
+Bundle-Name: Matcher for the messages
+Bundle-SymbolicName: DSPMatcherMessage
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.osgi.framework

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.example.miceaction.osgi.MiceActionActivator
+Bundle-Category: DSP DEMO
+Bundle-Description: Mice Action Producer on JFrame 
+Bundle-ManifestVersion: 2
+Bundle-Name: Mice Action
+Bundle-SymbolicName: DSPMiceActionDemo
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.osgi.framework

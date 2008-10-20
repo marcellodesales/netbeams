@@ -8,10 +8,13 @@ import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -94,28 +97,6 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
 			nbml.trackMouseActionUpdate(nbmi);
 		}
 	}
-
-//	/**
-//	 * Create the GUI and show it. For thread safety, this method should be
-//	 * invoked from the event-dispatching thread.
-//	 */
-//	private static void createAndShowGUI() {
-//		// Make sure we have nice window decorations.
-//		JFrame.setDefaultLookAndFeelDecorated(true);
-//
-//		// Create and set up the window.
-//		JFrame frame = new JFrame("NetBeams Mouse Click Demo 0.1");
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//		// Create and set up the content pane.
-//		JComponent newContentPane = new MousePanelDemo();
-//		newContentPane.setOpaque(true); // content panes must be opaque
-//		frame.setContentPane(newContentPane);
-//
-//		// Display the window.
-//		frame.pack();
-//		frame.setVisible(true);
-//	}
 	
 	private void eventOutput(String eventDescription, MouseEvent e) {
 		textArea.append(eventDescription + " detected on mouse button "+ e.getButton() + 
@@ -162,35 +143,49 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
 	public void mouseMoved(MouseEvent e) {
 		this.eventOutput(NetBeamsMouseActionEnum.MOVED + " at (" + e.getX() + " , " + e.getY() + ")", e);
 	}
+	
+	public static class JFrameExecutor extends JFrame implements Runnable {
+
+		private NetBeamsMouseActionDemo demo;
+
+		public JFrameExecutor(NetBeamsMouseActionDemo demo) {
+			super("NetBeams Mouse Click Demo 0.1");
+			this.demo = demo;
+			
+			this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			// Make sure we have nice window decorations.
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			// Create and set up the content pane.
+			this.demo.setOpaque(true); // content panes must be opaque
+			this.setContentPane(this.demo);
+		}
+		
+		@Override
+		public void run() {
+			this.createAndShowGUI();
+		}
+		
+		/**
+		 * Create the GUI and show it. For thread safety, this method should be
+		 * invoked from the event-dispatching thread.
+		 */
+		private void createAndShowGUI() {
+			// Display the window.
+			this.pack();
+			this.setVisible(true);
+		}
+	}
 
 	public static void main(String[] args) {
-		// Schedule a job for the event-dispatching thread:
-		// creating and showing this application's GUI.
-
-		// Make sure we have nice window decorations.
-		JFrame.setDefaultLookAndFeelDecorated(true);
-
-		// Create and set up the window.
-		JFrame frame = new JFrame("netBEAMS Mouse actions demo 0.1");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// Create and set up the content pane.
-		NetBeamsMouseActionDemo newContentPane = new NetBeamsMouseActionDemo();
-		newContentPane.setOpaque(true); // content panes must be opaque
-		frame.setContentPane(newContentPane);
-
-		// Display the window.
-		frame.pack();
-		frame.setVisible(true);
-
-		NetBeamsMouseCollector mc = NetBeamsMouseCollector
-				.makeNewNetBeamsMouseCollector();
-		newContentPane.addNetBeamsMouseListener(mc);
-
-		// javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		// public void run() {
-		// createAndShowGUI();
-		// }
-		// });
+	    //Schedule a job for the event-dispatching thread:
+	    //creating and showing this application's GUI.
+		NetBeamsMouseActionDemo demo = new NetBeamsMouseActionDemo();
+		NetBeamsMouseActionDemo.JFrameExecutor ex = new NetBeamsMouseActionDemo.JFrameExecutor(demo);
+	    javax.swing.SwingUtilities.invokeLater(ex);
+		ex.addWindowListener(new WindowAdapter () {
+		      public void windowClosing(WindowEvent e) {
+		          System.out.println("Closing...");
+		      }
+		});
 	}
 }

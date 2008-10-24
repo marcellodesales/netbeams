@@ -8,5 +8,5 @@ Bundle-Name: Basic Platform
 Bundle-SymbolicName: DSPPlatform
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Import-Package: org.osgi.framework, org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util
+Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.osgi.framework
 Export-Package: org.netbeams.dsp.platform.osgi

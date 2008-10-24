@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-Activator: org.netbeams.dsp.demo.stocks.stockconsumer.Activator
+Bundle-Activator: org.netbeams.dsp.demo.stocks.consumer.Activator
 Bundle-Category: DSP DEMO
 Bundle-Description: Stock ticks Consumer demo implementation
 Bundle-ManifestVersion: 2

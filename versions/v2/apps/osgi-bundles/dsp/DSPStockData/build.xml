@@ -25,6 +25,5 @@
 	
 	<target name="clean">
 		<delete dir="./classes" />
-		<delete dir="./build" />
 	</target>
 </project>

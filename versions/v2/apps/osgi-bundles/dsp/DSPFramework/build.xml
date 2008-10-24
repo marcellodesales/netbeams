@@ -14,7 +14,7 @@
 	
 	<target name="jar">
 		<jar basedir="${imported.basedir}/classes" 
-			 jarfile="${DSP.RUNTIME}/libs/DSPFramework-${DSP.VERSION}.jar" 
+			 jarfile="${DSP.RUNTIME}/DSPFramework-${DSP.VERSION}.jar" 
 			 compress="true" includes="**/*" 
 			 manifest="${imported.basedir}/META-INF/MANIFEST.MF" />
 	</target>

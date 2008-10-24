@@ -1,9 +1,8 @@
 Manifest-Version: 1.0
 Bundle-Category: DSP
-Bundle-Description: Contains core DSP framework libraries
 Bundle-ManifestVersion: 2
-Bundle-Name: Framework
-Bundle-SymbolicName: DMPFramework
+Bundle-Name: DSP Framework
+Bundle-SymbolicName: DSPFramework
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Import-Package: org.netbeams.dsp, org.netbeams.dsp.data, org.netbeams.dsp.message, org.netbeams.dsp.util
+Export-Package: org.netbeams.dsp, org.netbeams.dsp.data, org.netbeams.dsp.message, org.netbeams.dsp.util

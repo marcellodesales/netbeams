@@ -15,10 +15,23 @@
 	</target>
 	
 	<target name="jar">
-		<jar basedir="${imported.basedir}/classes" 
-			 jarfile="${DSP.RUNTIME}/libs/DSPPlatform-${DSP.VERSION}.jar" 
+	    
+		<mkdir dir=".tmp/"/>
+	        <copy todir=".tmp/">
+	            <fileset dir="${THIRDPARTY}/apache" includes="*.jar"/>
+	            <fileset dir="${THIRDPARTY}/jdom" includes="*.jar"/>
+	        </copy>
+	    
+		<jar basedir="${imported.basedir}/classes"
+			 jarfile="${DSP.RUNTIME}/DSPPlatform-${DSP.VERSION}.jar" 
 			 compress="true" includes="**/*" 
-			 manifest="${imported.basedir}/META-INF/MANIFEST.MF" />
+			 manifest="${imported.basedir}/META-INF/MANIFEST.MF">
+
+			<zipfileset dir=".tmp/" includes="*.jar" prefix="libs"/>
+			
+		</jar>
+		
+		<delete dir=".tmp/" />
 	</target>
 	
 	<target name="clean">

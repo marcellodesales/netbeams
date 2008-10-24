@@ -1,5 +1,6 @@
 <!-- Imported by every ant build file. -->
 <project name="DSP Core" basedir=".">
+	
     <property environment="env"/>
 	<dirname property="imported.basedir" file="${ant.file.imported}"/> 
 	<property name="running.file" value="${ant.file}"/> 
@@ -10,7 +11,8 @@
     <property name="PLATFORM" location="${DSP.BUNDLES}/DSPPlatform"/>
     <property name="THIRDPARTY" location="${CORE.DIR}/thirdparty"/>
     <property name="DSP.RUNTIME" location="${CORE.DIR}/runtime"/>
-    <property name="DSP.VERSION" value="0.1"/>
+	<property name="DSP.DEPLOYMENT" location="${DSP.RUNTIME}/deployment"/>
+	<property name="DSP.VERSION" value="0.1"/>
 
 	<path id="project.class.path">
 	       <pathelement location="./lib/"/>
@@ -44,8 +46,8 @@
 	<!-- Setting up runtime directory -->
 	<mkdir dir="${DSP.RUNTIME}"/>
 	
-	<mkdir dir="${DSP.RUNTIME}/libs/demos/stocks/" />
-	<echo file="${DSP.RUNTIME}/libs/demos/stocks/config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+	<mkdir dir="${DSP.RUNTIME}/demos/stocks/" />
+	<echo file="${DSP.RUNTIME}/demos/stocks/config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <components>
     <component>
 	   <name>DSPStockData</name>
@@ -68,7 +70,9 @@
 </components>
 ]]></echo>
 	
-    <echo file="${DSP.RUNTIME}/libs/matcher_config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+	<mkdir dir="${DSP.DEPLOYMENT}/"/>
+	<copy file="${DSP.RUNTIME}/demos/stocks/config.xml" todir="${DSP.DEPLOYMENT}/" />
+    <echo file="${DSP.RUNTIME}/matcher_config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <config>
     <matchRule>
         <matchCriteria>
@@ -96,4 +100,8 @@
     </matchRule>
 </config>]]>
         </echo>
+	
+	<target name="clear-runtime">
+		   <delete dir="${DSP.RUNTIME}/" />
+	</target>
 </project>

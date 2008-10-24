@@ -4,8 +4,16 @@
     <property environment="env"/>
 	<dirname property="imported.basedir" file="${ant.file.imported}"/> 
 	<property name="running.file" value="${ant.file}"/> 
+
+	<!-- DEVELOPMENT CONSTANT NECESSARY: KNOPFLERFISH_HOME -->
+    <property name="KNOPFLERFISH.HOME" location="/home/marcello/development/workspaces/opensource/knopflerfish2.1.0/knopflerfish.org" />
+	<!-- DEVELOPMENT CONSTANT NECESSARY: DSP_HOME -->
+	<property name="DSP.HOME" value="/home/marcello/development/workspaces/sfsu/netBEAMS2 OSGi General" />
+	<!-- DEVELOPMENT CONSTANT OPTIONAL: DSP.KNOPFLERFISH.EXEC 
+	   The name of the script to execute knopflerfish with support  to DSP, Log4J, etc. -->
+	<property name="DSP.KNOPFLERFISH.EXEC" value="start-knopflerfish-for-dsp" />
 	
-	<property name="CORE.DIR" value="/home/marcello/development/workspaces/sfsu/netBEAMS2 OSGi General/versions/v2/" />
+	<property name="CORE.DIR" value="${DSP.HOME}/versions/v2/" />
     <dirname property="DSP.BUNDLES" file="${CORE.DIR}/apps/osgi-bundles/dsp"/>
     <property name="FRAMEWORK" location="${DSP.BUNDLES}/DSPFramework"/>
     <property name="PLATFORM" location="${DSP.BUNDLES}/DSPPlatform"/>
@@ -43,11 +51,12 @@
 	<echo message="imported.basedir=${imported.basedir}"/>
 	<echo message="running.file=${running.file}"/>
 	
-	<!-- Setting up runtime directory -->
-	<mkdir dir="${DSP.RUNTIME}"/>
-	
-	<mkdir dir="${DSP.RUNTIME}/demos/stocks/" />
-	<echo file="${DSP.RUNTIME}/demos/stocks/config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+	<target name="setup">
+    	<!-- Setting up runtime directory -->
+    	<mkdir dir="${DSP.RUNTIME}"/>
+    	
+    	<mkdir dir="${DSP.RUNTIME}/demos/stocks/" />
+    	<echo file="${DSP.RUNTIME}/demos/stocks/config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <components>
     <component>
 	   <name>DSPStockData</name>
@@ -70,9 +79,9 @@
 </components>
 ]]></echo>
 	
-	<mkdir dir="${DSP.DEPLOYMENT}/"/>
-	<copy file="${DSP.RUNTIME}/demos/stocks/config.xml" todir="${DSP.DEPLOYMENT}/" />
-    <echo file="${DSP.RUNTIME}/matcher_config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+    	<mkdir dir="${DSP.DEPLOYMENT}/"/>
+    	<copy file="${DSP.RUNTIME}/demos/stocks/config.xml" todir="${DSP.DEPLOYMENT}/" />
+        <echo file="${DSP.RUNTIME}/matcher_config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <config>
     <matchRule>
         <matchCriteria>
@@ -98,8 +107,44 @@
             <componentType>org.netbeams.dsp.platform.channel</componentType>
         </matchTarget>
     </matchRule>
-</config>]]>
+</config>]]></echo>
+		
+        <echo file="${DSP.RUNTIME}/log4j.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <appender name="console" class="org.apache.log4j.ConsoleAppender">
+    <param name="Target" value="System.out" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+            value="%d{ISO8601}; %-5p [%t] %c{1}: %m%n" />
+    </layout>
+  </appender>
+  <root>
+    <priority value="info" />
+    <appender-ref ref="console" />
+  </root>
+</log4j:configuration>]]></echo>
+	
+        <echo file="${DSP.RUNTIME}/${DSP.KNOPFLERFISH.EXEC}">#### Linux #####
+export DSP_HOME="${DSP.RUNTIME}"
+export KNOPFLERFISH_HOME="${KNOPFLERFISH.HOME}"
+####################
+
+#### Windows ####
+# set DSP_HOME="${DSP.RUNTIME}"
+# set KNOPFLERFISH_HOME="${KNOPFLERFISH.HOME}"
+#################
+
+echo "#########################################"
+echo "## Running DSP${DSP.VERSION} OSGi version for Knopflerfish..."
+echo "## * DSP_HOME=$DSP_HOME"
+echo "## * KNOPFLERFISH_HOME=$KNOPFLERFISH_HOME"
+java -Dlog4j.configuration="file:$DSP_HOME/log4j.xml" -jar framework.jar
+
         </echo>
+		<chmod perm="+x" file="${DSP.RUNTIME}/${DSP.KNOPFLERFISH.EXEC}" />
+		<move file="${DSP.RUNTIME}/${DSP.KNOPFLERFISH.EXEC}" todir="${KNOPFLERFISH.HOME}/osgi" />
+	</target>
 	
 	<target name="clear-runtime">
 		   <delete dir="${DSP.RUNTIME}/" />

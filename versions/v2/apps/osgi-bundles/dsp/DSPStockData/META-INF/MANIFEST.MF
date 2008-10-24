@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Category: DSP
+Bundle-Description: Stock data demo implementation
+Bundle-ManifestVersion: 2
+Bundle-Name: Stock Data
+Bundle-SymbolicName: DSPStockData
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.netbeams.dsp.data
+Export-Package: org.netbeams.dsp.demo.stocks.data

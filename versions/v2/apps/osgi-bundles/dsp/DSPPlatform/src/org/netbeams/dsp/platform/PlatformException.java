@@ -9,4 +9,8 @@ public class PlatformException extends Exception {
 	public PlatformException(Exception e){
 		super(e);
 	}
+	
+	public PlatformException(String msg, Exception e){
+		super(msg, e);
+	}	
 }

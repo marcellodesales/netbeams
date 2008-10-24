@@ -1,33 +1,46 @@
 package org.netbeams.dsp;
 
+import java.util.Collection;
+
+import org.netbeams.dsp.message.MessageCategory;
+
 
 public class ComponentDescriptor {
+	
 	private String type;
-	private MessageTypes msgTypesProduced;
-	private MessageTypes msgTypesConsummed;
+	private Collection<MessageCategory> msgCategoryProduced;
+	private Collection<MessageCategory> msgCategoryConsumed;
 	
 	public ComponentDescriptor(){
 		type = null;
-		msgTypesConsummed = null;
-		msgTypesProduced = null;
+		msgCategoryProduced = null;
+		msgCategoryConsumed = null;
 	}
+
 	public String getType() {
 		return type;
 	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
-	public MessageTypes getMsgTypesProduced() {
-		return msgTypesProduced;
+
+	public Collection<MessageCategory> getMsgCategoryProduced() {
+		return msgCategoryProduced;
 	}
-	public void setMsgTypesProduced(MessageTypes msgTypesProduced) {
-		this.msgTypesProduced = msgTypesProduced;
+
+	public void setMsgCategoryProduced(
+			Collection<MessageCategory> msgCategoryProduced) {
+		this.msgCategoryProduced = msgCategoryProduced;
 	}
-	public MessageTypes getMsgTypesConsummed() {
-		return msgTypesConsummed;
+
+	public Collection<MessageCategory> getMsgCategoryConsumed() {
+		return msgCategoryConsumed;
 	}
-	public void setMsgTypesConsummed(MessageTypes msgTypesConsummed) {
-		this.msgTypesConsummed = msgTypesConsummed;
+
+	public void setMsgCategoryConsumed(	Collection<MessageCategory> msgCategoryConsummed) {
+		this.msgCategoryConsumed = msgCategoryConsummed;
 	}
+
 	
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<project name="DSP Demo - Stock Data" default="all">
+	<import file="../../../../build.xml" />
+	
+	<target name="all" depends="init,compile,jar" />
+	
+	<target name="init">
+		<mkdir dir="${imported.basedir}/classes" />
+	</target>
+	
+	<target name="compile">
+		<javac destdir="${imported.basedir}/classes" debug="on" srcdir="${imported.basedir}/src">
+	         <classpath refid="project.class.path"/>
+		</javac>
+	</target>
+	
+	<target name="jar">
+	   <property name="THIS.DEMO" value="demos/stocks" />
+	   <mkdir dir="${DSP.RUNTIME}/libs/${THIS.DEMO}" />
+	   <jar basedir="${imported.basedir}/classes" 
+	        jarfile="${DSP.RUNTIME}/libs/${THIS.DEMO}/DSPStockData.jar" 
+	   	    compress="true" includes="**/*" 
+	   	    manifest="${imported.basedir}/META-INF/MANIFEST.MF" />
+	</target>
+	
+	<target name="clean">
+		<delete dir="./classes" />
+		<delete dir="./build" />
+	</target>
+</project>

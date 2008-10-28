@@ -12,9 +12,6 @@
 	<classpathentry kind="lib" path="thirdparty/apache/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="thirdparty/apache/xerces.jar"/>
 	<classpathentry kind="lib" path="thirdparty/apache/xml-apis.jar"/>
-	<classpathentry kind="lib" path="thirdparty/apache/servlet-api.jar"/>
 	<classpathentry kind="lib" path="thirdparty/knopflerfish/2.1.1/framework.jar"/>
-	<classpathentry kind="lib" path="thirdparty/knopflerfish/2.1.1/http_api-2.1.0.jar"/>
-	<classpathentry kind="lib" path="thirdparty/knopflerfish/2.1.1/http_all-2.1.0.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

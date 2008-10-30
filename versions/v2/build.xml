@@ -1,36 +1,12 @@
-<!-- Imported by every ant build file. -->
-<project name="DSP Core" basedir=".">
+<project name="DSP Core" default="all" basedir=".">
 	
-    <property environment="env"/>
-	<dirname property="imported.basedir" file="${ant.file.imported}"/> 
-	<property name="running.file" value="${ant.file}"/> 
+	<import file="init-targets.xml"/>
+	<import file="apps/osgi-bundles/dsp/DSPFramework/build.xml"/>
+	<import file="apps/osgi-bundles/dsp/DSPPlatform/build.xml"/>
+	<import file="apps/osgi-bundles/dsp/DSPStockData/build.xml"/>
+	<import file="apps/osgi-bundles/dsp/DSPStockConsumer/build.xml"/>
+	<import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml"/>
 
-	<!-- DEVELOPMENT CONSTANT NECESSARY: KNOPFLERFISH_HOME -->
-    <property name="KNOPFLERFISH.HOME" location="/home/marcello/development/workspaces/opensource/knopflerfish2.1.0/knopflerfish.org" />
-	<!-- DEVELOPMENT CONSTANT NECESSARY: DSP_HOME -->
-	<property name="DSP.HOME" value="/home/marcello/development/workspaces/sfsu/netBEAMS2 OSGi General" />
-	<!-- DEVELOPMENT CONSTANT OPTIONAL: DSP.KNOPFLERFISH.EXEC 
-	   The name of the script to execute knopflerfish with support  to DSP, Log4J, etc. -->
-	<property name="DSP.KNOPFLERFISH.EXEC" value="start-knopflerfish-for-dsp" />
-	
-	<property name="CORE.DIR" value="${DSP.HOME}/versions/v2/" />
-    <dirname property="DSP.BUNDLES" file="${CORE.DIR}/apps/osgi-bundles/dsp"/>
-    <property name="FRAMEWORK" location="${DSP.BUNDLES}/DSPFramework"/>
-    <property name="PLATFORM" location="${DSP.BUNDLES}/DSPPlatform"/>
-    <property name="THIRDPARTY" location="${CORE.DIR}/thirdparty"/>
-    <property name="DSP.RUNTIME" location="${CORE.DIR}/runtime"/>
-	<property name="DSP.DEPLOYMENT" location="${DSP.RUNTIME}/deployment"/>
-	<property name="DSP.VERSION" value="0.1"/>
-
-	<path id="project.class.path">
-	       <pathelement location="./lib/"/>
-	        <fileset dir="${DSP.RUNTIME}/libs">
-	           <include name="**/*.jar"/>
-	        </fileset>
-	        <fileset dir="${THIRDPARTY}">
-	          <include name="**/*.jar"/>
-	       </fileset>
-	</path>
 	
     <!-- Defines which versions of thirdparty jars to use 
     <property file="${CORE}/tools/ant/thirdparty.properties"/>
@@ -41,17 +17,10 @@
         </classpath>
     </taskdef>
 -->
-    <echo message="CORE.DIR=${CORE.DIR}"/>
-    <echo message="DSP.BUNDLES=${DSP.BUNDLES}"/>
-	<echo message="FRAMEWORK=${FRAMEWORK}"/>
-	<echo message="PLATFORM=${PLATFORM}"/>
-	<echo message="THIRDPARTY=${THIRDPARTY}"/>
-	<echo message="DSP.RUNTIME=${DSP.RUNTIME}"/>
-	<echo message="DSP.VERSION=${DSP.VERSION}"/>
-	<echo message="imported.basedir=${imported.basedir}"/>
-	<echo message="running.file=${running.file}"/>
 	
-	<target name="setup">
+	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-data.all, dsp-stock-consumer.all, dsp-stock-producer.all"/>
+	
+	<target name="setup" depends="init, print-properties">
     	<!-- Setting up runtime directory -->
     	<mkdir dir="${DSP.RUNTIME}"/>
     	
@@ -125,28 +94,31 @@
   </root>
 </log4j:configuration>]]></echo>
 	
-        <echo file="${DSP.RUNTIME}/${DSP.KNOPFLERFISH.EXEC}">#### Linux #####
+        <echo file="${DSP.RUNTIME}/run-dsp.sh">
 export DSP_HOME="${DSP.RUNTIME}"
 export KNOPFLERFISH_HOME="${KNOPFLERFISH.HOME}"
-####################
-
-#### Windows ####
-# set DSP_HOME="${DSP.RUNTIME}"
-# set KNOPFLERFISH_HOME="${KNOPFLERFISH.HOME}"
-#################
 
 echo "#########################################"
 echo "## Running DSP${DSP.VERSION} OSGi version for Knopflerfish..."
 echo "## * DSP_HOME=$DSP_HOME"
 echo "## * KNOPFLERFISH_HOME=$KNOPFLERFISH_HOME"
+cd $KNOPFLERFISH_HOME/osgi
 java -Dlog4j.configuration="file:$DSP_HOME/log4j.xml" -jar framework.jar
 
         </echo>
-		<chmod perm="+x" file="${DSP.RUNTIME}/${DSP.KNOPFLERFISH.EXEC}" />
-		<move file="${DSP.RUNTIME}/${DSP.KNOPFLERFISH.EXEC}" todir="${KNOPFLERFISH.HOME}/osgi" />
+		<chmod perm="+x" file="${DSP.RUNTIME}/run-dsp.sh" />
+        <echo file="${DSP.RUNTIME}/run-dsp.bat">
+set DSP_HOME="${DSP.RUNTIME}"
+set KNOPFLERFISH_HOME="${KNOPFLERFISH.HOME}"
+
+cd $KNOPFLERFISH_HOME/osgi
+java -Dlog4j.configuration="file:$DSP_HOME/log4j.xml" -jar framework.jar
+
+        </echo>
+		<chmod perm="+x" file="${DSP.RUNTIME}/run-dsp.bat" />
 	</target>
 	
-	<target name="clear-runtime">
+	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-data.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean">
 		   <delete dir="${DSP.RUNTIME}/" />
 	</target>
 </project>

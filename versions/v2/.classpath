@@ -6,7 +6,6 @@
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPStockConsumer/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPPlatform/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPStockData/src"/>
-	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPHTTPMouseServer/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="thirdparty/jdom/jdom.jar"/>
 	<classpathentry kind="lib" path="thirdparty/apache/log4j-1.2.15.jar"/>

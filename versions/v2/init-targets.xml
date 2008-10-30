@@ -1,0 +1,43 @@
+<!-- Imported by every ant build file. -->
+<project name="DSP Initialization" default="init" basedir=".">
+	
+    <property environment="env"/>
+	
+	<target name="init" depends="read-userprops">
+		<echo message="Reading properties from build.properties" />
+		<property file="build.properties" />
+		
+		<path id="project.class.path">
+			<pathelement location="./lib/"/>
+	    	<fileset dir="${DSP.RUNTIME}">
+	    		<include name="**/*.jar"/>
+	    	</fileset>
+	    	<fileset dir="${THIRDPARTY}">
+	    		<include name="**/*.jar"/>
+	    	</fileset>
+	</path>
+	
+		
+	</target>
+
+
+	<target name="read-userprops" if="env.USER">
+		<echo message="Reading properties from build.properties.${env.USER}" />
+		<property file="build.properties.${env.USER}" />
+		<dirname property="imported.basedir" file="${ant.file.imported}"/> 
+		<property name="running.file" value="${ant.file}"/> 
+	</target>
+
+	<target name="print-properties">
+    	<echo message="CORE.DIR=${CORE.DIR}"/>
+    	<echo message="DSP.BUNDLES=${DSP.BUNDLES}"/>
+		<echo message="DSP.FRAMEWORK=${DSP.FRAMEWORK}"/>
+		<echo message="DSP.PLATFORM=${DSP.PLATFORM}"/>
+		<echo message="THIRDPARTY=${THIRDPARTY}"/>
+		<echo message="DSP.RUNTIME=${DSP.RUNTIME}"/>
+		<echo message="DSP.VERSION=${DSP.VERSION}"/>
+		<echo message="imported.basedir=${imported.basedir}"/>
+		<echo message="running.file=${running.file}"/>
+	</target>
+	
+</project>

@@ -1,25 +1,22 @@
 <?xml version="1.0"?>
-<project name="DSP Framework" default="all">
-    <import file="../../../../build.xml" />
+<project name="dsp-framework" default="dsp-framework.all">
 	
-	<target name="all" depends="init, compile, jar" />
-	
-	<target name="init">
-		<mkdir dir="${imported.basedir}/classes" />
+	<target name="dsp-framework.all" depends="dsp-framework.compile, dsp-framework.jar" />
+
+	<target name="dsp-framework.compile">
+		<mkdir dir="${DSP.FRAMEWORK}/classes" />
+		<javac destdir="${DSP.FRAMEWORK}/classes" debug="on" srcdir="${DSP.FRAMEWORK}/src"/>
 	</target>
 	
-	<target name="compile">
-		<javac destdir="${imported.basedir}/classes" debug="on" srcdir="${imported.basedir}/src"/>
-	</target>
-	
-	<target name="jar">
-		<jar basedir="${imported.basedir}/classes" 
+	<target name="dsp-framework.jar">
+		<jar basedir="${DSP.FRAMEWORK}/classes" 
 			 jarfile="${DSP.RUNTIME}/DSPFramework-${DSP.VERSION}.jar" 
-			 compress="true" includes="**/*" 
-			 manifest="${imported.basedir}/META-INF/MANIFEST.MF" />
+			 compress="true"
+			 includes="**/*" 
+			 manifest="${DSP.FRAMEWORK}/META-INF/MANIFEST.MF" />
 	</target>
 	
-	<target name="clean">
-		<delete dir="${imported.basedir}/classes" />
+	<target name="dsp-framework.clean">
+		<delete dir="${DSP.FRAMEWORK}/classes" />
 	</target>
 </project>

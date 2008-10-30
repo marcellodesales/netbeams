@@ -1,31 +1,32 @@
 <?xml version="1.0"?>
-<project name="DSP Demo - Stock Producer" default="all">
-	<import file="../../../../build.xml" />
+<project name="dsp-stock-producer" default="dsp-stock-producer.all">
 	
-	<target name="all" depends="init,compile,jar" />
+	<target name="dsp-stock-producer.all" depends="dsp-stock-producer.compile, dsp-stock-producer.jar" />
 	
-	<target name="init">
-		<mkdir dir="${imported.basedir}/classes" />
+	<target name="dsp-stock-producer.init">
+		<property name="stock.producer.base.dir" value="${DSP.BUNDLES}/DSPStockProducer"/>
 	</target>
 	
-	<target name="compile">
-		<javac destdir="${imported.basedir}/classes" debug="on" srcdir="${imported.basedir}/src">
+	<target name="dsp-stock-producer.compile" depends="dsp-stock-producer.init">
+		<mkdir dir="${stock.producer.base.dir}/classes" />
+		<javac destdir="${stock.producer.base.dir}/classes" debug="on" srcdir="${stock.producer.base.dir}/src">
 			<classpath refid="project.class.path"/>
 		</javac>
 	</target>
 	
-	<target name="jar">
-        <property name="THIS.DEMO" value="demos/stocks" />
-        <mkdir dir="${DSP.RUNTIME}/${THIS.DEMO}" />
-        <jar basedir="${imported.basedir}/classes" 
-        	 jarfile="${DSP.RUNTIME}/${THIS.DEMO}/DSPStockProducer-${DSP.VERSION}.jar" 
-        	 compress="true" includes="**/*" 
-        	 manifest="${imported.basedir}/META-INF/MANIFEST.MF" />
+	<target name="dsp-stock-producer.jar" depends="dsp-stock-producer.init">
+		<property name="THIS.DEMO" value="demos/stocks" />
+		<mkdir dir="${DSP.RUNTIME}/${THIS.DEMO}" />
+		<jar basedir="${stock.producer.base.dir}/classes" 
+			 jarfile="${DSP.RUNTIME}/${THIS.DEMO}/DSPStockProducer-${DSP.VERSION}.jar" 
+			 compress="true" includes="**/*" 
+			 manifest="${stock.producer.base.dir}/META-INF/MANIFEST.MF" />
 		
-        <copy todir="${DSP.DEPLOYMENT}/" file="${DSP.RUNTIME}/${THIS.DEMO}/DSPStockProducer-${DSP.VERSION}.jar"/>
+		<copy todir="${DSP.DEPLOYMENT}/" file="${DSP.RUNTIME}/${THIS.DEMO}/DSPStockProducer-${DSP.VERSION}.jar"/>
+		
 	</target>
 	
-	<target name="clean">
-		<delete dir="./classes" />
+	<target name="dsp-stock-producer.clean" depends="dsp-stock-producer.init">
+		<delete dir="${stock.producer.base.dir}/classes" />
 	</target>
 </project>

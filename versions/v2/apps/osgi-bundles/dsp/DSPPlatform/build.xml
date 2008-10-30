@@ -1,40 +1,33 @@
 <?xml version="1.0"?>
-<project name="DSP Platform" default="all">
-	<import file="../../../../build.xml" />
+<project name="dsp-platform" default="dsp-platform.all">
 	
-	<target name="all" depends="init, compile, jar" />
+	<target name="dsp-platform.all" depends="dsp-platform.compile, dsp-platform.jar" />
 	
-	<target name="init">
-		<mkdir dir="${imported.basedir}/classes" />
-	</target>
-	
-	<target name="compile">
-		<javac destdir="${imported.basedir}/classes" debug="on" srcdir="${imported.basedir}/src">
+	<target name="dsp-platform.compile">
+		<mkdir dir="${DSP.PLATFORM}/classes" />
+		<javac destdir="${DSP.PLATFORM}/classes" debug="on" srcdir="${DSP.PLATFORM}/src">
 	         <classpath refid="project.class.path"/>
 		</javac>
 	</target>
 	
-	<target name="jar">
+	<target name="dsp-platform.jar">
 	    
-		<mkdir dir=".tmp/"/>
-	        <copy todir=".tmp/">
+		<mkdir dir="${DSP.PLATFORM}/classes/libs"/>
+	        <copy todir="${DSP.PLATFORM}/classes/libs">
 	            <fileset dir="${THIRDPARTY}/apache" includes="*.jar"/>
 	            <fileset dir="${THIRDPARTY}/jdom" includes="*.jar"/>
 	        </copy>
 	    
-		<jar basedir="${imported.basedir}/classes"
+		<jar basedir="${DSP.PLATFORM}/classes"
 			 jarfile="${DSP.RUNTIME}/DSPPlatform-${DSP.VERSION}.jar" 
-			 compress="true" includes="**/*" 
-			 manifest="${imported.basedir}/META-INF/MANIFEST.MF">
-
-			<zipfileset dir=".tmp/" includes="*.jar" prefix="libs"/>
-			
-		</jar>
+			 compress="true"
+			 includes="**/*" 
+			 manifest="${DSP.PLATFORM}/META-INF/MANIFEST.MF"/>
 		
-		<delete dir=".tmp/" />
+		<delete dir="${DSP.PLATFORM}/classes/libs" />
 	</target>
 	
-	<target name="clean">
-		<delete dir="${imported.basedir}/classes" />
+	<target name="dsp-platform.clean">
+		<delete dir="${DSP.PLATFORM}/classes" />
 	</target>
 </project>

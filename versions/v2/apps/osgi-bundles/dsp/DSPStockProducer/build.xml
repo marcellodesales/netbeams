@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <project name="dsp-stock-producer" default="dsp-stock-producer.all">
 	
-	<target name="dsp-stock-producer.all" depends="dsp-stock-producer.compile, dsp-stock-producer.jar" />
+	<import file="../../../../init-targets.xml"/>
+		
+	<target name="dsp-stock-producer.all" depends="init, dsp-stock-producer.compile, dsp-stock-producer.jar" />
 	
 	<target name="dsp-stock-producer.init">
 		<property name="stock.producer.base.dir" value="${DSP.BUNDLES}/DSPStockProducer"/>

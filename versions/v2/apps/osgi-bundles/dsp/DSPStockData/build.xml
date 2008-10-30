@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <project name="dsp-stock-data" default="dsp-stock-data.all">
 	
-	<target name="dsp-stock-data.all" depends="dsp-stock-data.compile, dsp-stock-data.jar" />
+	<import file="../../../../init-targets.xml"/>
+		
+	<target name="dsp-stock-data.all" depends="init, dsp-stock-data.compile, dsp-stock-data.jar" />
 	
 	<target name="dsp-stock-data.init">
 		<property name="stock.data.base.dir" value="${DSP.BUNDLES}/DSPStockData"/>

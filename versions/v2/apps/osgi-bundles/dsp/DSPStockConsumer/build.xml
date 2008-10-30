@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <project name="dsp-stock-consumer" default="dsp-stock-consumer.all">
 	
-	<target name="dsp-stock-consumer.all" depends="dsp-stock-consumer.compile, dsp-stock-consumer.jar" />
+	<import file="../../../../init-targets.xml"/>
+		
+	<target name="dsp-stock-consumer.all" depends="init, dsp-stock-consumer.compile, dsp-stock-consumer.jar" />
 	
 	<target name="dsp-stock-consumer.init">
 		<property name="stock.consumer.base.dir" value="${DSP.BUNDLES}/DSPStockConsumer"/>

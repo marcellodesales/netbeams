@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <project name="dsp-framework" default="dsp-framework.all">
 	
-	<target name="dsp-framework.all" depends="dsp-framework.compile, dsp-framework.jar" />
+	<import file="../../../../init-targets.xml"/>
+		
+	<target name="dsp-framework.all" depends="init, dsp-framework.compile, dsp-framework.jar" />
 
 	<target name="dsp-framework.compile">
 		<mkdir dir="${DSP.FRAMEWORK}/classes" />

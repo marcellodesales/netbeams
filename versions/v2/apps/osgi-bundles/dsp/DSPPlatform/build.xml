@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <project name="dsp-platform" default="dsp-platform.all">
 	
-	<target name="dsp-platform.all" depends="dsp-platform.compile, dsp-platform.jar" />
+	<import file="../../../../init-targets.xml"/>
+		
+	<target name="dsp-platform.all" depends="init, dsp-platform.compile, dsp-platform.jar" />
 	
 	<target name="dsp-platform.compile">
 		<mkdir dir="${DSP.PLATFORM}/classes" />

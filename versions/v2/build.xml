@@ -93,31 +93,15 @@
     <appender-ref ref="console" />
   </root>
 </log4j:configuration>]]></echo>
-	
-        <echo file="${DSP.RUNTIME}/run-dsp.sh">
-export DSP_HOME="${DSP.RUNTIME}"
-export KNOPFLERFISH_HOME="${KNOPFLERFISH.HOME}"
-
-echo "#########################################"
-echo "## Running DSP${DSP.VERSION} OSGi version for Knopflerfish..."
-echo "## * DSP_HOME=$DSP_HOME"
-echo "## * KNOPFLERFISH_HOME=$KNOPFLERFISH_HOME"
-cd $KNOPFLERFISH_HOME/osgi
-java -Dlog4j.configuration="file:$DSP_HOME/log4j.xml" -jar framework.jar
-
-        </echo>
-		<chmod perm="+x" file="${DSP.RUNTIME}/run-dsp.sh" />
-        <echo file="${DSP.RUNTIME}/run-dsp.bat">
-set DSP_HOME="${DSP.RUNTIME}"
-set KNOPFLERFISH_HOME="${KNOPFLERFISH.HOME}"
-
-cd $KNOPFLERFISH_HOME/osgi
-java -Dlog4j.configuration="file:$DSP_HOME/log4j.xml" -jar framework.jar
-
-        </echo>
-		<chmod perm="+x" file="${DSP.RUNTIME}/run-dsp.bat" />
 	</target>
 	
+	<target name="run" depends="init">
+		<exec executable="java"
+		      dir="${KNOPFLERFISH.HOME}/osgi">
+		      <arg line='-Dlog4j.configuration="file:${DSP.RUNTIME}/log4j.xml" -jar framework.jar'/>
+		</exec>
+	</target>
+
 	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-data.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean">
 		   <delete dir="${DSP.RUNTIME}/" />
 	</target>

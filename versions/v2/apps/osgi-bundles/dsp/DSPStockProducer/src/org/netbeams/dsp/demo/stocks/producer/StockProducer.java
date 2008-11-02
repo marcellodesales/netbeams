@@ -29,7 +29,7 @@ public class StockProducer implements DSPComponent{
 	private static final ComponentDescriptor componentDescriptor;
 	
 	// Component Type
-	public final static String COMPONENT_TYPE = "org.dsp.test.stockproducer";
+	public final static String COMPONENT_TYPE = "org.netbeams.dsp.demo.stocks.producer";
 	
 	private DSPContext context;
 	

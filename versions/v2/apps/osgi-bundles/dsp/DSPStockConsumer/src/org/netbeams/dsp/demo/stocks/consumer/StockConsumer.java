@@ -18,7 +18,7 @@ import org.netbeams.dsp.util.Log;
 public class StockConsumer implements DSPComponent{
 	
 	// Component Type
-	public final static String COMPONENT_TYPE = "org.dsp.test.stockconsumer";
+	public final static String COMPONENT_TYPE = "org.netbeams.dsp.demo.stocks.consumer";
 	
 	private static ComponentDescriptor componentDescriptor;
 

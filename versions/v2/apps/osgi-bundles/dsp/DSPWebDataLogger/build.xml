@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project name="dsp-weblogger" default="dsp-weblogger.all">
+	
+	<import file="../../../../init-targets.xml"/>
+		
+	<target name="dsp-weblogger.all" depends="init, dsp-weblogger.compile, dsp-weblogger.jar" />
+	
+	<target name="dsp-weblogger.init">
+		<property name="weblogger.base.dir" value="${DSP.BUNDLES}/DSPWebDataLogger"/>
+	</target>
+	
+	<target name="dsp-weblogger.compile" depends="dsp-weblogger.init">
+		<mkdir dir="${weblogger.base.dir}/classes" />
+		<javac destdir="${weblogger.base.dir}/classes" debug="on" srcdir="${weblogger.base.dir}/src">
+			<classpath refid="project.class.path"/>
+		</javac>
+	</target>
+	
+	<target name="dsp-weblogger.jar" depends="dsp-weblogger.init">
+		<mkdir dir="${DSP.RUNTIME}" />
+		<copy todir="${weblogger.base.dir}/classes/web/">
+			<fileset dir="${weblogger.base.dir}/web/DSP Web Logger/build/"/>
+		</copy>
+		<jar basedir="${weblogger.base.dir}/classes" 
+			 jarfile="${DSP.RUNTIME}/DSPWebLogger-${DSP.VERSION}.jar" 
+			 compress="true" includes="**/*" 
+			 manifest="${weblogger.base.dir}/META-INF/MANIFEST.MF" />
+		
+		<copy todir="${DSP.DEPLOYMENT}/" file="${DSP.RUNTIME}/DSPWebLogger-${DSP.VERSION}.jar"/>
+		
+	</target>
+	
+	<target name="dsp-weblogger.clean" depends="dsp-weblogger.init">
+		<delete dir="${weblogger.base.dir}/classes" />
+	</target>
+</project>

@@ -39,11 +39,17 @@
 	   <priority>70</priority>
 	   <required/>
 	</component>
-	<component>
-	   <name>DSPStockConsumer</name>
-	   <bundle>DSPStockConsumer-0.1.jar</bundle>
-	   <priority>71</priority>
-	   <required/>
+    <component>
+       <name>DSPStockConsumer</name>
+       <bundle>DSPStockConsumer-0.1.jar</bundle>
+       <priority>71</priority>
+       <required/>
+    </component>
+    <component>
+       <name>DSPWebDataLogger</name>
+       <bundle>DSPWebLogger-0.1.jar</bundle>
+       <priority>71</priority>
+       <required/>
     </component>
 </components>
 ]]></echo>
@@ -52,18 +58,30 @@
     	<copy file="${DSP.RUNTIME}/demos/stocks/config.xml" todir="${DSP.DEPLOYMENT}/" />
         <echo file="${DSP.RUNTIME}/matcher_config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <matchRule>
-        <matchCriteria>
-            <nodeAddress>LOCAL</nodeAddress>
-            <componentType>org.netbeams.dsp.demo.stocks.producer</componentType>
-            <!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
-        </matchCriteria>
-        <matchTarget>
+            <matchRule>
+                <matchCriteria>
+                    <nodeAddress>LOCAL</nodeAddress>
+                    <componentType>org.netbeams.dsp.demo.stocks.producer</componentType>
+                    <!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
+                </matchCriteria>
+                <matchTarget>
 
-            <nodeAddress>LOCAL</nodeAddress>
-            <componentType>org.netbeams.dsp.demo.stocks.consumer</componentType>
-        </matchTarget>
-    </matchRule>
+                    <nodeAddress>LOCAL</nodeAddress>
+                    <componentType>org.netbeams.dsp.demo.stocks.consumer</componentType>
+                </matchTarget>
+            </matchRule>
+            <matchRule>
+                <matchCriteria>
+                    <nodeAddress>LOCAL</nodeAddress>
+                    <componentType>org.netbeams.dsp.demo.stocks.producer</componentType>
+                    <!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
+                </matchCriteria>
+                <matchTarget>
+
+                    <nodeAddress>LOCAL</nodeAddress>
+                    <componentType>org.netbeams.dsp.weblogger</componentType>
+                </matchTarget>
+            </matchRule>
     <matchRule>
         <matchCriteria>
             <nodeAddress>LOCAL</nodeAddress>

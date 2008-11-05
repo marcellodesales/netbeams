@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
-Bundle-Activator: org.netbeams.dsp.weblogger.Activator
-Bundle-Category: DSP Core
-Bundle-Description: DSP Data Web Logger
+Bundle-Activator: org.netbeams.dsp.demo.stocks.producer.Activator
+Bundle-Category: DSP DEMO
+Bundle-Description: Stock Tick Producer demo
 Bundle-ManifestVersion: 2
-Bundle-Name: Web Logger
-Bundle-SymbolicName: DSPWebLogger
+Bundle-Name: Stock Producer
+Bundle-SymbolicName: DSPStockProducer
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.netbeams.dsp.demo.stocks.data, org.netbeams.dsp.data, org.osgi.framework, org.osgi.service.http, javax.servlet, javax.servlet.http
+Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.netbeams.dsp.demo.stocks.data, org.netbeams.dsp.data, org.osgi.framework

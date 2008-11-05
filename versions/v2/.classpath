@@ -6,11 +6,14 @@
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPStockConsumer/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPPlatform/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPStockData/src"/>
+	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPWebDataLogger/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="thirdparty/jdom/jdom.jar"/>
 	<classpathentry kind="lib" path="thirdparty/apache/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="thirdparty/apache/xerces.jar"/>
 	<classpathentry kind="lib" path="thirdparty/apache/xml-apis.jar"/>
 	<classpathentry kind="lib" path="thirdparty/knopflerfish/2.1.1/framework.jar"/>
+	<classpathentry kind="lib" path="thirdparty/knopflerfish/2.1.1/http/http_all-2.1.0.jar"/>
+	<classpathentry kind="lib" path="thirdparty/pax/pax-web-service-0.5.0.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

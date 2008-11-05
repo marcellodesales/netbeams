@@ -14,6 +14,7 @@ import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.platform.broker.MessageBroker;
 import org.netbeams.dsp.platform.management.component.ComponentManager;
 import org.netbeams.dsp.platform.matcher.Matcher;
+import org.osgi.framework.BundleContext;
 
 
 public class Platform implements DSPContextFactory{
@@ -30,10 +31,10 @@ public class Platform implements DSPContextFactory{
 	
 	private Object shutdownLock;
 	
-	public Platform(String home){
+	public Platform(String home, BundleContext bundleContext){
 		DSP_HOME = home;
 		shutdownLock = new Object();
-		context = new DSPContextImpl();
+		context = new DSPContextImpl(bundleContext);
 	}
 		
 	/**

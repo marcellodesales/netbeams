@@ -16,4 +16,15 @@ public interface DSPContext {
 	 */
 	public MessageBrokerAccessor getDataBroker() throws DSPException;
 	
+
+	/**
+	 * Returns a resource from the underlying DSP implementation. If the
+	 * underlying implementation is OSGi, this will allow access to OSGi
+	 * related resources.
+	 * 
+	 * @param resource Description of the resource.
+	 * @return Reference to the resource, null if the resource could not be located.
+	 */
+	public Object getResource(String resource);
+	
 }

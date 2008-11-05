@@ -18,6 +18,7 @@
 	        <copy todir="${DSP.PLATFORM}/classes/libs">
 	            <fileset dir="${THIRDPARTY}/apache" includes="*.jar"/>
 	            <fileset dir="${THIRDPARTY}/jdom" includes="*.jar"/>
+	            <fileset dir="${THIRDPARTY}/pax" includes="*.jar"/>
 	        </copy>
 	    
 		<jar basedir="${DSP.PLATFORM}/classes"

@@ -41,7 +41,7 @@ public class Activator implements BundleActivator {
 		
 		dspBundleController = new DSPBundleController(DSP_HOME, this.bundleContext);
 
-		platform = new Platform(DSP_HOME);
+		platform = new Platform(DSP_HOME, bundleContext);
 		platform.init();
 		// Provide the component manager with the mechanism to control deployment
 		// units where DSP component resides

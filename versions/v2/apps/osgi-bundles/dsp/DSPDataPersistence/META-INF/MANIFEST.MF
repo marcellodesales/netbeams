@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.persistence.DataPersistenceActivator
+Bundle-Category: DSP
+Bundle-Description: The DSP Data Persistence service 
+Bundle-ManifestVersion: 2
+Bundle-Name: DSP Data Persistence
+Bundle-SymbolicName: DSPDataPersistence
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.osgi.framework
+Export-Package: org.netbeams.dsp.persistence

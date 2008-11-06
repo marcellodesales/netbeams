@@ -1,24 +1,15 @@
-<project name="DSP Core" default="all" basedir=".">
+<project name="DSP General Builder" default="all" basedir=".">
 	
-	<import file="init-targets.xml"/>
-	<import file="apps/osgi-bundles/dsp/DSPFramework/build.xml"/>
-	<import file="apps/osgi-bundles/dsp/DSPPlatform/build.xml"/>
-	<import file="apps/osgi-bundles/dsp/DSPStockData/build.xml"/>
-	<import file="apps/osgi-bundles/dsp/DSPStockConsumer/build.xml"/>
-	<import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml"/>
-
+    <import file="init-targets.xml"/>
+    <import file="apps/osgi-bundles/dsp/DSPFramework/build.xml"/>
+    <import file="apps/osgi-bundles/dsp/DSPPlatform/build.xml"/>
+    <import file="apps/osgi-bundles/dsp/DSPStockData/build.xml"/>
+    <import file="apps/osgi-bundles/dsp/DSPStockConsumer/build.xml"/>
+    <import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml"/>
+    <import file="apps/osgi-bundles/dsp/DSPDataPersistence/build.xml"/>
+	<import file="apps/osgi-bundles/dsp/DSPHTTPMouseServer/build.xml"/>
 	
-    <!-- Defines which versions of thirdparty jars to use 
-    <property file="${CORE}/tools/ant/thirdparty.properties"/>
-
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-        <classpath>
-            <pathelement location="${THIRDPARTY}/ant-contrib/${ant-contrib.version}/ant-contrib-${ant-contrib.version}.jar"/>
-        </classpath>
-    </taskdef>
--->
-	
-	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-data.all, dsp-stock-consumer.all, dsp-stock-producer.all"/>
+	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-data.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-data-persistence.all"/>
 	
 	<target name="setup" depends="init, print-properties">
     	<!-- Setting up runtime directory -->

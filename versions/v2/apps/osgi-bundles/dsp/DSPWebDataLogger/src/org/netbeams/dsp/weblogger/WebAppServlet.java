@@ -3,11 +3,8 @@ package org.netbeams.dsp.weblogger;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -20,12 +17,13 @@ import org.netbeams.dsp.util.Log;
 
 
 
-
 public class WebAppServlet
     extends HttpServlet
 {
 
-    private String        documentRoot = "/web/";
+    final public static String BASE_URI     = "/weblogger";
+
+    private String             documentRoot = "/web/";
 
 
 
@@ -42,8 +40,9 @@ public class WebAppServlet
     {
         String uri = request.getRequestURI();
         Log.log("Processing URI: " + uri);
-        // Strip leading '/'
-        String resource = uri.substring(1);
+        // Strip leading "/weblogger/"
+        String resource = uri.substring(BASE_URI.length() + 1);
+
         if (resource.equals(""))
             resource = "index.html";
 
@@ -71,12 +70,12 @@ public class WebAppServlet
         throws IOException
     {
         final int READ_BUFFER = 4096;
-        
+
         ServletOutputStream out = resp.getOutputStream();
         InputStream is = this.getClass().getResourceAsStream(fileName);
         byte b[] = new byte[READ_BUFFER];
         int l = 0;
-        while((l = is.read(b)) > 0) {
+        while ((l = is.read(b)) > 0) {
             out.write(b, 0, l);
         }
     }
@@ -86,7 +85,6 @@ public class WebAppServlet
     private void sendImageFile(HttpServletResponse resp, String fileName)
         throws IOException
     {
-        //resp.setContentLength((int) raf.length());
         ServletOutputStream out = resp.getOutputStream();
         InputStream is = this.getClass().getResourceAsStream(fileName);
         BufferedImage image = ImageIO.read(is);

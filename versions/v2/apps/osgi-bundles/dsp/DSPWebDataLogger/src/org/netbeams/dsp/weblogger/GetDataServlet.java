@@ -15,6 +15,8 @@ public class GetDataServlet
     extends HttpServlet
 {
 
+    final public static String BASE_URI     = "/get-data";
+
     private Buffer theBuffer;
 
 

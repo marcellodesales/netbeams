@@ -36,6 +36,7 @@ public class DataCollector
     private ComponentDescriptor        descriptor;
 
     private Buffer                     theBuffer;
+    private HttpService                httpService;
 
 
 
@@ -85,12 +86,12 @@ public class DataCollector
     {
         Log.log("DataCollector.startComponent()");
         theBuffer = new Buffer();
-        HttpService service = (HttpService) context
-                .getResource("osgi:HttpService");
+        httpService = (HttpService) context.getResource("osgi:HttpService");
         try {
-            service.registerServlet("/get-data", new GetDataServlet(theBuffer), null,
-                    null);
-            service.registerServlet("/", new WebAppServlet(), null, null);
+            httpService.registerServlet(GetDataServlet.BASE_URI,
+                    new GetDataServlet(theBuffer), null, null);
+            httpService.registerServlet(WebAppServlet.BASE_URI,
+                    new WebAppServlet(), null, null);
         }
         catch (ServletException e) {
             // TODO Auto-generated catch block
@@ -108,6 +109,8 @@ public class DataCollector
     public void stopComponent()
     {
         Log.log("DataCollector.stopComponent()");
+        httpService.unregister(GetDataServlet.BASE_URI);
+        httpService.unregister(WebAppServlet.BASE_URI);
     }
 
 

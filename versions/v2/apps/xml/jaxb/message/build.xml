@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<project name="message" default="xjc-compile" basedir=".">
+
+<property file="build.properities"/>
+
+<property name="thirdparty" value="${basedir}/../../../../thirdparty"/>
+
+<property name="java-src-dir" value="${basedir}/java-src"/>
+
+<property name="message-package" value="org.netbeams.dsp.message"/>
+
+<condition property="isWindows">
+    <os family="windows"/>
+</condition>
+
+<condition property="isUnix">
+    <os family="unix"/>
+</condition>
+
+
+<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+  	<classpath>
+    		<fileset dir="${thirdparty}/jaxb\2.1.9\lib" includes="*.jar" excludes="ant.jar"/>
+  	</classpath>
+</taskdef>
+
+
+<target name="init"/>
+
+
+<target name="xjc-compile">
+	<mkdir dir="${java-src-dir}"/>
+	<xjc destdir="${java-src-dir}" 
+	     schema="${basedir}/../../schemas/message.xsd"
+	     removeOldOutput="yes" 
+	     package="${message-package}"/>
+
+</target>
+
+
+</project>

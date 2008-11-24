@@ -10,57 +10,63 @@ package org.netbeams.dsp.message;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
+import org.w3c.dom.Element;
 
 
 /**
- * <p>Java class for ComponentType complex type.
+ * <p>Java class for Body complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="ComponentType">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *     &lt;/extension>
- *   &lt;/simpleContent>
+ * &lt;complexType name="Body">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;any/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
  * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ComponentType", propOrder = {
-    "value"
+@XmlType(name = "Body", propOrder = {
+    "any"
 })
-public class ComponentType {
+public class Body {
 
-    @XmlValue
-    protected String value;
+    @XmlAnyElement(lax = true)
+    protected Object any;
 
     /**
-     * Gets the value of the value property.
+     * Gets the value of the any property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link Element }
+     *     {@link Object }
      *     
      */
-    public String getValue() {
-        return value;
+    public Object getAny() {
+        return any;
     }
 
     /**
-     * Sets the value of the value property.
+     * Sets the value of the any property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link Element }
+     *     {@link Object }
      *     
      */
-    public void setValue(String value) {
-        this.value = value;
+    public void setAny(Object value) {
+        this.any = value;
     }
 
 }

@@ -27,12 +27,12 @@
 
 <target name="init"/>
 
+<!-- removeOldOutput="yes" -->
 
 <target name="xjc-compile">
 	<mkdir dir="${java-src-dir}"/>
 	<xjc destdir="${java-src-dir}" 
 	     schema="${basedir}/../../schemas/message.xsd"
-	     removeOldOutput="yes" 
 	     package="${message-package}"/>
 
 </target>

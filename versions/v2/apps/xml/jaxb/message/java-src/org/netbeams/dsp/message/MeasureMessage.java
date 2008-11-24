@@ -14,15 +14,15 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for NodeRefID complex type.
+ * <p>Java class for MeasureMessage complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="NodeRefID">
+ * &lt;complexType name="MeasureMessage">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *     &lt;/restriction>
+ *     &lt;extension base="{http://www.netbeams.dsp.org/message.xsd}AbstractMessage">
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -30,8 +30,10 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "NodeRefID")
-public class NodeRefID {
+@XmlType(name = "MeasureMessage")
+public class MeasureMessage
+    extends Message
+{
 
 
 }

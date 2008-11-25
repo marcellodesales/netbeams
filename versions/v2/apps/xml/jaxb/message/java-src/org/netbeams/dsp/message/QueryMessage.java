@@ -32,8 +32,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
-@XmlRootElement(name = "MeasureMessage")
-public class MeasureMessage
+@XmlRootElement(name = "QueryMessage")
+public class QueryMessage
     extends Message
 {
 

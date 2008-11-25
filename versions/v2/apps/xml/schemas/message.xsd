@@ -55,19 +55,54 @@
 			<xs:extension base="xs:string"/>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:complexType name="MeasureMessage">
-		<xs:complexContent>
-			<xs:extension base="AbstractMessage"/>
-		</xs:complexContent>
-	</xs:complexType>	
-	<!--
-	<xs:element name="ActionMessage" type="Message"/>
-	<xs:element name="MeasureMessage" type="Message"/>
-	<xs:element name="CreateMessage" type="Message"/>
-	<xs:element name="EventMessage" type="Message"/>
-	<xs:element name="InsertMessage" type="Message"/>
-	<xs:element name="QueryMessage" type="Message"/>
-	<xs:element name="UpdateMessage" type="Message"/>
-  	-->
-	<xs:element name="MeasureMessage" type="MeasureMessage"/>
+
+	<xs:element name="MeasureMessage">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AbstractMessage"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="ActionMessage">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AbstractMessage"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="CreateMessage">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AbstractMessage"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="InsertMessage">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AbstractMessage"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="QueryMessage">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AbstractMessage"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="UpdateMessage">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AbstractMessage"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	
 </xs:schema>

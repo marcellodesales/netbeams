@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="message" default="xjc-compile" basedir=".">
+<project name="message" default="create-jar" basedir=".">
 
 <property file="build.properities"/>
 
@@ -44,7 +44,7 @@
 
 </target>
 
-<target name="compile-java">
+<target name="compile-java" depends="xjc-compile">
 	  <mkdir dir="${basedir}/classes"/>
 	  <javac srcdir="${basedir}/java-src"
 	         destdir="${basedir}/classes"
@@ -53,14 +53,14 @@
 </target>
 
 
-<target name="create-jar">
+<target name="create-jar" depends="compile-java">
 	<mkdir dir="${basedir}/dist"/>
 	<jar destfile="${basedir}/dist/stocktick.jar"
 	     basedir="${basedir}/classes"/>	
 </target>
 
-<target name="dist">
-	<copy file="${basedir}/dist/stocktick.jar" todir="C:\\Netbeams\\versions\\v2\\apps\\xml\\jaxb\\message\\lib"/>
+<target name="dist" depends="create-jar">
+	<copy file="${basedir}/dist/stocktick.jar" todir="${basedir}/../message/lib"/>
 </target>
 
 </project>

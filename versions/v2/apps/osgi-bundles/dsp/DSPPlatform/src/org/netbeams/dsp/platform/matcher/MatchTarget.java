@@ -1,6 +1,6 @@
 package org.netbeams.dsp.platform.matcher;
 
-import org.netbeams.dsp.ComponentLocator;
+import org.netbeams.dsp.message.ComponentLocator;
 
 public class MatchTarget {
 

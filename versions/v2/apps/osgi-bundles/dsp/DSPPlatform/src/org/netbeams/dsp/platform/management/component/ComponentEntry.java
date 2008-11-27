@@ -1,17 +1,15 @@
 package org.netbeams.dsp.platform.management.component;
 
-import java.util.UUID;
-
 import org.netbeams.dsp.DSPComponent;
 
 public class ComponentEntry {
 
-	private UUID _uuid;
+	private String componentNodeId;
 	private ComponentState state;
 	private DSPComponent component;
 	
-	public ComponentEntry(UUID uuid, ComponentState state, DSPComponent component){
-		_uuid = uuid;
+	public ComponentEntry(String componentNodeId, ComponentState state, DSPComponent component){
+		this.componentNodeId = componentNodeId;
 		this.state = state;
 		this.component = component;
 	
@@ -23,11 +21,11 @@ public class ComponentEntry {
 	public void setComponent(DSPComponent component) {
 		this.component = component;
 	}
-	public UUID getUUID() {
-		return _uuid;
+	public String getComponentNodeId() {
+		return componentNodeId;
 	}
-	public void setComponentID(UUID uuid) {
-		_uuid = uuid;
+	public void setComponentID(String componentNodeId) {
+		this.componentNodeId = componentNodeId;
 	}
 	public ComponentState getState() {
 		return state;

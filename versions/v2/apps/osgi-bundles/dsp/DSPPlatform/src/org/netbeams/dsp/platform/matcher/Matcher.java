@@ -27,13 +27,14 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.netbeams.dsp.BaseComponent;
-import org.netbeams.dsp.ComponentIdentifier;
-import org.netbeams.dsp.ComponentLocator;
+import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.GlobalComponentTypeName;
 import org.netbeams.dsp.MessageBrokerAccessor;
-import org.netbeams.dsp.NodeAddress;
+import org.netbeams.dsp.NodeAddressHelper;
+import org.netbeams.dsp.message.NodeAddress;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.util.Log;
 
@@ -41,7 +42,7 @@ public class Matcher implements BaseComponent {
 	
 	private static final String CONFIG_FILE_NAME = "matcher_config.xml";
 
-	private UUID uuid;
+	private String componentNodeId;
 	private DSPContext context;
 	private MessageBrokerAccessor brokerAccessor;
 	
@@ -63,12 +64,12 @@ public class Matcher implements BaseComponent {
 	}
 
 	@Override
-	public UUID getUUID() {
-		return uuid;
+	public String getComponentNodeId() {
+		return componentNodeId;
 	}
 	
-	public void initComponent(UUID uuid, DSPContext context) throws DSPException{
-		this.uuid = uuid;
+	public void initComponent(String componentNodeId, DSPContext context) throws DSPException{
+		this.componentNodeId = componentNodeId;
 		this.context = context;
 		
 		try {
@@ -87,14 +88,15 @@ public class Matcher implements BaseComponent {
 		
 		Collection<ComponentIdentifier> consumers = new ArrayList<ComponentIdentifier>();
 		
-		ComponentIdentifier producer = message.getProducer();
+		ComponentIdentifier producer = message.getHeader().getProducer();
 		
 		for(MatchRule mr: rules){
 			if(isMatchForNode(producer, mr)){
 				if(isMatchForComponentType(producer, mr)){
 					MatchTarget matchtTarget = mr.getTarget();
-					ComponentIdentifier target = 
-						new ComponentIdentifier(matchtTarget.getComponentType(), matchtTarget.getLocator());
+					ComponentIdentifier target = new ComponentIdentifier();
+					target.setComponentType(matchtTarget.getComponentType());
+					target.setComponentLocator(matchtTarget.getLocator());
 					consumers.add(target);
 				}
 			}			
@@ -111,10 +113,10 @@ public class Matcher implements BaseComponent {
 		boolean matchNode = false;
 		boolean matchUUID = false;
 		
-		ComponentLocator producerLocator = producer.getLocator();
+		ComponentLocator producerLocator = producer.getComponentLocator();
 		ComponentLocator criteriaLocator = mr.getTarget().getLocator();
 		// Is the Criteria for any node?
-		if(NodeAddress.NO_ADDRESS.equals(criteriaLocator.getNodeAddress())){
+		if(NodeAddressHelper.NO_ADDRESS.equals(criteriaLocator.getNodeAddress())){
 			matchNode = true;
 		}
 		// Are the nodes equals?
@@ -124,11 +126,11 @@ public class Matcher implements BaseComponent {
 		// If there is a match for node, check if the UUID matches
 		if(matchNode){
 			// Is there NO  restriction on UUID?
-			if(criteriaLocator.getUUID() == null){
+			if(criteriaLocator.getComponentNodeId() == null){
 				matchUUID = true;
 			}
 			// Do we have a match
-			else if( producerLocator.getUUID().equals(criteriaLocator.getUUID())){
+			else if( producerLocator.getComponentNodeId().equals(criteriaLocator.getComponentNodeId())){
 				matchUUID = true;
 			}
 		}
@@ -146,10 +148,10 @@ public class Matcher implements BaseComponent {
 		criteriaType = criteriaType.replace(".", "\\.");
 		
 		Log.log("criteriaType=" + criteriaType);
-		Log.log("component type=" + producer.getType());
+		Log.log("component type=" + producer.getComponentType());
 		
 		Pattern pattern = Pattern.compile(criteriaType);
-		java.util.regex.Matcher m = pattern.matcher(producer.getType());
+		java.util.regex.Matcher m = pattern.matcher(producer.getComponentType());
 		return m.matches();
 	}
 
@@ -169,7 +171,11 @@ public class Matcher implements BaseComponent {
 			Element eComponentTypeCriteria = eMatchCriteria.getChild("componentType");
 			
 			NodeAddress nodeCriteria = obtainNodeAddress(eNodeAddressCriteria);
-			ComponentLocator locatorCriteria = new ComponentLocator(null, nodeCriteria);
+			
+			ComponentLocator locatorCriteria = new ComponentLocator();
+			locatorCriteria.setComponentNodeId(null);
+			locatorCriteria.setNodeAddress(nodeCriteria);
+			
 			MatchCriteria criteria = new MatchCriteria(eComponentTypeCriteria.getTextTrim(), locatorCriteria);
 			
 			// matchTarget
@@ -177,7 +183,11 @@ public class Matcher implements BaseComponent {
 			Element eComponentTypeTarget = eMatchTarget.getChild("componentType");
 			
 			NodeAddress nodeTarget = obtainNodeAddress(eNodeAddressTarget);
-			ComponentLocator locatorTarget = new ComponentLocator(null, nodeTarget);
+			
+			ComponentLocator locatorTarget = new ComponentLocator();
+			locatorCriteria.setComponentNodeId(null);
+			locatorCriteria.setNodeAddress(nodeTarget);
+			
 			MatchTarget target = new MatchTarget(eComponentTypeTarget.getTextTrim(), locatorTarget);
 			
 			// Create Rule
@@ -189,11 +199,13 @@ public class Matcher implements BaseComponent {
 	private NodeAddress obtainNodeAddress(Element nodeAddressCriteria) {
 		String nodeStr = nodeAddressCriteria.getTextTrim();
 		if(nodeStr.equals("LOCAL")){
-			return NodeAddress.LOCAL_ADDRESS;
+			return NodeAddressHelper.LOCAL_NODEADDRESS;
 		}else if(nodeStr.equals("*")){
-			return NodeAddress.NO_ADDRESS;
+			return NodeAddressHelper.NO_ADDRESS;
 		}else{
-			return new NodeAddress(nodeStr);
+			NodeAddress nodeAddress = new NodeAddress();
+			nodeAddress.setValue(nodeStr);
+			return nodeAddress;
 		}
 	}
 

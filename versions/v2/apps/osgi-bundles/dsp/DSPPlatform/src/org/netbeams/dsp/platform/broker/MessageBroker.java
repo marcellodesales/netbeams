@@ -6,6 +6,7 @@ package org.netbeams.dsp.platform.broker;
  * TODO: Handle concurrency.
  */
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +14,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.netbeams.dsp.ComponentIdentifier;
-import org.netbeams.dsp.ComponentLocator;
+import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.GlobalComponentTypeName;
@@ -22,6 +23,7 @@ import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.platform.matcher.Matcher;
 import org.netbeams.dsp.util.ErrorCode;
+import org.netbeams.dsp.util.Log;
 
 
 public class MessageBroker implements MessageBrokerAccessor {
@@ -33,8 +35,8 @@ public class MessageBroker implements MessageBrokerAccessor {
 
 	private Object lock;
 
-	private Map<UUID, DSPComponent> components;
-	// Platform Component
+	private Map<String, DSPComponent> components;
+	// Assume at most one type per node
 	private Map<String, DSPComponent> componentsByType;
 
 	private Matcher matcher;
@@ -42,7 +44,7 @@ public class MessageBroker implements MessageBrokerAccessor {
 
 	public MessageBroker(Matcher matcher){
 		lock = new Object();
-		components = new HashMap<UUID, DSPComponent>();
+		components = new HashMap<String, DSPComponent>();
 		componentsByType = new HashMap<String, DSPComponent>();
 		this.matcher = matcher;
 	}
@@ -56,8 +58,7 @@ public class MessageBroker implements MessageBrokerAccessor {
 	 */
 	public void attach(DSPComponent component) throws DSPException {
 		// Save reference
-		components.put(component.getUUID(), component);
-		// Add Platform component index
+		components.put(component.getComponentNodeId(), component);
 		String type = component.getComponentType();
 		componentsByType.put(type, component);
 	}
@@ -92,13 +93,16 @@ public class MessageBroker implements MessageBrokerAccessor {
 	 */
 	@Override
 	public void send(Message message) throws DSPException {
+		
+		Log.log("Broker.send(): " + messageSummary(message));
+		
 		Collection<ComponentIdentifier> consumers = obtainConsumers(message);
 
 		// Deliver messages
 		if(!consumers.isEmpty()){
 			for(ComponentIdentifier consumer : consumers){
 				// We can deliberatly ignore the message
-				if(GlobalComponentTypeName.NO_COMPONENT.equals(consumer.getType())){
+				if(GlobalComponentTypeName.NO_COMPONENT.equals(consumer.getComponentType())){
 					continue;
 				}
 				DSPComponent component = obtainDSPComponent(consumer);
@@ -106,18 +110,19 @@ public class MessageBroker implements MessageBrokerAccessor {
 					component.deliver(message);
 				}
 			}
+		}else{
+			Log.log("No consumer foung for message: " + message.getMessageID());
 		}
 	}
 
 	@Override
 	public Message sendWaitForReply(Message request) throws DSPException {
-		List<ComponentIdentifier> consumers = request.getConsumers();
+		ComponentIdentifier consumer = request.getHeader().getConsumer();
 		// The MUST be exactly one consumer
-		if(consumers.size() != 1){
+		if(consumer == null){
 			throw new DSPException(ErrorCode.ERROR_INTERFACE_REQUIRES_ONE_CONSUMER, 
 				"sendWaitForReply insterface requires exaclty ONE consumer");
 		}
-		ComponentIdentifier consumer = consumers.get(0);
 		DSPComponent component = obtainDSPComponent(consumer);
 		if(component != null){
 			return component.deliverWithReply(request);
@@ -129,13 +134,12 @@ public class MessageBroker implements MessageBrokerAccessor {
 
 	@Override
 	public Message sendWaitForReply(Message request, long waitTime) throws DSPException {
-		List<ComponentIdentifier> consumers = request.getConsumers();
+		ComponentIdentifier consumer = request.getHeader().getConsumer();
 		// The MUST be exactly one consumer
-		if(consumers.size() != 1){
+		if(consumer == null){
 			throw new DSPException(ErrorCode.ERROR_INTERFACE_REQUIRES_ONE_CONSUMER, 
 				"sendWaitForReply insterface requires exaclty ONE consumer");
 		}
-		ComponentIdentifier consumer = consumers.get(0);
 		DSPComponent component = obtainDSPComponent(consumer);
 		if(component != null){
 			return component.deliverWithReply(request, waitTime);
@@ -151,14 +155,17 @@ public class MessageBroker implements MessageBrokerAccessor {
 	/////////////////////////////////////
 
 	private Collection<ComponentIdentifier> obtainConsumers(Message message) {
-		Collection<ComponentIdentifier> consumers  = message.getConsumers(); // Optional
-
+		Collection<ComponentIdentifier> result = new ArrayList<ComponentIdentifier>();
+		
+		ComponentIdentifier consumer  = message.getHeader().getConsumer(); // Optional
 		// If there are not target consumers, then try to find a match
-		if(consumers.isEmpty()){
-			consumers = match(message);
+		if(consumer == null){
+			result = match(message);
+		}else{
+			result.add(consumer);
 		}
 		
-		return consumers;
+		return result;
 	}
 
 	
@@ -169,16 +176,30 @@ public class MessageBroker implements MessageBrokerAccessor {
 	private DSPComponent obtainDSPComponent(ComponentIdentifier consumer) {
 		DSPComponent component = null;
 		// Let's try the UUID first
-		ComponentLocator locator = consumer.getLocator();
+		ComponentLocator locator = consumer.getComponentLocator();
 		if(locator != null){
-			UUID uuid = locator.getUUID();
-			if(uuid != null){
-				return components.get(uuid);
+			String comonentNodeId = locator.getComponentNodeId();
+			if(comonentNodeId != null){
+				return components.get(comonentNodeId);
+			}else{
+				return componentsByType.get(consumer.getComponentType());
 			}
 		}
-		String type = consumer.getType();
+		String type = consumer.getComponentType();
 		return componentsByType.get(type);
+	}
 
+	private String messageSummary(Message message) {
+		StringBuffer buff = new StringBuffer();
+		buff.append("id=").append(message.getMessageID()).append("; ");
+		buff.append("producer=").append(message.getHeader().getProducer().getComponentType()).append("; ");
+		buff.append("content type=").append(message.getContentType()).append("; ");
+		ComponentIdentifier consumer = message.getHeader().getConsumer();
+		if(consumer != null){
+			buff.append("consumer=");
+			buff.append(consumer.getComponentType()).append(",");
+		}
+		return buff.toString();
 	}
 
 

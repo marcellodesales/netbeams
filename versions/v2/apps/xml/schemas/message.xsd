@@ -13,6 +13,7 @@
 			<xs:element name="Body" type="Body"/>
 		</xs:sequence>
 		<xs:attribute name="messageID"/>
+		<xs:attribute name="ContentType"/>
 	</xs:complexType>
 	<xs:complexType name="Header">
 		<xs:sequence>
@@ -27,33 +28,42 @@
 			<xs:any processContents="lax"/>
 		</xs:sequence>
 	</xs:complexType>	
-	<xs:complexType name="NodeAddress">
+	<xs:complexType name="AbstractNodeAddress">
+		<xs:annotation>
+			<xs:appinfo>
+				<jaxb:class implClass="NodeAddress"/>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:simpleContent>
 			<xs:extension base="xs:string"/>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:complexType name="LocalNodeAddress">
-		<xs:complexContent>
-			<xs:extension base="NodeAddress"/>
-		</xs:complexContent>
+	<!--
+	<xs:complexType name="ComponentNodeID">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
 	</xs:complexType>
-	<xs:complexType name="NodeRefID"/>
+	-->
 	<xs:complexType name="ComponentLocator">
 		<xs:sequence>
-			<xs:element name="NodeRefID" type="NodeRefID"/>
-			<xs:element name="NodeAddress" type="NodeAddress"/>
+			<xs:element name="ComponentNodeId" type="xs:string"/>
+			<xs:element name="NodeAddress" type="AbstractNodeAddress"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ComponentIdentifier">
 		<xs:sequence>
-			<xs:element name="ComponentType" type="ComponentType"/>
+			<xs:element name="ComponentType" type="xs:string"/>
 			<xs:element name="ComponentLocator" type="ComponentLocator"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ComponentType">
-		<xs:simpleContent>
-			<xs:extension base="xs:string"/>
-		</xs:simpleContent>
+
+	<xs:complexType name="AbstractMessageContent">
+		<xs:annotation>
+			<xs:appinfo>
+				<jaxb:class implClass="MessageContent"/>
+			</xs:appinfo>
+		</xs:annotation>
 	</xs:complexType>
 
 	<xs:element name="MeasureMessage">
@@ -97,6 +107,23 @@
 	</xs:element>
 
 	<xs:element name="UpdateMessage">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AbstractMessage"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="DeleteMessage">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AbstractMessage"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:element name="EventMessage">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="AbstractMessage"/>

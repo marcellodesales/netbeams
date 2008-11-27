@@ -17,6 +17,18 @@
     <os family="unix"/>
 </condition>
 
+<path id="jaxb.classpath">
+    <fileset dir="${thirdparty}/jaxb/2.1.9/lib">
+    	<include name="**/*.jar"/>
+    </fileset>
+</path>
+
+
+<path id="all.classpath">
+	<path refid="jaxb.classpath"/>
+	<pathelement location="lib/stocktick.jar"/>
+</path>
+
 
 <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
   	<classpath>
@@ -27,14 +39,31 @@
 
 <target name="init"/>
 
-<!-- removeOldOutput="yes" -->
 
 <target name="xjc-compile">
 	<mkdir dir="${java-src-dir}"/>
 	<xjc destdir="${java-src-dir}" 
 	     schema="${basedir}/../../schemas/message.xsd"
 	     package="${message-package}"/>
+</target>
 
+
+<target name="java-compile" depends="xjc-compile">
+	  <mkdir dir="${basedir}/classes"/>
+	  <javac srcdir="${basedir}/java-src"
+	         destdir="${basedir}/classes"
+	         classpathref="all.classpath"
+	         source="1.6"/>
+</target>
+
+<target name="create-jar" depends="java-compile">
+	<mkdir dir="${basedir}/dist"/>
+	<jar destfile="${basedir}/dist/message.jar"
+	     basedir="${basedir}/classes"/>	
+</target>
+
+<target name="dist" depends="create-jar">
+	<copy file="${basedir}/dist/stocktick.jar" todir="${basedir}/../message/lib"/>
 </target>
 
 

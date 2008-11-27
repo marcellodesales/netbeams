@@ -1,16 +1,22 @@
 package org.netbeams.dsp.util;
 
-import java.util.UUID;
-
-import org.netbeams.dsp.ComponentIdentifier;
-import org.netbeams.dsp.ComponentLocator;
-import org.netbeams.dsp.NodeAddress;
+import org.netbeams.dsp.NodeAddressHelper;
+import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.message.ComponentLocator;
+import org.netbeams.dsp.message.NodeAddress;
 
 public abstract class DSPUtils {
 	
-	public static ComponentIdentifier obtainIdentifier(String type, UUID uuid, NodeAddress nodeAddress){
-		ComponentLocator locator = new ComponentLocator(uuid, NodeAddress.LOCAL_ADDRESS);
-		return new ComponentIdentifier(type, locator);
+	public static ComponentIdentifier obtainIdentifier(String componentType, String componentNodeId, NodeAddress nodeAddress){
+		ComponentLocator locator = new ComponentLocator();
+		locator.setComponentNodeId(componentNodeId);
+		locator.setNodeAddress(NodeAddressHelper.LOCAL_NODEADDRESS);
+		
+		ComponentIdentifier indentifier = new ComponentIdentifier();
+		indentifier.setComponentType(componentType);
+		indentifier.setComponentLocator(locator);
+		
+		return indentifier;
 
 	}
 	

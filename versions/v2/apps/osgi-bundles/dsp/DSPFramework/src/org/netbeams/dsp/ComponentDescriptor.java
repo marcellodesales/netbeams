@@ -2,7 +2,6 @@ package org.netbeams.dsp;
 
 import java.util.Collection;
 
-import org.netbeams.dsp.message.MessageCategory;
 
 
 public class ComponentDescriptor {

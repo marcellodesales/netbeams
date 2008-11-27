@@ -1,6 +1,5 @@
 package org.netbeams.dsp;
 
-import java.util.UUID;
 
 public interface BaseComponent {
 	/**
@@ -8,7 +7,7 @@ public interface BaseComponent {
 	 * 
 	 * @return
 	 */
-	public UUID getUUID();
+	public String getComponentNodeId();
 	
 	/**
 	 * Provide the component's type. The type is the package name of the component.
@@ -31,7 +30,7 @@ public interface BaseComponent {
 	 * @param context
 	 * @throws DSPException
 	 */
-	public void initComponent(UUID uuid, DSPContext context) throws DSPException;
+	public void initComponent(String componentNodeId, DSPContext context) throws DSPException;
 
 
 }

@@ -1,4 +1,4 @@
-package org.netbeams.dsp.message;
+package org.netbeams.dsp;
 
 /**
  * Message category is a tuple represention a message type and message content type. DSP components 

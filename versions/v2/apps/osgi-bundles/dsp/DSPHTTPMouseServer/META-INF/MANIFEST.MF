@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Activator: org.netbeams.dsp.demo.miceaction.osgi.MouseHttpServerActivators
 Bundle-Category: DSP DEMO
-Bundle-ClassPath: ., lib/pax-web-service-0.5.1.jar
+Bundle-ClassPath: ., libs/pax-web-service-0.5.1.jar
 Bundle-Description: Mice Action Consumer and display 
 Bundle-ManifestVersion: 2
 Bundle-Name: Mice Action HTTP Observer

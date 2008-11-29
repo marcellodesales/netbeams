@@ -8,8 +8,9 @@
     <import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml"/>
     <import file="apps/osgi-bundles/dsp/DSPDataPersistence/build.xml"/>
 	<import file="apps/osgi-bundles/dsp/DSPHTTPMouseServer/build.xml"/>
+	<import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml"/>
 	
-	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-data.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-data-persistence.all"/>
+	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-data.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-data-persistence.all, dsp-mouse-http-consumer.all, dsp-mouse-producer-jswing.all"/>
 	
 	<target name="setup" depends="init, print-properties">
     	<!-- Setting up runtime directory -->

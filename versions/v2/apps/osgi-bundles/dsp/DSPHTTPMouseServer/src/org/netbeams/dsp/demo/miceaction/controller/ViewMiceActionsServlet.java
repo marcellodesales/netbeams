@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +22,7 @@ import org.osgi.framework.ServiceReference;
  * @author marcello
  * 
  */
-public class ViewMiceActionServlet extends HttpServlet {
+public class ViewMiceActionsServlet extends HttpServlet {
 
     private int refreshCounter = 0;
 
@@ -38,7 +39,7 @@ public class ViewMiceActionServlet extends HttpServlet {
      */
     private static final long serialVersionUID = 1L;
 
-    public ViewMiceActionServlet(BundleContext bc) {
+    public ViewMiceActionsServlet(BundleContext bc) {
         this.bc = bc;
     }
 
@@ -53,7 +54,7 @@ public class ViewMiceActionServlet extends HttpServlet {
 		out.println("<meta http-equiv='refresh' content='"+ REFRESH +"'></head>");
 		out.println("<body>This is just a test... This page has been refreshed "+ ++ this.refreshCounter +" times...");
 		
-		Map<String, List<String>> repository = DSPInMemoryDataPersistence.INSTANCE.getRepositoryData();
+		Map<UUID, List<String>> repository = DSPInMemoryDataPersistence.INSTANCE.getRepositoryData();
 		
 		out.println("<BR><BR><b>Register Mouse Actions</b><BR><form method='POST' action='/registerMiceActions'>");
 		out.println("MouseID: <input type='text' name='mouseProducerId'><BR>");
@@ -62,15 +63,17 @@ public class ViewMiceActionServlet extends HttpServlet {
 		out.println("<input type='submit' value='Register Mouse Click'></form>");
 		
 		ServiceReference reference = bc.getServiceReference(DSPInMemoryDataPersistence.class.getName());
-		DSPInMemoryDataPersistence memData = (DSPInMemoryDataPersistence)bc.getService(reference);
 		
-		out.println("<BR><BR>Producers and their observable values.");
-		for (String observer : memData.getRepositoryData().keySet()) {
-			out.println("<BR><b>Producer = " + observer + "</b>");
-			for (String value : repository.get(observer)) {
-				out.println("<BR><b>value = " + value);
-			}
-		}
+        DSPInMemoryDataPersistence memRepository = (DSPInMemoryDataPersistence)bc.getService(reference);
+        
+        out.println("<BR><BR>Producers and their observable values.");
+        Map<UUID, List<String>> memRepo = memRepository.getRepositoryData();
+        for (UUID observer : memRepo.keySet()) {
+            out.println("<BR><b>Producer = " + observer + "</b>");
+            for (String value : memRepo.get(observer)) {
+                out.println("<BR><b>value = " + value);
+            }
+        }
 		out.println("</body></html>");
 		out.close();
 	}

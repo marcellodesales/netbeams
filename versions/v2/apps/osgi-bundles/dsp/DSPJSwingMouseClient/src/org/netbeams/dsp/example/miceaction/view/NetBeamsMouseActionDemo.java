@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,7 +21,6 @@ import javax.swing.JTextArea;
 
 import org.netbeams.dsp.example.miceaction.model.NetBeamsMouseActionEnum;
 import org.netbeams.dsp.example.miceaction.model.NetBeamsMouseButtonEnum;
-import org.netbeams.dsp.example.miceaction.model.NetBeamsMouseCollector;
 import org.netbeams.dsp.example.miceaction.model.NetBeamsMouseInfo;
 import org.netbeams.dsp.example.miceaction.model.NetBeamsMouseListener;
 

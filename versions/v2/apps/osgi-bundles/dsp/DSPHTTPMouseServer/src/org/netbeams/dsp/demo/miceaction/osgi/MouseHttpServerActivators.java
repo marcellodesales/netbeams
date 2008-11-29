@@ -1,20 +1,20 @@
 package org.netbeams.dsp.demo.miceaction.osgi;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import javax.servlet.ServletException;
 
-import org.netbeams.dsp.demo.miceaction.controller.CollectMouseActionServlet;
-import org.netbeams.dsp.demo.miceaction.controller.ViewMiceActionServlet;
+import org.netbeams.dsp.demo.miceaction.controller.CollectMouseActionsServlet;
+import org.netbeams.dsp.demo.miceaction.controller.ViewMiceActionsServlet;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
 public class MouseHttpServerActivators implements BundleActivator {
-
-    private ServiceRegistration aaReg;
 
     private static BundleContext bc;
 
@@ -43,6 +43,17 @@ public class MouseHttpServerActivators implements BundleActivator {
 
         this.printServiceProperties();
         this.registerServlets();
+        
+        String host = "localhost";
+        try {
+            host = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e1) {
+            e1.printStackTrace();
+        }
+        
+        System.out.println("Mouse Services Available:");
+        System.out.println("View: http://"+host+":8080/showMiceActions");
+        System.out.println("Register: http://"+host+":8080/registerMiceActions");
     }
 
     private void printServiceProperties() {
@@ -89,9 +100,9 @@ public class MouseHttpServerActivators implements BundleActivator {
         // / Greetings servlet will be available from
         // "http://localhost:8080/show"
         try {
-            httpService.registerServlet(aliasShow, new ViewMiceActionServlet(bc),
+            httpService.registerServlet(aliasShow, new ViewMiceActionsServlet(bc),
                     null, null);
-            httpService.registerServlet(aliasRegisterActions, new CollectMouseActionServlet(bc),
+            httpService.registerServlet(aliasRegisterActions, new CollectMouseActionsServlet(bc),
                     null, null);
 
         } catch (ServletException e) {
@@ -106,8 +117,6 @@ public class MouseHttpServerActivators implements BundleActivator {
     @Override
     public void stop(BundleContext arg0) throws Exception {
         System.out.println("Stopping mice actions server");
-//        this.aaReg.unregister();
-        this.aaReg = null;
         MouseHttpServerActivators.bc = null;
     }
 }

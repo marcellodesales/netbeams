@@ -2,22 +2,24 @@ package org.netbeams.dsp.example.miceaction.osgi;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.ExecutorService;
 
-import javax.swing.JFrame;
-
+import org.netbeams.dsp.example.miceaction.controller.DSPMouseActionsHttpServerCollectorClient;
 import org.netbeams.dsp.example.miceaction.model.NetBeamsMouseCollector;
 import org.netbeams.dsp.example.miceaction.view.NetBeamsMouseActionDemo;
 import org.netbeams.dsp.example.miceaction.view.NetBeamsMouseSystemOutput;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-public class MiceActionActivator implements BundleActivator{
+public class MouseActionsActivator implements BundleActivator{
 
 	public static BundleContext bc;
 	
 	private NetBeamsMouseActionDemo demo;
 	
 	private NetBeamsMouseActionDemo.JFrameExecutor jfexec;
+	
+	private ExecutorService dspDataSend;
 	
 	private class BundleJFrameWindowAdapter extends WindowAdapter {
 		
@@ -39,19 +41,23 @@ public class MiceActionActivator implements BundleActivator{
 	
 	@Override
 	public void start(BundleContext bc) throws Exception {
-		MiceActionActivator.bc = bc;
+		MouseActionsActivator.bc = bc;
 
 		this.demo = new NetBeamsMouseActionDemo();
 		this.jfexec = new NetBeamsMouseActionDemo.JFrameExecutor(this.demo);
 		
 	    javax.swing.SwingUtilities.invokeLater(this.jfexec);
-	    this.jfexec.addWindowListener(new BundleJFrameWindowAdapter(MiceActionActivator.bc));
+	    this.jfexec.addWindowListener(new BundleJFrameWindowAdapter(MouseActionsActivator.bc));
 		
 		NetBeamsMouseCollector mc = NetBeamsMouseCollector.makeNewNetBeamsMouseCollector();
 		demo.addNetBeamsMouseListener(mc);
 		
 		NetBeamsMouseSystemOutput systemOutObserver = new NetBeamsMouseSystemOutput();
 		demo.addNetBeamsMouseListener(systemOutObserver);
+		
+		DSPMouseActionsHttpServerCollectorClient hs = new DSPMouseActionsHttpServerCollectorClient();
+		demo.addNetBeamsMouseListener(hs);
+		this.dspDataSend = DSPMouseActionsHttpServerCollectorClient.scheduler;
 	}
 
 	@Override
@@ -61,6 +67,9 @@ public class MiceActionActivator implements BundleActivator{
 			this.jfexec.dispose();
 		}
 		bc = null;
+		this.jfexec = null;
+		this.dspDataSend.shutdownNow();
+		
 		System.out.println("Bundle should be stopped now...");
 	}
 

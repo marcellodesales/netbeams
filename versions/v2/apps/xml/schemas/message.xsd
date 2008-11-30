@@ -58,14 +58,6 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="AbstractMessageContent">
-		<xs:annotation>
-			<xs:appinfo>
-				<jaxb:class implClass="MessageContent"/>
-			</xs:appinfo>
-		</xs:annotation>
-	</xs:complexType>
-
 	<xs:element name="MeasureMessage">
 		<xs:complexType>
 			<xs:complexContent>

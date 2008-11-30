@@ -6,6 +6,7 @@
 <property name="thirdparty" value="${basedir}/../../../../thirdparty"/>
 
 <property name="java-src-dir" value="${basedir}/java-src"/>
+<property name="generated-src-dir" value="${basedir}/generated-src"/>
 
 <property name="message-package" value="org.netbeams.dsp.message"/>
 
@@ -41,19 +42,24 @@
 
 
 <target name="xjc-compile">
-	<mkdir dir="${java-src-dir}"/>
-	<xjc destdir="${java-src-dir}" 
+	<mkdir dir="${generated-src-dir}"/>
+	<xjc destdir="${generated-src-dir}" 
 	     schema="${basedir}/../../schemas/message.xsd"
 	     package="${message-package}"/>
 </target>
 
 
 <target name="java-compile" depends="xjc-compile">
-	  <mkdir dir="${basedir}/classes"/>
-	  <javac srcdir="${basedir}/java-src"
-	         destdir="${basedir}/classes"
-	         classpathref="all.classpath"
-	         source="1.6"/>
+	<mkdir dir="${basedir}/classes"/>
+	<javac  destdir="${basedir}/classes"
+		classpathref="all.classpath"
+		source="1.6">
+	         
+	  	<src path="${generated-src-dir}"/>
+		<src path="${java-src-dir}"/>
+	</javac>
+	
+
 </target>
 
 <target name="create-jar" depends="java-compile">

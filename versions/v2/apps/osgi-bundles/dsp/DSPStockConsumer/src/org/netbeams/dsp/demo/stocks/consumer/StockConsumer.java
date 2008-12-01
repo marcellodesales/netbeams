@@ -1,17 +1,15 @@
 package org.netbeams.dsp.demo.stocks.consumer;
 
-
-
 import java.util.UUID;
 
 import org.netbeams.dsp.ComponentDescriptor;
-import org.netbeams.dsp.ComponentLocator;
+import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
-import org.netbeams.dsp.demo.stocks.data.StockTick;
-import org.netbeams.dsp.demo.stocks.data.StockTickData;
-import org.netbeams.dsp.message.MeasurementMessage;
+import org.netbeams.dsp.demo.stock.StockTick;
+import org.netbeams.dsp.demo.stock.StockTicks;
+import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.util.Log;
 
@@ -23,7 +21,7 @@ public class StockConsumer implements DSPComponent{
 	private static ComponentDescriptor componentDescriptor;
 
 	
-	private UUID uuid;
+	private String componentNodeId;
 	
 	private DSPContext context;
 	private ComponentLocator locator;
@@ -35,7 +33,7 @@ public class StockConsumer implements DSPComponent{
 
 
 	@Override
-	public UUID getUUID() {
+	public String getComponentNodeId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -46,10 +44,10 @@ public class StockConsumer implements DSPComponent{
 	}
 
 	@Override
-	public void initComponent(UUID uuid, DSPContext context) throws DSPException {
+	public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
 		Log.log("StockConsumer.initComponent()");	
 		this.context = context;
-		this.uuid = uuid;
+		this.componentNodeId = componentNodeId;
 	}
 
 	@Override
@@ -95,13 +93,25 @@ public class StockConsumer implements DSPComponent{
 
 	private void processMessage(Message message) {
 		Log.log("message.class=" + message.getClass().getName());
-		if(message instanceof MeasurementMessage){
-			StockTickData data = (StockTickData)message.getContent();
-			for(StockTick tick: data.getTicks()){
-				Log.log("Symble:" + tick.getStockSymbol() + "  " + "Value:" + tick.getValue());
+		
+		if(message instanceof MeasureMessage){
+			
+			StockTicks stockTicks = null;
+			Object content = message.getBody().getAny();
+			if(Message.isPojo(content)){
+				if(content instanceof StockTicks){
+					stockTicks = (StockTicks)content;
+				}else{
+					Log.log("StockConsumer.processMessage(): Invalid content type " + content.getClass().getName());
+				}
+			}else{
+				// TODO: Unmarshall
+			}
+
+			for(StockTick tick: stockTicks.getStockTick()){
+				Log.log("Symble:" + tick.getSymbol() + "  " + "Value:" + tick.getValue());
 			}
 		}
-		
 	}
 
 }

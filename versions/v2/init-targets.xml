@@ -1,8 +1,8 @@
 <!-- Imported by every ant build file. -->
 <project name="dsp-init" default="init" basedir=".">
 	
-    <property environment="env"/>
-	
+    	<property environment="env"/>
+    		
 	<dirname property="init-targets.dir" file="${ant.file.dsp-init}"/>
     
 	<target name="init" depends="read-userprops">
@@ -21,18 +21,18 @@
 	</target>
 	
 	<target name="get-user-unix" if="env.USER">
-		<propery name="USER" value="${env.USER}"/>
+		<property name="USER" value="${env.USER}"/>
 	</target>
 
 	<target name="get-user-windows" if="env.USERNAME">
-		<propery name="USER" value="${env.USERNAME}"/>
+		<property name="USER" value="${env.USERNAME}"/>
 	</target>
 
 	<target name="get-user" depends="get-user-unix,get-user-windows">
 	</target>
 
 
-	<target name="read-userprops" if="env.USERNAME">
+	<target name="read-userprops" depends="get-user">
 		<echo message="Reading properties from build.properties.${USER}" />
 		<property file="${init-targets.dir}/build.properties.${USER}" />
 	</target>

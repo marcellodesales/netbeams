@@ -8,7 +8,7 @@ import java.util.UUID;
 import javax.servlet.ServletException;
 
 import org.netbeams.dsp.ComponentDescriptor;
-import org.netbeams.dsp.ComponentLocator;
+import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
@@ -29,7 +29,7 @@ public class DataCollector
     private static ComponentDescriptor componentDescriptor;
 
 
-    private UUID                       uuid;
+    private String                     componentNodeId;
 
     private DSPContext                 context;
     private ComponentLocator           locator;
@@ -46,7 +46,7 @@ public class DataCollector
 
 
     @Override
-    public UUID getUUID()
+    public String getComponentNodeId()
     {
         // TODO Auto-generated method stub
         return null;
@@ -63,12 +63,12 @@ public class DataCollector
 
 
     @Override
-    public void initComponent(UUID uuid, DSPContext context)
+    public void initComponent(String componentNodeId, DSPContext context)
         throws DSPException
     {
         Log.log("DataCollector.initComponent()");
         this.context = context;
-        this.uuid = uuid;
+        this.componentNodeId = componentNodeId;
     }
 
 

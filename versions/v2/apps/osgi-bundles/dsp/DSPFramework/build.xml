@@ -11,6 +11,21 @@
 	</target>
 	
 	<target name="dsp-framework.jar">
+	
+		<mkdir dir="${DSP.FRAMEWORK}/classes/libs"/>
+		
+	        <copy todir="${DSP.FRAMEWORK}/classes/libs">
+	            <fileset dir="${XML.JAXB}/message/dist" includes="*.jar"/>
+	        </copy>
+		
+	        <copy todir="${DSP.FRAMEWORK}/classes/libs">
+	            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib">
+	            	<include name="*.jar"/>
+	            	<exclude name="jaxb-xjc.jar"/>
+	            </fileset>
+	        </copy>
+
+	
 		<jar basedir="${DSP.FRAMEWORK}/classes" 
 			 jarfile="${DSP.RUNTIME}/DSPFramework-${DSP.VERSION}.jar" 
 			 compress="true"
@@ -21,4 +36,5 @@
 	<target name="dsp-framework.clean">
 		<delete dir="${DSP.FRAMEWORK}/classes" />
 	</target>
+	
 </project>

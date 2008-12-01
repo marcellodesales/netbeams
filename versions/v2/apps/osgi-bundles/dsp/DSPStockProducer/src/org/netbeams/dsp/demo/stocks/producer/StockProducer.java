@@ -13,13 +13,13 @@ import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
-import org.netbeams.dsp.demo.stocks.data.StockCT;
-import org.netbeams.dsp.demo.stocks.data.StockTick;
-import org.netbeams.dsp.demo.stocks.data.StockTickData;
-import org.netbeams.dsp.message.MeasurementMessage;
+import org.netbeams.dsp.MessageCategory;
+import org.netbeams.dsp.MessageFactory;
+import org.netbeams.dsp.demo.stock.StockTick;
+import org.netbeams.dsp.demo.stock.StockTicks;
+import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.Message;
-import org.netbeams.dsp.message.MessageCategory;
-import org.netbeams.dsp.message.MessageFactory;
+import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.util.Log;
 
 
@@ -31,9 +31,12 @@ public class StockProducer implements DSPComponent{
 	// Component Type
 	public final static String COMPONENT_TYPE = "org.netbeams.dsp.demo.stocks.producer";
 	
+	// Message Content Type
+	public final static String MSG_CONTENT_TYPE_STOCK_TICK = "stock.tick";
+	
 	private DSPContext context;
 	
-	private UUID uuid;
+	private String componentNodeId;
 	
 	// Last measurement. This is used for pull requests
 	private List<StockTick> lastMeasurements;
@@ -57,17 +60,17 @@ public class StockProducer implements DSPComponent{
 	}
 
 	@Override
-	public void initComponent(UUID uuid, DSPContext context) throws DSPException {
+	public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
 		Log.log("StockProducer.initComponent()");
 		
 		this.context = context;
-		this.uuid = uuid;
+		this.componentNodeId = componentNodeId;
 	}
 
 
 	@Override
-	public UUID getUUID() {
-		return uuid;
+	public String getComponentNodeId() {
+		return componentNodeId;
 	}
 
 	@Override
@@ -93,7 +96,7 @@ public class StockProducer implements DSPComponent{
 	@Override
 	public void startComponent() {
 		Log.log("StockProducer.startComponent()");
-		engine = new Engine("[" + uuid + "] " + COMPONENT_TYPE);
+		engine = new Engine("[" + componentNodeId + "] " + COMPONENT_TYPE);
 		engine.start();
 		
 	}
@@ -109,19 +112,19 @@ public class StockProducer implements DSPComponent{
 	}
 
 	
-	private void send(StockTickData data) throws DSPException{
+	private void send(StockTicks data) throws DSPException{
 		//Create the message
-		Message message = MessageFactory.newMessage(MeasurementMessage.class, data, this);
+		Message message = MessageFactory.newMessage(MeasureMessage.class, data, this);
 		// TODO: Test only
 		Log.log("StockProducer.send()");
-		StockTickData d = (StockTickData)message.getContent();
-		if(d == null){
-			Log.log("StockTickData is null");
+				
+		if(data == null){
+			Log.log("StockTicks is null");
 		}else{
-			if(d.getTicks() == null){
+			if(data.getStockTick() == null){
 				Log.log("Tick Collection is null");
 			}else{
-				Log.log("Tick Collection size is " + d.getTicks().size());
+				Log.log("Tick Collection size is " + data.getStockTick().size());
 			}
 		}
 		
@@ -146,7 +149,7 @@ public class StockProducer implements DSPComponent{
 		Collection<MessageCategory> consumedMessageCategories = new ArrayList<MessageCategory>();
 		// StockTick
 		MessageCategory messageCategory = 
-			new MessageCategory(StockProducer.class.getName(), StockCT.STOCK_TICK);
+			new MessageCategory(StockProducer.class.getName(), MSG_CONTENT_TYPE_STOCK_TICK);
 		
 		producedMessageCategories.add(messageCategory);
 		componentDescriptor.setMsgCategoryProduced(producedMessageCategories);
@@ -197,7 +200,7 @@ public class StockProducer implements DSPComponent{
 		}
 
 		private void pushMeasurements() {
-			StockTickData data = generateStockTickData(StockProducer.this.lastMeasurements);
+			StockTicks data = generateStockTickData(StockProducer.this.lastMeasurements);
 			// TODO: Test Only
 			try {
 				send(data);
@@ -209,9 +212,11 @@ public class StockProducer implements DSPComponent{
 			
 		}
 
-		private StockTickData generateStockTickData(List<StockTick> lastMeasurements) {
-			StockTickData result = new StockTickData();
-			result.setTicks(lastMeasurements);
+		private StockTicks generateStockTickData(List<StockTick> lastMeasurements) {
+			StockTicks result = new StockTicks();
+			for(StockTick tick: lastMeasurements){
+				result.getStockTick().add(tick);
+			}
 			return result;
 		}
 
@@ -222,18 +227,18 @@ public class StockProducer implements DSPComponent{
 			// Google
 			StockTick google = new StockTick();
 //			google.name = "Google";
-			google.setStockSymbol("GOOG");
+			google.setSymbol("GOOG");
 			google.setValue(400 +  100 * random.nextFloat()); 	
 			// Google
 			StockTick ms = new StockTick();
 //			ms.name = "Micrisoft";
-			ms.setStockSymbol("MSFT");
+			ms.setSymbol("MSFT");
 			ms.setValue(25 +  10 * random.nextFloat()); 	
 
 			// Yahoo
 			StockTick y = new StockTick();
 //			y.name = "Yahoo";
-			y.setStockSymbol("YHOO");
+			y.setSymbol("YHOO");
 			y.setValue(10 +  10 * random.nextFloat()); 	
 			
 		    List<StockTick> tickers = new ArrayList<StockTick>();

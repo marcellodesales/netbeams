@@ -74,6 +74,8 @@ public class BootstrapConfigurator {
 		Log.log("BootstrapConfigurator.createMessages(): " + componentType);
 		
 		List<Message> messages = new ArrayList<Message>();
+		
+		/*
 		// Messages are supposed to be local. Create local consumers identifiers
 		ComponentLocator locator = new ComponentLocator(null, NodeAddressHelper.LOCAL_NODEADDRESS);
 		
@@ -97,6 +99,8 @@ public class BootstrapConfigurator {
 				messages.add(message);
 			}		
 		}
+		
+		*/
 		Log.log("BootstrapConfigurator.createMessages(): #" + messages.size());
 		return messages;
 	}

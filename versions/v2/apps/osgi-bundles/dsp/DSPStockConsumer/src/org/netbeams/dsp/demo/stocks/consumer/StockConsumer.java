@@ -1,6 +1,5 @@
 package org.netbeams.dsp.demo.stocks.consumer;
 
-import java.util.UUID;
 
 import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.message.ComponentLocator;
@@ -99,18 +98,20 @@ public class StockConsumer implements DSPComponent{
 			StockTicks stockTicks = null;
 			Object content = message.getBody().getAny();
 			if(Message.isPojo(content)){
-				if(content instanceof StockTicks){
-					stockTicks = (StockTicks)content;
-				}else{
-					Log.log("StockConsumer.processMessage(): Invalid content type " + content.getClass().getName());
-				}
+				Log.log("StockConsumer.processMessage(): Message Received....");
+				
+//				if(content instanceof StockTicks){
+//					stockTicks = (StockTicks)content;
+//				}else{
+//					Log.log("StockConsumer.processMessage(): Invalid content type " + content.getClass().getName());
+//				}
 			}else{
 				// TODO: Unmarshall
 			}
-
-			for(StockTick tick: stockTicks.getStockTick()){
-				Log.log("Symble:" + tick.getSymbol() + "  " + "Value:" + tick.getValue());
-			}
+			
+//			for(StockTick tick: stockTicks.getStockTick()){
+//				Log.log("Symble:" + tick.getSymbol() + "  " + "Value:" + tick.getValue());
+//			}
 		}
 	}
 

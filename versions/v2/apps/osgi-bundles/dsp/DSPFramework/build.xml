@@ -7,8 +7,9 @@
 
 	<target name="dsp-framework.compile">
 		<mkdir dir="${DSP.FRAMEWORK}/classes" />
-		<javac destdir="${DSP.FRAMEWORK}/classes" debug="on" srcdir="${DSP.FRAMEWORK}/src"/>
+		<javac destdir="${DSP.FRAMEWORK}/classes" classpath="${XML.JAXB}/message/dist/message.jar" debug="on" srcdir="${DSP.FRAMEWORK}/src"/>
 	</target>
+	
 	
 	<target name="dsp-framework.jar">
 	

@@ -110,17 +110,23 @@ public class Matcher implements BaseComponent {
 	
 	
 	private boolean isMatchForNode(ComponentIdentifier producer, MatchRule mr) {
+				
 		boolean matchNode = false;
 		boolean matchUUID = false;
 		
 		ComponentLocator producerLocator = producer.getComponentLocator();
 		ComponentLocator criteriaLocator = mr.getTarget().getLocator();
+		
+		Log.log("Matcher.isMatchForNode(): Producer Node=" + producerLocator.getNodeAddress().getValue());
+		Log.log("Matcher.isMatchForNode(): Rule Node=" + criteriaLocator.getNodeAddress().getValue());
+
+		
 		// Is the Criteria for any node?
-		if(NodeAddressHelper.NO_ADDRESS.equals(criteriaLocator.getNodeAddress())){
+		if(NodeAddressHelper.NO_ADDRESS.getValue().equals(criteriaLocator.getNodeAddress().getValue())){
 			matchNode = true;
 		}
 		// Are the nodes equals?
-		else if( producerLocator.getNodeAddress().equals(criteriaLocator.getNodeAddress())){
+		else if( producerLocator.getNodeAddress().getValue().equals(criteriaLocator.getNodeAddress().getValue())){
 			matchNode = true;
 		}
 		// If there is a match for node, check if the UUID matches
@@ -185,8 +191,8 @@ public class Matcher implements BaseComponent {
 			NodeAddress nodeTarget = obtainNodeAddress(eNodeAddressTarget);
 			
 			ComponentLocator locatorTarget = new ComponentLocator();
-			locatorCriteria.setComponentNodeId(null);
-			locatorCriteria.setNodeAddress(nodeTarget);
+			locatorTarget.setComponentNodeId(null);
+			locatorTarget.setNodeAddress(nodeTarget);
 			
 			MatchTarget target = new MatchTarget(eComponentTypeTarget.getTextTrim(), locatorTarget);
 			

@@ -10,7 +10,10 @@
 	<import file="apps/osgi-bundles/dsp/DSPHTTPMouseServer/build.xml"/>
 	<import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml"/>
 	
+	<!--
 	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-data.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-data-persistence.all, dsp-mouse-http-consumer.all, dsp-mouse-producer-jswing.all"/>
+	-->
+	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-consumer.all, dsp-stock-producer.all"/>
 	
 	<target name="setup" depends="init, print-properties">
     	<!-- Setting up runtime directory -->
@@ -19,12 +22,6 @@
     	<mkdir dir="${DSP.RUNTIME}/demos/stocks/" />
     	<echo file="${DSP.RUNTIME}/demos/stocks/config.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <components>
-    <component>
-	   <name>DSPStockData</name>
-	   <bundle>DSPStockData-0.1.jar</bundle>
-	   <priority>20</priority>
-	   <required/>
-	</component>    
 	<component>
 	   <name>DSPStockProducer</name>
 	   <bundle>DSPStockProducer-0.1.jar</bundle>
@@ -37,12 +34,14 @@
        <priority>71</priority>
        <required/>
     </component>
+    <!--
     <component>
        <name>DSPWebDataLogger</name>
        <bundle>DSPWebLogger-0.1.jar</bundle>
        <priority>71</priority>
        <required/>
     </component>
+    -->
 </components>
 ]]></echo>
 	

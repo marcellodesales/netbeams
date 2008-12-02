@@ -1,36 +1,46 @@
 <?xml version="1.0"?>
 <project name="dsp-platform" default="dsp-platform.all">
 	
-	<import file="../../../../init-targets.xml"/>
-		
-	<target name="dsp-platform.all" depends="init, dsp-platform.compile, dsp-platform.jar" />
+<import file="../../../../init-targets.xml"/>
+
+
+<target name="dsp-platform.all" depends="init, dsp-platform.compile, dsp-platform.jar" />
+
+
+<target name="dsp-platform.compile">
+	<echo message="XML.JAXB=${XML.JAXB}/message/dist/message.jar"/>
 	
-	<target name="dsp-platform.compile">
-		<mkdir dir="${DSP.PLATFORM}/classes" />
-		<javac destdir="${DSP.PLATFORM}/classes" debug="on" srcdir="${DSP.PLATFORM}/src">
-	         <classpath refid="project.class.path"/>
-		</javac>
-	</target>
-	
-	<target name="dsp-platform.jar">
-	    
-		<mkdir dir="${DSP.PLATFORM}/classes/libs"/>
-	        <copy todir="${DSP.PLATFORM}/classes/libs">
-	            <fileset dir="${THIRDPARTY}/apache" includes="*.jar"/>
-	            <fileset dir="${THIRDPARTY}/jdom" includes="*.jar"/>
-	            <fileset dir="${THIRDPARTY}/pax" includes="*.jar"/>
-	        </copy>
-	    
-		<jar basedir="${DSP.PLATFORM}/classes"
-			 jarfile="${DSP.RUNTIME}/DSPPlatform-${DSP.VERSION}.jar" 
-			 compress="true"
-			 includes="**/*" 
-			 manifest="${DSP.PLATFORM}/META-INF/MANIFEST.MF"/>
-		
-		<delete dir="${DSP.PLATFORM}/classes/libs" />
-	</target>
-	
-	<target name="dsp-platform.clean">
-		<delete dir="${DSP.PLATFORM}/classes" />
-	</target>
+	<path id="platform.project.classpath">
+		<path refid="project.class.path"/>
+		<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+	</path>
+
+	<mkdir dir="${DSP.PLATFORM}/classes" />
+	<javac destdir="${DSP.PLATFORM}/classes" debug="on" srcdir="${DSP.PLATFORM}/src">
+		<classpath refid="platform.project.classpath"/>
+	</javac>
+</target>
+
+<target name="dsp-platform.jar">
+
+	<mkdir dir="${DSP.PLATFORM}/classes/libs"/>
+	<copy todir="${DSP.PLATFORM}/classes/libs">
+	    <fileset dir="${THIRDPARTY}/apache" includes="*.jar"/>
+	    <fileset dir="${THIRDPARTY}/jdom" includes="*.jar"/>
+	    <fileset dir="${THIRDPARTY}/pax" includes="*.jar"/>
+	</copy>
+
+	<jar basedir="${DSP.PLATFORM}/classes"
+		 jarfile="${DSP.RUNTIME}/DSPPlatform-${DSP.VERSION}.jar" 
+		 compress="true"
+		 includes="**/*" 
+		 manifest="${DSP.PLATFORM}/META-INF/MANIFEST.MF"/>
+
+	<delete dir="${DSP.PLATFORM}/classes/libs" />
+</target>
+
+<target name="dsp-platform.clean">
+	<delete dir="${DSP.PLATFORM}/classes" />
+</target>
+
 </project>

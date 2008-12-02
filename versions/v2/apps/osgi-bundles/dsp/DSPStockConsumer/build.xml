@@ -10,15 +10,29 @@
 	</target>
 	
 	<target name="dsp-stock-consumer.compile" depends="dsp-stock-consumer.init">
+	
+		<path id="stock-consumer.project.classpath">
+			<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+			<pathelement location="${XML.JAXB}/stocktick/dist/stocktick.jar"/>
+			<path refid="project.class.path"/>
+		</path>
+		
 		<mkdir dir="${stock.consumer.base.dir}/classes" />
 		<javac destdir="${stock.consumer.base.dir}/classes" debug="on" srcdir="${stock.consumer.base.dir}/src">
-			<classpath refid="project.class.path"/>
+			<classpath refid="stock-consumer.project.classpath"/>
 		</javac>
 	</target>
 	
 	<target name="dsp-stock-consumer.jar" depends="dsp-stock-consumer.init">
 		<property name="THIS.DEMO" value="demos/stocks" />
 		<mkdir dir="${DSP.RUNTIME}/${THIS.DEMO}" />
+		
+		<mkdir dir="${stock.consumer.base.dir}/classes/libs"/>
+	        <copy todir="${stock.consumer.base.dir}/classes/libs">
+	            <fileset dir="${XML.JAXB}/stocktick/dist" includes="*.jar"/>
+	        </copy>		
+		
+		
 		<jar basedir="${stock.consumer.base.dir}/classes" 
 			 jarfile="${DSP.RUNTIME}/${THIS.DEMO}/DSPStockConsumer-${DSP.VERSION}.jar" 
 			 compress="true" includes="**/*" 

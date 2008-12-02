@@ -5,7 +5,7 @@ public class MessageContent extends AbstractMessageContent {
 
 	// TODO: Find way to turn this into an abstract class
 	public String getContentType(){
-		return "";
+		return getClass().getName();
 	}
 
 }

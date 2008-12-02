@@ -11,7 +11,7 @@ public class NodeAddressHelper {
 
 	public static final NodeAddress NO_ADDRESS = new NodeAddress();
 	static {
-		LOCAL_NODEADDRESS.setValue("no-address");
+		NO_ADDRESS.setValue("no-address");
 	}
 	
 	

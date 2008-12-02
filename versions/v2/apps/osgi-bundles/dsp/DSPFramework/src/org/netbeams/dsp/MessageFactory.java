@@ -1,6 +1,8 @@
 package org.netbeams.dsp;
 
 
+import java.util.UUID;
+
 import org.netbeams.dsp.message.*;
 import org.netbeams.dsp.util.ErrorCode;
 
@@ -34,7 +36,7 @@ public class MessageFactory {
 
 
 	private static Message createMessage(Class<? extends Message> messageType,
-			MessageContent messageContent, ComponentIdentifier componentIdentifier) 
+			MessageContent messageContent, ComponentIdentifier producer) 
 		throws DSPException 
 	{
 		Message message = null;
@@ -42,29 +44,31 @@ public class MessageFactory {
 		if(messageType.equals(ActionMessage.class)){
 			message = new ActionMessage();
 		}else if(messageType.equals(CreateMessage.class)){
-			message = new ActionMessage();
+			message = new CreateMessage();
 		}else if(messageType.equals(DeleteMessage.class)){
-			message = new ActionMessage();
+			message = new DeleteMessage();
 		}else if(messageType.equals(EventMessage.class)){
-			message = new ActionMessage();
+			message = new EventMessage();
 		}else if(messageType.equals(InsertMessage.class)){
-			message = new ActionMessage();
+			message = new InsertMessage();
 		}else if(messageType.equals(QueryMessage.class)){
-			message = new ActionMessage();
+			message = new QueryMessage();
 		}else if(messageType.equals(UpdateMessage.class)){
-			message = new ActionMessage();
+			message = new UpdateMessage();
 		}else if(messageType.equals(MeasureMessage.class)){
-			message = new ActionMessage();
+			message = new MeasureMessage();
 		}else{
 			throw new DSPException(ErrorCode.ERROR_INVALID_MESSAGE, "Invalide Message Type=" + messageType.getName());
 		}
 		
 		// Create Header
 		Header header = new Header();
+		header.setProducer(producer);
 		// Create Body
 		Body body = new Body();
 		body.setAny(messageContent);
 		// Set up Message
+		message.setMessageID(UUID.randomUUID().toString());
 		message.setContentType(messageContent.getContentType());
 		message.setHeader(header);
 		message.setBody(body);

@@ -102,7 +102,18 @@
     <appender-ref ref="console" />
   </root>
 </log4j:configuration>]]></echo>
+		
+		<antcall target="bootstrap-setup-messages" />
 	</target>
+	
+   <target name="bootstrap-setup-messages" depends="init">
+        <echo message="Setting up bootstrap directory" />
+        <delete dir="${DSP.RUNTIME}/bootstrap" />
+        <mkdir dir="${DSP.RUNTIME}/bootstrap" />
+        <copy todir="${DSP.RUNTIME}/bootstrap">
+            <fileset dir="${DSP.HOME}/apps/xml/samples/" includes="*.xml" />
+        </copy>
+    </target>
 	
 	<target name="run" depends="init">
 		<exec executable="java"

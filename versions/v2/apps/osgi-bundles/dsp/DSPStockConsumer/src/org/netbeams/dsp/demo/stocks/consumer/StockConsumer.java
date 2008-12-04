@@ -1,6 +1,13 @@
 package org.netbeams.dsp.demo.stocks.consumer;
 
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.DSPComponent;
@@ -11,6 +18,8 @@ import org.netbeams.dsp.demo.stock.StockTicks;
 import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.util.Log;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 public class StockConsumer implements DSPComponent{
 	
@@ -99,6 +108,7 @@ public class StockConsumer implements DSPComponent{
 			Object content = message.getBody().getAny();
 			if(Message.isPojo(content)){
 				Log.log("StockConsumer.processMessage(): Message Received....");
+				return;
 				
 //				if(content instanceof StockTicks){
 //					stockTicks = (StockTicks)content;
@@ -106,12 +116,21 @@ public class StockConsumer implements DSPComponent{
 //					Log.log("StockConsumer.processMessage(): Invalid content type " + content.getClass().getName());
 //				}
 			}else{
-				// TODO: Unmarshall
+				try{
+					JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.demo.stock",
+							org.netbeams.dsp.demo.stock.ObjectFactory.class.getClassLoader());
+					Unmarshaller unmarshaller = jc.createUnmarshaller();
+					stockTicks = (StockTicks)unmarshaller.unmarshal((Node)content);
+				}catch(JAXBException e){
+					Log.log(e);
+					return;
+				}
+
 			}
 			
-//			for(StockTick tick: stockTicks.getStockTick()){
-//				Log.log("Symble:" + tick.getSymbol() + "  " + "Value:" + tick.getValue());
-//			}
+			for(StockTick tick: stockTicks.getStockTick()){
+				Log.log("Symble:" + tick.getSymbol() + "  " + "Value:" + tick.getValue());
+			}
 		}
 	}
 

@@ -27,7 +27,7 @@ import org.netbeams.dsp.util.Log;
 
 public class ComponentManager implements BaseComponent{
 
-	private static final String TYPE = "org.dsp.platform.componentmanager";
+	private static final String TYPE = ComponentManager.class.getName();
 	
 	private String DSP_HOME;
 

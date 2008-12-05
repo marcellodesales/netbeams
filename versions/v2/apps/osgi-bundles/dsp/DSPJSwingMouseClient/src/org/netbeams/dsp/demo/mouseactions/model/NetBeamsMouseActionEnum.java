@@ -1,4 +1,4 @@
-package org.netbeams.dsp.example.miceaction.model;
+package org.netbeams.dsp.demo.mouseactions.model;
 
 /**
  * Captures the mouse actions on a given environment such as a windows
@@ -36,8 +36,7 @@ public enum NetBeamsMouseActionEnum {
 	 */
 	RELEASED;
 	
-	@Override
-	public String toString() {
+	public String getHumanReadable() {
 		switch (this) {
 			case CLICKED: return "Mouse clicked";
 			case DRAGGED: return "Mouse dragged";

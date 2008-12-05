@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mouseaction="http://dsp.netbeams.org/demo/mouseaction.xsd"
+    xmlns:dspmessage="http://www.netbeams.dsp.org/message.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    targetNamespace="http://dsp.netbeams.org/demo/mouseaction.xsd">
+
+    <xs:import schemaLocation="message-content.xsd" namespace="http://www.netbeams.dsp.org/message.xsd" />
+
+    <xs:simpleType name="point">
+        <xs:restriction base="xs:string" />
+    </xs:simpleType>
+
+    <xs:complexType name="mouseAction">
+        <xs:simpleContent>
+            <xs:extension base="mouseaction:point">
+                <xs:attribute name="x" type="xs:int" />
+                <xs:attribute name="y" type="xs:int" />
+                <xs:attribute name="button" type="xs:string"/>
+                <xs:attribute name="event" type="xs:string" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:element name="mouseActionsContainer">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="dspmessage:AbstractMessageContent">
+                    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                        <xs:element name="mouseAction" type="mouseaction:mouseAction" />
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

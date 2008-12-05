@@ -1,4 +1,4 @@
-package org.netbeams.dsp.example.miceaction.model;
+package org.netbeams.dsp.demo.mouseactions.model;
 
 import java.awt.event.MouseEvent;
 

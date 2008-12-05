@@ -1,4 +1,6 @@
-package org.netbeams.dsp.example.miceaction.model;
+package org.netbeams.dsp.demo.mouseactions.controller;
+
+import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo;
 
 /**
  * This is the netBEAMS mouse listener interface that tracks all the events regarding to the

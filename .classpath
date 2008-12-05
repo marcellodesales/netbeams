@@ -5,14 +5,25 @@
 	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPPlatform/src"/>
 	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPFramework/src"/>
 	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPJSwingMouseClient/src"/>
-	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPStockData/src"/>
 	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPHTTPMouseServer/src"/>
 	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPWebDataLogger/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="versions/v2/thirdparty/apache/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="versions/v2/thirdparty/ops4j/pax-web-service-0.5.1.jar"/>
 	<classpathentry kind="lib" path="versions/v2/thirdparty/knopflerfish/2.1.1/framework.jar"/>
 	<classpathentry kind="lib" path="versions/v2/thirdparty/knopflerfish/2.1.1/http_all-2.1.0.jar"/>
-	<classpathentry kind="lib" path="/netBEAMS2OSGiGeneral/versions/v2/thirdparty/jdom/jdom.jar"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/apache/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/jdom/jdom.jar"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/apache/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/apache/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/jaxb/2.1.9/lib/jaxb-api.jar"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/jaxb/2.1.9/lib/jaxb-impl.jar"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/jaxb/2.1.9/lib/jaxb-xjc.jar"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/jaxb/2.1.9/lib/jsr173_1.0_api.jar"/>
+	<classpathentry kind="lib" path="versions/v2/apps/xml/jaxb/message/dist/message.jar"/>
+	<classpathentry kind="lib" path="versions/v2/apps/xml/jaxb/stocktick/dist/stocktick.jar"/>
+	<classpathentry kind="lib" path="versions/v2/thirdparty/jaxb/2.1.9/lib/jaxb1-impl.jar"/>
+	<classpathentry kind="lib" path="versions/v2/apps/xml/jaxb/mouseactions/dist/mouseactions.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

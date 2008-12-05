@@ -12,6 +12,13 @@
     </target>
     
     <target name="dsp-mouse-producer-jswing.compile" depends="dsp-mouse-producer-jswing.init">
+        
+        <path id="stock-producer.project.classpath">
+            <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+            <pathelement location="${XML.JAXB}/mouseactions/dist/mouseaction.jar"/>
+            <path refid="project.class.path"/>
+        </path>
+            
         <mkdir dir="${THIS.DEMO.BASE.DIR}/classes" />
         <javac destdir="${THIS.DEMO.BASE.DIR}/classes" debug="on" srcdir="${THIS.DEMO.BASE.DIR}/src">
             <classpath refid="project.class.path"/>
@@ -22,6 +29,13 @@
         <mkdir dir="${THIS.DEMO.RUNTIME.DIR}" />
         
         <mkdir dir="${THIS.DEMO.BASE.DIR}/tmp/"/>
+        
+        <mkdir dir="${THIS.DEMO.BASE.DIR}/classes/libs"/>
+        <copy todir="${THIS.DEMO.BASE.DIR}/classes/libs">
+            <fileset dir="${XML.JAXB}/mouseactions/dist" includes="*.jar"/>
+        </copy>
+    
+        
          <copy todir="${THIS.DEMO.BASE.DIR}/tmp/">
              <fileset dir="${THIRDPARTY}/apache/" includes="commons-httpclient-3.1.jar"/>
          	<fileset dir="${THIRDPARTY}/apache/" includes="commons-logging-1.1.1.jar"/>

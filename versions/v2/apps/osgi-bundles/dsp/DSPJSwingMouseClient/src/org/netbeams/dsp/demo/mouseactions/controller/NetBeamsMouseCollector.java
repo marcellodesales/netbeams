@@ -1,7 +1,9 @@
-package org.netbeams.dsp.example.miceaction.model;
+package org.netbeams.dsp.demo.mouseactions.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo;
 
 /**
  * Collects the data to be processed from the mouse events.

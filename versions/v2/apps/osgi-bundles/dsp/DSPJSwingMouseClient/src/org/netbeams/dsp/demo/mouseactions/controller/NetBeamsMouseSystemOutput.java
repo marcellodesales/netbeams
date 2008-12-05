@@ -1,7 +1,6 @@
-package org.netbeams.dsp.example.miceaction.view;
+package org.netbeams.dsp.demo.mouseactions.controller;
 
-import org.netbeams.dsp.example.miceaction.model.NetBeamsMouseInfo;
-import org.netbeams.dsp.example.miceaction.model.NetBeamsMouseListener;
+import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo;
 
 public class NetBeamsMouseSystemOutput implements NetBeamsMouseListener {
 

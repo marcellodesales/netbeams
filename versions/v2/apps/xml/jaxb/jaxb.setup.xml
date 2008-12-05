@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project name="jaxbsetup" default="" basedir=".">
+
+    <property environment="env" />
+
+    <dirname property="this.dir" file="${ant.file.jaxbsetup}" />
+
+    <property name="thirdparty" value="${this.dir}/../../../thirdparty" />
+
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+
+    <condition property="isUnix">
+        <os family="unix" />
+    </condition>
+
+    <path id="jaxb.classpath">
+        <fileset dir="${thirdparty}/jaxb/2.1.9/lib">
+            <include name="**/*.jar" />
+        </fileset>
+        <pathelement location="${this.dir}/message/dist/message.jar" />
+    </path>
+
+    <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+        <classpath>
+            <fileset dir="${thirdparty}/jaxb\2.1.9\lib" includes="*.jar" excludes="ant.jar" />
+        </classpath>
+    </taskdef>
+    
+    <target name="xjc-compile">
+        <delete dir="${java-src}" />
+        <mkdir dir="${java-src}" />
+        <xjc destdir="${java-src}" schema="${basedir}/../../schemas/${schema.name}" package="${message-package}" />
+    </target>
+
+</project>

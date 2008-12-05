@@ -13,15 +13,15 @@
     
     <target name="dsp-mouse-producer-jswing.compile" depends="dsp-mouse-producer-jswing.init">
         
-        <path id="stock-producer.project.classpath">
+        <path id="dsp-mouse-producer.classpath">
             <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
-            <pathelement location="${XML.JAXB}/mouseactions/dist/mouseaction.jar"/>
+            <pathelement location="${XML.JAXB}/mouseactions/dist/mouseactions.jar"/>
             <path refid="project.class.path"/>
         </path>
             
         <mkdir dir="${THIS.DEMO.BASE.DIR}/classes" />
         <javac destdir="${THIS.DEMO.BASE.DIR}/classes" debug="on" srcdir="${THIS.DEMO.BASE.DIR}/src">
-            <classpath refid="project.class.path"/>
+            <classpath refid="dsp-mouse-producer.classpath"/>
         </javac>
     </target>
     

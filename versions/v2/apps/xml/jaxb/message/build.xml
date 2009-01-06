@@ -68,9 +68,4 @@
 	     basedir="${basedir}/classes"/>	
 </target>
 
-<target name="dist" depends="create-jar">
-	<copy file="${basedir}/dist/stocktick.jar" todir="${basedir}/../message/lib"/>
-</target>
-
-
 </project>

@@ -1,6 +1,7 @@
 package org.netbeams.dsp;
 
 
+import java.util.List;
 import java.util.UUID;
 
 import org.netbeams.dsp.message.*;
@@ -42,21 +43,21 @@ public class MessageFactory {
 		Message message = null;
 		
 		if(messageType.equals(ActionMessage.class)){
-			message = new ActionMessage();
+			message = new ObjectFactory().createActionMessage();
 		}else if(messageType.equals(CreateMessage.class)){
-			message = new CreateMessage();
+			message = new ObjectFactory().createCreateMessage();
 		}else if(messageType.equals(DeleteMessage.class)){
-			message = new DeleteMessage();
+			message = new ObjectFactory().createDeleteMessage();
 		}else if(messageType.equals(EventMessage.class)){
-			message = new EventMessage();
+			message = new ObjectFactory().createEventMessage();
 		}else if(messageType.equals(InsertMessage.class)){
-			message = new InsertMessage();
+			message = new ObjectFactory().createInsertMessage();
 		}else if(messageType.equals(QueryMessage.class)){
-			message = new QueryMessage();
+			message = new ObjectFactory().createQueryMessage();
 		}else if(messageType.equals(UpdateMessage.class)){
-			message = new UpdateMessage();
+			message = new ObjectFactory().createUpdateMessage();
 		}else if(messageType.equals(MeasureMessage.class)){
-			message = new MeasureMessage();
+			message = new ObjectFactory().createMeasureMessage();
 		}else{
 			throw new DSPException(ErrorCode.ERROR_INVALID_MESSAGE, "Invalide Message Type=" + messageType.getName());
 		}
@@ -74,5 +75,15 @@ public class MessageFactory {
 		message.setBody(body);
 		
 		return message;
+	}
+	
+	/**
+	 * @param messages
+	 * @return a new instance of Messages Container to be sent by the broker.
+	 */
+	public static MessagesContainer createMessagesContainer(List<Message> messages) {
+		MessagesContainer container = new ObjectFactory().createMessagesContainer();
+		container.getMessage().addAll(messages);
+		return container;
 	}
 }

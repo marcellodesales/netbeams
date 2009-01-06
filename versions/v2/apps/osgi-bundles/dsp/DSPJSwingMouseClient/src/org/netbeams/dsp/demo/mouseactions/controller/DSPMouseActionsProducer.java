@@ -11,6 +11,8 @@ import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.MessageFactory;
+import org.netbeams.dsp.demo.mouseactions.ButtonName;
+import org.netbeams.dsp.demo.mouseactions.EventName;
 import org.netbeams.dsp.demo.mouseactions.MouseAction;
 import org.netbeams.dsp.demo.mouseactions.MouseActionsContainer;
 import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo;
@@ -20,18 +22,26 @@ import org.netbeams.dsp.util.Log;
 
 public class DSPMouseActionsProducer implements NetBeamsMouseListener {
 
-    public static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-
-    private List<NetBeamsMouseInfo> localMemory;
-
-    private static DSPContext bc;
-    private static BaseComponent baseComponent;
-
     /**
-     * Creates a new Mouse Actions client that is responsible for sending the information to the DSP 
-     * component.
-     * @param dspBc
-     * @param component
+     * Executor responsible for the execution of the thread with a fixed delay to send the values. 
+     */
+    public static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    /**
+     * The local memory defines the measuraments from the mouse actions. 
+     */
+    private List<NetBeamsMouseInfo> localMemory;
+    /**
+     * The DSPContext defines the external context
+     */
+    private static DSPContext bc;
+    /**
+     * The base component is responsible for this producer.
+     */
+    private static BaseComponent baseComponent;
+    /**
+     * Creates a new Mouse Actions client that is responsible for sending the information to the DSP component.
+     * @param dspBc is the DSPContext implementation initialized by the OSGi framework.
+     * @param component is the DSP base component responsible for this producer.
      */
     public DSPMouseActionsProducer(DSPContext dspBc, BaseComponent component) {
         this.localMemory = new LinkedList<NetBeamsMouseInfo>();
@@ -46,7 +56,6 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
             this.localMemory.add(netBeamsMouseInfo);
         }
     }
-
     /**
      * The DSPMouseWorker implements a pattern of a given worker thread that is used at different types by
      * the Executor. 
@@ -54,6 +63,9 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
      */
     private class DspMouseWorker extends Thread {
 
+        /**
+         * The mouse actions is the list of all observations (measuraments). 
+         */
         private List<NetBeamsMouseInfo> mouseActions;
 
         public DspMouseWorker(List<NetBeamsMouseInfo> mouseActions) {
@@ -61,7 +73,6 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
             this.setDaemon(true);
         }
         
-
         /**
          * The DSP interface where the message is sent through the Broker. 
          * @param data is the payload for the DSP component. It contains the given MouseActionsContainer with
@@ -71,7 +82,6 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
         private void send(MouseActionsContainer data) throws DSPException {
             // Create the message
             Message message = MessageFactory.newMessage(MeasureMessage.class, data, baseComponent);
-            // TODO: Test only
             Log.log("MouseAction.prepareDSPData()");
 
             if (data == null) {
@@ -101,8 +111,8 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
             MouseActionsContainer actionsContainer = new MouseActionsContainer();
             for (NetBeamsMouseInfo mouseInfoCollected : this.mouseActions) {
                 MouseAction mc = new MouseAction();
-                mc.setButton(mouseInfoCollected.getMouseButton().toString());
-                mc.setEvent(mouseInfoCollected.getMouseAction().toString());
+                mc.setButton(ButtonName.fromValue(mouseInfoCollected.getMouseButton().toString()));
+                mc.setEvent(EventName.fromValue(mouseInfoCollected.getMouseAction().toString()));
                 mc.setX((int) mouseInfoCollected.getPointClicked().getX());
                 mc.setY((int) mouseInfoCollected.getPointClicked().getY());
 

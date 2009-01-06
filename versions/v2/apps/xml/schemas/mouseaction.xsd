@@ -8,14 +8,34 @@
     <xs:simpleType name="point">
         <xs:restriction base="xs:string" />
     </xs:simpleType>
-
+    
+ 	<xs:simpleType name="buttonName">
+ 		<xs:restriction base="xs:string">
+ 			<xs:enumeration value="RIGHT"/>
+ 			<xs:enumeration value="LEFT"/>
+ 			<xs:enumeration value="CENTER"/>
+ 			<xs:enumeration value="NONE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="eventName">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CLICKED"/>
+			<xs:enumeration value="RELEASED"/>
+			<xs:enumeration value="DRAGGED"/>
+			<xs:enumeration value="ENTERED"/>			
+			<xs:enumeration value="EXITED"/>
+			<xs:enumeration value="MOVED"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
     <xs:complexType name="mouseAction">
         <xs:simpleContent>
             <xs:extension base="mouseaction:point">
                 <xs:attribute name="x" type="xs:int" />
                 <xs:attribute name="y" type="xs:int" />
-                <xs:attribute name="button" type="xs:string"/>
-                <xs:attribute name="event" type="xs:string" />
+                <xs:attribute name="button" type="mouseaction:buttonName"/>
+                <xs:attribute name="event" type="mouseaction:eventName" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

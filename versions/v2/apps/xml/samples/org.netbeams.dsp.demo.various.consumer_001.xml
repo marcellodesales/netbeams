@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dsp:MessagesContainer xmlns:dsp="http://www.netbeams.dsp.org/message.xsd" 
+						xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+						xsi:schemaLocation="http://www.netbeams.dsp.org/message.xsd">
+						
+	<dsp:MeasureMessage messageID="1" ContentType="org.netbeams.dsp.demo.stock.StockTicks">
+		<Header>
+			<CreationTime>1</CreationTime>
+			<CorrelationID/>
+			<Producer>
+				<ComponentType>org.netbeams.dsp.platform.management.component.ComponentManager</ComponentType>
+				<ComponentLocator>
+					<ComponentNodeId>1</ComponentNodeId>
+					<NodeAddress>LOCAL</NodeAddress>
+				</ComponentLocator>
+			</Producer>
+			<Consumer>
+				<ComponentType>org.netbeams.dsp.demo.stocks.consumer</ComponentType>
+				<ComponentLocator>
+					<NodeAddress>LOCAL</NodeAddress>
+				</ComponentLocator>
+			</Consumer>
+		</Header>
+		<Body>
+			<stk:StockTicks xmlns:stk="http://www.netbeams.dsp.org/stocktick.xsd">
+				<StockTick>
+					<Symbol>GOOG</Symbol>
+					<Name>Google</Name>
+					<Value>35.0</Value>
+				</StockTick>
+			</stk:StockTicks>
+		</Body>
+	</dsp:MeasureMessage>
+		
+	<dsp:MeasureMessage messageID="2" ContentType="org.netbeams.dsp.demo.mouseactions.MouseActions">
+	    <Header>
+	        <CreationTime>1</CreationTime>
+	        <CorrelationID />
+	        <Producer>
+	            <ComponentType>org.netbeams.dsp.platform.management.component.ComponentManager</ComponentType>
+	            <ComponentLocator>
+	                <ComponentNodeId>1</ComponentNodeId>
+	                <NodeAddress>LOCAL</NodeAddress>
+	            </ComponentLocator>
+	        </Producer>
+	        <Consumer>
+	            <ComponentType>org.netbeams.dsp.demo.mouseactions.consumer</ComponentType>
+	            <ComponentLocator>
+	                <NodeAddress>LOCAL</NodeAddress>
+	            </ComponentLocator>
+	        </Consumer>
+	    </Header>
+	    <Body>
+	        <mouseaction:mouseActionsContainer xmlns:mouseaction="http://dsp.netbeams.org/demo/mouseaction.xsd">
+	            <mouseAction type="ENTERED" button="NONE"  x="280" y="118"/>
+	            <mouseAction type="CLICKED" button="RIGHT" x="281" y="118"/>
+	            <mouseAction type="CLICKED" button="LEFT" x="284" y="101"/>
+	            <mouseAction type="DRAGGED" button="LEFT" x="284" y="100"/>
+	            <mouseAction type="DRAGGED" button="LEFT" x="287" y="95"/>
+	            <mouseAction type="DRAGGED" button="LEFT" x="289" y="91"/>
+	            <mouseAction type="DRAGGED" button="LEFT" x="297" y="87"/>
+	            <mouseAction type="RELEASED" button="RIGHT" x="304" y="79"/>
+	            <mouseAction type="MOVED" button="NONE" x="305" y="80"/>
+	            <mouseAction type="EXITED" button="NONE" x="306" y="80"/>
+	        </mouseaction:mouseActionsContainer>
+	    </Body>
+	</dsp:MeasureMessage>
+	
+</dsp:MessagesContainer>

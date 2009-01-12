@@ -30,12 +30,11 @@ public class Activator implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
-		log.debug("start(");
+		log.info("start() invoked.");
 		
-		Log.log("Platform.Activator.start()");
-
 		DSP_HOME = obtainHomePath();
-		Log.log("Platform.Activator: DSP_HOME = " + DSP_HOME);
+		
+		log.info("DSP_HOME = " + DSP_HOME);
 		
 		this.bundleContext = bundleContext;
 		
@@ -48,27 +47,27 @@ public class Activator implements BundleActivator {
 		platform.getComponentManager().setDeploymentController(dspBundleController);
 		platform.start();
 		
-
+		log.info("start() completed.");
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		log.info("stop() invoked.");
+		
 		platform.stop();
 		//TODO: Fix
 //		if(platformConfiguration.getProperty("platform.bundle.uninstallOnStop", "false").equals("true")){
 //			dspBundleController.uninstallPlatformBundles();
 //		}
 		dspBundleController.uninstallBundles();
+		log.info("stop() completed.");
 	}
-
-		
+	
 	private String obtainHomePath(){
 		// For now, get it from environment variables
 		return System.getenv("DSP_HOME");
 
 	}
-	
-
 }

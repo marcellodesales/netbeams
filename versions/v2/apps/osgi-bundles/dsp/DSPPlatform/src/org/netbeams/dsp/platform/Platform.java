@@ -10,8 +10,7 @@ package org.netbeams.dsp.platform;
  *
  **/
 
-import java.util.UUID;
-
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
@@ -21,11 +20,12 @@ import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.platform.broker.MessageBroker;
 import org.netbeams.dsp.platform.management.component.ComponentManager;
 import org.netbeams.dsp.platform.matcher.Matcher;
-import org.netbeams.dsp.util.Log;
 import org.osgi.framework.BundleContext;
 
 
 public class Platform implements DSPContextFactory{
+	
+	private static final Logger log = Logger.getLogger(Platform.class);
 	
 	public static final String COMPONENT_TYPE = "org.dsp.platform";
 
@@ -52,7 +52,7 @@ public class Platform implements DSPContextFactory{
 	 * Invoked by the Running Environment before any other method.
 	 */
 	public void init(){
-		Log.log("Platform.init()");
+		log.info("init()");
 		
 		try {
 			createMatcher();
@@ -72,6 +72,8 @@ public class Platform implements DSPContextFactory{
 		}
 		
 		platformDSPAccess = new PlatformDSPAccess();
+		
+		log.info("init() completed");
 	}
 	
 	/**
@@ -81,14 +83,18 @@ public class Platform implements DSPContextFactory{
 	 * @throws PlatformException
 	 */
 	void start() throws DSPException, PlatformException {
+		log.info("start()");
 		startPlatform();
+		log.info("start() completed");
 	}
 	
 	/**
 	 * Invoked by the Running Environment.
 	 */
 	void stop()	{
+		log.info("stop()");
 		stopPlatform();
+		log.info("stop() completed.");
 	}
 	
 
@@ -142,8 +148,7 @@ public class Platform implements DSPContextFactory{
 		try {
 			componentManager.stop();
 		} catch (PlatformException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error stopping Component Manager", e);
 		}		
 	}
 

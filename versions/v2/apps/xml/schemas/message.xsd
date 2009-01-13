@@ -16,7 +16,7 @@
 		<xs:attribute name="messageID"/>
 		<xs:attribute name="ContentType"/>
 	</xs:complexType>
-	
+<!--	
 	<xs:simpleType name="ContentType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="MEASURE"/>
@@ -29,7 +29,7 @@
 			<xs:enumeration value="EVENT"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
+-->
 	<xs:complexType name="Header">
 		<xs:sequence>
 			<xs:element name="CreationTime" type="xs:long"/>
@@ -73,74 +73,72 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:element name="MeasureMessage">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AbstractMessage"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="MeasureMessage" />
+	<xs:complexType name="MeasureMessage">
+		<xs:complexContent>
+			<xs:extension base="AbstractMessage"/>
+		</xs:complexContent>
+	</xs:complexType>
 	
-	<xs:element name="ActionMessage">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AbstractMessage"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="ActionMessage" />
+	<xs:complexType name="ActionMessage">
+		<xs:complexContent>
+			<xs:extension base="AbstractMessage"/>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<xs:element name="CreateMessage">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AbstractMessage"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="CreateMessage" />
+	<xs:complexType name="CreateMessage">
+		<xs:complexContent>
+			<xs:extension base="AbstractMessage"/>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<xs:element name="InsertMessage">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AbstractMessage"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="InsertMessage" />
+	<xs:complexType name="InsertMessage">
+		<xs:complexContent>
+			<xs:extension base="AbstractMessage"/>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<xs:element name="QueryMessage">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AbstractMessage"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="QueryMessage" /> 
+	<xs:complexType name="QueryMessage">
+		<xs:complexContent>
+			<xs:extension base="AbstractMessage"/>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<xs:element name="UpdateMessage">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AbstractMessage"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="DeleteMessage">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AbstractMessage"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="EventMessage">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AbstractMessage"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:complexType name="MessagesContainer">
-		<xs:sequence>
-			<xs:element name="message" type="AbstractMessage" minOccurs="1" maxOccurs="unbounded" />
-		</xs:sequence>
-	</xs:complexType>	
+	<xs:element name="UpdateMessage" />
+	<xs:complexType name="UpdateMessage">
+		<xs:complexContent>
+			<xs:extension base="AbstractMessage"/>
+		</xs:complexContent>
+	</xs:complexType>
 	
+	<xs:element name="DeleteMessage" />
+	<xs:complexType name="DeleteMessage">
+		<xs:complexContent>
+			<xs:extension base="AbstractMessage"/>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="EventMessage"/>
+    <xs:complexType name="EventMessage">
+	   <xs:complexContent>
+			<xs:extension base="AbstractMessage"/>
+		</xs:complexContent>
+	</xs:complexType>
+
+    <xs:element name="MessagesContainer">
+	    <xs:annotation>
+	        <xs:documentation>More details at http://code.google.com/p/netbeams/issues/detail?id=23</xs:documentation>
+	    </xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="message" type="AbstractMessage" minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="uudi" type="xs:string" use="required" />
+			<xs:attribute name="time" type="xs:string" use="required" />
+		</xs:complexType>	
+	</xs:element>
 </xs:schema>

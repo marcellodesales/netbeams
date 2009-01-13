@@ -1,71 +1,65 @@
 <?xml version="1.0"?>
-<project name="message" default="xjc-compile" basedir=".">
+<project name="message" default="create-jar" basedir=".">
 
-<property file="build.properities"/>
+	<property file="build.properities" />
 
-<property name="thirdparty" value="${basedir}/../../../../thirdparty"/>
+	<property name="thirdparty" value="${basedir}/../../../../thirdparty" />
 
-<property name="java-src-dir" value="${basedir}/java-src"/>
-<property name="generated-src-dir" value="${basedir}/generated-src"/>
+	<property name="java-src-dir" value="${basedir}/java-src" />
+	<property name="generated-src-dir" value="${basedir}/generated-src" />
 
-<property name="message-package" value="org.netbeams.dsp.message"/>
+	<property name="message-package" value="org.netbeams.dsp.message" />
 
-<condition property="isWindows">
-    <os family="windows"/>
-</condition>
+	<condition property="isWindows">
+		<os family="windows" />
+	</condition>
 
-<condition property="isUnix">
-    <os family="unix"/>
-</condition>
+	<condition property="isUnix">
+		<os family="unix" />
+	</condition>
 
-<path id="jaxb.classpath">
-    <fileset dir="${thirdparty}/jaxb/2.1.9/lib">
-    	<include name="**/*.jar"/>
-    </fileset>
-</path>
-
-
-<path id="all.classpath">
-	<path refid="jaxb.classpath"/>
-	<pathelement location="lib/stocktick.jar"/>
-</path>
+	<path id="jaxb.classpath">
+		<fileset dir="${thirdparty}/jaxb/2.1.9/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
 
 
-<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-  	<classpath>
-    		<fileset dir="${thirdparty}/jaxb\2.1.9\lib" includes="*.jar" excludes="ant.jar"/>
-  	</classpath>
-</taskdef>
+	<path id="all.classpath">
+		<path refid="jaxb.classpath" />
+		<pathelement location="lib/stocktick.jar" />
+	</path>
 
 
-<target name="init"/>
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		<classpath>
+			<fileset dir="${thirdparty}/jaxb\2.1.9\lib" includes="*.jar" excludes="ant.jar" />
+		</classpath>
+	</taskdef>
 
 
-<target name="xjc-compile">
-	<mkdir dir="${generated-src-dir}"/>
-	<xjc destdir="${generated-src-dir}" 
-	     schema="${basedir}/../../schemas/message.xsd"
-	     package="${message-package}"/>
-</target>
+	<target name="init" />
 
 
-<target name="java-compile" depends="xjc-compile">
-	<mkdir dir="${basedir}/classes"/>
-	<javac  destdir="${basedir}/classes"
-		classpathref="all.classpath"
-		source="1.6">
-	         
-	  	<src path="${generated-src-dir}"/>
-		<src path="${java-src-dir}"/>
-	</javac>
-	
+	<target name="xjc-compile">
+		<mkdir dir="${generated-src-dir}" />
+		<xjc destdir="${generated-src-dir}" schema="${basedir}/../../schemas/message.xsd" package="${message-package}" />
+	</target>
 
-</target>
 
-<target name="create-jar" depends="java-compile">
-	<mkdir dir="${basedir}/dist"/>
-	<jar destfile="${basedir}/dist/message.jar"
-	     basedir="${basedir}/classes"/>	
-</target>
+	<target name="java-compile" depends="xjc-compile">
+		<mkdir dir="${basedir}/classes" />
+		<javac destdir="${basedir}/classes" classpathref="all.classpath" source="1.6">
+			<src path="${generated-src-dir}" />
+			<src path="${java-src-dir}" />
+		</javac>
+
+
+	</target>
+
+	<target name="create-jar" depends="java-compile">
+		<mkdir dir="${basedir}/dist" />
+		<jar destfile="${basedir}/dist/message.jar" basedir="${basedir}/classes" />
+	</target>
 
 </project>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project name="dsp-data-persistence" default="dsp-messages-dir.all">
+	
+	<import file="../../../../init-targets.xml"/>
+	
+	<target name="dsp-messages-dir.all" depends="init,dsp-messages-dir.compile,dsp-messages-dir.jar" />
+	
+    <target name="dsp-messages-dir.compile">
+
+    	<path id="dsp-messages-dir.classpath">
+             <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+             <path refid="project.class.path"/>
+         </path>
+
+    	<mkdir dir="${DSP.MESSAGES.DIR}/classes" />
+        <javac destdir="${DSP.MESSAGES.DIR}/classes" debug="on" srcdir="${DSP.MESSAGES.DIR}/src">
+        	<classpath refid="dsp-messages-dir.classpath"/>
+        </javac>
+    </target>
+	
+    <target name="dsp-messages-dir.jar">
+        <jar basedir="${DSP.MESSAGES.DIR}/classes" 
+             jarfile="${DSP.RUNTIME}/DSPMessagesDirectory-${DSP.VERSION}.jar" 
+             compress="true" 
+        	 includes="**/*" 
+             manifest="${DSP.MESSAGES.DIR}/META-INF/MANIFEST.MF"/>
+    </target>
+    
+    <target name="dsp-data-persistence.clean">
+        <delete dir="${DSP.MESSAGES.DIR}/classes" />
+        <delete dir="${DSP.MESSAGES.DIR}/build" />
+    </target>
+</project>

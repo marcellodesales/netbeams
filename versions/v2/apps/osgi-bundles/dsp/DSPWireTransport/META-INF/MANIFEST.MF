@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.wiretransport.osgi.WireTransportActivator
+Bundle-Category: DSP
+Bundle-Description: The DSP Wire Transport service 
+Bundle-ManifestVersion: 2
+Bundle-Name: DSP Wire Transport
+Bundle-SymbolicName: DSPWireTransport
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.netbeams.dsp, 
+  org.netbeams.dsp.message, 
+  org.netbeams.dsp.util, 
+  org.netbeams.dsp.platform.osgi, 
+  org.osgi.framework, 
+  org.apache.log4j

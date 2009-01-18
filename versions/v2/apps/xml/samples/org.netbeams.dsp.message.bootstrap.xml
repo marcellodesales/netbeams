@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:MessagesContainer time="1232250420007"
+	uudi="78141119-7b72-4a2b-8f77-9253752b71b1" xmlns:ns2="http://www.netbeams.dsp.org/message.xsd">
+	<message xsi:type="ns2:MeasureMessage" ContentType="org.netbeams.dsp.demo.stock"
+		messageID="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<Header>
+			<CreationTime>1232250419593</CreationTime>
+			<Producer>
+				<ComponentType>org.netbeams.dsp.platform.management.component.ComponentManager</ComponentType>
+				<ComponentLocator>
+					<ComponentNodeId>1</ComponentNodeId>
+					<NodeAddress>LOCAL</NodeAddress>
+				</ComponentLocator>
+			</Producer>
+			<Consumer>
+				<ComponentType>org.netbeams.dsp.demo.stocks.consumer</ComponentType>
+				<ComponentLocator>
+					<NodeAddress>LOCAL</NodeAddress>
+				</ComponentLocator>
+			</Consumer>
+		</Header>
+		<Body>
+			<ns2:StockTicks xmlns:ns2="http://www.netbeams.dsp.org/stocktick.xsd">
+				<StockTick>
+					<Symbol>GOOG</Symbol>
+					<Name>Google, Inc.</Name>
+					<Value>23.4</Value>
+				</StockTick>
+			</ns2:StockTicks>
+		</Body>
+	</message>
+	<message xsi:type="ns2:MeasureMessage" ContentType="org.netbeams.dsp.demo.mouseactions"
+		messageID="2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<Header>
+			<CreationTime>1232250419951</CreationTime>
+			<Producer>
+				<ComponentType>org.netbeams.dsp.platform.management.component.ComponentManager</ComponentType>
+				<ComponentLocator>
+					<ComponentNodeId>1</ComponentNodeId>
+					<NodeAddress>LOCAL</NodeAddress>
+				</ComponentLocator>
+			</Producer>
+			<Consumer>
+				<ComponentType>org.netbeams.dsp.mouseactions</ComponentType>
+				<ComponentLocator>
+					<NodeAddress>192.168.0.101</NodeAddress>
+				</ComponentLocator>
+			</Consumer>
+		</Header>
+		<Body>
+			<ns2:mouseActionsContainer
+				xmlns:ns2="http://dsp.netbeams.org/demo/mouseaction.xsd">
+				<mouseAction button="CENTER" event="CLICKED" x="3" y="5">Button
+					clicked at (3.5)</mouseAction>
+				<mouseAction button="NONE" event="MOVED" x="4" y="7">Button
+					moved at (4.7)</mouseAction>
+			</ns2:mouseActionsContainer>
+		</Body>
+	</message>
+</ns2:MessagesContainer>

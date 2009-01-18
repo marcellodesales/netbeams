@@ -138,7 +138,8 @@
 				<xs:element name="message" type="AbstractMessage" minOccurs="1" maxOccurs="unbounded" />
 			</xs:sequence>
 			<xs:attribute name="uudi" type="xs:string" use="required" />
-			<xs:attribute name="time" type="xs:long" use="required" />
+			<xs:attribute name="creationTime" type="xs:string" use="required" />
+			<xs:attribute name="host" type="xs:string" use="optional" />
 		</xs:complexType>	
 	</xs:element>
 </xs:schema>

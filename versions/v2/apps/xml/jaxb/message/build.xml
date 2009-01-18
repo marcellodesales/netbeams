@@ -24,7 +24,6 @@
 		</fileset>
 	</path>
 
-
 	<path id="all.classpath">
 		<path refid="jaxb.classpath" />
 		<pathelement location="lib/stocktick.jar" />
@@ -37,15 +36,12 @@
 		</classpath>
 	</taskdef>
 
-
 	<target name="init" />
-
 
 	<target name="xjc-compile">
 		<mkdir dir="${generated-src-dir}" />
 		<xjc destdir="${generated-src-dir}" schema="${basedir}/../../schemas/message.xsd" package="${message-package}" />
 	</target>
-
 
 	<target name="java-compile" depends="xjc-compile">
 		<mkdir dir="${basedir}/classes" />
@@ -53,8 +49,6 @@
 			<src path="${generated-src-dir}" />
 			<src path="${java-src-dir}" />
 		</javac>
-
-
 	</target>
 
 	<target name="create-jar" depends="java-compile">

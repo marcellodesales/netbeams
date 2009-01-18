@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-Name: simplebundle
+Bundle-SymbolicName: simplebundle
+Bundle-Version: 1.0.0
+Bundle-Description: Demo Bundle
+Bundle-Vendor: Vodafone Pilotentwicklung GmbH
+Bundle-Activator: org.netbeams.test.simplebundle.Activator
+Bundle-Category: example
+Import-Package: org.osgi.framework

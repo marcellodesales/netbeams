@@ -49,11 +49,9 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
         try {
             stocks = this.fac.makeDSPMessage("1", "org.netbeams.dsp.demo.stock", header, ticks);
         } catch (JAXBException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            fail(e1.getMessage());
         } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            fail(e.getMessage());
         }
 
         // ------------------ Creation of the Mouse Actions
@@ -80,11 +78,9 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
         try {
             mouseActions = this.fac.makeDSPMessage("2", "org.netbeams.dsp.demo.mouseactions", header2, macontainer);
         } catch (JAXBException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            fail(e1.getMessage());
         } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            fail(e.getMessage());
         }
 
         MessagesContainer messages = this.fac.makeDSPMessagesContainer();
@@ -95,11 +91,12 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
 
             JAXBContext context = JAXBContext.newInstance("org.netbeams.dsp.message");
             Marshaller m = context.createMarshaller();
-            FileWriter fileWriter = new FileWriter(new File("/tmp/messagesExample.xml"));
+            String messagesExampleFilePath = "/tmp/messagesExample.xml";
+            FileWriter fileWriter = new FileWriter(new File(messagesExampleFilePath));
+            assertTrue("The marshalled should exist at " + messagesExampleFilePath, new File(messagesExampleFilePath).exists());
             m.marshal(messages, fileWriter);
 
         } catch (Exception e) {
-            e.printStackTrace();
             fail(e.getMessage());
         }
 

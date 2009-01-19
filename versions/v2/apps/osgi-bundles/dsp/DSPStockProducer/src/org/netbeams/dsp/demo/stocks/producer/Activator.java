@@ -1,13 +1,15 @@
 package org.netbeams.dsp.demo.stocks.producer;
 
 
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
-import org.netbeams.dsp.util.Log;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 public class Activator implements BundleActivator {
+	
+	private static final Logger log = Logger.getLogger(Activator.class);
 	
 	private BundleContext bundleContext;
 	private ServiceRegistration serviceRegistration;
@@ -18,7 +20,7 @@ public class Activator implements BundleActivator {
    * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
    */
   public void start(BundleContext bundleContext) throws Exception {
-	  Log.log("StockProducer.Activate.start()");
+	  log.info("Starting...");
 	  
 	  this.bundleContext = bundleContext;
 	  producer = new StockProducer();
@@ -29,7 +31,7 @@ public class Activator implements BundleActivator {
    * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
    */
   public void stop(BundleContext context) throws Exception {
-	  Log.log("StockProducer.Activator.stop()");
+	  log.info("stopping...");
 	  ActivatorHelper.unregisterOSGIService(bundleContext, serviceRegistration);
 	  producer.stopComponent();
   }

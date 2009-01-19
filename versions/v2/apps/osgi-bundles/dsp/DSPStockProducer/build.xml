@@ -19,7 +19,8 @@
 	
 	
 		<mkdir dir="${stock.producer.base.dir}/classes" />
-		<javac destdir="${stock.producer.base.dir}/classes" debug="on" srcdir="${stock.producer.base.dir}/src">
+		<javac destdir="${stock.producer.base.dir}/classes" debug="on" srcdir="${stock.producer.base.dir}/src"
+			source="1.5" target="1.5">
 			<classpath refid="stock-producer.project.classpath"/>
 		</javac>
 	</target>

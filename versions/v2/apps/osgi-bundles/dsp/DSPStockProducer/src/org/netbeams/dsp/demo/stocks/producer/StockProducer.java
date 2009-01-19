@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
@@ -19,12 +19,11 @@ import org.netbeams.dsp.demo.stock.StockTick;
 import org.netbeams.dsp.demo.stock.StockTicks;
 import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.Message;
-import org.netbeams.dsp.message.MessageContent;
-import org.netbeams.dsp.util.Log;
-
 
 
 public class StockProducer implements DSPComponent{
+	
+	private static final Logger log = Logger.getLogger(StockProducer.class);
 	
 	private static final ComponentDescriptor componentDescriptor;
 	
@@ -49,61 +48,77 @@ public class StockProducer implements DSPComponent{
 	////////// DSP Component Interface //////////
 	/////////////////////////////////////////////
 	
-	@Override
+	/**
+	 * @Override
+	 */
 	public String getComponentType() {
 		return COMPONENT_TYPE;
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public ComponentDescriptor getComponentDescriptor() {
 		return componentDescriptor;
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
-		Log.log("StockProducer.initComponent()");
+		log.info("Initializing component: " + componentNodeId);
 		
 		this.context = context;
 		this.componentNodeId = componentNodeId;
 	}
 
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public String getComponentNodeId() {
 		return componentNodeId;
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public void deliver(Message request) throws DSPException {
-		// TODO How we should handle an invokation to this method when the component is not a consumer?
+		log.debug("Delivering message.");
 	}
 
-	@Override
-	public Message deliverWithReply(Message message)
-			throws DSPException {
-		// TODO How we should handle an invokation to this method when the component is not a consumer?
+	/**
+	 * @Override
+	 */
+	public Message deliverWithReply(Message message) throws DSPException {
+		log.debug("Delivering message with reply.");
 		return null;
 	}
 	
-	@Override
-	public Message deliverWithReply(Message message, long waitTime)
-			throws DSPException {
-		// TODO Auto-generated method stub
+	/**
+	 * @Override
+	 */
+	public Message deliverWithReply(Message message, long waitTime) throws DSPException {
+		log.debug("Delivering message with reply w/wait.");
 		return null;
 	}
 
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public void startComponent() {
-		Log.log("StockProducer.startComponent()");
-		engine = new Engine("[" + componentNodeId + "] " + COMPONENT_TYPE);
-		engine.start();
+		log.info("Starting component");
+//		engine = new Engine("[" + componentNodeId + "] " + COMPONENT_TYPE);
+//		engine.start();
 		
 	}
 	
-	@Override
+	/**
+	 * @Override
+	 */
 	public void stopComponent() {
-		Log.log("StockProducer.stopComponent()");
+		log.info("Stopping component");
 		
 		if(engine != null){
 			engine.stopEngine();
@@ -115,25 +130,23 @@ public class StockProducer implements DSPComponent{
 	private void send(StockTicks data) throws DSPException{
 		//Create the message
 		Message message = MessageFactory.newMessage(MeasureMessage.class, data, this);
-		// TODO: Test only
-		Log.log("StockProducer.send()");
+		log.debug("Send stock ticks");
 				
 		if(data == null){
-			Log.log("StockTicks is null");
+			log.debug("No stock ticks generated");
 		}else{
 			if(data.getStockTick() == null){
-				Log.log("Tick Collection is null");
+				log.debug("No stock ticks generated");
 			}else{
-				Log.log("Tick Collection size is " + data.getStockTick().size());
+				log.debug("Tick Collection size is " + data.getStockTick().size());
 			}
 		}
-		
 		// Always check if there is a broker available
 		MessageBrokerAccessor messageBroker = context.getDataBroker();
 		if(messageBroker != null){
 			messageBroker.send(message);
 		}else{
-			Log.log("StockProducer.push: Message Broker not available");
+			log.debug("Message broker not available");
 		}
 	}
 	
@@ -191,7 +204,7 @@ public class StockProducer implements DSPComponent{
 					break;
 				}
 			}	
-			Log.log("Stock Producer is stopping...");
+			log.debug("Producer is stopping...");
 		}
 		
 		private void stopEngine(){
@@ -222,7 +235,7 @@ public class StockProducer implements DSPComponent{
 
 		private void gatherStockTickers() {
 			
-			Log.log("StockProducer.gatherStockTickers()");
+			log.debug("Gathering stock ticks...");
 			
 			// Google
 			StockTick google = new StockTick();

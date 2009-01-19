@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.platform.management.component.osgi.DSPBundleController;
-import org.netbeams.dsp.util.Log;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -25,7 +24,6 @@ public class Activator implements BundleActivator {
 	private String DSP_HOME;
 	
 
-	
 	/* (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */

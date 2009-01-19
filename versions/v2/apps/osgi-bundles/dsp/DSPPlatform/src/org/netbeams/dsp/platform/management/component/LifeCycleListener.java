@@ -8,7 +8,5 @@ public class LifeCycleListener {
 	public LifeCycleListener(String dspHome){
 		DSP_HOME = dspHome;
 	}
-	
-	
 
 }

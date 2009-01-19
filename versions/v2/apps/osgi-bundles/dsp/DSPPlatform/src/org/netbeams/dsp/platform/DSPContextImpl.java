@@ -11,9 +11,11 @@ class DSPContextImpl implements DSPContext {
 	
 	private MessageBrokerAccessor _msgBrokerAccessor;
 	private BundleContext _bundleContext;
+	private String _homePlatformDirectoryPath;
 	
-	public DSPContextImpl(BundleContext bundleContext) {
+	public DSPContextImpl(BundleContext bundleContext, String homePlatformDirectoryPath) {
 	    _bundleContext = bundleContext;
+	    _homePlatformDirectoryPath = homePlatformDirectoryPath;
 		_msgBrokerAccessor = null;
 	}
 	
@@ -21,12 +23,16 @@ class DSPContextImpl implements DSPContext {
 		_msgBrokerAccessor = msgBrokerAccessor;
 	}
 	
-	@Override
+	/**
+	 * @Override
+	 */
 	public synchronized MessageBrokerAccessor getDataBroker() throws DSPException {
 		return _msgBrokerAccessor;
 	}
 
-    @Override
+	/**
+	 * @Override
+	 */
     public Object getResource(String resource)
     {
         if (resource.equals("osgi:HttpService")) {
@@ -35,5 +41,12 @@ class DSPContextImpl implements DSPContext {
         }
         return null;
     }
+
+	/**
+	 * @Override
+	 */
+	public String getHomePlatformDirectoryPath() {
+		return _homePlatformDirectoryPath;
+	}
 
 }

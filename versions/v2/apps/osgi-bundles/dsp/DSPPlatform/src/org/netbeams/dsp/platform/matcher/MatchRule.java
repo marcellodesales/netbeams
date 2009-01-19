@@ -5,16 +5,23 @@ public class MatchRule implements Comparable<MatchRule>{
 	
 	private int priority;
 
+	private String ruleID;
 	private MatchCriteria criteria;
 	private MatchTarget target;
 	
-	public MatchRule(MatchCriteria criteria, MatchTarget target) {
+	public MatchRule(String ruleID, MatchCriteria criteria, MatchTarget target) {
 		super();
 		resetPriority();
+		this.ruleID = ruleID;
 		this.criteria = criteria;
 		this.target = target;
 	}	
 	
+
+	public String getRuleID() {
+		return ruleID;
+	}
+
 	public MatchCriteria getCriteria() {
 		return criteria;
 	}
@@ -31,7 +38,9 @@ public class MatchRule implements Comparable<MatchRule>{
 		this.target = target;
 	}	
 	
-	@Override
+	/**
+	 * @Override
+	 */
 	public int compareTo(MatchRule o) {
 		return priority - o.priority;
 	}	
@@ -53,6 +62,5 @@ public class MatchRule implements Comparable<MatchRule>{
 			priority = 10;
 		}		
 	}
-
-
+	
 }

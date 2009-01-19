@@ -28,6 +28,8 @@ public class Platform implements DSPContextFactory{
 	private static final Logger log = Logger.getLogger(Platform.class);
 	
 	public static final String COMPONENT_TYPE = "org.dsp.platform";
+	
+	public static final String MATCHER_NODE_ID = "Marcher";
 
 	private String DSP_HOME;
 	
@@ -45,7 +47,7 @@ public class Platform implements DSPContextFactory{
 	public Platform(String home, BundleContext bundleContext){
 		DSP_HOME = home;
 		shutdownLock = new Object();
-		context = new DSPContextImpl(bundleContext);
+		context = new DSPContextImpl(bundleContext, home);
 	}
 		
 	/**
@@ -97,8 +99,9 @@ public class Platform implements DSPContextFactory{
 		log.info("stop() completed.");
 	}
 	
-
-	@Override
+	/**
+	 * @Override
+	 */
 	public DSPContext createContext() {
 		return context;
 	}
@@ -154,8 +157,8 @@ public class Platform implements DSPContextFactory{
 
 	
 	private void createMatcher() throws DSPException {
-		matcher = new Matcher(DSP_HOME);
-		matcher.initComponent(null, context);
+		matcher = new Matcher();
+		matcher.initComponent(MATCHER_NODE_ID, context);
 	}
 	
 
@@ -180,54 +183,71 @@ public class Platform implements DSPContextFactory{
 		
 		/**
 		 * Messages sent to the Platform.
+		 * 
+		 * @Override
 		 */
-		@Override
 		public void deliver(Message message) throws DSPException {
 			// TODO Auto-generated method stub
 			
 		}
 
-		@Override
+		/**
+		 * @Override
+		 */
 		public Message deliverWithReply(Message message) throws DSPException {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
-		@Override
+		/**
+		 * @Override
+		 */
 		public Message deliverWithReply(Message message, long waitTime)
 				throws DSPException {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
-		@Override
+		/**
+		 * @Override
+		 */
 		public ComponentDescriptor getComponentDescriptor() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
-		@Override
+		/**
+		 * @Override
+		 */
 		public void startComponent() throws DSPException {
 			// So far, nothing to do...
 			
 		}
 
-		@Override
+		/**
+		 * @Override
+		 */
 		public void stopComponent() throws DSPException {
 			// So far, nothing to do...
 		}
 
-		@Override
+		/**
+		 * @Override
+		 */
 		public String getComponentType() {
 			return COMPONENT_TYPE;
 		}
 
-		@Override
+		/**
+		 * @Override
+		 */
 		public String getComponentNodeId() {
 			return componentNodeId;
 		}
 
-		@Override
+		/**
+		 * @Override
+		 */
 		public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
 			this.componentNodeId = componentNodeId;
 			this.context = context;

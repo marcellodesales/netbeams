@@ -9,7 +9,6 @@ package org.netbeams.dsp.platform.broker;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,9 +21,8 @@ import org.netbeams.dsp.GlobalComponentTypeName;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.platform.matcher.Matcher;
+import org.netbeams.dsp.util.DSPUtils;
 import org.netbeams.dsp.util.ErrorCode;
-import org.netbeams.dsp.util.Log;
-
 
 public class MessageBroker implements MessageBrokerAccessor {
 	
@@ -54,27 +52,29 @@ public class MessageBroker implements MessageBrokerAccessor {
 	}
 
 	/**
-	 * Inform the Broker a new DSP component is available. T
+	 * Inform the Broker a new DSP component is available.
 	 */
 	public void attach(DSPComponent component) throws DSPException {
+		log.info("attach dsp component " + component.getComponentNodeId());
+		
 		// Save reference
 		components.put(component.getComponentNodeId(), component);
 		String type = component.getComponentType();
 		componentsByType.put(type, component);
 	}
 
-	public void deattach(UUID uuid) throws DSPException {
-
+	public void deattach(String componentID) throws DSPException {
+		log.info("deattach dsp component " + componentID);
 	}
 
 
 	public void start() throws DSPException{
-
+		log.info("start()");
 	}
 
 
 	public void stop() throws DSPException{
-
+		log.info("stop()");
 	}
 
 
@@ -90,11 +90,14 @@ public class MessageBroker implements MessageBrokerAccessor {
 	 *
 	 * @param consumers Targets for this message
 	 * @throws DSPException If the message already has consumers.
+	 * @Override
 	 */
-	@Override
 	public void send(Message message) throws DSPException {
 		
-		Log.log("Broker.send(): " + messageSummary(message));
+		log.info("send() message id : " + message.getMessageID());
+		if(log.isDebugEnabled()){
+			log.debug("message summary: " + messageSummary(message));
+		}
 		
 		Collection<ComponentIdentifier> consumers = obtainConsumers(message);
 
@@ -108,15 +111,25 @@ public class MessageBroker implements MessageBrokerAccessor {
 				DSPComponent component = obtainDSPComponent(consumer);
 				if(component != null){
 					component.deliver(message);
+				}else{
+					log.warn("No attached dsp component " + DSPUtils.toString(consumer));
 				}
 			}
 		}else{
-			Log.log("No consumer foung for message: " + message.getMessageID());
+			log.warn("No consumers found for message");
 		}
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public Message sendWaitForReply(Message request) throws DSPException {
+		
+		log.info("sendWaitForReply() message id : " + request.getMessageID());
+		if(log.isDebugEnabled()){
+			log.debug("message summary: " + messageSummary(request));
+		}
+			
 		ComponentIdentifier consumer = request.getHeader().getConsumer();
 		// The MUST be exactly one consumer
 		if(consumer == null){
@@ -132,8 +145,16 @@ public class MessageBroker implements MessageBrokerAccessor {
 					"No DSPComponent found");
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public Message sendWaitForReply(Message request, long waitTime) throws DSPException {
+		
+		log.info("sendWaitForReply(req,time) message id : " + request.getMessageID());
+		if(log.isDebugEnabled()){
+			log.debug("message summary: " + messageSummary(request));
+		}
+
 		ComponentIdentifier consumer = request.getHeader().getConsumer();
 		// The MUST be exactly one consumer
 		if(consumer == null){
@@ -159,11 +180,12 @@ public class MessageBroker implements MessageBrokerAccessor {
 		
 		ComponentIdentifier consumer  = message.getHeader().getConsumer(); // Optional
 		// If there are not target consumers, then try to find a match
-		if(consumer == null){
-			result = match(message);
-		}else{
-			result.add(consumer);
+		if(consumer != null){
+			log.debug("Message has pre-defined consumer");
+			result.add(consumer);			
 		}
+		// Try to find more matches
+		result.addAll(match(message));
 		
 		return result;
 	}

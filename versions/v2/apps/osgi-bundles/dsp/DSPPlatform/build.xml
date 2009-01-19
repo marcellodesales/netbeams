@@ -16,7 +16,7 @@
 	</path>
 
 	<mkdir dir="${DSP.PLATFORM}/classes" />
-	<javac destdir="${DSP.PLATFORM}/classes" debug="on" srcdir="${DSP.PLATFORM}/src">
+	<javac destdir="${DSP.PLATFORM}/classes" debug="on" srcdir="${DSP.PLATFORM}/src" source="1.5" target="1.5">
 		<classpath refid="platform.project.classpath"/>
 	</javac>
 </target>

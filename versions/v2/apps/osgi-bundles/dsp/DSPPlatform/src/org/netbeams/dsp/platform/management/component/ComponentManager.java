@@ -7,8 +7,8 @@ package org.netbeams.dsp.platform.management.component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.BaseComponent;
 import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.message.ComponentIdentifier;
@@ -18,14 +18,14 @@ import org.netbeams.dsp.DSPContextFactory;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.DSPPlatformComponent;
 import org.netbeams.dsp.NodeAddressHelper;
-import org.netbeams.dsp.message.NodeAddress;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.platform.PlatformException;
 import org.netbeams.dsp.platform.broker.MessageBroker;
 import org.netbeams.dsp.util.DSPUtils;
-import org.netbeams.dsp.util.Log;
 
 public class ComponentManager implements BaseComponent{
+	
+	private static final Logger log = Logger.getLogger(ComponentManager.class);
 
 	private static final String TYPE = ComponentManager.class.getName();
 	
@@ -34,7 +34,7 @@ public class ComponentManager implements BaseComponent{
 	private String componentNodeId;
 	
 	private DSPContextFactory contextFactory;
-	private Map<String, String> binds; // <?, Component Node ID>
+//	private Map<String, String> binds; // <?, Component Node ID>
 	private Map<String, ComponentEntry> entries; // <Component Node ID, ComponentEntry>
 	
 	private DSPPlatformComponent directoryService;
@@ -48,25 +48,29 @@ public class ComponentManager implements BaseComponent{
 	
 	public ComponentManager(){
 		lock = new Object();
-		binds = new HashMap<String,String>();	
 		entries = new HashMap<String, ComponentEntry>();	
 		directoryService = null; // The code might not have a Directory Service
 	}
 	
-	@Override
+	/**
+	 * @Override
+	 */
 	public String getComponentType() {
-		// TODO Auto-generated method stub
 		return TYPE;
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public String getComponentNodeId() {
 		return componentNodeId;
 	}
 
-	@Override
-	public void initComponent(String componentNodeId, DSPContext context)
-			throws DSPException {
+	/**
+	 * @Override
+	 */
+	public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
+		log.info("initComponent()");
 	}
 
 	public void init(DSPContextFactory contextFactory, String dspHome) throws PlatformException {
@@ -91,24 +95,25 @@ public class ComponentManager implements BaseComponent{
 	}
 	
 	public void start() throws PlatformException{
+		log.info("start()");
 		startDSPBundleController();
 		obtainDirectoryService();
 	}
 				
 	public void stop() throws PlatformException{
-		// TODO: Clean up code...
+		log.info("stop()");
 	}
 
 
-	public void attach(String externalId, DSPComponent component) throws DSPException{
-		String componentNodeId = UUID.randomUUID().toString();
-		ComponentEntry entry = new ComponentEntry(componentNodeId, ComponentState.ACTIVE, component);
-		binds.put(externalId, componentNodeId);
-		entries.put(componentNodeId, entry);
+	public void attach(String componentName, DSPComponent component) throws DSPException{
+		log.info("attach component name  " +  componentName);
+				
+		ComponentEntry entry = new ComponentEntry(componentName, ComponentState.ACTIVE, component);
+		entries.put(componentName, entry);
 		
-		component.initComponent(componentNodeId, contextFactory.createContext());
+		component.initComponent(componentName, contextFactory.createContext());
 		ComponentIdentifier indentifier = 
-			DSPUtils.obtainIdentifier(component.getComponentType(), componentNodeId, NodeAddressHelper.LOCAL_NODEADDRESS);
+			DSPUtils.obtainIdentifier(component.getComponentType(), componentName, NodeAddressHelper.LOCAL_NODEADDRESS);
 		
 		notifyDirectoryService(indentifier, component.getComponentDescriptor());		
 		notifyMessageBroker(component);	
@@ -118,8 +123,8 @@ public class ComponentManager implements BaseComponent{
 	}
 	
 
-	public void dettach(String externalId) throws DSPException{
-		// TODO: Implement
+	public void dettach(String componentName) throws DSPException{
+		log.info("dettaching " + componentName);		
 	}
 
 	/////////////////////////////////////
@@ -127,11 +132,13 @@ public class ComponentManager implements BaseComponent{
 	/////////////////////////////////////
 	
 	private void startDSPBundleController() throws PlatformException {
+		log.info("startDSPBundleController()");
 		deploymentController.start();
 	}
 
 
 	private void notifyDirectoryService(ComponentIdentifier indentifier, ComponentDescriptor descriptor) {
+		log.debug("notifyDirectoryService()");
 		// Notify the DirectotyService
 		createNotificationService();
 		
@@ -151,9 +158,9 @@ public class ComponentManager implements BaseComponent{
 	}
 	
 	private void sendBootstrapMessages(DSPComponent component) throws DSPException {
-		Log.log("sendBootstrapMessages to " + component.getComponentType());
+		log.info("Send bootstrap messages to " + component.getComponentNodeId());
 		
-		List<Message> messages = boostrapConfigurator.createMessages(this, component.getComponentType());
+		List<Message> messages = boostrapConfigurator.createMessages(this, component.getComponentNodeId());
 		for(Message message: messages){
 			broker.getMessageBrokerAccessor().send(message);
 		}		

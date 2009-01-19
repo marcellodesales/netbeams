@@ -19,9 +19,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -36,39 +36,44 @@ import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.NodeAddressHelper;
 import org.netbeams.dsp.message.NodeAddress;
 import org.netbeams.dsp.message.Message;
-import org.netbeams.dsp.util.Log;
 
 public class Matcher implements BaseComponent {
+	
+	private static final Logger log = Logger.getLogger(Matcher.class);
 	
 	private static final String CONFIG_FILE_NAME = "matcher_config.xml";
 
 	private String componentNodeId;
 	private DSPContext context;
 	private MessageBrokerAccessor brokerAccessor;
-	
-	private String HOME_PATH;
-	
+		
 	private Object lock;
 	
 	List<MatchRule> rules;
 	
-	public Matcher(String homePath){
-		HOME_PATH = homePath;
+	public Matcher(){
 		lock = new Object();
 		rules = new ArrayList<MatchRule>();
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public String getComponentType() {
 		return GlobalComponentTypeName.MATCHER;
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public String getComponentNodeId() {
 		return componentNodeId;
 	}
 	
 	public void initComponent(String componentNodeId, DSPContext context) throws DSPException{
+		
+		log.info("initComponent() invoked. Component node id: " + componentNodeId );
+		
 		this.componentNodeId = componentNodeId;
 		this.context = context;
 		
@@ -86,20 +91,30 @@ public class Matcher implements BaseComponent {
 	
 	public Collection<ComponentIdentifier> match(Message message){
 		
+		log.debug("match() invoked for message" + message.getMessageID());
+		
 		Collection<ComponentIdentifier> consumers = new ArrayList<ComponentIdentifier>();
 		
 		ComponentIdentifier producer = message.getHeader().getProducer();
 		
 		for(MatchRule mr: rules){
+			
+			log.debug("try match for rule" + mr.getRuleID());
 			if(isMatchForNode(producer, mr)){
 				if(isMatchForComponentType(producer, mr)){
+					log.debug("**MATCH**");
+					
 					MatchTarget matchtTarget = mr.getTarget();
 					ComponentIdentifier target = new ComponentIdentifier();
 					target.setComponentType(matchtTarget.getComponentType());
 					target.setComponentLocator(matchtTarget.getLocator());
 					consumers.add(target);
+				}else{
+					log.debug("no match for type");
 				}
-			}			
+			}else{
+				log.debug("no match for node.");
+			}
 		}
 		return consumers;
 	}
@@ -117,12 +132,9 @@ public class Matcher implements BaseComponent {
 		ComponentLocator producerLocator = producer.getComponentLocator();
 		ComponentLocator criteriaLocator = mr.getTarget().getLocator();
 		
-		Log.log("Matcher.isMatchForNode(): Producer Node=" + producerLocator.getNodeAddress().getValue());
-		Log.log("Matcher.isMatchForNode(): Rule Node=" + criteriaLocator.getNodeAddress().getValue());
-
-		
 		// Is the Criteria for any node?
 		if(NodeAddressHelper.NO_ADDRESS.getValue().equals(criteriaLocator.getNodeAddress().getValue())){
+			log.debug("isMatchForNode(): no node address match");
 			matchNode = true;
 		}
 		// Are the nodes equals?
@@ -152,10 +164,7 @@ public class Matcher implements BaseComponent {
 		}
 		// replace . by \\.
 		criteriaType = criteriaType.replace(".", "\\.");
-		
-		Log.log("criteriaType=" + criteriaType);
-		Log.log("component type=" + producer.getComponentType());
-		
+				
 		Pattern pattern = Pattern.compile(criteriaType);
 		java.util.regex.Matcher m = pattern.matcher(producer.getComponentType());
 		return m.matches();
@@ -163,6 +172,9 @@ public class Matcher implements BaseComponent {
 
 
 	private void readConfiguration() throws JDOMException, IOException {
+		
+		log.debug("readConfiguration() invoked.");
+		
 		Document doc = readConfigurationFile();
 		Element eConfig = doc.getRootElement();
 		// matchRule
@@ -171,6 +183,9 @@ public class Matcher implements BaseComponent {
 			Element eMatchRule = (Element) o;
 			Element eMatchCriteria = eMatchRule.getChild("matchCriteria");
 			Element eMatchTarget = eMatchRule.getChild("matchTarget");
+			
+			// Rule ID
+			String ruleID = eMatchRule.getChildTextTrim("ruleid");
 			
 			// matchCriteria
 			Element eNodeAddressCriteria = eMatchCriteria.getChild("nodeAddress");
@@ -197,7 +212,7 @@ public class Matcher implements BaseComponent {
 			MatchTarget target = new MatchTarget(eComponentTypeTarget.getTextTrim(), locatorTarget);
 			
 			// Create Rule
-			MatchRule rule = new MatchRule(criteria, target);
+			MatchRule rule = new MatchRule(ruleID, criteria, target);
 			rules.add(rule);			
 		}		
 	}
@@ -216,13 +231,16 @@ public class Matcher implements BaseComponent {
 	}
 
 	private Document readConfigurationFile() throws JDOMException, IOException{
-		String configFilePath = HOME_PATH + File.separator + CONFIG_FILE_NAME;
+		String configFilePath = context.getHomePlatformDirectoryPath() + File.separator + CONFIG_FILE_NAME;
+		
+		log.info("Reading configuration file: " + configFilePath);
+		
 		File configFile = new File(configFilePath);
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(configFile);
 		} catch (FileNotFoundException e) {
-			Log.log(e);
+			log.error("Could not read configuration file", e);
 			throw e;
 		}
 		SAXBuilder parser = new SAXBuilder();
@@ -230,10 +248,10 @@ public class Matcher implements BaseComponent {
 		try {
 			config = parser.build(fis);
 		} catch (JDOMException e) {
-			Log.log(e);
+			log.error("Could not parse configuration file", e);
 			throw e;
 		} catch (IOException e) {
-			Log.log(e);
+			log.error("Could not parse configuration file", e);
 			throw e;
 		}finally{
 			if(fis != null){

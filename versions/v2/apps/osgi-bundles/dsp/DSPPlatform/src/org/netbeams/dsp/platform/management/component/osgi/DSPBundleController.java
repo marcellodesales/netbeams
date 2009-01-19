@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -22,7 +23,6 @@ import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.platform.PlatformException;
 import org.netbeams.dsp.platform.management.component.ComponentManager;
 import org.netbeams.dsp.platform.management.component.DeploymentController;
-import org.netbeams.dsp.util.Log;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -34,7 +34,10 @@ import org.osgi.framework.ServiceReference;
 
 public class DSPBundleController implements DeploymentController, BundleListener, ServiceListener{
 	
+	private static final Logger log = Logger.getLogger(DSPBundleController.class);
+	
 	private static final String DSP_DEPLOYMENT_DIRECTORY = "deployment";
+	private static final String CONFIG_FILE = "config.xml";
 
 	private String HOME_PATH;
 	
@@ -44,46 +47,50 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	
 	// Information about OSGi bundle containing DSPComponents
 	// <bundle name> ==> <bundle_config>
-	private Map<String, BundleConfig> bundleConfigs;
-	private Map<String, Bundle> bundles;
+	private Map<String, BundleConfig> nameTobundleConfigsMap; 
+	private Map<String, Bundle> nameToBundleMap;  
+	private Map<String, List<DSPComponent>> nameToComponentMap;
+	private Map<Long, String> bundleIdToNameMap;
 	
-	private Map<Long, List<DSPComponent>> bundleComponentMap;
 	private Map<ServiceReference, Long> seviceReferences;
 		
-	private SortedSet<BundleConfig> configs;
-	
+	private SortedSet<BundleConfig> sortedByPriorityConfigs;
 	
 	Object lock;
 
 	public DSPBundleController(String homePath, BundleContext bundleContext){
+		nameTobundleConfigsMap = new HashMap<String, BundleConfig>();
+		nameToBundleMap = new HashMap<String, Bundle>();
+		
+		nameToComponentMap = new HashMap<String, List<DSPComponent>>();
+		bundleIdToNameMap = new HashMap<Long, String>();
+		seviceReferences = new HashMap<ServiceReference, Long>();
+		
+		sortedByPriorityConfigs = new TreeSet<BundleConfig>(new BundleConfigPriorityComparator());
+		
 		lock = new Object();
 		HOME_PATH = homePath;
 		this.bundleContext = bundleContext;
-		bundleConfigs = new HashMap<String, BundleConfig>();
-		bundles = new HashMap<String, Bundle>();
-		
-		bundleComponentMap = new HashMap<Long, List<DSPComponent>>();
-		seviceReferences = new HashMap<ServiceReference, Long>();
-		
-		configs = new TreeSet<BundleConfig>(new BundleConfigPriorityComparator());
 	}
 	
-	@Override
+	/**
+	 * @Override
+	 */
 	public void setComponentManager(ComponentManager componentManager) {
 		this.componentManager = componentManager;
 	}
-
 	
 	/**
+	 * Init component.
 	 * 
 	 * @throws PlatformException
 	 */
 	public void init() throws PlatformException{
+		log.info("init()");
 	}
 	
-
-	
 	public void start()throws PlatformException{
+		log.info("start()");
 		registerServiceListner();
 		findPreregisteredDSPServices();
 		// The OSGi specification states the bundle installation procedures should not re-install the 
@@ -94,32 +101,32 @@ public class DSPBundleController implements DeploymentController, BundleListener
 			installDSPComponents();
 		} catch (Exception e) {
 			// TODO: Improve this code
-			e.printStackTrace();
-			throw new PlatformException("Cannot install components", e);
+			log.error("Problems installing dsp components.", e);
+			throw new PlatformException("CProblems installing dsp components.", e);
 		}
 		
 		try {
 			startDSPBundles();
 		} catch (BundleException e) {
 			// TODO: Improve this code
-			e.printStackTrace();
-			throw new PlatformException("Cannot start components", e);
+			log.error("Cannot start components.", e);
+			throw new PlatformException("Cannot start components.", e);
 		}		
 	}
 	public void stop() throws PlatformException{
-		// TODO: Implement it
+		log.info("stop()");
 	}
 	
 	public Collection<Bundle> getBundles(){
-		return bundles.values();
+		return nameToBundleMap.values();
 	}
 	
 	/**
 	 * Invoked by OSGi Event framework when the bundle status is modified.
 	 * 
 	 * @param event
+	 * @Override
 	 */
-	@Override
 	public void bundleChanged(BundleEvent event) {
 		// TODO: Implement
 	}
@@ -128,8 +135,8 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	 * Invoked by OSGi Event framework when the bundle status is modified.
 	 * 
 	 * @param event
+	 * @Override
 	 */
-	@Override
 	public void serviceChanged(ServiceEvent event) {
 		if(event.getType() == ServiceEvent.REGISTERED){
 			try {
@@ -146,16 +153,15 @@ public class DSPBundleController implements DeploymentController, BundleListener
 				e.printStackTrace();
 			}
 		}
-		
 	}
 
-	public Bundle obtainDSPBundle(String bundleFileName){
-		return bundles.get(bundleFileName);
-	}
+//	public Bundle obtainDSPBundle(String bundleFileName){
+//		return nameToBundleMap.get(bundleFileName);
+//	}
 	
 	
 	public List<BundleConfig> sortedBundleByPriority() {
-		Collection<BundleConfig> coll = bundleConfigs.values();
+		Collection<BundleConfig> coll = nameTobundleConfigsMap.values();
 		List<BundleConfig> list = new ArrayList<BundleConfig>();
 		list.addAll(coll);
 		Collections.sort(list, new BundleConfigPriorityComparator());
@@ -175,7 +181,7 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	 * Start Level Service
 	 */
 	private void findPreregisteredDSPServices() {
-		
+		log.info("findPreregisteredDSPServices()");
 	}
 	
 	/**
@@ -186,18 +192,19 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	 * @throws JDOMException
 	 * @throws IOException
 	 */
-	private void installDSPComponents() throws JDOMException, IOException {
-
-		Log.log("DSPBundleController.installDSPComponents()");
-	
+	private void installDSPComponents() throws JDOMException, IOException {	
 		String configFilePath = HOME_PATH + File.separator + DSP_DEPLOYMENT_DIRECTORY;
+		
+		log.info("Install dsp components. Deployment directory: " + configFilePath);
+
 		Document config = readConfiguration(configFilePath);
 		installBundles(config);
 	}
 
 	private void installBundles(Document document) throws JDOMException, IOException {
-		Element eComponents = document.getRootElement();
-				
+		log.info("Install bundles.");
+		
+		Element eComponents = document.getRootElement();				
 		// Get all components
 		List components = eComponents.getChildren("component");
 		for (Object o : components) {
@@ -210,19 +217,21 @@ public class DSPBundleController implements DeploymentController, BundleListener
 			Element ePriority = eComponent.getChild("priority");
 			String pritority = ePriority.getTextTrim();	
 			
-			Log.log("DSPBundleController: bundle file name[ " + fileName + " ] priority[ " + pritority + " ]");
+			log.info("Read config for bundle name:" + name);
 			
 			// Keep information about the bundle.
 			BundleConfig bundleConfig = new BundleConfig();
 			bundleConfig.setName(name);
 			bundleConfig.setFileName(fileName);
 			bundleConfig.setPriority(Integer.parseInt(pritority));
-			bundleConfigs.put(name, bundleConfig);
+			nameTobundleConfigsMap.put(name, bundleConfig);
 			
 			Bundle bundle = installBundle(bundleContext, fileName);
-			bundles.put(name, bundle);
-			
-			configs.add(bundleConfig);
+			if(bundle != null){
+				nameToBundleMap.put(name, bundle);
+				bundleIdToNameMap.put(bundle.getBundleId(), name);
+				sortedByPriorityConfigs.add(bundleConfig);
+			}
 		}
 	}
 
@@ -233,27 +242,25 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	 */
 	public void startDSPBundles() throws BundleException{
 		
-		Log.log("DSPBundleController.startDSPBundles()");
+		log.info("start bundles");
 				
-		for(BundleConfig bc: configs){		
+		for(BundleConfig bc: sortedByPriorityConfigs){		
 			try {
-				Log.log("DSPBundleController: starting " + bc.getName());
+				log.info("Starting " + bc.getName());
 		
-				Bundle b = bundles.get(bc.getName());
-				// TODO: Handle the blundle state properly
+				Bundle b = nameToBundleMap.get(bc.getName());
 				b.start();
 			} catch (BundleException e) {
-				Log.log(e);
-				throw e;
+				log.warn("Could not start bundle.", e);
 			}
 		}
 	}
 	
-	
 	public void uninstallBundles() throws BundleException{
-		for(Map.Entry<String,Bundle> entry: bundles.entrySet()){
-			Log.log("Uninstalling: " + entry.getKey());
-			entry.getValue().uninstall();
+		log.info("Uninstalling bundles...");
+		for(Map.Entry<String,Bundle> entry: nameToBundleMap.entrySet()){
+			log.info("Uninstalling: " + entry.getKey());		
+		    entry.getValue().uninstall();
 		}
 	}
 	
@@ -261,6 +268,7 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	 * TODO: Add filter
 	 */
 	private void registerServiceListner() {
+		log.info("Registering OSGi service listner()");
 		bundleContext.addServiceListener(this);
 	}
 
@@ -276,15 +284,23 @@ public class DSPBundleController implements DeploymentController, BundleListener
 		Object service = bundleContext.getService(sr);
 		
 		if(service instanceof DSPComponent){
-			Log.log("DSPBundleController.handleRegistered: " + service.getClass());
-			Long bundleID = sr.getBundle().getBundleId();
+			log.info("Registering dsp component: " + service.getClass());
 			DSPComponent component = (DSPComponent)service;
+
+			Long bundleId = sr.getBundle().getBundleId();
+			String componentName = bundleIdToNameMap.get(bundleId);
+			if(componentName != null){
+				log.info("Bundle mapped to component name " + componentName);
+			}else{
+				log.warn("Bundle could not be mapped to any component name. It will not be registered.");
+				return;
+			}
 			
-			addComponent(bundleID, component);
-			seviceReferences.put(sr, bundleID);
+			addComponent(componentName, component);
+			seviceReferences.put(sr, bundleId);
 			
 			try {
-				componentManager.attach(bundleID.toString(), component);
+				componentManager.attach(componentName, component);
 			} catch (DSPException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -307,18 +323,30 @@ public class DSPBundleController implements DeploymentController, BundleListener
 		Object service = bundleContext.getService(sr);
 		
 		if(service instanceof DSPComponent)	{	
-			Log.log("DSPBundleController.handleUnegistering: " + service.getClass());
 			Long bundleID = sr.getBundle().getBundleId();
+			
+			log.info("Unregistering component " + bundleIdToNameMap.get(bundleID) + 
+					" class " + service.getClass());
+
 			DSPComponent component = (DSPComponent)service;
 			
-			removeComponent(bundleID, component);
+			Long bundleId = sr.getBundle().getBundleId();
+			String componentName = bundleIdToNameMap.get(bundleId);
+			if(componentName != null){
+				log.info("Bundle mapped to component name " + componentName);
+			}else{
+				log.warn("Bundle could not be mapped to any component name. It will not be unregistered.");
+				return;
+			}
+			
+			
+			removeComponent(componentName, component);
 			seviceReferences.remove(sr);
 			
 			try {
-				componentManager.dettach(bundleID.toString());
+				componentManager.dettach(componentName);
 			} catch (DSPException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn("Could not dettach ");
 			}
 		}
 		
@@ -331,11 +359,11 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	 * @param bundleID
 	 * @param component
 	 */
-	public void addComponent(long bundleID, DSPComponent component){
-		List<DSPComponent> componentsInBundle = bundleComponentMap.get(bundleID);
+	public void addComponent(String name, DSPComponent component){
+		List<DSPComponent> componentsInBundle = nameToComponentMap.get(name);
 		if(componentsInBundle == null){
 			componentsInBundle = new ArrayList<DSPComponent>();
-			bundleComponentMap.put(bundleID, componentsInBundle);
+			nameToComponentMap.put(name, componentsInBundle);
 		}
 		componentsInBundle.add(component);		
 	}
@@ -345,8 +373,10 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	 * @param bundleID
 	 * @param component
 	 */
-	public void removeComponent(long bundleID, DSPComponent component){
-		List<DSPComponent> componentsInBundle = bundleComponentMap.get(bundleID);
+	public void removeComponent(String name, DSPComponent component){
+		log.info("Remove component " + name);
+		
+		List<DSPComponent> componentsInBundle = nameToComponentMap.get(name);
 		if(componentsInBundle != null){
 			for( int x = 0; x < componentsInBundle.size(); ++x){
 				if(component == componentsInBundle.get(x)){
@@ -357,6 +387,8 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	}
 
 	private Bundle installBundle(BundleContext bundleContext, String bundleFileName) {
+		log.info("Installing bundle file name " + bundleFileName);
+		
 		String bundlePath = HOME_PATH + File.separator + DSP_DEPLOYMENT_DIRECTORY + File.separator + bundleFileName;
 		FileInputStream fis = null;
 
@@ -364,29 +396,25 @@ public class DSPBundleController implements DeploymentController, BundleListener
 			fis = new FileInputStream(new File(bundlePath));
 			return bundleContext.installBundle(bundlePath, fis);
 		} catch (BundleException e) {
-			Log.log(e);
+			log.error("Could not install bundle", e);
 		} catch (FileNotFoundException e) {
-			Log.log(e);
+			log.error("Could not find bundle file", e);
 		} finally {
 			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-				}
+				try { fis.close();} catch (IOException e) {}
 			}
 		}
 		return null;
 	}
 
-	
 	private Document readConfiguration(String path) throws JDOMException, IOException {
-		String configFilePath = path + File.separator + "config.xml";
+		String configFilePath = path + File.separator + CONFIG_FILE;
 		File configFile = new File(configFilePath);
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(configFile);
 		} catch (FileNotFoundException e) {
-			Log.log(e);
+			log.error("Could not find configuration file", e);
 			throw e;
 		}
 		SAXBuilder parser = new SAXBuilder();
@@ -394,10 +422,10 @@ public class DSPBundleController implements DeploymentController, BundleListener
 		try {
 			config = parser.build(fis);
 		} catch (JDOMException e) {
-			Log.log(e);
+			log.error("Could not parse configuration file", e);
 			throw e;
 		} catch (IOException e) {
-			Log.log(e);
+			log.error("Could not parse configuration file", e);
 			throw e;
 		}finally{
 			if(fis != null){

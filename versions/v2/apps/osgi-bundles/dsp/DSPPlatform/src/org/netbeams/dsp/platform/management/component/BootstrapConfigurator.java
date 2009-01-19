@@ -27,14 +27,14 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPException;
-import org.netbeams.dsp.MessageFactory;
-import org.netbeams.dsp.NodeAddressHelper;
 import org.netbeams.dsp.message.*;
 
-import org.netbeams.dsp.util.Log;
 
 public class BootstrapConfigurator {
+	
+	private static final Logger log = Logger.getLogger(BootstrapConfigurator.class);
 	
 	public static final String BOOTSTRAP_MESSAGE_DIR = "bootstrap";
 	
@@ -62,22 +62,24 @@ public class BootstrapConfigurator {
 		contentDataFiles = new HashMap<String, List<File>>();
 	}
 	
-	public void init(){
-		Log.log("BootstrapConfigurator.init");
+	public void init(){		
 		
-		File dir = new File(DSP_HOME + File.separator + BOOTSTRAP_MESSAGE_DIR);
+		String boostratpDir = DSP_HOME + File.separator + BOOTSTRAP_MESSAGE_DIR;
+		
+		log.info("init() invoked. Boostrap directory: " + boostratpDir);
+	
+		File dir = new File(boostratpDir);
+		
 		File[] files = dir.listFiles();
 		if(files != null){
 			Arrays.sort(files);
 			createTypeMap(files);
 			messageFiles = files;
-		}else{
-			Log.log("No files in " + dir.getAbsolutePath());
 		}
 	}
 	
 	public List<Message> createMessages(ComponentManager componentManager, String componentType) throws DSPException {
-		Log.log("BootstrapConfigurator.createMessages(): " + componentType);
+		log.debug("BootstrapConfigurator.createMessages(): " + componentType);
 		
 		List<Message> messages = new ArrayList<Message>();
 		
@@ -92,7 +94,7 @@ public class BootstrapConfigurator {
 							(MeasureMessage)unmarshaller.unmarshal(file);
 					messages.add(message);
 				}catch(JAXBException e){
-					Log.log(e);
+					log.warn("Could not parse bootstrap message", e);
 				}
 			}
 		}
@@ -124,7 +126,7 @@ public class BootstrapConfigurator {
 		}
 		
 		*/
-		Log.log("BootstrapConfigurator.createMessages(): #" + messages.size());
+		log.info("createMessages(): #" + messages.size());
 		return messages;
 	}
 
@@ -144,7 +146,7 @@ public class BootstrapConfigurator {
 				baos.write(buff, 0, n);
 			}
 		}catch(IOException e){
-			Log.log(e);
+			log.warn(e);
 		}finally{
 			if(fis != null){
 				try { fis.close(); } catch (IOException e) {}
@@ -164,16 +166,16 @@ public class BootstrapConfigurator {
 			String[] nameParts = parserFileName(name);
 			// Make sure the file name is valid
 			if(validateFileName(nameParts)){
-				String componentType = nameParts[0];
-				List<File> dataFiles = contentDataFiles.get(componentType);
+				String componentName = nameParts[0];
+				List<File> dataFiles = contentDataFiles.get(componentName);
 				if(dataFiles == null){
 					dataFiles = new ArrayList<File>();
-					contentDataFiles.put(componentType, dataFiles);
+					contentDataFiles.put(componentName, dataFiles);
 				}
-				Log.log("Add " + name + " to " + componentType);
+				log.info("Add file " + name + " to " + componentName);
 				dataFiles.add(file);
 			}else{
-				Log.log("BootstrapConfigurator.Invalid content file name " + name);
+				log.warn("Invalid content file name " + name);
 			}
 		}		
 	}

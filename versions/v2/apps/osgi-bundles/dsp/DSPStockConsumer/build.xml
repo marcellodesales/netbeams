@@ -18,7 +18,8 @@
 		</path>
 		
 		<mkdir dir="${stock.consumer.base.dir}/classes" />
-		<javac destdir="${stock.consumer.base.dir}/classes" debug="on" srcdir="${stock.consumer.base.dir}/src">
+		<javac destdir="${stock.consumer.base.dir}/classes" debug="on" srcdir="${stock.consumer.base.dir}/src"
+			source="1.5" target="1.5">
 			<classpath refid="stock-consumer.project.classpath"/>
 		</javac>
 	</target>

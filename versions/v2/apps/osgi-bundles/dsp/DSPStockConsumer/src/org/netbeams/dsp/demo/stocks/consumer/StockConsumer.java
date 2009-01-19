@@ -4,9 +4,6 @@ package org.netbeams.dsp.demo.stocks.consumer;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.ComponentDescriptor;
@@ -18,7 +15,6 @@ import org.netbeams.dsp.demo.stock.StockTick;
 import org.netbeams.dsp.demo.stock.StockTicks;
 import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.Message;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 public class StockConsumer implements DSPComponent{
@@ -43,55 +39,72 @@ public class StockConsumer implements DSPComponent{
 	/////////////////////////////////////////////
 
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public String getComponentNodeId() {
-		// TODO Auto-generated method stub
-		return null;
+		return componentNodeId;
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public String getComponentType() {
 		return COMPONENT_TYPE;
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
-		log.info("initComponent()");
+		log.info("Initializing...");
 		
 		this.context = context;
 		this.componentNodeId = componentNodeId;
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public ComponentDescriptor getComponentDescriptor() {
 		return componentDescriptor;
 	}
 
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public void startComponent() {
 		log.info("startComponent()");
 	}
 	
-	@Override
+	/**
+	 * @Override
+	 */
 	public void stopComponent() {
 		log.info("stopComponent()");
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public void deliver(Message message) throws DSPException {
 		log.debug("deliver(Message)");
 		processMessage(message);
 	}
 
-	@Override
+	/**
+	 * @Override
+	 */
 	public Message deliverWithReply(Message request)
 			throws DSPException {
 		// TODO How we should handle an invokation to this method when the component is not a consumer?
 		return null;
 	}
 	
-	@Override
+	/**
+	 * @Override
+	 */
 	public Message deliverWithReply(Message message, long waitTime)
 			throws DSPException {
 		// TODO Auto-generated method stub

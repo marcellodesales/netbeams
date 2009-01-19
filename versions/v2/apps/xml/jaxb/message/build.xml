@@ -45,7 +45,7 @@
 
 	<target name="java-compile" depends="xjc-compile">
 		<mkdir dir="${basedir}/classes" />
-		<javac destdir="${basedir}/classes" classpathref="all.classpath" source="1.6">
+		<javac destdir="${basedir}/classes" classpathref="all.classpath" source="1.5" target="1.5">
 			<src path="${generated-src-dir}" />
 			<src path="${java-src-dir}" />
 		</javac>

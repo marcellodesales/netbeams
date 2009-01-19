@@ -8,7 +8,8 @@
 	<target name="dsp-framework.compile">
 		<delete dir="${DSP.FRAMEWORK}/classes" />
 		<mkdir dir="${DSP.FRAMEWORK}/classes" />
-		<javac destdir="${DSP.FRAMEWORK}/classes" classpath="${XML.JAXB}/message/dist/message.jar" debug="on" srcdir="${DSP.FRAMEWORK}/src"/>
+		<javac destdir="${DSP.FRAMEWORK}/classes" classpath="${XML.JAXB}/message/dist/message.jar" 
+		debug="on" srcdir="${DSP.FRAMEWORK}/src" source="1.5" target="1.5"/>
 	</target>
 	
 	

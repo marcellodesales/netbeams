@@ -5,7 +5,6 @@ package org.netbeams.dsp;
  */
 
 
-
 public interface DSPContext {
 
 	/**
@@ -26,5 +25,12 @@ public interface DSPContext {
 	 * @return Reference to the resource, null if the resource could not be located.
 	 */
 	public Object getResource(String resource);
+	
+	/**
+	 * Provides the path to the platform directory where the all platform are located.
+	 * 
+	 * @return
+	 */
+	public String getHomePlatformDirectoryPath();
 	
 }

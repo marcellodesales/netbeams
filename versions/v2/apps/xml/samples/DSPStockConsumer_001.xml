@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dsp:MeasureMessage xmlns:dsp="http://www.netbeams.dsp.org/message.xsd" 
+		    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		    xsi:schemaLocation="http://www.netbeams.dsp.org/message.xsd"
+		    messageID="1"
+		    ContentType="org.netbeams.dsp.demo.stock.StockTicks">
+	<Header>
+		<CreationTime>1</CreationTime>
+		<CorrelationID/>
+		<Producer>
+			<ComponentType>org.netbeams.dsp.platform.management.component.ComponentManager</ComponentType>
+			<ComponentLocator>
+				<ComponentNodeId>1</ComponentNodeId>
+				<NodeAddress>LOCAL</NodeAddress>
+			</ComponentLocator>
+		</Producer>
+		<Consumer>
+			<ComponentType>org.netbeams.dsp.demo.stocks.consumer</ComponentType>
+			<ComponentLocator>
+				<NodeAddress>LOCAL</NodeAddress>
+			</ComponentLocator>
+		</Consumer>
+	</Header>
+	<Body>
+		<stk:StockTicks xmlns:stk="http://www.netbeams.dsp.org/stocktick.xsd">
+			<StockTick>
+				<Symbol>GOOG</Symbol>
+				<Name>Google</Name>
+				<Value>35.0</Value>
+			</StockTick>
+		</stk:StockTicks>
+	</Body>
+</dsp:MeasureMessage>

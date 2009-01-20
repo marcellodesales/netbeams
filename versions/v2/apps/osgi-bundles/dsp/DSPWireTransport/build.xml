@@ -26,7 +26,7 @@
              manifest="${DSP.WIRE.TRANSPORT}/META-INF/MANIFEST.MF"/>
     </target>
     
-    <target name="dsp-data-persistence.clean">
+    <target name="dsp-wire-transport.clean">
         <delete dir="${DSP.WIRE.TRANSPORT}/classes" />
         <delete dir="${DSP.WIRE.TRANSPORT}/build" />
     </target>

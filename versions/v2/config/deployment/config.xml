@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components>
+	<component>
+	   <name>DSPStockProducer</name>
+	   <bundle>DSPStockProducer-0.1.jar</bundle>
+	   <priority>70</priority>
+	   <required/>
+	</component>
+    <component>
+       <name>DSPStockConsumer</name>
+       <bundle>DSPStockConsumer-0.1.jar</bundle>
+       <priority>71</priority>
+       <required/>
+    </component>
+    <!--
+    <component>
+       <name>DSPWebDataLogger</name>
+       <bundle>DSPWebLogger-0.1.jar</bundle>
+       <priority>71</priority>
+       <required/>
+    </component>
+    -->
+</components>

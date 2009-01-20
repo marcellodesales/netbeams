@@ -27,7 +27,7 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
      */
     public static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     /**
-     * The local memory defines the measuraments from the mouse actions. 
+     * The local memory defines the measurements from the mouse actions. 
      */
     private List<NetBeamsMouseInfo> localMemory;
     /**

@@ -15,10 +15,10 @@ import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
+import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.message.EventMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
-import org.netbeams.dsp.message.ObjectFactory;
 import org.netbeams.dsp.messagesdirectory.model.DirectoryData;
 import org.netbeams.dsp.messagesdirectory.model.MessagesQueueState;
 import org.netbeams.dsp.util.Log;
@@ -89,16 +89,12 @@ public enum DSPMessagesDirectory implements DSPComponent {
      *         component destination.
      */
     public synchronized MessagesContainer retrieveQueuedMessagesForTransmission(URL componentDestinition) {
-        MessagesContainer container = new ObjectFactory().createMessagesContainer();
-        UUID containerId = UUID.randomUUID();
-
-        container.setUudi(containerId.toString());
-        container.setTime(System.currentTimeMillis());
-
+        MessagesContainer container = DSPMessagesFactory.INSTANCE.makeDSPMessagesContainer();
+        
         for (DirectoryData data : this.outboundQueue.get(componentDestinition)) {
             if (data.getState().equals(MessagesQueueState.QUEUED)) {
                 container.getMessage().add(data.getMessage());
-                data.setMessagesContainerId(containerId);
+                data.setMessagesContainerId(UUID.fromString(container.getUudi()));
             }
         }
         return container;

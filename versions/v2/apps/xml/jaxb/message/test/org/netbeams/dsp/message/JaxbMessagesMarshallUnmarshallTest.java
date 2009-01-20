@@ -54,7 +54,7 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
         MeasureMessage stocks = null;
         try {
             //Specifying the correct content type for the message as the package of the component
-            stocks = this.fac.makeDSPMessage("1", "org.netbeams.dsp.demo.stock", header, ticks);
+            stocks = this.fac.makeDSPMeasureMessage("1", "org.netbeams.dsp.demo.stock", header, ticks);
         } catch (JAXBException e1) {
             fail(e1.getMessage());
         } catch (ParserConfigurationException e) {
@@ -88,7 +88,7 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
         MeasureMessage mouseActions = null;
         try {
           //Specifying the correct content type for the message as the package of the component
-            mouseActions = this.fac.makeDSPMessage("2", "org.netbeams.dsp.demo.mouseactions", header2, macontainer);
+            mouseActions = this.fac.makeDSPMeasureMessage("2", "org.netbeams.dsp.demo.mouseactions", header2, macontainer);
         } catch (JAXBException e1) {
             fail(e1.getMessage());
         } catch (ParserConfigurationException e) {
@@ -156,8 +156,7 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
             }
             
         } catch (JAXBException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            fail(e.getMessage());
         }
     }
 }

@@ -36,7 +36,7 @@ public enum DSPMessagesFactory {
     /**
      * @param compId is the identification of the component
      * @param location is the location of the component. It must be a machine name or ip address.
-     * @param compType is the complete name of the 
+     * @param compType is the complete name of the
      * @return a new instance of a Component Identifier with the specified data.
      */
     public ComponentIdentifier makeDSPComponentIdentifier(String compId, String location, String compType) {
@@ -53,7 +53,7 @@ public enum DSPMessagesFactory {
 
     /**
      * @param correlationId
-     * @param creationTime is the 
+     * @param creationTime is the
      * @param producer is the ComponentIdentifier instance for the producer.
      * @param consumer is the ComponentIdentifier instance for the consumer.
      * @return a new instance of the Header for the DSP Message
@@ -69,17 +69,60 @@ public enum DSPMessagesFactory {
     }
 
     /**
+     * The ISO time specification is as follows:
+     * 
+     * <br>
+     * 2002-05-30T09:30:10-06:00 shows the GMT -6 time or <br>
+     * 2002-05-30T09:30:10Z shows the UTC/GMT default time
+     * 
+     * @return make a new current ISO time format used to be interoperable with other programming languages.
+     */
+    public String makeCurrentIsoDateTime() {
+        // final int msInMin = 60000;
+        // final int minInHr = 60;
+        // Date date = new Date();
+        // int Hours, Minutes;
+        // DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG );
+        // TimeZone zone = dateFormat.getTimeZone();
+        // System.out.println( "BST Time: " + dateFormat.format( date ) );
+        // Minutes =zone.getOffset( date.getTime() ) / msInMin;
+        // Hours = Minutes / minInHr;
+        // zone = zone.getTimeZone( "GMT Time" +(Hours>=0?"+":"")+Hours+":"+ Minutes);
+        // dateFormat.setTimeZone( zone );
+        // System.out.println( "GMT: " + dateFormat.format( date ) );
+        //        
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        // System.out.println("ISO 8601: "+sdf.format( now ));
+        return sdf.format(now);
+        //        
+        // Date now2 = sdf.parse(sdf.format( now ));
+        // System.out.println("ISO 8601: "+sdf.format( now2 ));
+
+    }
+
+    /**
+     * @return a new instance of the DSP Messages Container with the correct new values of the UUID and the creation
+     *         time of the message.
+     */
+    public MessagesContainer makeDSPMessagesContainer() {
+        MessagesContainer messages = this.factory.createMessagesContainer();
+        messages.setCreationTime(this.makeCurrentIsoDateTime());
+        messages.setUudi(UUID.randomUUID().toString());
+        return messages;
+    }
+
+    /**
      * @param messageId is the message ID
      * @param contentType is the description of the main class, with the complete name (org.netbeans.dsp.demo.Stick)
-     * @param header is the information of the header. 
+     * @param header is the information of the header.
      * @param bodyNode is the instance of a JAXB generated object
-     * @return an instance of the Measure Message with the given Id, header and the body with the given contentType. 
+     * @return an instance of the Measure Message with the given Id, header and the body with the given contentType.
      * @throws JAXBException if there's a parsing error from JAXB
      * @throws ParserConfigurationException if there's a problem parsing the body object
      */
-    public MeasureMessage makeDSPMessage(String messageId, String contentType, Header header, Object bodyNode)
+    private Message makeDSPMessage(Message m1, String messageId, String contentType, Header header, Object bodyNode)
             throws JAXBException, ParserConfigurationException {
-        MeasureMessage m1 = this.factory.createMeasureMessage();
         m1.setContentType(contentType);
         m1.setMessageID(messageId);
         m1.setHeader(header);
@@ -92,51 +135,56 @@ public enum DSPMessagesFactory {
         m.marshal(bodyNode, xmlDocumentNode);
         body.setAny(xmlDocumentNode.getFirstChild());
         m1.setBody(body);
- 
+
         return m1;
     }
-    
-    /**
-     * The ISO time specification is as follows:
-     * 
-     * <br>2002-05-30T09:30:10-06:00 shows the GMT -6 time or
-     * <br>2002-05-30T09:30:10Z shows the UTC/GMT default time
-     * 
-     * @return make a new current ISO time format used to be interoperable with other programming
-     * languages.
-     */
-    public String makeCurrentIsoDateTime() {
-//        final int msInMin = 60000;
-//        final int minInHr = 60;
-//        Date date = new Date();
-//        int Hours, Minutes;
-//        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG );
-//        TimeZone zone = dateFormat.getTimeZone();
-//        System.out.println( "BST Time: " + dateFormat.format( date ) );
-//        Minutes =zone.getOffset( date.getTime() ) / msInMin;
-//        Hours = Minutes / minInHr;
-//        zone = zone.getTimeZone( "GMT Time" +(Hours>=0?"+":"")+Hours+":"+ Minutes);
-        // dateFormat.setTimeZone( zone );
-        // System.out.println( "GMT: " + dateFormat.format( date ) );
-        //        
-         Date now = new Date();
-         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-//         System.out.println("ISO 8601: "+sdf.format( now ));
-         return sdf.format(now);
-        //        
-        // Date now2 = sdf.parse(sdf.format( now ));
-        // System.out.println("ISO 8601: "+sdf.format( now2 ));
 
+    public MeasureMessage makeDSPMeasureMessage(String messageId, String contentType, Header header, Object bodyNode)
+            throws JAXBException, ParserConfigurationException {
+        MeasureMessage m1 = this.factory.createMeasureMessage();
+        return (MeasureMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
     }
 
-    /**
-     * @return a new instance of the DSP Messages Container with the correct new values of the
-     * UUID and the creation time of the message.
-     */
-    public MessagesContainer makeDSPMessagesContainer() {
-        MessagesContainer messages = this.factory.createMessagesContainer();
-        messages.setCreationTime(this.makeCurrentIsoDateTime());
-        messages.setUudi(UUID.randomUUID().toString());
-        return messages;
+    public EventMessage makeDSPEventMessage(String messageId, String contentType, Header header, Object bodyNode)
+            throws JAXBException, ParserConfigurationException {
+        EventMessage m1 = this.factory.createEventMessage();
+        return (EventMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
     }
+
+    public ActionMessage makeDSPActionMessage(String messageId, String contentType, Header header, Object bodyNode)
+            throws JAXBException, ParserConfigurationException {
+        ActionMessage m1 = this.factory.createActionMessage();
+        return (ActionMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+    }
+
+    public QueryMessage makeDSPQueryMessage(String messageId, String contentType, Header header, Object bodyNode)
+            throws JAXBException, ParserConfigurationException {
+        QueryMessage m1 = this.factory.createQueryMessage();
+        return (QueryMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+    }
+
+    public CreateMessage makeDSPCreateMessage(String messageId, String contentType, Header header, Object bodyNode)
+            throws JAXBException, ParserConfigurationException {
+        CreateMessage m1 = this.factory.createCreateMessage();
+        return (CreateMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+    }
+
+    public DeleteMessage makeDSPDeleteMessage(String messageId, String contentType, Header header, Object bodyNode)
+            throws JAXBException, ParserConfigurationException {
+        DeleteMessage m1 = this.factory.createDeleteMessage();
+        return (DeleteMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+    }
+
+    public InsertMessage makeDSPInsertMessage(String messageId, String contentType, Header header, Object bodyNode)
+            throws JAXBException, ParserConfigurationException {
+        InsertMessage m1 = this.factory.createInsertMessage();
+        return (InsertMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+    }
+
+    public UpdateMessage makeDSPUpdateMessage(String messageId, String contentType, Header header, Object bodyNode)
+            throws JAXBException, ParserConfigurationException {
+        UpdateMessage m1 = this.factory.createUpdateMessage();
+        return (UpdateMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+    }
+
 }

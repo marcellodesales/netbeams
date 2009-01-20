@@ -1,7 +1,7 @@
 package org.netbeams.dsp.platform.management.component;
 
 /**
- * Provide bootstrap configuratio messages.
+ * Provide bootstrap configuration messages.
  * 
  * File names follow: <DSP component type>_<sequence>_<content data type>_<message category prefix>.xml
  * 
@@ -12,10 +12,7 @@ package org.netbeams.dsp.platform.management.component;
  * #11/02/2008 - Kleber Sales - Creation
  *
  **/
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,8 +26,9 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPException;
-import org.netbeams.dsp.message.*;
-
+import org.netbeams.dsp.message.AbstractMessage;
+import org.netbeams.dsp.message.Message;
+import org.netbeams.dsp.message.MessagesContainer;
 
 public class BootstrapConfigurator {
 	
@@ -84,21 +82,25 @@ public class BootstrapConfigurator {
 		List<Message> messages = new ArrayList<Message>();
 		
 		List<File> files = contentDataFiles.get(componentType);
-		if(files != null){
-			for(File file: messageFiles){
-				try{
-					JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.message", 
-							org.netbeams.dsp.message.ObjectFactory.class.getClassLoader());
-					Unmarshaller unmarshaller = jc.createUnmarshaller();
-					Message message = 
-							(MeasureMessage)unmarshaller.unmarshal(file);
-					messages.add(message);
-				}catch(JAXBException e){
-					log.warn("Could not parse bootstrap message", e);
-				}
-			}
+		if (files != null) {
+		    for (File file: messageFiles){
+		        //Just get messages whose file name includes "bootstrap". They contains the
+		        //dsp messages container. A set of messages container can be divided by
+		        //components, be sorted, etc...
+		        if (file.getName().contains("bootstrap")) {
+		            try {
+                                JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.message");
+                                Unmarshaller unmarshaller = jc.createUnmarshaller();
+                                MessagesContainer msgsCtn = (MessagesContainer)unmarshaller.unmarshal(file);
+                                for(AbstractMessage abstrMsg: msgsCtn.getMessage()) {
+                                    messages.add((Message)abstrMsg);
+                                }
+                            }catch(JAXBException e){
+                                e.printStackTrace();
+                            }
+		        }
+		    }
 		}
-		
 		
 		/*
 		// Messages are supposed to be local. Create local consumers identifiers
@@ -128,31 +130,6 @@ public class BootstrapConfigurator {
 		*/
 		log.info("createMessages(): #" + messages.size());
 		return messages;
-	}
-
-
-//	private Class<? extends Message> getMessageClass(String[] nameParts) {
-//		return prefixToCategory.get(nameParts[3]);
-//	}
-
-	private byte[] readContentData(File file) {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		byte[] buff = new byte[4096];
-		FileInputStream fis = null;
-		try{
-			fis = new FileInputStream(file);
-			int n = 0;
-			while((n=fis.read(buff)) != -1){
-				baos.write(buff, 0, n);
-			}
-		}catch(IOException e){
-			log.warn(e);
-		}finally{
-			if(fis != null){
-				try { fis.close(); } catch (IOException e) {}
-			}
-		}
-		return baos.toByteArray();
 	}
 
 	/**

@@ -1,0 +1,52 @@
+	<project name="dsp-test-random-number-generator" default="dsp-test-random-number-generator.all">
+		
+		<import file="../../../../init-targets.xml"/>
+			
+		<target name="dsp-test-random-number-generator.all" depends="init, dsp-test-random-number-generator.compile, dsp-test-random-number-generator.jar" />
+		
+		<target name="dsp-test-random-number-generator.init">
+			<property name="test-random-number-generator.base.dir" value="${DSP.BUNDLES}/DSPTestRandomNumGen"/>
+		</target>
+		
+		<target name="dsp-test-random-number-generator.compile" depends="dsp-test-random-number-generator.init">
+			<mkdir dir="${test-random-number-generator.base.dir}/classes" />
+			<javac destdir="${test-random-number-generator.base.dir}/classes" debug="on" srcdir="${test-random-number-generator.base.dir}/src">
+				<classpath refid="project.class.path"/>
+			</javac>
+		</target>
+		
+		<target name="dsp-test-random-number-generator.jar" depends="dsp-test-random-number-generator.init">
+			<mkdir dir="${DSP.RUNTIME}" />
+			<!-- <mkdir dir="${test-random-number-generator.base.dir}/build/" />
+			<copy todir="${test-random-number-generator.base.dir}/classes/">
+				<fileset dir="${test-random-number-generator.base.dir}/build/"/>
+			</copy>
+			-->
+			<jar basedir="${test-random-number-generator.base.dir}/classes" 
+				 jarfile="${DSP.RUNTIME}/DSPTestRandomNumGen-${DSP.VERSION}.jar" 
+				 compress="true" includes="**/*" 
+				 manifest="${test-random-number-generator.base.dir}/META-INF/MANIFEST.MF" />
+			
+			<copy todir="${DSP.DEPLOYMENT}/" file="${DSP.RUNTIME}/DSPTestRandomNumGen-${DSP.VERSION}.jar"/>
+			
+		</target>
+		
+		<target name="dsp-test-random-number-generator.clean" depends="dsp-test-random-number-generator.init">
+			<delete dir="${test-random-number-generator.base.dir}/classes" />
+		</target>
+	</project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

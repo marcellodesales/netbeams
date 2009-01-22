@@ -26,7 +26,7 @@
              manifest="${DSP.MESSAGES.DIR}/META-INF/MANIFEST.MF"/>
     </target>
     
-    <target name="dsp-data-persistence.clean">
+    <target name="dsp-messages-dir.clean">
         <delete dir="${DSP.MESSAGES.DIR}/classes" />
         <delete dir="${DSP.MESSAGES.DIR}/build" />
     </target>

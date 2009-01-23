@@ -16,7 +16,7 @@ import org.netbeams.dsp.util.Log;
 
 public class RandomNumberGenerator extends Thread implements DSPComponent {
 	
-	public final static String COMPONENT_TYPE = "org.netbeams.dsp.test.randomnumbergenerator";
+	public final static String COMPONENT_TYPE = "org.netbeams.dsp.test.rand";
 	private static ComponentDescriptor componentDescriptor;
 	private String componentNodeId;
     private DSPContext context;

@@ -20,15 +20,19 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bc) throws Exception {		
 		Log.log("RandomNumber.Activate.start()");
 		producer = new RandomNumberGenerator();
-		this.bundleContext = bc;
+		bundleContext = bc;
+		producer = new RandomNumberGenerator();
+		producer.start();
 		serviceRegistration = ActivatorHelper.registerOSGIService(bundleContext, producer);
-		producer.startComponent();
 	}
 
 	public void stop(BundleContext bc) throws Exception {
 		Log.log("RandomNumber.Activator.stop()");
 		ActivatorHelper.unregisterOSGIService(bundleContext, serviceRegistration);
-		producer.stopComponent();
+		producer.stopThread();
+		producer.join();
+		bundleContext = null;
+		
 	}
 
 }

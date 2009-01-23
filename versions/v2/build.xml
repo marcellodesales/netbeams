@@ -11,7 +11,7 @@
 	<import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPMessagesDirectory/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPWireTransport/build.xml" />
-	
+
 	<!--
 	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-data.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-data-persistence.all, dsp-mouse-http-consumer.all, dsp-mouse-producer-jswing.all"/>
 	-->
@@ -21,94 +21,17 @@
 	<target name="setup" depends="init, print-properties">
 		<!-- Setting up runtime directory -->
 		<mkdir dir="${DSP.RUNTIME}" />
-
+		
 		<mkdir dir="${DSP.RUNTIME}/demos/stocks/" />
-		<echo file="${DSP.RUNTIME}/demos/stocks/config.xml">
-			<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-			<components>
-				<component>
-					<name>DSPStockProducer</name>
-					<bundle>DSPStockProducer-0.1.jar</bundle>
-					<priority>70</priority>
-					<required/>
-				</component>
-				<component>
-					<name>DSPStockConsumer</name>
-					<bundle>DSPStockConsumer-0.1.jar</bundle>
-					<priority>71</priority>
-					<required/>
-				</component>
-				<!--
-    <component>
-       <name>DSPWebDataLogger</name>
-       <bundle>DSPWebLogger-0.1.jar</bundle>
-       <priority>71</priority>
-       <required/>
-    </component>
-    -->
-			</components>
-]]></echo>
-
-		<mkdir dir="${DSP.DEPLOYMENT}/" />
+		<copy file="${DSP.HOME}/config/deployment/config.xml" tofile="${DSP.RUNTIME}/demos/stocks/config.xml" />
 		<copy file="${DSP.RUNTIME}/demos/stocks/config.xml" todir="${DSP.DEPLOYMENT}/" />
-		<echo file="${DSP.RUNTIME}/matcher_config.xml">
-			<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-			<config>
-				<matchRule>
-					<matchCriteria>
-						<nodeAddress>LOCAL</nodeAddress>
-						<componentType>org.netbeams.dsp.demo.stocks.producer</componentType>
-						<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
-					</matchCriteria>
-					<matchTarget>
-
-						<nodeAddress>LOCAL</nodeAddress>
-						<componentType>org.netbeams.dsp.demo.stocks.consumer</componentType>
-					</matchTarget>
-				</matchRule>
-				<matchRule>
-					<matchCriteria>
-						<nodeAddress>LOCAL</nodeAddress>
-						<componentType>org.netbeams.dsp.demo.stocks.producer</componentType>
-						<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
-					</matchCriteria>
-					<matchTarget>
-
-						<nodeAddress>LOCAL</nodeAddress>
-						<componentType>org.netbeams.dsp.weblogger</componentType>
-					</matchTarget>
-				</matchRule>
-				<matchRule>
-					<matchCriteria>
-						<nodeAddress>LOCAL</nodeAddress>
-
-						<componentType>ALL</componentType>
-						<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
-					</matchCriteria>
-					<matchTarget>
-						<nodeAddress>LOCAL</nodeAddress>
-						<componentType>org.netbeams.dsp.platform.channel</componentType>
-					</matchTarget>
-				</matchRule>
-			</config>]]></echo>
-
-		<echo file="${DSP.RUNTIME}/log4j.xml">
-			<![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
-			<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-			<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-				<appender name="console" class="org.apache.log4j.ConsoleAppender">
-					<param name="Target" value="System.out" />
-					<layout class="org.apache.log4j.PatternLayout">
-						<param name="ConversionPattern"
-            value="%d{ISO8601}; %-5p [%t] %c{1}: %m%n" />
-					</layout>
-				</appender>
-				<root>
-					<priority value="info" />
-					<appender-ref ref="console" />
-				</root>
-			</log4j:configuration>]]></echo>
-
+		
+		<mkdir dir="${DSP.DEPLOYMENT}/" />
+		<mkdir dir="${DSP.DEPLOYMENT}/logs" />
+		<copy file="${DSP.HOME}/config/log4j.xml" tofile="${DSP.RUNTIME}/log4j.xml" />
+		<replace file="${DSP.DEPLOYMENT}/log4j.xml" token="DSP_HOME" value="${DSP.HOME}"/>
+        <copy file="${DSP.HOME}/config/matcher_config.xml" todir="${DSP.RUNTIME}"  />
+		
 		<antcall target="bootstrap-setup-messages" />
 	</target>
 

@@ -9,7 +9,7 @@
     </layout>
   </appender>
   <appender name="R" class="org.apache.log4j.RollingFileAppender"> 
-    <param name="file" value="DSP_HOME/logs/dspplatform.log"/>
+    <param name="file" value="DSP_HOME/runtime/logs/dspplatform.log"/>
     <param name="MaxFileSize" value="100KB"/>
     <param name="Append" value="true" />
     <!-- Keep one backup file -->

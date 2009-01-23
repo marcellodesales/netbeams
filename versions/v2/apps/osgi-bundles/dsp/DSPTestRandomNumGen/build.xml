@@ -17,15 +17,14 @@
 		
 		<target name="dsp-test-random-number-generator.jar" depends="dsp-test-random-number-generator.init">
 			<mkdir dir="${DSP.RUNTIME}" />
-			<!-- <mkdir dir="${test-random-number-generator.base.dir}/build/" />
-			<copy todir="${test-random-number-generator.base.dir}/classes/">
-				<fileset dir="${test-random-number-generator.base.dir}/build/"/>
-			</copy>
-			-->
 			<jar basedir="${test-random-number-generator.base.dir}/classes" 
 				 jarfile="${DSP.RUNTIME}/DSPTestRandomNumGen-${DSP.VERSION}.jar" 
 				 compress="true" includes="**/*" 
-				 manifest="${test-random-number-generator.base.dir}/META-INF/MANIFEST.MF" />
+				 manifest="${test-random-number-generator.base.dir}/META-INF/MANIFEST.MF">
+				 <fileset dir="${DSP.BUNDLES}/DSPFramework/classes"/>
+				 <fileset dir="${DSP.BUNDLES}/DSPFramework/classes/libs"/>
+				 <fileset dir="${DSP.BUNDLES}/DSPPlatform/classes/"/>
+			</jar>
 			
 			<copy todir="${DSP.DEPLOYMENT}/" file="${DSP.RUNTIME}/DSPTestRandomNumGen-${DSP.VERSION}.jar"/>
 			

@@ -1,4 +1,4 @@
-package org.netbeams.dsp.test.randomnumbergenerator;
+package org.netbeams.dsp.test.rand;
 
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
 import org.netbeams.dsp.util.Log;

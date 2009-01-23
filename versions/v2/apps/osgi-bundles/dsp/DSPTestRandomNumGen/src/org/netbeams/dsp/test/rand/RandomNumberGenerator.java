@@ -1,4 +1,4 @@
-package org.netbeams.dsp.test.randomnumbergenerator;
+package org.netbeams.dsp.test.rand;
 
 import java.security.SecureRandom;
 import java.io.ByteArrayInputStream;
@@ -16,7 +16,7 @@ import org.netbeams.dsp.util.Log;
 
 public class RandomNumberGenerator extends Thread implements DSPComponent {
 	
-	public final static String COMPONENT_TYPE = "org.netbeams.dsp.randomnumber";
+	public final static String COMPONENT_TYPE = "org.netbeams.dsp.test.randomnumbergenerator";
 	private static ComponentDescriptor componentDescriptor;
 	private String componentNodeId;
     private DSPContext context;
@@ -100,11 +100,9 @@ public class RandomNumberGenerator extends Thread implements DSPComponent {
 	}
 
 	public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
-		
 		Log.log("RandomNumberGenerator.initComponent()");
         this.context = context;
         this.componentNodeId = componentNodeId;
-
 	}
 
 }

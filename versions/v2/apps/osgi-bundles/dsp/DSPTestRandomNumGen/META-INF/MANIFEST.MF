@@ -4,7 +4,7 @@ Bundle-SymbolicName: dsptestrandomnumber
 Bundle-Version: 0.1
 Bundle-Description: DSP Test Random Number Generator
 Bundle-Vendor: NetBEAMS.org
-Bundle-Activator: org.netbeams.dsp.test.randomnumbergenerator.Activator
+Bundle-Activator: org.netbeams.dsp.test.rand.Activator
 Bundle-Category: DSP Core
 Import-Package: org.osgi.framework
 Bundle-ClassPath: .

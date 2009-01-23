@@ -48,8 +48,7 @@ public class RandomNumberGenerator extends Thread implements DSPComponent {
     
     
     public void run() {
-		while (running) {
-			
+		while (running) {			
 			random.nextBytes(bytes);
 			getRandomNum();
 			System.out.println("Random Number: " + fData );
@@ -62,6 +61,9 @@ public class RandomNumberGenerator extends Thread implements DSPComponent {
 		}
 	}
     
+    public void stopThread() {
+		this.running = false;
+	}
     
  // Implemented methods of the DSPComponent interface.
     
@@ -88,7 +90,7 @@ public class RandomNumberGenerator extends Thread implements DSPComponent {
 
 	public void stopComponent() throws DSPException {		
 		Log.log("RandomNumberGenerator.stopComponent()");
-		this.running = false;
+		this.stopThread();
 	}
 
 	public String getComponentNodeId() {

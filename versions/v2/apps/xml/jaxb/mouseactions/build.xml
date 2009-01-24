@@ -18,7 +18,7 @@
     <target name="java-compile" depends="xjc-compile">
         <delete dir="${basedir}/classes" />
         <mkdir dir="${basedir}/classes" />
-        <javac srcdir="${basedir}/java-src" destdir="${basedir}/classes" classpathref="jaxb.classpath" source="1.6" />
+        <javac srcdir="${basedir}/java-src" destdir="${basedir}/classes" classpathref="jaxb.classpath" source="1.5" target="1.5" />
     </target>
 
     <target name="create-jar" depends="java-compile">

@@ -86,7 +86,7 @@ public enum DSPInMemoryDataPersistence implements DSPDataPersistence {
      * @param producerReference is the identification of a producer
      * @param valuesList the list of values from this producer.
      */
-    @Override
+    //@Override
     public void insertData(UUID producerReference, List<String> newDataList) {
         List<String> obList = this.repositoryData.get(producerReference);
         if (obList == null) {
@@ -103,7 +103,7 @@ public enum DSPInMemoryDataPersistence implements DSPDataPersistence {
      * @param producerReference is the producer reference
      * @param value the value produced.
      */
-    @Override
+    //@Override
     public void insertData(UUID producerReference, String... newDataList) {
         List<String> obList = this.repositoryData.get(producerReference);
         if (obList == null) {
@@ -112,7 +112,7 @@ public enum DSPInMemoryDataPersistence implements DSPDataPersistence {
         } else this.addValuesToNewProducer(producerReference, newDataList);
     }
 
-    @Override
+    //@Override
     public void insertData(UUID producerReference, String data) {
         List<String> obList = this.repositoryData.get(producerReference);
         if (obList == null) {
@@ -122,12 +122,12 @@ public enum DSPInMemoryDataPersistence implements DSPDataPersistence {
         } else this.addValuesToNewProducer(producerReference, new String[]{data});
     }
 
-    @Override
+    //@Override
     public List<String> retrieveData(UUID producerReference) {
         return this.repositoryData.get(producerReference);
     }
 
-    @Override
+    //@Override
     public Set<UUID> retrieveProducersIdSet() {
         return this.repositoryData.keySet();
     }

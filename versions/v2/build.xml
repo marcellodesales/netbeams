@@ -51,7 +51,7 @@
 		</exec>
 	</target>
 
-	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-data.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean, dsp-messages-dir.clean, dsp-wire-transport.clean">
+	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-data.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean, dsp-wire-transport.clean">
 		<delete dir="${DSP.RUNTIME}/" />
 	</target>
 </project>

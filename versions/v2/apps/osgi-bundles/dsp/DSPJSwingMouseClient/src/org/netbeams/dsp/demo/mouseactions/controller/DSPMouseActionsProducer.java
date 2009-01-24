@@ -50,7 +50,7 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
         scheduler.scheduleWithFixedDelay(new DspMouseWorker(this.localMemory), 0, 20, TimeUnit.SECONDS);
     }
 
-    @Override
+    //@Override
     public void trackMouseActionUpdate(NetBeamsMouseInfo netBeamsMouseInfo) {
         if (this.localMemory.size() <= 30) {
             this.localMemory.add(netBeamsMouseInfo);

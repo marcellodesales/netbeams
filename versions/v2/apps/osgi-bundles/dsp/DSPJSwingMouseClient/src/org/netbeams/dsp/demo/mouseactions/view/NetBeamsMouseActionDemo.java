@@ -110,43 +110,43 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
         this.notifyNetBeamsMouseListeners(eventDescription, e, action);
     }
 
-    @Override
+    //@Override
     public void mousePressed(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.PRESSED + " (# of clicks: " + e.getClickCount() + ") on (" + e.getX()
                 + " , " + e.getY() + ")", e, NetBeamsMouseActionEnum.PRESSED);
     }
 
-    @Override
+    //@Override
     public void mouseReleased(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.RELEASED + " at (" + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.RELEASED);
     }
 
-    @Override
+    //@Override
     public void mouseEntered(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.ENTERED + " at (" + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.ENTERED);
     }
 
-    @Override
+    //@Override
     public void mouseExited(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.EXITED + " at (" + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.EXITED);
     }
 
-    @Override
+    //@Override
     public void mouseClicked(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.CLICKED + " (# of clicks: " + e.getClickCount() + ") on (" + e.getX()
                 + " , " + e.getY() + ")", e, NetBeamsMouseActionEnum.CLICKED);
     }
 
-    @Override
+    //@Override
     public void mouseDragged(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.DRAGGED + " at " + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.DRAGGED);
     }
 
-    @Override
+    //@Override
     public void mouseMoved(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.MOVED + " at (" + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.MOVED);
@@ -168,7 +168,7 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
             this.setContentPane(this.demo);
         }
 
-        @Override
+        //@Override
         public void run() {
             this.createAndShowGUI();
         }

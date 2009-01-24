@@ -30,7 +30,7 @@ public final class NetBeamsMouseCollector implements NetBeamsMouseListener {
 		return new NetBeamsMouseCollector();
 	}
 
-	@Override
+	//@Override
 	public void trackMouseActionUpdate(NetBeamsMouseInfo nbMInfo) {
 		this.mouseEvents.add(nbMInfo);
 		//Send to DSP transfer channel...

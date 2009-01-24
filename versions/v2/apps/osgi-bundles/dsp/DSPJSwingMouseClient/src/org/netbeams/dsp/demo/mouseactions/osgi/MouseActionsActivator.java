@@ -26,7 +26,7 @@ public class MouseActionsActivator implements BundleActivator{
 	 */
 	private MouseActionDSPComponent producer;
 	
-    @Override
+    //@Override
     public void start(BundleContext bc) throws Exception {
         Log.log("MouseActions.Activate.start()");
         this.bundleContext = bc;
@@ -35,7 +35,7 @@ public class MouseActionsActivator implements BundleActivator{
         
     }
 
-    @Override
+    //@Override
     public void stop(BundleContext bc) throws Exception {
         Log.log("MouseActions.Activator.stop()");
         ActivatorHelper.unregisterOSGIService(this.bundleContext, this.serviceRegistration);

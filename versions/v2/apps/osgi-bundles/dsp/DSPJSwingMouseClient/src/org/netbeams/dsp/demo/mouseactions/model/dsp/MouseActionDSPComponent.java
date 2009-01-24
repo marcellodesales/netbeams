@@ -84,17 +84,17 @@ public class MouseActionDSPComponent implements DSPComponent  {
      */
     private ExecutorService dspDataSend;
 
-    @Override
+    //@Override
     public String getComponentType() {
         return COMPONENT_TYPE;
     }
 
-    @Override
+    //@Override
     public ComponentDescriptor getComponentDescriptor() {
         return componentDescriptor;
     }
 
-    @Override
+    //@Override
     public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
         Log.log(COMPONENT_TYPE + ".initComponent()");
 
@@ -102,31 +102,31 @@ public class MouseActionDSPComponent implements DSPComponent  {
         this.componentNodeId = componentNodeId;
     }
 
-    @Override
+    //@Override
     public String getComponentNodeId() {
         return componentNodeId;
     }
 
-    @Override
+    //@Override
     public void deliver(Message request) throws DSPException {
         // TODO How we should handle an invokation to this method when the
         // component is not a consumer?
     }
 
-    @Override
+    //@Override
     public Message deliverWithReply(Message message) throws DSPException {
         // TODO How we should handle an invokation to this method when the
         // component is not a consumer?
         return null;
     }
 
-    @Override
+    //@Override
     public Message deliverWithReply(Message message, long waitTime) throws DSPException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override
     public void startComponent() {
         Log.log("MouseAction.startComponent()");
         
@@ -158,7 +158,7 @@ public class MouseActionDSPComponent implements DSPComponent  {
         this.dspDataSend = DSPMouseActionsProducer.scheduler;
     }
 
-    @Override
+    //@Override
     public void stopComponent() {
         Log.log("MouseAction.stopComponent()");
         this.dspDataSend.shutdown();

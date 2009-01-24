@@ -19,7 +19,7 @@ import org.osgi.framework.ServiceRegistration;
  */
 public class MessagesDirectoryActivator implements BundleActivator {
     
-    private static final Logger log = Logger.getLogger(DSPWireTransportActivator.class);
+    private static final Logger log = Logger.getLogger(MessagesDirectoryActivator.class);
 
     /**
      * Bundle context

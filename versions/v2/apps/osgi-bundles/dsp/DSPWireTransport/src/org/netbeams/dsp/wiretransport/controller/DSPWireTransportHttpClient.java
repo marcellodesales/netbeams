@@ -64,7 +64,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         bc = dspBc;
         baseComponent = component;
         
-        scheduler.scheduleWithFixedDelay(new DspTransportSender(null), 0, 1, TimeUnit.MINUTES);
+        scheduler.scheduleWithFixedDelay(new DspTransportSender(null), 0, 1, TimeUnit.SECONDS);
     }
         
     public DSPWireTransportHttpClient(MessagesContainer messages) throws JAXBException {        
@@ -206,7 +206,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         }
     }
 
-    @Override
+    //@Override
     public void deliver(Message message) throws DSPException {
         // Always check if there is a broker available
         MessageBrokerAccessor messageBroker = bc.getDataBroker();
@@ -217,49 +217,49 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         }
     }
 
-    @Override
+    //@Override
     public Message deliverWithReply(Message message) throws DSPException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override
     public Message deliverWithReply(Message message, long waitTime) throws DSPException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override
     public ComponentDescriptor getComponentDescriptor() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override
     public void startComponent() throws DSPException {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    //@Override
     public void stopComponent() throws DSPException {
         // TODO Auto-generated method stub
 
     }
 
-    @Override
+    //@Override
     public String getComponentNodeId() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override
     public String getComponentType() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override
     public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
         // TODO Auto-generated method stub
 

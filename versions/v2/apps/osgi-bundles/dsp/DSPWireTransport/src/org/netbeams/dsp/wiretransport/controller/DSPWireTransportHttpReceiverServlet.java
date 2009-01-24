@@ -137,14 +137,15 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         } catch (UnknownHostException e) {
             compLocation = "dsp-server";
         }
-        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(this.getClass()
+        
+        DSPMessagesFactory bl = DSPMessagesFactory.INSTANCE;
+        
+        ComponentIdentifier producer = bl.makeDSPComponentIdentifier(this.getClass()
                 .toString(), compLocation, "org.netbeams.dsp.wiretransport");
-        ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(this.getClass()
+        ComponentIdentifier consumer = bl.makeDSPComponentIdentifier(this.getClass()
                 .toString(), requestUrl.toString(), "org.netbeams.dsp.wiretransport");
         String correlationId = requestMessagesContainer.getUudi();
-        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(correlationId, System.currentTimeMillis(),
-                producer, consumer);
-        return DSPMessagesFactory.INSTANCE.makeDSPEventMessage(UUID.randomUUID().toString(),
-                "org.netbeams.dsp.message", header, new Body());
+        Header header = bl.makeDSPMessageHeader(correlationId, System.currentTimeMillis(),producer, consumer);
+        return bl.makeDSPEventMessage(UUID.randomUUID().toString(), "org.netbeams.dsp.message", header, new Body());
     }
 }

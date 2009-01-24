@@ -1,10 +1,12 @@
 Manifest-Version: 1.0
 Bundle-Activator: org.netbeams.dsp.messagesdirectory.osgi.MessagesDirectoryActivator
 Bundle-Category: DSP
+Bundle-ClassPath: ., libs/log4j-1.2.15.jar
 Bundle-Description: The DSP Messages Directory service 
 Bundle-ManifestVersion: 2
 Bundle-Name: DSP Messages Directory
 Bundle-SymbolicName: DSPMessagesDirectory
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
+Export-Package: org.netbeams.dsp.messagesdirectory.controller, org.netbeams.dsp.messagesdirectory.model, org.netbeams.dsp.messagesdirectory.osgi
 Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.osgi.framework, org.apache.log4j

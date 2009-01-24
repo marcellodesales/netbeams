@@ -1,33 +1,45 @@
 <?xml version="1.0"?>
 <project name="dsp-wire-transport" default="dsp-wire-transport.all">
-	
-	<import file="../../../../init-targets.xml"/>
-	
+
+	<import file="../../../../init-targets.xml" />
+
 	<target name="dsp-wire-transport.all" depends="init,dsp-wire-transport.compile,dsp-wire-transport.jar" />
-	
-    <target name="dsp-wire-transport.compile">
 
-    	<path id="wire-transport.classpath">
-             <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
-             <path refid="project.class.path"/>
-         </path>
+	<target name="dsp-wire-transport.compile">
 
-    	<mkdir dir="${DSP.WIRE.TRANSPORT}/classes" />
-        <javac destdir="${DSP.WIRE.TRANSPORT}/classes" debug="on" srcdir="${DSP.WIRE.TRANSPORT}/src">
-        	<classpath refid="wire-transport.classpath"/>
-        </javac>
-    </target>
-	
-    <target name="dsp-wire-transport.jar">
-        <jar basedir="${DSP.WIRE.TRANSPORT}/classes" 
-             jarfile="${DSP.RUNTIME}/DSPWireTransport-${DSP.VERSION}.jar" 
-             compress="true" 
-        	 includes="**/*" 
-             manifest="${DSP.WIRE.TRANSPORT}/META-INF/MANIFEST.MF"/>
-    </target>
-    
-    <target name="dsp-wire-transport.clean">
-        <delete dir="${DSP.WIRE.TRANSPORT}/classes" />
-        <delete dir="${DSP.WIRE.TRANSPORT}/build" />
-    </target>
+		<path id="wire-transport.classpath">
+			<pathelement location="${XML.JAXB}/message/dist/message.jar" />
+			<path refid="project.class.path" />
+		</path>
+
+		<mkdir dir="${DSP.WIRE.TRANSPORT}/classes" />
+		<javac destdir="${DSP.WIRE.TRANSPORT}/classes" debug="on" srcdir="${DSP.WIRE.TRANSPORT}/src">
+			<classpath refid="wire-transport.classpath" />
+		</javac>
+	</target>
+
+	<target name="dsp-wire-transport.jar">
+
+		<mkdir dir="${DSP.WIRE.TRANSPORT}/tmp/" />
+		<copy todir="${DSP.WIRE.TRANSPORT}/tmp/">
+			<fileset dir="${THIRDPARTY}/ops4j/" includes="pax-web-service-0.5.1.jar" />
+			<fileset dir="${THIRDPARTY}/apache/" includes="commons-httpclient-3.1.jar" />
+			<fileset dir="${THIRDPARTY}/apache/" includes="commons-logging-1.1.1.jar" />
+			<fileset dir="${THIRDPARTY}/apache/" includes="commons-codec-1.3.jar" />
+			<fileset dir="${THIRDPARTY}/apache/" includes="xerces.jar" />
+			<fileset dir="${THIRDPARTY}/apache/" includes="xml-apis.jar" />
+			<fileset dir="${THIRDPARTY}/apache/" includes="log4j-1.2.15.jar" />
+	        <fileset dir="${THIRDPARTY}/jdom/" includes="jdom.jar" />
+		</copy>
+
+		<jar basedir="${DSP.WIRE.TRANSPORT}/classes" jarfile="${DSP.RUNTIME}/deployment/DSPWireTransport-${DSP.VERSION}.jar" compress="true" includes="**/*" manifest="${DSP.WIRE.TRANSPORT}/META-INF/MANIFEST.MF">
+			<zipfileset dir="${DSP.WIRE.TRANSPORT}/tmp/" includes="*.jar" prefix="libs" />
+		</jar>
+		<delete dir="${DSP.WIRE.TRANSPORT}/tmp/" />
+	</target>
+
+	<target name="dsp-wire-transport.clean">
+		<delete dir="${DSP.WIRE.TRANSPORT}/classes" />
+		<delete dir="${DSP.WIRE.TRANSPORT}/build" />
+	</target>
 </project>

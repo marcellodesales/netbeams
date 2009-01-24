@@ -4,9 +4,10 @@
 
 package org.netbeams.dsp.messagesdirectory.osgi;
 
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
-import org.netbeams.dsp.util.Log;
+import org.netbeams.dsp.wiretransport.osgi.DSPWireTransportActivator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -17,6 +18,8 @@ import org.osgi.framework.ServiceRegistration;
  * @author Marcello de Sales
  */
 public class MessagesDirectoryActivator implements BundleActivator {
+    
+    private static final Logger log = Logger.getLogger(DSPWireTransportActivator.class);
 
     /**
      * Bundle context
@@ -37,7 +40,7 @@ public class MessagesDirectoryActivator implements BundleActivator {
      * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
      */
     public void start(BundleContext bc) throws Exception {
-        Log.log("MessagesDirectory.Activate.start()");
+        log.info("MessagesDirectory.Activate.start()");
 
         this.bundleContext = bc;
         this.messagesDirectory = DSPMessagesDirectory.INSTANCE;
@@ -50,7 +53,7 @@ public class MessagesDirectoryActivator implements BundleActivator {
      * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
      */
     public void stop(BundleContext bc) throws Exception {
-        Log.log("MessagesDirectory.Activator.stop()");
+        log.info("MessagesDirectory.Activator.stop()");
         ActivatorHelper.unregisterOSGIService(this.bundleContext, this.serviceRegistration);
         this.messagesDirectory.stopComponent();
     }

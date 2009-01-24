@@ -45,7 +45,7 @@ public class DataCollector
     // ///////////////////////////////////////////
 
 
-    @Override
+    //@Override
     public String getComponentNodeId()
     {
         // TODO Auto-generated method stub
@@ -54,7 +54,7 @@ public class DataCollector
 
 
 
-    @Override
+    //@Override
     public String getComponentType()
     {
         return COMPONENT_TYPE;
@@ -62,7 +62,7 @@ public class DataCollector
 
 
 
-    @Override
+    //@Override
     public void initComponent(String componentNodeId, DSPContext context)
         throws DSPException
     {
@@ -73,7 +73,7 @@ public class DataCollector
 
 
 
-    @Override
+    //@Override
     public ComponentDescriptor getComponentDescriptor()
     {
         return componentDescriptor;
@@ -81,7 +81,7 @@ public class DataCollector
 
 
 
-    @Override
+    //@Override
     public void startComponent()
     {
         Log.log("DataCollector.startComponent()");
@@ -105,7 +105,7 @@ public class DataCollector
 
 
 
-    @Override
+    //@Override
     public void stopComponent()
     {
         Log.log("DataCollector.stopComponent()");
@@ -115,7 +115,7 @@ public class DataCollector
 
 
 
-    @Override
+    //@Override
     public void deliver(Message message)
         throws DSPException
     {
@@ -125,7 +125,7 @@ public class DataCollector
 
 
 
-    @Override
+    //@Override
     public Message deliverWithReply(Message request)
         throws DSPException
     {
@@ -136,7 +136,7 @@ public class DataCollector
 
 
 
-    @Override
+    //@Override
     public Message deliverWithReply(Message message, long waitTime)
         throws DSPException
     {

@@ -152,7 +152,7 @@ public enum DSPMessagesDirectory implements DSPComponent {
         return messages;
     }
 
-    @Override
+    //@Override
     public void deliver(Message message) throws DSPException {
         log.debug("message class=" + message.getClass().getName());
 
@@ -168,45 +168,45 @@ public enum DSPMessagesDirectory implements DSPComponent {
         }
     }
 
-    @Override
+    //@Override
     public Message deliverWithReply(Message message) throws DSPException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override
     public Message deliverWithReply(Message message, long waitTime) throws DSPException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override
     public ComponentDescriptor getComponentDescriptor() {
         return componentDescriptor;
     }
 
-    @Override
+    //@Override
     public void startComponent() throws DSPException {
         Log.log("MessagesDirectory.startComponent()");
     }
 
-    @Override
+    //@Override
     public void stopComponent() throws DSPException {
         Log.log("MessagesDirectory.stopComponent()");
     }
 
-    @Override
+    //@Override
     public String getComponentNodeId() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override
     public String getComponentType() {
         return COMPONENT_TYPE;
     }
 
-    @Override
+    //@Override
     public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
         Log.log("MessagesDirectory.initComponent()");
         this.context = context;

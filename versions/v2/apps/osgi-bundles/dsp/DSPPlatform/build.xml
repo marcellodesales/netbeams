@@ -25,8 +25,10 @@
 
 	<mkdir dir="${DSP.PLATFORM}/classes/libs"/>
 	<copy todir="${DSP.PLATFORM}/classes/libs">
-	    <fileset dir="${THIRDPARTY}/apache" includes="*.jar"/>
-	    <fileset dir="${THIRDPARTY}/jdom" includes="*.jar"/>
+	    <fileset dir="${THIRDPARTY}/apache" includes="log4j-1.2.15.jar"/>
+		<fileset dir="${THIRDPARTY}/apache" includes="xerces.jar"/>
+		<fileset dir="${THIRDPARTY}/apache" includes="xml-apis.jar"/>
+	    <fileset dir="${THIRDPARTY}/jdom" includes="jdom.jar"/>
 	    <fileset dir="${THIRDPARTY}/pax" includes="*.jar"/>
 		<fileset dir="${THIRDPARTY}/knopflerfish/2.1.1/" includes="http_all-2.1.0.jar" />
 	</copy>

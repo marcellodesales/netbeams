@@ -11,7 +11,7 @@
         <antcall target="jaxbsetup.xjc-compile">
             <param name="java-src" value="${java-src-dir}"/>
             <param name="schema.name" value="stocktick.xsd" />
-            <param name="message.package" value="${message-package}" />
+            <param name="message-package" value="${message-package}" />
         </antcall>
     </target>
 

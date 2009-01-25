@@ -1,7 +1,7 @@
 package org.netbeams.dsp.test.rand;
 
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
-import org.netbeams.dsp.util.Log;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -13,25 +13,27 @@ import org.osgi.framework.ServiceRegistration;
  */
 public class Activator implements BundleActivator {
 	
+	private static final Logger log = Logger.getLogger(Activator.class);
 	private BundleContext bundleContext;
     private ServiceRegistration serviceRegistration;
-    private RandomNumberGenerator producer;
+    private RandomProducer producer;
 
 	public void start(BundleContext bc) throws Exception {		
-		Log.log("RandomNumber.Activate.start()");
-		producer = new RandomNumberGenerator();
+		log.info("Starting...");
+		
 		bundleContext = bc;
-		producer = new RandomNumberGenerator();
-		producer.start();
-		serviceRegistration = ActivatorHelper.registerOSGIService(bundleContext, producer);
+		producer = new RandomProducer();
+		//producer.start();
+		serviceRegistration = ActivatorHelper.registerOSGIService(bc, producer);
 	}
 
 	public void stop(BundleContext bc) throws Exception {
-		Log.log("RandomNumber.Activator.stop()");
+		log.info("Stopping...");
 		ActivatorHelper.unregisterOSGIService(bundleContext, serviceRegistration);
-		producer.stopThread();
-		producer.join();
-		bundleContext = null;
+		producer.stopComponent();
+		//producer.stopThread();
+		//producer.join();
+		//bundleContext = null;
 		
 	}
 

@@ -21,7 +21,6 @@ import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
 import org.netbeams.dsp.messagesdirectory.model.DirectoryData;
 import org.netbeams.dsp.messagesdirectory.model.MessagesQueueState;
-import org.netbeams.dsp.util.Log;
 
 /**
  * The DSPMessagesDirectory represents the directory of messages being produced by DSP components.
@@ -91,10 +90,16 @@ public enum DSPMessagesDirectory implements DSPComponent {
     public synchronized MessagesContainer retrieveQueuedMessagesForTransmission(URL componentDestinition) {
         MessagesContainer container = DSPMessagesFactory.INSTANCE.makeDSPMessagesContainer();
         
-        for (DirectoryData data : this.outboundQueue.get(componentDestinition)) {
-            if (data.getState().equals(MessagesQueueState.QUEUED)) {
-                container.getMessage().add(data.getMessage());
-                data.setMessagesContainerId(UUID.fromString(container.getUudi()));
+        log.debug("The Messages queue is being queried for "+componentDestinition);
+        Queue<DirectoryData> outboutQueue = this.outboundQueue.get(componentDestinition);
+        if (outboutQueue != null) {
+            log.debug("The size of the messages in the outbound queue is " + outboutQueue.size());
+            
+            for (DirectoryData data : outboutQueue) {
+                if (data.getState().equals(MessagesQueueState.QUEUED)) {
+                    container.getMessage().add(data.getMessage());
+                    data.setMessagesContainerId(UUID.fromString(container.getUudi()));
+                }
             }
         }
         return container;
@@ -152,7 +157,6 @@ public enum DSPMessagesDirectory implements DSPComponent {
         return messages;
     }
 
-    //@Override
     public void deliver(Message message) throws DSPException {
         log.debug("message class=" + message.getClass().getName());
 
@@ -167,50 +171,41 @@ public enum DSPMessagesDirectory implements DSPComponent {
             }
         }
     }
-
-    //@Override
+    
     public Message deliverWithReply(Message message) throws DSPException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    //@Override
     public Message deliverWithReply(Message message, long waitTime) throws DSPException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    //@Override
     public ComponentDescriptor getComponentDescriptor() {
         return componentDescriptor;
     }
 
-    //@Override
     public void startComponent() throws DSPException {
-        Log.log("MessagesDirectory.startComponent()");
+        log.info("MessagesDirectory.startComponent()");
     }
-
-    //@Override
+    
     public void stopComponent() throws DSPException {
-        Log.log("MessagesDirectory.stopComponent()");
+        log.info("MessagesDirectory.stopComponent()");
     }
 
-    //@Override
     public String getComponentNodeId() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.componentNodeId;
     }
 
-    //@Override
     public String getComponentType() {
         return COMPONENT_TYPE;
     }
 
-    //@Override
     public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
-        Log.log("MessagesDirectory.initComponent()");
+        log.info("MessagesDirectory.initComponent()");
         this.context = context;
         this.componentNodeId = componentNodeId;
-        Log.log("Context: " + this.context.toString() + "  with component ID " + this.componentNodeId);
+        log.info("Context: " + this.context.toString() + "  with component ID " + this.componentNodeId);
     }
 }

@@ -28,6 +28,7 @@
 	    <fileset dir="${THIRDPARTY}/apache" includes="*.jar"/>
 	    <fileset dir="${THIRDPARTY}/jdom" includes="*.jar"/>
 	    <fileset dir="${THIRDPARTY}/pax" includes="*.jar"/>
+		<fileset dir="${THIRDPARTY}/knopflerfish/2.1.1/" includes="http_all-2.1.0.jar" />
 	</copy>
 
 	<jar basedir="${DSP.PLATFORM}/classes"

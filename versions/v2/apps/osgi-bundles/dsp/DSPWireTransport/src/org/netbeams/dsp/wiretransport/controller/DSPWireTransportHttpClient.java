@@ -33,8 +33,6 @@ import org.netbeams.dsp.message.EventMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
 import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
 public class DSPWireTransportHttpClient implements DSPComponent {
 
@@ -52,12 +50,12 @@ public class DSPWireTransportHttpClient implements DSPComponent {
 
     private static final String COMPONENT_TYPE = "org.netbeams.dsp.wiretransport";
 
-    private static final ComponentDescriptor componentDescriptor = null;
+    private static final ComponentDescriptor COMPONENT_DESCRIPTOR = null;
 
     /**
      * The DSPContext defines the external context
      */
-    private BundleContext bc;
+    private DSPMessagesDirectory messagesQueue;
     private DSPContext dspContext;
     /**
      * The DSP Node ID
@@ -68,9 +66,9 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      */
     private static BaseComponent baseComponent;
 
-    public DSPWireTransportHttpClient(BundleContext bc) throws JAXBException {
-        this.bc = bc;
-        log.info("Starting the DSP Wire Transport locally...");
+    public DSPWireTransportHttpClient(DSPMessagesDirectory dspQueues) throws JAXBException {
+        this.messagesQueue = dspQueues;
+        log.info("Starting DSP Transport Client...");
         log.info("Scheduling the transport senders to wake up at every 60 seconds...");
         scheduler.scheduleWithFixedDelay(new DspTransportSender(null), 0, 60, TimeUnit.SECONDS);
     }
@@ -112,15 +110,6 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      */
     private class DspTransportSender extends Thread {
 
-        /**
-         * Reference to the service
-         */
-        private ServiceReference reference;
-        /**
-         * Reference to the DSP Messages Directory service
-         */
-        private DSPMessagesDirectory messagesDir;
-
         private MessagesContainer messages;
 
         /**
@@ -128,8 +117,6 @@ public class DSPWireTransportHttpClient implements DSPComponent {
          */
         public DspTransportSender(MessagesContainer messages) {
             this.messages = messages;
-            this.reference =  bc.getServiceReference(DSPMessagesDirectory.class.getName());
-            this.messagesDir = (DSPMessagesDirectory) bc.getService(reference);
         }
 
         /**
@@ -175,14 +162,13 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             return responseXmlMessagesContainter;
         }
 
-        @Override
         public void run() {
 
             try {
                 // URL url = new URL(DSPMessagesDirectory.COMPONENTS_SERVER_URL);
                 URL url = new URL(DSPMessagesDirectory.COMPONENTS_SERVER_URL + "/transportDspMessages");
 
-                MessagesContainer messagesForRequest = this.messages != null ? this.messages : messagesDir
+                MessagesContainer messagesForRequest = this.messages != null ? this.messages : messagesQueue
                         .retrieveQueuedMessagesForTransmission(url);
                 if (messagesForRequest.getMessage().size() > 0) {
                     String messagesForRequestInXml = serializeMessagesContainer(messagesForRequest);
@@ -198,7 +184,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                             if (message instanceof EventMessage) {
                                 log.trace("Received Acknowledge message with correlation ID = "
                                         + message.getHeader().getCorrelationID());
-                                this.messagesDir.setMessagesToTransmitted(url, UUID.fromString(message.getHeader()
+                                messagesQueue.setMessagesToTransmitted(url, UUID.fromString(message.getHeader()
                                         .getCorrelationID().toString()));
                             } else {
                                 // At this point, deliver the messages for the broker through the proxy with
@@ -215,11 +201,6 @@ public class DSPWireTransportHttpClient implements DSPComponent {
 
             } catch (ConnectException e) {
                 log.error("There's no HTTP server available at " + DSPMessagesDirectory.COMPONENTS_SERVER_URL);
-                // if (++notAvailable == 5) {
-                // System.out.println("Server is not responding... terminating the service...");
-                // shutdownTransportWorker();
-                // }
-
             } catch (HttpException e) {
                 log.error(e.getMessage(), e);
             } catch (IOException e) {
@@ -240,7 +221,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
     private void shutdownTransportWorkers() {
         if (!scheduler.isShutdown()) {
             scheduler.shutdown();
-            System.out.println("shutting down all transport workers...");
+            log.trace("Shutting down all transport workers...");
         }
     }
 
@@ -250,7 +231,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         if (messageBroker != null) {
             messageBroker.send(message);
         } else {
-            log.error("WireTransport.push: Message Broker not available");
+            log.error("Message Broker not available while delivering message");
         }
     }
 
@@ -265,12 +246,11 @@ public class DSPWireTransportHttpClient implements DSPComponent {
     }
 
     public ComponentDescriptor getComponentDescriptor() {
-        return componentDescriptor;
+        return COMPONENT_DESCRIPTOR;
     }
 
     public void startComponent() throws DSPException {
         log.info("Starting component");
-        baseComponent.getComponentNodeId();
     }
 
     public void stopComponent() throws DSPException {
@@ -290,7 +270,6 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         log.info("Initializing component: " + componentNodeId);
         this.dspContext = context;
         this.componentNodeId = componentNodeId;
-
     }
 
 //    public static void main(String[] args) throws JAXBException {

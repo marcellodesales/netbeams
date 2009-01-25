@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Activator: org.netbeams.dsp.wiretransport.osgi.DSPWireTransportActivator
 Bundle-Category: DSP
-Bundle-ClassPath: ., libs/jdom.jar, libs/xerces.jar, libs/xml-apis.jar, libs/pax-web-service-0.5.1.jar, libs/commons-httpclient-3.1.jar, libs/commons-codec-1.3.jar, libs/commons-logging-1.1.1.jar, libs/log4j-1.2.15.jar
+Bundle-ClassPath: ., libs/commons-httpclient-3.1.jar, libs/commons-codec-1.3.jar, libs/commons-logging-1.1.1.jar, libs/jaxb-api.jar
 Bundle-Description: The DSP Wire Transport service 
 Bundle-ManifestVersion: 2
 Bundle-Name: DSP Wire Transport

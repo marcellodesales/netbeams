@@ -1,10 +1,12 @@
 package org.netbeams.dsp.demo.mouseactions.osgi;
 
 import org.netbeams.dsp.demo.mouseactions.model.dsp.MouseActionDSPComponent;
+import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
 import org.netbeams.dsp.util.Log;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
 /**
@@ -30,7 +32,10 @@ public class MouseActionsActivator implements BundleActivator{
     public void start(BundleContext bc) throws Exception {
         Log.log("MouseActions.Activate.start()");
         this.bundleContext = bc;
-        this.producer = new MouseActionDSPComponent();
+        
+        ServiceReference sr = bc.getServiceReference(DSPMessagesDirectory.class.getName());
+        DSPMessagesDirectory messagesQueue = (DSPMessagesDirectory)bc.getService(sr);
+        this.producer = new MouseActionDSPComponent(messagesQueue);
         this.serviceRegistration = ActivatorHelper.registerOSGIService(bc, this.producer);
         
     }

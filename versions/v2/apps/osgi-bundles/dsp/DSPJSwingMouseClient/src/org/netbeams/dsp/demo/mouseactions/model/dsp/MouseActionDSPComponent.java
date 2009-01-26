@@ -16,6 +16,7 @@ import org.netbeams.dsp.demo.mouseactions.controller.NetBeamsMouseCollector;
 import org.netbeams.dsp.demo.mouseactions.view.NetBeamsMouseActionDemo;
 import org.netbeams.dsp.demo.stocks.producer.StockProducer;
 import org.netbeams.dsp.message.Message;
+import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 import org.netbeams.dsp.util.Log;
 
 /**
@@ -38,11 +39,11 @@ public class MouseActionDSPComponent implements DSPComponent  {
     /**
      * Component type defined for the DSP framework to identify this message 
      */
-    public final static String COMPONENT_TYPE = "org.netbeams.dsp.example.miceaction";
+    public final static String COMPONENT_TYPE = "org.netbeams.dsp.demo.miceaction";
     /**
      * Defines the type of payload that will be sent. Please refer to the XML packages with the defined value
      */
-    public final static String MSG_CONTENT_TYPE_STOCK_TICK = "mouse.action";
+    public final static String MSG_CONTENT_TYPE_MOUSE_ACTIONS = "org.netbeams.dsp.demo.miceaction.mouseactionscontainer";
     
     static {
         componentDescriptor = new ComponentDescriptor();
@@ -51,7 +52,7 @@ public class MouseActionDSPComponent implements DSPComponent  {
         Collection<MessageCategory> consumedMessageCategories = new ArrayList<MessageCategory>();
         // MouseAction
         MessageCategory messageCategory = 
-            new MessageCategory(StockProducer.class.getName(), MSG_CONTENT_TYPE_STOCK_TICK);
+            new MessageCategory(StockProducer.class.getName(), MSG_CONTENT_TYPE_MOUSE_ACTIONS);
         
         producedMessageCategories.add(messageCategory);
         componentDescriptor.setMsgCategoryProduced(producedMessageCategories);
@@ -83,7 +84,19 @@ public class MouseActionDSPComponent implements DSPComponent  {
      * Executors.newSingleThreadScheduledExecutor()
      */
     private ExecutorService dspDataSend;
+    /**
+     * The reference to the messages queue DSP component.
+     */
+    private DSPMessagesDirectory messagesQueueComp;
 
+    /**
+     * Creates a new instance of the MouseActionDSPComponent with the given reference to the Messages Queue
+     * @param messagesQueue is the service where the DSP component needs to send messages.
+     */
+    public MouseActionDSPComponent(DSPMessagesDirectory messagesQueue) {
+        this.messagesQueueComp = messagesQueue;
+    }
+    
     //@Override
     public String getComponentType() {
         return COMPONENT_TYPE;
@@ -153,7 +166,7 @@ public class MouseActionDSPComponent implements DSPComponent  {
 //      NetBeamsMouseSystemOutput systemOutObserver = new NetBeamsMouseSystemOutput();
 //      demo.addNetBeamsMouseListener(systemOutObserver);
         
-        DSPMouseActionsProducer hs = new DSPMouseActionsProducer(context, this);
+        DSPMouseActionsProducer hs = new DSPMouseActionsProducer(this.messagesQueueComp);
         demo.addNetBeamsMouseListener(hs);
         this.dspDataSend = DSPMouseActionsProducer.scheduler;
     }

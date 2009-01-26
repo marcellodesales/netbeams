@@ -35,8 +35,7 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
     private static final String NEWLINE = "\n";
 
     /**
-     * The NetBeams Mouse listeners, who are interested about the mouse events
-     * on the JPanel.
+     * The NetBeams Mouse listeners, who are interested about the mouse events on the JPanel.
      */
     private List<NetBeamsMouseListener> netBeamsMouseListener;
 
@@ -77,9 +76,7 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
     /**
      * Adds a new listener to the NetBeamsMouse events.
      * 
-     * @param listener
-     *            is a NetBeamsMouseListener that is interested in the mouse
-     *            events.
+     * @param listener is a NetBeamsMouseListener that is interested in the mouse events.
      */
     public void addNetBeamsMouseListener(NetBeamsMouseListener listener) {
         this.netBeamsMouseListener.add(listener);
@@ -88,12 +85,9 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
     /**
      * Notifies all NetBeams components interested in the mouse actions.
      * 
-     * @param description
-     *            the full description from the event
-     * @param me
-     *            is the mouse event that trigged the event
-     * @param action
-     *            the action related to the mouse event
+     * @param description the full description from the event
+     * @param me is the mouse event that trigged the event
+     * @param action the action related to the mouse event
      */
     private void notifyNetBeamsMouseListeners(String description, MouseEvent me, NetBeamsMouseActionEnum action) {
         NetBeamsMouseInfo nbmi = NetBeamsMouseInfo.makeNetBeamsMouseInfo(action, NetBeamsMouseButtonEnum
@@ -110,43 +104,36 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
         this.notifyNetBeamsMouseListeners(eventDescription, e, action);
     }
 
-    //@Override
     public void mousePressed(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.PRESSED + " (# of clicks: " + e.getClickCount() + ") on (" + e.getX()
                 + " , " + e.getY() + ")", e, NetBeamsMouseActionEnum.PRESSED);
     }
 
-    //@Override
     public void mouseReleased(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.RELEASED + " at (" + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.RELEASED);
     }
 
-    //@Override
     public void mouseEntered(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.ENTERED + " at (" + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.ENTERED);
     }
 
-    //@Override
     public void mouseExited(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.EXITED + " at (" + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.EXITED);
     }
 
-    //@Override
     public void mouseClicked(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.CLICKED + " (# of clicks: " + e.getClickCount() + ") on (" + e.getX()
                 + " , " + e.getY() + ")", e, NetBeamsMouseActionEnum.CLICKED);
     }
 
-    //@Override
     public void mouseDragged(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.DRAGGED + " at " + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.DRAGGED);
     }
 
-    //@Override
     public void mouseMoved(MouseEvent e) {
         this.eventOutput(NetBeamsMouseActionEnum.MOVED + " at (" + e.getX() + " , " + e.getY() + ")", e,
                 NetBeamsMouseActionEnum.MOVED);
@@ -168,14 +155,14 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
             this.setContentPane(this.demo);
         }
 
-        //@Override
+        // @Override
         public void run() {
             this.createAndShowGUI();
         }
 
         /**
-         * Create the GUI and show it. For thread safety, this method should be
-         * invoked from the event-dispatching thread.
+         * Create the GUI and show it. For thread safety, this method should be invoked from the event-dispatching
+         * thread.
          */
         private void createAndShowGUI() {
             // Display the window.

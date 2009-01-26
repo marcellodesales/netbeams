@@ -3,10 +3,7 @@ package org.netbeams.dsp.wiretransport.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,14 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.message.AbstractMessage;
-import org.netbeams.dsp.message.Body;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.message.EventMessage;
 import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
+import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.message.MessagesContainer;
 import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 import org.osgi.framework.BundleContext;
@@ -31,6 +29,8 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
 
     private BundleContext bc;
 
+    private static final Logger log = Logger.getLogger(DSPWireTransportHttpReceiverServlet.class);
+    
     public DSPWireTransportHttpReceiverServlet(BundleContext bc) {
         this.bc = bc;
     }
@@ -46,12 +46,15 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
             try {
                 this.deliverMessagesToLocalDSP(messagesContainerXml);
             } catch (JAXBException e) {
+                log.error(e.getMessage(), e);
                 throw new IllegalArgumentException(e.getMessage());
             } catch (DSPException e) {
+                log.error(e.getMessage(), e);
                 throw new IllegalArgumentException(e.getMessage());
             }
 
         } else {
+            log.error("There's not HTTP parameter called "+ DSPWireTransportHttpClient.TRANSPORT_HTTP_VARIABLE +" with the Messages Container in xml");
             throw new IllegalArgumentException("The request paramemter " + DSPWireTransportHttpClient.TRANSPORT_HTTP_VARIABLE
                     + "is missing");
         }
@@ -90,31 +93,34 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         //Deliver all the messages to the DSP Broker component
         MessagesContainer requestMessagesContainer = DSPWireTransportHttpClient.deserializeMessagesContainer(
                                                                                   messagesContainerRequestXML);
+        log.debug("Retrieved messages container from the HTTP request");
+        
+        //OSGi MUST be removed
         ServiceReference transportService = bc.getServiceReference(DSPWireTransportHttpClient.class.getName());
-        DSPWireTransportHttpClient dspWireTransport = (DSPWireTransportHttpClient) bc.getService(transportService);
+        DSPWireTransportHttpClient dspWireTransport = (DSPWireTransportHttpClient) bc.getService(transportService);        
+        log.trace("The DSP Transport client service is running to send...");
+        
         for (AbstractMessage msg : requestMessagesContainer.getMessage()) {
+            log.debug("Delivering messages from the HTTP request... They are directed to the Broker through the deliver()");
             dspWireTransport.deliver((Message) msg);
         }
         
         //Retrieve the outbound messages from the Messages Queues for the client DSP component
         ServiceReference messagesQueueService = bc.getServiceReference(DSPMessagesDirectory.class.getName());
         DSPMessagesDirectory messagesQueue = (DSPMessagesDirectory) bc.getService(messagesQueueService);
-        MessagesContainer responseMessagesContainer = null;
-        URL requestUrl = null;
-        try {
-            requestUrl = new URL(requestMessagesContainer.getHost());
-            responseMessagesContainer = messagesQueue.retrieveQueuedMessagesForTransmission(requestUrl);
-        } catch (MalformedURLException e) {
-            responseMessagesContainer = messagesQueue.retrieveQueuedMessagesForTransmission(null);
-        }
-
+        log.trace("The DSP Messages Queue service is running to send...");
+        
+        String destIpAddress = requestMessagesContainer.getHost();
+        MessagesContainer responseMessagesContainer =  messagesQueue.retrieveQueuedMessagesForTransmission(destIpAddress);
+        log.trace("Retrieved the messages container for the given client IP: " + destIpAddress);
         // Adding the acknowledgment message to be sent back to the client
         try {
             Message acknowledgeMessage = null;
-            acknowledgeMessage = this.generateAcknowledgmentMessageForRequest(requestMessagesContainer, requestUrl);
+            acknowledgeMessage = this.generateAcknowledgmentMessageForRequest(responseMessagesContainer, destIpAddress);
             responseMessagesContainer.getMessage().add(acknowledgeMessage);
+            log.debug("Adding an acknowledgement message for the client's request");
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return responseMessagesContainer;
     }
@@ -129,7 +135,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
      * @throws JAXBException
      * @throws ParserConfigurationException
      */
-    private EventMessage generateAcknowledgmentMessageForRequest(MessagesContainer requestMessagesContainer, URL requestUrl)
+    private EventMessage generateAcknowledgmentMessageForRequest(MessagesContainer requestMessagesContainer, String destIpAddress)
             throws JAXBException, ParserConfigurationException {
         String compLocation = "";
         try {
@@ -143,9 +149,9 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         ComponentIdentifier producer = bl.makeDSPComponentIdentifier(this.getClass()
                 .toString(), compLocation, "org.netbeams.dsp.wiretransport");
         ComponentIdentifier consumer = bl.makeDSPComponentIdentifier(this.getClass()
-                .toString(), requestUrl.toString(), "org.netbeams.dsp.wiretransport");
+                .toString(), destIpAddress, "org.netbeams.dsp.wiretransport");
         String correlationId = requestMessagesContainer.getUudi();
-        Header header = bl.makeDSPMessageHeader(correlationId, System.currentTimeMillis(),producer, consumer);
-        return bl.makeDSPEventMessage(UUID.randomUUID().toString(), "org.netbeams.dsp.message", header, new Body());
+        Header header = bl.makeDSPMessageHeader(correlationId, producer, consumer);
+        return bl.makeDSPEventMessage(header, new MessageContent());
     }
 }

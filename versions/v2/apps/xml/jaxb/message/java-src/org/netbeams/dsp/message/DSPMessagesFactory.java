@@ -53,16 +53,15 @@ public enum DSPMessagesFactory {
 
     /**
      * @param correlationId
-     * @param creationTime is the
+     * @param creationTime is 
      * @param producer is the ComponentIdentifier instance for the producer.
      * @param consumer is the ComponentIdentifier instance for the consumer.
      * @return a new instance of the Header for the DSP Message
      */
-    public Header makeDSPMessageHeader(String correlationId, long creationTime, ComponentIdentifier producer,
-            ComponentIdentifier consumer) {
+    public Header makeDSPMessageHeader(String correlationId, ComponentIdentifier producer, ComponentIdentifier consumer) {
         Header header = this.factory.createHeader();
         header.setCorrelationID(correlationId);
-        header.setCreationTime(creationTime);
+        header.setCreationTime(System.currentTimeMillis());
         header.setProducer(producer);
         header.setConsumer(consumer);
         return header;
@@ -105,10 +104,11 @@ public enum DSPMessagesFactory {
      * @return a new instance of the DSP Messages Container with the correct new values of the UUID and the creation
      *         time of the message.
      */
-    public MessagesContainer makeDSPMessagesContainer() {
+    public MessagesContainer makeDSPMessagesContainer(String destIpAddress) {
         MessagesContainer messages = this.factory.createMessagesContainer();
         messages.setCreationTime(this.makeCurrentIsoDateTime());
         messages.setUudi(UUID.randomUUID().toString());
+        messages.setHost(destIpAddress);
         return messages;
     }
 
@@ -121,70 +121,70 @@ public enum DSPMessagesFactory {
      * @throws JAXBException if there's a parsing error from JAXB
      * @throws ParserConfigurationException if there's a problem parsing the body object
      */
-    private Message makeDSPMessage(Message m1, String messageId, String contentType, Header header, Object bodyNode)
+    private Message makeDSPMessage(Message m1, Header header, MessageContent bodyPayload)
             throws JAXBException, ParserConfigurationException {
-        m1.setContentType(contentType);
-        m1.setMessageID(messageId);
+        m1.setContentType(bodyPayload.getContentContextForJAXB());
+        m1.setMessageID(UUID.randomUUID().toString());
         m1.setHeader(header);
 
-        Body body = this.factory.createBody();
-        JAXBContext context = JAXBContext.newInstance(contentType);
+        Body dspMsgBody = this.factory.createBody();
+        JAXBContext context = JAXBContext.newInstance(bodyPayload.getContentContextForJAXB());
         Marshaller m = context.createMarshaller();
         Element xmlDocumentNode = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
                 .createElement("temp");
-        m.marshal(bodyNode, xmlDocumentNode);
-        body.setAny(xmlDocumentNode.getFirstChild());
-        m1.setBody(body);
+        m.marshal(bodyPayload, xmlDocumentNode);
+        dspMsgBody.setAny(xmlDocumentNode.getFirstChild());
+        m1.setBody(dspMsgBody);
 
         return m1;
     }
 
-    public MeasureMessage makeDSPMeasureMessage(String messageId, String contentType, Header header, Object bodyNode)
+    public MeasureMessage makeDSPMeasureMessage(Header header, MessageContent body)
             throws JAXBException, ParserConfigurationException {
         MeasureMessage m1 = this.factory.createMeasureMessage();
-        return (MeasureMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+        return (MeasureMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public EventMessage makeDSPEventMessage(String messageId, String contentType, Header header, Object bodyNode)
+    public EventMessage makeDSPEventMessage(Header header, MessageContent body)
             throws JAXBException, ParserConfigurationException {
         EventMessage m1 = this.factory.createEventMessage();
-        return (EventMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+        return (EventMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public ActionMessage makeDSPActionMessage(String messageId, String contentType, Header header, Object bodyNode)
+    public ActionMessage makeDSPActionMessage(Header header, MessageContent body)
             throws JAXBException, ParserConfigurationException {
         ActionMessage m1 = this.factory.createActionMessage();
-        return (ActionMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+        return (ActionMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public QueryMessage makeDSPQueryMessage(String messageId, String contentType, Header header, Object bodyNode)
+    public QueryMessage makeDSPQueryMessage(Header header, MessageContent body)
             throws JAXBException, ParserConfigurationException {
         QueryMessage m1 = this.factory.createQueryMessage();
-        return (QueryMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+        return (QueryMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public CreateMessage makeDSPCreateMessage(String messageId, String contentType, Header header, Object bodyNode)
+    public CreateMessage makeDSPCreateMessage(Header header, MessageContent body)
             throws JAXBException, ParserConfigurationException {
         CreateMessage m1 = this.factory.createCreateMessage();
-        return (CreateMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+        return (CreateMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public DeleteMessage makeDSPDeleteMessage(String messageId, String contentType, Header header, Object bodyNode)
+    public DeleteMessage makeDSPDeleteMessage(Header header, MessageContent body)
             throws JAXBException, ParserConfigurationException {
         DeleteMessage m1 = this.factory.createDeleteMessage();
-        return (DeleteMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+        return (DeleteMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public InsertMessage makeDSPInsertMessage(String messageId, String contentType, Header header, Object bodyNode)
+    public InsertMessage makeDSPInsertMessage(Header header, MessageContent body)
             throws JAXBException, ParserConfigurationException {
         InsertMessage m1 = this.factory.createInsertMessage();
-        return (InsertMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+        return (InsertMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public UpdateMessage makeDSPUpdateMessage(String messageId, String contentType, Header header, Object bodyNode)
+    public UpdateMessage makeDSPUpdateMessage(Header header, MessageContent body)
             throws JAXBException, ParserConfigurationException {
         UpdateMessage m1 = this.factory.createUpdateMessage();
-        return (UpdateMessage) this.makeDSPMessage(m1, messageId, contentType, header, bodyNode);
+        return (UpdateMessage) this.makeDSPMessage(m1, header, body);
     }
 
 }

@@ -1,6 +1,5 @@
 package org.netbeams.dsp.messagesdirectory.model;
 
-import java.net.URL;
 import java.util.UUID;
 
 import org.netbeams.dsp.message.Message;
@@ -17,7 +16,7 @@ public class DirectoryData {
     /**
      * The destination URL of the component that will receive the message
      */
-    private URL destinition;
+    private String destinitionIpAddress;
     /**
      * The DSP message to be delivered.
      */
@@ -39,8 +38,8 @@ public class DirectoryData {
      * @param componentDestinition is the URL of the DSP component.
      * @param dspMessage is the DSP message to be sent.
      */
-    public DirectoryData(URL componentDestinition, Message dspMessage) {
-        this.destinition = componentDestinition;
+    public DirectoryData(Message dspMessage) {
+        this.destinitionIpAddress = dspMessage.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
         this.message = dspMessage;
         this.state = MessagesQueueState.QUEUED;
     }
@@ -52,8 +51,8 @@ public class DirectoryData {
      * @param dspMessage is the dspMessage.
      * @return a new instance of the DirectoryData.
      */
-    public static DirectoryData makeNewInstance(URL componentDestinition, Message dspMessage) {
-        return new DirectoryData(componentDestinition, dspMessage);
+    public static DirectoryData makeNewInstance(Message dspMessage) {
+        return new DirectoryData(dspMessage);
     }
 
     public MessagesQueueState getState() {
@@ -82,8 +81,8 @@ public class DirectoryData {
         this.containerId = messagesContainerId;
     }
 
-    public URL getDestinition() {
-        return this.destinition;
+    public String getDestinitionIpAddress() {
+        return this.destinitionIpAddress;
     }
 
     public Message getMessage() {
@@ -93,7 +92,7 @@ public class DirectoryData {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof DirectoryData) {
-            return this.destinition.equals(((DirectoryData) obj).destinition)
+            return this.destinitionIpAddress.equals(((DirectoryData) obj).destinitionIpAddress)
                     && this.message.getMessageID().equals(((DirectoryData) obj).message.getMessageID());
         }
         return super.equals(obj);
@@ -101,7 +100,7 @@ public class DirectoryData {
 
     @Override
     public int hashCode() {
-        return this.destinition.hashCode() + this.state.hashCode() + this.containerId.hashCode()
+        return this.destinitionIpAddress.hashCode() + this.state.hashCode() + this.containerId.hashCode()
                 + this.message.hashCode();
     }
 }

@@ -1,111 +1,141 @@
 package org.netbeams.dsp.demo.mouseactions.controller;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.netbeams.dsp.BaseComponent;
-import org.netbeams.dsp.DSPContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPException;
-import org.netbeams.dsp.MessageBrokerAccessor;
-import org.netbeams.dsp.MessageFactory;
 import org.netbeams.dsp.demo.mouseactions.ButtonName;
 import org.netbeams.dsp.demo.mouseactions.EventName;
 import org.netbeams.dsp.demo.mouseactions.MouseAction;
 import org.netbeams.dsp.demo.mouseactions.MouseActionsContainer;
 import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo;
-import org.netbeams.dsp.message.MeasureMessage;
+import org.netbeams.dsp.demo.mouseactions.model.dsp.MouseActionDSPComponent;
+import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.message.DSPMessagesFactory;
+import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
-import org.netbeams.dsp.util.Log;
+import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
+import org.netbeams.dsp.wiretransport.controller.DSPWireTransportHttpClient;
 
 public class DSPMouseActionsProducer implements NetBeamsMouseListener {
 
     /**
-     * Executor responsible for the execution of the thread with a fixed delay to send the values. 
+     * Detault Logger
+     */
+    private static final Logger log = Logger.getLogger(DSPMessagesDirectory.class);
+
+    /**
+     * Executor responsible for the execution of the thread with a fixed delay to send the values.
      */
     public static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     /**
-     * The local memory defines the measurements from the mouse actions. 
+     * The local memory defines the measurements from the mouse actions.
      */
     private List<NetBeamsMouseInfo> localMemory;
-    /**
-     * The DSPContext defines the external context
-     */
-    private static DSPContext bc;
-    /**
-     * The base component is responsible for this producer.
-     */
-    private static BaseComponent baseComponent;
+    private DSPMessagesDirectory messagesQueueService;
+
     /**
      * Creates a new Mouse Actions client that is responsible for sending the information to the DSP component.
+     * 
      * @param dspBc is the DSPContext implementation initialized by the OSGi framework.
      * @param component is the DSP base component responsible for this producer.
      */
-    public DSPMouseActionsProducer(DSPContext dspBc, BaseComponent component) {
+    public DSPMouseActionsProducer(DSPMessagesDirectory messagesQueue) {
         this.localMemory = new LinkedList<NetBeamsMouseInfo>();
-        bc = dspBc;
-        baseComponent = component;
         scheduler.scheduleWithFixedDelay(new DspMouseWorker(this.localMemory), 0, 20, TimeUnit.SECONDS);
+        this.messagesQueueService = messagesQueue;
+        log.trace("The DSPMouseActionsProducer initialized: internal sender at every 10 seconds for 3 times...");
     }
 
-    //@Override
     public void trackMouseActionUpdate(NetBeamsMouseInfo netBeamsMouseInfo) {
         if (this.localMemory.size() <= 30) {
+            log.trace("Tracking updates since there are less than 30 items on the producer local memory...");
             this.localMemory.add(netBeamsMouseInfo);
         }
     }
+
     /**
-     * The DSPMouseWorker implements a pattern of a given worker thread that is used at different types by
-     * the Executor. 
+     * The DSPMouseWorker implements a pattern of a given worker thread that is used at different types by the Executor.
+     * 
      * @author marcello de sales <marcello.sales@gmail.com>
      */
     private class DspMouseWorker extends Thread {
 
         /**
-         * The mouse actions is the list of all observations (measuraments). 
+         * Detault Logger
+         */
+        private final Logger thrlog = Logger.getLogger(DspMouseWorker.class);
+        
+        /**
+         * The mouse actions is the list of all observations (measuraments).
          */
         private List<NetBeamsMouseInfo> mouseActions;
 
         public DspMouseWorker(List<NetBeamsMouseInfo> mouseActions) {
             this.mouseActions = mouseActions;
             this.setDaemon(true);
+            thrlog.trace("starting the worker for mouse actions with " + mouseActions.size() + "instances.");
         }
-        
+
         /**
-         * The DSP interface where the message is sent through the Broker. 
-         * @param data is the payload for the DSP component. It contains the given MouseActionsContainer with
-         * the measurements of the mouse captured from the JFrame.
+         * The DSP interface where the message is sent through the Broker.
+         * 
+         * @param data is the payload for the DSP component. It contains the given MouseActionsContainer with the
+         *        measurements of the mouse captured from the JFrame.
          * @throws DSPException with any communication error in the platform.
          */
-        private void send(MouseActionsContainer data) throws DSPException {
+        private void send(MouseActionsContainer data) {
+            thrlog.debug("Preparying to send MouseActionsContainer data");
             // Create the message
-            Message message = MessageFactory.newMessage(MeasureMessage.class, data, baseComponent);
-            Log.log("MouseAction.prepareDSPData()");
-
-            if (data == null) {
-                Log.log("MouseActionData is null");
-            } else {
-                if (data.getMouseAction() == null) {
-                    Log.log("MouseAction Collection is null");
-                } else {
-                    Log.log("Mouse Collection size is " + data.getMouseAction().size());
+            String localIPAddress;
+            try {
+                localIPAddress = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e1) {
+                localIPAddress = "127.0.0.1";
+            }
+            thrlog.trace("Sending from " + localIPAddress);
+            ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
+                    MouseActionDSPComponent.class.getName(), localIPAddress, data.getContentContextForJAXB());
+            ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier("WEB",
+                    DSPWireTransportHttpClient.DEFAULT_DEMO_IP, null);
+            
+            thrlog.trace("Sending to " + consumer.getComponentLocator().getNodeAddress().getValue());
+            Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, consumer);
+            
+            try {
+                Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data);
+                messagesQueueService.addMessageToOutboundQueue(message);
+                if (data != null) {
+                    thrlog.debug("Sending " + data.getMouseAction().size() + "items");
                 }
+
+            } catch (JAXBException e) {
+                thrlog.error(e.getMessage(), e);
+            } catch (ParserConfigurationException e) {
+                thrlog.error(e.getMessage(), e);
             }
 
-            // Always check if there is a broker available
-            MessageBrokerAccessor messageBroker = bc.getDataBroker();
-            if (messageBroker != null) {
-                messageBroker.send(message);
-            } else {
-                Log.log("MouseAction.push: Message Broker not available");
-            }
+            // // Always check if there is a broker available
+            // MessageBrokerAccessor messageBroker = bc.getDataBroker();
+            // if (messageBroker != null) {
+            // messageBroker.send(message);
+            // } else {
+            // Log.log("MouseAction.push: Message Broker not available");
+            // }
         }
 
         /**
-         * @return the MouseActionsContainer for the given set of mouseActions, which is passed
-         * in the instantiation of an instance of this DSPMouseWorker.
+         * @return the MouseActionsContainer for the given set of mouseActions, which is passed in the instantiation of
+         *         an instance of this DSPMouseWorker.
          */
         private MouseActionsContainer makeMouseActionsContainerFromMouseActions() {
             MouseActionsContainer actionsContainer = new MouseActionsContainer();
@@ -120,18 +150,13 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
             }
             return actionsContainer;
         }
-        
-        @Override
+
         public void run() {
 
             MouseActionsContainer data = this.makeMouseActionsContainerFromMouseActions();
-            try {
-                this.send(data);
-            } catch (DSPException e) {
-                e.printStackTrace();
-            }
-            
-            //this section determines other communication channels
+            this.send(data);
+
+            // this section determines other communication channels
 
             // System.out.println("Waking up " + getClass() +
             // " to register actions to server");
@@ -159,7 +184,7 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
             // returnCode = client.executeMethod(post);
             //
             // if (returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
-            //System.err.println("The Post method is not implemented by this URI"
+            // System.err.println("The Post method is not implemented by this URI"
             // );
             // // still consume the response body
             // post.getResponseBodyAsString();

@@ -30,6 +30,10 @@ public class DSPWireTransportActivator implements BundleActivator {
 
     private static final Logger log = Logger.getLogger(DSPWireTransportActivator.class);
 
+    public static final String DESTINATION_PORT = "8080";
+
+    public static final String TRANSPORT_CONTEXT_URL = "/transportDspMessages";
+
     /**
      * Http Service for the DSP Wire Transport HTTP Server
      */
@@ -75,15 +79,18 @@ public class DSPWireTransportActivator implements BundleActivator {
         // Register the servlets for the DSP Wire Transport
         this.registerServlets();
 
-        String host = "";
+        String host = "", destIpAddress = "";
         try {
             host = InetAddress.getLocalHost().getHostName();
+            destIpAddress = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e1) {
             log.debug("Could not find the name of this host for the network service... Using 'localhost'...");
             host = "localhost";
+            destIpAddress = "127.0.0.1";
         }
         log.info("DSP Wire Transport Service Available...");
-        log.info("HTTP POST requests as XML to http://" + host + ":8080/transportDspMessages");
+        log.info("HTTP POST requests as XML to http://" + host + ":"+ DESTINATION_PORT + TRANSPORT_CONTEXT_URL);
+        log.info("You can also use the URL with the IP address: http://" +destIpAddress+ ":8080/transportDspMessages");
 
         ServiceReference sr = bc.getServiceReference(DSPMessagesDirectory.class.getName());
         DSPMessagesDirectory messagesQueue = (DSPMessagesDirectory) bc.getService(sr);

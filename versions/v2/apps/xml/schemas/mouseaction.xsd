@@ -4,10 +4,6 @@
     targetNamespace="http://dsp.netbeams.org/demo/mouseaction.xsd">
 
     <xs:import schemaLocation="message-content.xsd" namespace="http://www.netbeams.dsp.org/message.xsd" />
-
-    <xs:simpleType name="point">
-        <xs:restriction base="xs:string" />
-    </xs:simpleType>
     
  	<xs:simpleType name="buttonName">
  		<xs:restriction base="xs:string">
@@ -30,14 +26,10 @@
 	</xs:simpleType>
 	
     <xs:complexType name="mouseAction">
-        <xs:simpleContent>
-            <xs:extension base="mouseaction:point">
-                <xs:attribute name="x" type="xs:int" />
-                <xs:attribute name="y" type="xs:int" />
-                <xs:attribute name="button" type="mouseaction:buttonName"/>
-                <xs:attribute name="event" type="mouseaction:eventName" />
-            </xs:extension>
-        </xs:simpleContent>
+        <xs:attribute name="x" type="xs:int" />
+        <xs:attribute name="y" type="xs:int" />
+        <xs:attribute name="button" type="mouseaction:buttonName"/>
+        <xs:attribute name="event" type="mouseaction:eventName" />
     </xs:complexType>
 
     <xs:element name="mouseActionsContainer">

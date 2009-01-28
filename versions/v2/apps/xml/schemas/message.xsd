@@ -123,11 +123,18 @@
 	</xs:complexType>
 
 	<xs:element name="EventMessage"/>
-    <xs:complexType name="EventMessage">
-	   <xs:complexContent>
+    	<xs:complexType name="EventMessage">
+	   	<xs:complexContent>
 			<xs:extension base="AbstractMessage"/>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	<xs:element name="AcknowledgeMessage"/>
+    	<xs:complexType name="AcknowledgeMessage">
+	   	<xs:complexContent>
+			<xs:extension base="AbstractMessage"/>
+		</xs:complexContent>
+	</xs:complexType>	
 
     <xs:element name="MessagesContainer">
 	    <xs:annotation>

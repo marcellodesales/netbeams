@@ -2,6 +2,11 @@ package org.netbeams.sim.ysi;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author Teresa L. Johnson <gamma.particle@gmail.com>
+ *
+ */
 public class SondeUnattendedSampleMenu extends SondeMenu {
 	
 	private static final String UNATTENDED_SAMPLE_MENU_TITLE = "------------Unattended setup-----------";

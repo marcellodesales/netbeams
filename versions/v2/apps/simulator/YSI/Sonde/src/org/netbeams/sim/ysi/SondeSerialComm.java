@@ -37,6 +37,7 @@ public class SondeSerialComm {
 
 	            (new Thread(new SondeSerialReader(in))).start();
 	            (new Thread(new SondeSerialWriter(out))).start();
+	            System.err.println("Success: Connection established");
 	        } else {
 	            System.err.println("Error: Only serial ports are handled by this example.");
 	        }

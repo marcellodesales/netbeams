@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ackmsg="http://dsp.netbeams.org/acknowledgements.xsd"
+    xmlns:dspmessage="http://www.netbeams.dsp.org/message.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    targetNamespace="http://dsp.netbeams.org/acknowledgements.xsd">
+
+    <xs:import schemaLocation="message-content.xsd" namespace="http://www.netbeams.dsp.org/message.xsd" />
+	
+	<xs:complexType name="ackType">
+        <xs:attribute name="uuid" type="xs:string" />
+    </xs:complexType>
+
+    <xs:element name="acksContainer">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="dspmessage:AbstractMessageContent">
+                    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                        <xs:element name="ack" type="ackmsg:ackType" />
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

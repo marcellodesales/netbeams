@@ -8,4 +8,4 @@ Bundle-Name: DSP Wire Transport
 Bundle-SymbolicName: DSPWireTransport
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.osgi.framework, org.netbeams.dsp.messagesdirectory.model, org.netbeams.dsp.messagesdirectory.controller, org.osgi.service.http, javax.servlet, javax.servlet.http, org.apache.log4j
+Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.message.content, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.osgi.framework, org.netbeams.dsp.messagesdirectory.model, org.netbeams.dsp.messagesdirectory.controller, org.osgi.service.http, javax.servlet, javax.servlet.http, org.apache.log4j

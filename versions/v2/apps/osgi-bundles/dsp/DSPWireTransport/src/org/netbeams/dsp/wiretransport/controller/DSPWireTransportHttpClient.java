@@ -185,8 +185,15 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                         String messagesForRequestInXml = serializeMessagesContainer(messagesForRequest);
                         thLog.trace("HTTP Request BODY: " + messagesForRequestInXml);
 
-                        destinationURL = new URL("http://" + messagesForRequest.getHost() + ":"  +  DESTINATION_PORT
+                        destinationURL = new URL("http://" + messagesForRequest.getHost() + ":" + DESTINATION_PORT
                                 + DSPWireTransportHttpReceiverServlet.BASE_URI);
+
+                        thLog.trace("Setting the messages in the container " + messagesForRequest.getUudi()
+                                + " to the 'transmitted' state...");
+                        // Set the messages to transmitted before sending them. This avoid messages
+                        // sent to the local DSP to be in an inaccurate state.
+                        messagesQueue.setMessagesToTransmitted(messagesForRequest.getHost(), UUID
+                                .fromString(messagesForRequest.getUudi()));
 
                         String messagesFromResponseInXml = this.transmitMessagesReceiveResponse(
                                 messagesForRequestInXml, UUID.fromString(messagesForRequest.getUudi()), destinationURL);

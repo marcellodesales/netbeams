@@ -12,17 +12,22 @@
 		<priority>71</priority>
 		<required />
 	</component>
-	<component>
-		<name>DSPMessagesDirectory</name>
-		<bundle>DSPMessagesDirectory-0.1.jar
-		</bundle>
-		<priority>72</priority>
-		<required />
-	</component>
-	<component>
-		<name>DSPWebDataLogger</name>
-		<bundle>DSPWebLogger-0.1.jar</bundle>
-		<priority>73</priority>
-		<required />
-	</component>
+    <component>
+        <name>DSPMessagesDirectory</name>
+        <bundle>DSPMessagesDirectory-0.1.jar</bundle>
+        <priority>72</priority>
+        <required />
+    </component>
+    <component>
+        <name>DSPWireTransport</name>
+        <bundle>DSPWireTransport-0.1.jar</bundle>
+        <priority>73</priority>
+        <required />
+    </component>
+    <component>
+        <name>DSPJSwingMouseClient</name>
+        <bundle>DSPJSwingMouseClient-0.1.jar</bundle>
+        <priority>74</priority>
+        <required />
+    </component>
 </components>

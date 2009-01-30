@@ -4,6 +4,7 @@
 	<import file="../../../../init-targets.xml" />
 
 	<property name="message-package" value="org.netbeams.dsp.message" />
+	<property name="message-content-package" value="org.netbeams.dsp.message.content" />
 
 	<target name="xjc-compile" depends="dsp-init.init">
 		<antcall target="dsp-init.print-properties"/>
@@ -19,7 +20,8 @@
 		<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="jaxb.classpath"/>
 	    
 		<xjc schema="${XML.JAXB}/../schemas/message.xsd" package="${message-package}" destdir="${XML.JAXB}/message/generated-src" />
-	      <xjc schema="${XML.JAXB}/../schemas/message-content.xsd" package="${message-package}" destdir="${XML.JAXB}/message/generated-src" />
+	    <xjc schema="${XML.JAXB}/../schemas/message-content.xsd" package="${message-content-package}" destdir="${XML.JAXB}/message/generated-src" />
+		<xjc schema="${XML.JAXB}/../schemas/acknowledgements.xsd" package="${message-content-package}" destdir="${XML.JAXB}/message/generated-src" />
 	</target>
 
 	<target name="java-compile" depends="xjc-compile">

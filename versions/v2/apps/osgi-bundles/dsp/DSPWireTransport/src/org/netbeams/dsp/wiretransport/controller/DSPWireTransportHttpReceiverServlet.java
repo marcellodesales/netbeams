@@ -18,9 +18,9 @@ import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
-import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.message.MessagesContainer;
-import org.netbeams.dsp.message.ObjectFactory;
+import org.netbeams.dsp.message.content.AckType;
+import org.netbeams.dsp.message.content.AcksContainer;
 import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 import org.netbeams.dsp.wiretransport.osgi.DSPWireTransportActivator;
 
@@ -66,9 +66,11 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
 
         // Get the value of a request parameter; the name is case-sensitive
         String messagesContainerXml = req.getParameterValues(TRANSPORT_HTTP_VARIABLE)[0];
+        MessagesContainer responseMessagesContainer;
+        
         if (messagesContainerXml != null && !"".equals(messagesContainerXml)) {
             try {
-                this.deliverMessagesToLocalDSP(messagesContainerXml);
+                responseMessagesContainer = this.deliverMessagesToLocalDSP(messagesContainerXml);
             } catch (JAXBException e) {
                 log.error(e.getMessage(), e);
                 throw new IllegalArgumentException(e.getMessage());
@@ -86,15 +88,14 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         // The following generates a page showing all the request parameters
         PrintWriter out = resp.getWriter();
         resp.setContentType("text/xml");
-        MessagesContainer responseMessagesContainer;
+        
         try {
-            responseMessagesContainer = this.deliverMessagesToLocalDSP(messagesContainerXml);
+            
             out.println(DSPWireTransportHttpClient.serializeMessagesContainer(responseMessagesContainer));
+        
         } catch (JAXBException e) {
             e.printStackTrace();
-        } catch (DSPException e) {
-            e.printStackTrace();
-        }
+        } 
         out.close();
     }
 
@@ -160,8 +161,16 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
                 DSPWireTransportActivator.DSP_TRANSPORT_DESTINATION, "org.netbeams.dsp.wiretransport");
         ComponentIdentifier consumer = bl.makeDSPComponentIdentifier(this.getClass().toString(), destIpAddress,
                 "org.netbeams.dsp.wiretransport");
+        
         String correlationId = requestMessagesContainer.getUudi();
+        
         Header header = bl.makeDSPMessageHeader(correlationId, producer, consumer);
-        return bl.makeDSPAcknowledgementMessage(header, new MessageContent(), ObjectFactory.class);
+        
+        AcksContainer acks = new AcksContainer();
+        AckType ackt = new AckType();
+        ackt.setUuid(requestMessagesContainer.getUudi());
+        acks.getAck().add(ackt);
+        
+        return bl.makeDSPAcknowledgementMessage(header, acks, org.netbeams.dsp.message.content.ObjectFactory.class);
     }
 }

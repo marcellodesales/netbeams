@@ -48,6 +48,7 @@
 		<exec executable="java" dir="${KNOPFLERFISH.HOME}/osgi">
 			<arg line='-Dlog4j.configuration="file:${DSP.RUNTIME}/log4j.xml" -jar framework.jar' />
 			<env key="DSP_HOME" value="${DSP.RUNTIME}" />
+			<env key="WIRE.TRANSPORT.SERVER" value="127.0.0.1" />
 		</exec>
 	</target>
 

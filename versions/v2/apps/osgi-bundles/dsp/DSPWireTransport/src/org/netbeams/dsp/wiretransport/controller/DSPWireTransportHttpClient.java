@@ -1,7 +1,6 @@
 package org.netbeams.dsp.wiretransport.controller;
 
 import static org.netbeams.dsp.wiretransport.osgi.DSPWireTransportActivator.DESTINATION_PORT;
-import static org.netbeams.dsp.wiretransport.osgi.DSPWireTransportActivator.TRANSPORT_CONTEXT_URL;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,7 +30,7 @@ import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.message.AbstractMessage;
-import org.netbeams.dsp.message.EventMessage;
+import org.netbeams.dsp.message.AcknowledgementMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
 import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
@@ -45,17 +44,9 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      */
     public static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-    /**
-     * HTTP POST request variable used to submit the MessagesContainer.
-     */
-    public static final String TRANSPORT_HTTP_VARIABLE = "dspMessagesContainer";
-
     private static final String COMPONENT_TYPE = "org.netbeams.dsp.wiretransport";
 
     private static final ComponentDescriptor COMPONENT_DESCRIPTOR = null;
-
-    // public static final String DEFAULT_DEMO_IP = System.getenv("DEFAULT_DEMO_SERVER_ID");
-    public static final String DEFAULT_DEMO_IP = "127.0.0.1";
 
     /**
      * The DSPContext defines the external context
@@ -94,7 +85,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
 
     /**
      * @param responseStream the marshalled version of the Messages Container
-     * @return the Messages Container instance frmo the the xml version of the message
+     * @return the Messages Container instance from the the xml version of the message
      * @throws JAXBException if any problem with the unmarshall operation occurs.
      */
     public static MessagesContainer deserializeMessagesContainer(String responseStream) throws JAXBException {
@@ -113,11 +104,14 @@ public class DSPWireTransportHttpClient implements DSPComponent {
 
         private MessagesContainer messages;
 
+        private final Logger thLog = Logger.getLogger(DspTransportSender.class);
+
         /**
          * Initializes the transport sender with service reference to the Messages Directory.
          */
         public DspTransportSender(MessagesContainer messages) {
             this.messages = messages;
+            thLog.info("Starting the DSP Wire Transport Sender...");
         }
 
         /**
@@ -138,26 +132,27 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             PostMethod postMethod = new PostMethod(dest.toString());
 
             NameValuePair[] formValues = new NameValuePair[1];
-            formValues[0] = new NameValuePair(TRANSPORT_HTTP_VARIABLE, messagesContainerXml);
+            formValues[0] = new NameValuePair(DSPWireTransportHttpReceiverServlet.TRANSPORT_HTTP_VARIABLE,
+                    messagesContainerXml);
             postMethod.setRequestBody(formValues);
             // execute method and handle any error responses.
 
-            log.trace("Trying send the container " + messagesContainerId + " to the DSP Wire Transport Server located"
-                    + "at " + dest.toString());
+            thLog.trace("Trying send the container " + messagesContainerId
+                    + " to the DSP Wire Transport Server located" + "at " + dest.toString());
             int statusCode = client.executeMethod(postMethod);
 
             // // Change the messages to the Transmitted state
             // this.messagesDir.setMessagesToTransmitted(url, messagesContainerId);
 
             String responseXmlMessagesContainter = null;
-            log.debug("The HTTP server replied with the status code " + statusCode);
+            thLog.debug("The HTTP server replied with the status code " + statusCode);
             if (statusCode == HttpStatus.SC_OK) {
                 responseXmlMessagesContainter = postMethod.getResponseBodyAsString();
-                log.debug("The DSP Transport Server responded with messages " + dest.toString());
-                log.trace(responseXmlMessagesContainter);
+                thLog.debug("The DSP Transport Server responded with messages " + dest.toString());
+                thLog.trace(responseXmlMessagesContainter);
             } else if (statusCode == HttpStatus.SC_NOT_FOUND) {
                 responseXmlMessagesContainter = null;
-                log.error("The server is running, but there's no service at " + dest.toString());
+                thLog.error("The server is running, but there's no service at " + dest.toString());
             }
             postMethod.releaseConnection();
             return responseXmlMessagesContainter;
@@ -169,27 +164,38 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             try {
 
                 MessagesContainer[] msgContainers = messagesQueue.retrieveAllQueuedMessagesForTransmission();
-                
-                //Just for the matter of testing purposes, the MessagesContainer can be passed as a parameter.
-                msgContainers = (this.messages == null) ? new MessagesContainer[] {this.messages} : msgContainers;
-                
+                thLog.debug("Retrieving all messages from the Messages Queue for transmission...");
+                // Just for the matter of testing purposes, the MessagesContainer can be passed as a parameter.
+                msgContainers = (this.messages != null) ? new MessagesContainer[] { this.messages } : msgContainers;
+                thLog.debug("Messages Container size is " + msgContainers.length + ".");
+                if (msgContainers.length > 0) {
+                    thLog.debug("Sending each Messages Container to their own destinition...");
+                } else {
+                    thLog.debug("No messages registered in the Messages Queue...");
+                    thLog.debug("Stopping the Wire Transport for 60 seconds...");
+                }
                 for (MessagesContainer messagesForRequest : msgContainers) {
+
+                    thLog.debug("Messages Container UUID: " + messagesForRequest.getUudi());
+                    thLog.debug("Messages Container destiniation IP is " + messagesForRequest.getHost());
+                    thLog.debug("Messages Container # of messages " + messagesForRequest.getMessage().size());
+
                     if (messagesForRequest.getMessage().size() > 0) {
                         String messagesForRequestInXml = serializeMessagesContainer(messagesForRequest);
-                        log.trace("HTTP Request BODY: " + messagesForRequestInXml);
+                        thLog.trace("HTTP Request BODY: " + messagesForRequestInXml);
 
                         destinationURL = new URL("http://" + messagesForRequest.getHost() + DESTINATION_PORT
-                                + TRANSPORT_CONTEXT_URL);
+                                + DSPWireTransportHttpReceiverServlet.BASE_URI);
 
                         String messagesFromResponseInXml = this.transmitMessagesReceiveResponse(
                                 messagesForRequestInXml, UUID.fromString(messagesForRequest.getUudi()), destinationURL);
-                        log.trace("HTTP Response BODY: " + messagesFromResponseInXml);
+                        thLog.trace("HTTP Response BODY: " + messagesFromResponseInXml);
 
                         if (messagesFromResponseInXml != null) {
                             MessagesContainer messagesFromResponse = deserializeMessagesContainer(messagesFromResponseInXml);
                             for (AbstractMessage message : messagesFromResponse.getMessage()) {
-                                if (message instanceof EventMessage) {
-                                    log.trace("Received Acknowledge message with correlation ID = "
+                                if (message instanceof AcknowledgementMessage) {
+                                    thLog.trace("Received Acknowledge message with correlation ID = "
                                             + message.getHeader().getCorrelationID());
                                     messagesQueue.setMessagesToTransmitted(messagesForRequest.getHost(), UUID
                                             .fromString(message.getHeader().getCorrelationID().toString()));
@@ -197,29 +203,29 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                                     // At this point, deliver the messages for the broker through the proxy with
                                     // the delivery method of the DSP component.
                                     deliver((Message) message);
-                                    log.trace("Delivering message ID " + message.getMessageID() + " type "
+                                    thLog.trace("Delivering message ID " + message.getMessageID() + " type "
                                             + message.getContentType() + " to the DSP broker...");
                                 }
                             }
                         } else {
-                            log.trace("No messages received from the HTTP response...");
+                            thLog.trace("No messages received from the HTTP response...");
                         }
                     }
                 }
 
             } catch (ConnectException e) {
-                log.error("There's no HTTP server running at " + destinationURL
+                thLog.error("There's no HTTP server running at " + destinationURL
                         + ". Please verify if there's a DSPWireTransport component running...");
             } catch (HttpException e) {
-                log.error(e.getMessage(), e);
+                thLog.error(e.getMessage(), e);
             } catch (IOException e) {
-                log.error(e.getMessage(), e);
+                thLog.error(e.getMessage(), e);
             } catch (JAXBException e) {
-                log.error(e.getMessage(), e);
+                thLog.error(e.getMessage(), e);
             } catch (DSPException e) {
-                log.error(e.getMessage(), e);
+                thLog.error(e.getMessage(), e);
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                thLog.error(e.getMessage(), e);
             }
         }
     }
@@ -237,6 +243,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
     public void deliver(Message message) throws DSPException {
         // Always check if there is a broker available
         MessageBrokerAccessor messageBroker = this.dspContext.getDataBroker();
+        log.debug("Delivering message");
         if (messageBroker != null) {
             messageBroker.send(message);
         } else {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
@@ -14,10 +15,8 @@ import org.netbeams.dsp.MessageCategory;
 import org.netbeams.dsp.demo.mouseactions.controller.DSPMouseActionsProducer;
 import org.netbeams.dsp.demo.mouseactions.controller.NetBeamsMouseCollector;
 import org.netbeams.dsp.demo.mouseactions.view.NetBeamsMouseActionDemo;
-import org.netbeams.dsp.demo.stocks.producer.StockProducer;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
-import org.netbeams.dsp.util.Log;
 
 /**
  * MouseActionDSPComponent is the DSP component for the mouse actions. It starts a new JFrame
@@ -32,6 +31,9 @@ import org.netbeams.dsp.util.Log;
  *
  */
 public class MouseActionDSPComponent implements DSPComponent  {
+
+    private static final Logger log = Logger.getLogger(MouseActionDSPComponent.class);
+
     /**
      * Part of the DSP component
      */
@@ -39,11 +41,11 @@ public class MouseActionDSPComponent implements DSPComponent  {
     /**
      * Component type defined for the DSP framework to identify this message 
      */
-    public final static String COMPONENT_TYPE = "org.netbeams.dsp.demo.miceaction";
+    public final static String COMPONENT_TYPE = "org.netbeams.dsp.demo.mouseactions";
     /**
      * Defines the type of payload that will be sent. Please refer to the XML packages with the defined value
      */
-    public final static String MSG_CONTENT_TYPE_MOUSE_ACTIONS = "org.netbeams.dsp.demo.miceaction.mouseactionscontainer";
+    public final static String MSG_CONTENT_TYPE_MOUSE_ACTIONS = "mouse.actions";
     
     static {
         componentDescriptor = new ComponentDescriptor();
@@ -52,7 +54,7 @@ public class MouseActionDSPComponent implements DSPComponent  {
         Collection<MessageCategory> consumedMessageCategories = new ArrayList<MessageCategory>();
         // MouseAction
         MessageCategory messageCategory = 
-            new MessageCategory(StockProducer.class.getName(), MSG_CONTENT_TYPE_MOUSE_ACTIONS);
+            new MessageCategory(MouseActionDSPComponent.class.getName(), MSG_CONTENT_TYPE_MOUSE_ACTIONS);
         
         producedMessageCategories.add(messageCategory);
         componentDescriptor.setMsgCategoryProduced(producedMessageCategories);
@@ -76,7 +78,7 @@ public class MouseActionDSPComponent implements DSPComponent  {
      * The JFrameExecutor is responsible for executing the JFrame in different classloaders, and for the OSGi
      * context, it helps creating a new Swing thread.
      */
-    private NetBeamsMouseActionDemo.JFrameExecutor jfexec;
+    private NetBeamsMouseActionDemo.JFrameExecutorForMouseActions jfexec;
     /**
      * The ExecutorService instance is responsible for starting and stopping the execution of the data collection.
      * NOTE that this is a strongly-coupled reference to the ExecutorService from 
@@ -94,68 +96,71 @@ public class MouseActionDSPComponent implements DSPComponent  {
      * @param messagesQueue is the service where the DSP component needs to send messages.
      */
     public MouseActionDSPComponent(DSPMessagesDirectory messagesQueue) {
+        log.debug("Instantiating the DSPMouseActions component");
         this.messagesQueueComp = messagesQueue;
     }
     
-    //@Override
     public String getComponentType() {
         return COMPONENT_TYPE;
     }
 
-    //@Override
     public ComponentDescriptor getComponentDescriptor() {
         return componentDescriptor;
     }
 
-    //@Override
     public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
-        Log.log(COMPONENT_TYPE + ".initComponent()");
+        log.info(COMPONENT_TYPE + ".initComponent()");
 
         this.context = context;
         this.componentNodeId = componentNodeId;
     }
 
-    //@Override
     public String getComponentNodeId() {
         return componentNodeId;
     }
 
-    //@Override
     public void deliver(Message request) throws DSPException {
         // TODO How we should handle an invokation to this method when the
         // component is not a consumer?
     }
 
-    //@Override
     public Message deliverWithReply(Message message) throws DSPException {
         // TODO How we should handle an invokation to this method when the
         // component is not a consumer?
         return null;
     }
 
-    //@Override
     public Message deliverWithReply(Message message, long waitTime) throws DSPException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    //@Override
     public void startComponent() {
-        Log.log("MouseAction.startComponent()");
+        log.info("MouseAction.startComponent()");
         
-        this.demo = new NetBeamsMouseActionDemo();
-        this.jfexec = new NetBeamsMouseActionDemo.JFrameExecutor(this.demo);
+//        try {
+//            
+////            this.demo = new NetBeamsMouseActionDemo(this.context.getDataBroker());
+//            
+//        } catch (DSPException e2) {
+//            log.error(e2.getMessage(), e2);
+//        }
+        log.debug("Trying to start the mouse actions demo application...");
+        this.demo = new NetBeamsMouseActionDemo(null);
+        this.jfexec = new NetBeamsMouseActionDemo.JFrameExecutorForMouseActions(this.demo);
+        
+        log.debug("Ready to start the Mouse Actions User Interface...");
         
         javax.swing.SwingUtilities.invokeLater(this.jfexec);
         this.jfexec.addWindowListener(new WindowAdapter () {
             public void windowClosing(WindowEvent e) {
                   try {
-                      System.out.println("Closing the mouse demo window... Stopping the component");
+                      log.info("Closing the mouse actions demo window... Stopping the component");
                       
                       stopComponent();
                       
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    log.error(e1.getMessage(), e1);
                 }
               }
         });
@@ -169,11 +174,13 @@ public class MouseActionDSPComponent implements DSPComponent  {
         DSPMouseActionsProducer hs = new DSPMouseActionsProducer(this.messagesQueueComp);
         demo.addNetBeamsMouseListener(hs);
         this.dspDataSend = DSPMouseActionsProducer.scheduler;
+        
+        log.debug("Mouse Actions demo UI is ready to receive interaction...");
     }
 
     //@Override
     public void stopComponent() {
-        Log.log("MouseAction.stopComponent()");
+        log.info("MouseAction.stopComponent()");
         this.dspDataSend.shutdown();
     }
 }

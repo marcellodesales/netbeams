@@ -30,17 +30,22 @@ public class DSPWireTransportActivator implements BundleActivator {
 
     private static final Logger log = Logger.getLogger(DSPWireTransportActivator.class);
 
+    /**
+     * The destiniation por of the HTTP server 
+     */
     public static final String DESTINATION_PORT = "8080";
-
-    public static final String TRANSPORT_CONTEXT_URL = "/transportDspMessages";
-
+    /**
+     * The DSP Wire Transport IP default server IP address
+     */
+    public static final String DSP_TRANSPORT_DESTINATION = System.getenv("WIRE.TRANSPORT.SERVER");
     /**
      * Http Service for the DSP Wire Transport HTTP Server
      */
     private HttpService httpService;
-
+    /**
+     * The service reference to the HTTP
+     */
     private ServiceReference httpSR;
-
     /**
      * Bundle context
      */
@@ -49,7 +54,9 @@ public class DSPWireTransportActivator implements BundleActivator {
      * The service registration instance
      */
     private ServiceRegistration serviceRegistration;
-
+    /**
+     * The reference to the Wire Transport client
+     */
     private DSPWireTransportHttpClient client;
 
     /*
@@ -59,6 +66,7 @@ public class DSPWireTransportActivator implements BundleActivator {
      */
     public void start(BundleContext bc) throws Exception {
         log.info("WireTransport.Activate.start()");
+        
         this.bundleContext = bc;
 
         this.httpSR = bc.getServiceReference(HttpService.class.getName());
@@ -66,35 +74,48 @@ public class DSPWireTransportActivator implements BundleActivator {
             log.error("The Http Service reference could not be retrieved from the OSGi platform!!!");
             throw new IllegalStateException("This DSP Component needs to have the HTTP service running!!!");
         }
-        
+
         httpService = (HttpService) bc.getService(this.httpSR);
         if (this.httpService == null) {
             log.error("The Http Service could not be retrieved from the reference of the OSGi platform!!!");
-            throw new IllegalStateException("The Http Service could not be retrieved from the reference of the OSGi platform!!!");
+            throw new IllegalStateException(
+                    "The Http Service could not be retrieved from the reference of the OSGi platform!!!");
         }
         log.debug("HttpService.class.getName(): " + HttpService.class.getName());
 
+        log.debug("Retrieving the Messages Queue service");
+        ServiceReference sr = bc.getServiceReference(DSPMessagesDirectory.class.getName());
+        DSPMessagesDirectory messagesQueue = (DSPMessagesDirectory) bc.getService(sr);
+        if (messagesQueue == null) {
+            log.error("The Messages Queue serice could not be retrieved from the reference of the OSGi platform!!");
+            throw new IllegalStateException(
+                    "The Messages Queue serice could not be retrieved from the reference of the OSGi platform!!");
+        }
+
+        this.client = new DSPWireTransportHttpClient(messagesQueue);
+        
         // Just print the service properties
         this.printServiceProperties();
         // Register the servlets for the DSP Wire Transport
-        this.registerServlets();
+        this.registerServlets(messagesQueue);
 
-        String host = "", destIpAddress = "";
+        log.info("DSP Wire Transport Service Available...");
+        String destIpAddress = DSP_TRANSPORT_DESTINATION, hostName = null;
+    
         try {
-            host = InetAddress.getLocalHost().getHostName();
-            destIpAddress = InetAddress.getLocalHost().getHostAddress();
+            destIpAddress = destIpAddress == null ? InetAddress.getLocalHost().getHostAddress() : destIpAddress;
+            hostName = InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e1) {
             log.debug("Could not find the name of this host for the network service... Using 'localhost'...");
-            host = "localhost";
+            hostName = "localhost";
             destIpAddress = "127.0.0.1";
         }
-        log.info("DSP Wire Transport Service Available...");
-        log.info("HTTP POST requests as XML to http://" + host + ":"+ DESTINATION_PORT + TRANSPORT_CONTEXT_URL);
-        log.info("You can also use the URL with the IP address: http://" +destIpAddress+ ":8080/transportDspMessages");
+    
+        log.info("HTTP POST requests as XML to http://" + hostName + ":" + DESTINATION_PORT
+                + DSPWireTransportHttpReceiverServlet.BASE_URI);
+        log.info("You can also use the URL with the IP address: http://" + destIpAddress + ":8080"
+                + DSPWireTransportHttpReceiverServlet.BASE_URI);
 
-        ServiceReference sr = bc.getServiceReference(DSPMessagesDirectory.class.getName());
-        DSPMessagesDirectory messagesQueue = (DSPMessagesDirectory) bc.getService(sr);
-        this.client = new DSPWireTransportHttpClient(messagesQueue);
         this.serviceRegistration = ActivatorHelper.registerOSGIService(bundleContext, this.client);
     }
 
@@ -120,16 +141,18 @@ public class DSPWireTransportActivator implements BundleActivator {
      * Registers the HTTP Servlet for the DSP Wire Transport Server-side. The server will be available at the URL:
      * http://SERVER-NAME/transportDspMessages and will accept HTTP POST requests.
      * 
+     * @param messagesQueue
+     * 
      * @see DSPWireTransportHttpReceiverServlet.
      */
-    private void registerServlets() {
-        String aliasTransport = "/transportDspMessages";
-        // / Since the HTTP Service is available from
-        // "http://localhost:8080"
+    private void registerServlets(DSPMessagesDirectory messagesQueue) {
         try {
-            log.info("Registering the DSP Wire Transport Messages Receiver Servlet as /transportDspMessages");
-            httpService.registerServlet(aliasTransport, new DSPWireTransportHttpReceiverServlet(this.bundleContext),
-                    null, null);
+            
+            log.info("Registering the DSP Wire Transport Messages Receiver Servlet as "
+                    + DSPWireTransportHttpReceiverServlet.BASE_URI);
+            httpService.registerServlet(DSPWireTransportHttpReceiverServlet.BASE_URI,
+                    new DSPWireTransportHttpReceiverServlet(messagesQueue, this.client), null, null);
+            
         } catch (ServletException e) {
             log.error(e.getMessage(), e);
         } catch (NamespaceException e) {
@@ -144,7 +167,8 @@ public class DSPWireTransportActivator implements BundleActivator {
      */
     public void stop(BundleContext bc) throws Exception {
         log.info("WireTransport.Activator.stop()");
-        ActivatorHelper.unregisterOSGIService(this.bundleContext, this.serviceRegistration);
+        this.httpService.unregister(DSPWireTransportHttpReceiverServlet.BASE_URI);
         this.client.stopComponent();
+        ActivatorHelper.unregisterOSGIService(this.bundleContext, this.serviceRegistration);
     }
 }

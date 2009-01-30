@@ -40,6 +40,7 @@
              <fileset dir="${THIRDPARTY}/apache/" includes="commons-httpclient-3.1.jar"/>
          	<fileset dir="${THIRDPARTY}/apache/" includes="commons-logging-1.1.1.jar"/>
          	<fileset dir="${THIRDPARTY}/apache/" includes="commons-codec-1.3.jar"/>
+         	<fileset dir="${XML.JAXB}/mouseactions/dist/" includes="mouseactions.jar"/>
          </copy>
          
          <jar basedir="${THIS.DEMO.BASE.DIR}/classes" 
@@ -49,6 +50,8 @@
    
             <zipfileset dir="${THIS.DEMO.BASE.DIR}/tmp/" includes="*.jar" prefix="libs"/>
          </jar>
+    	
+    	<copy todir="${DSP.DEPLOYMENT}/" file="${THIS.DEMO.RUNTIME.DIR}/${THIS.DEMO.BUNDLE.NAME}-${DSP.VERSION}.jar"/>
         <delete dir="${THIS.DEMO.BASE.DIR}/tmp/"/>
     </target>
     

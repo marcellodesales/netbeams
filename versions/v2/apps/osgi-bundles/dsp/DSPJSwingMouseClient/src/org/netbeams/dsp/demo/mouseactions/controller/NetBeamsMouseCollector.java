@@ -7,7 +7,7 @@ import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo;
 
 /**
  * Collects the data to be processed from the mouse events.
- * @author marcello
+ * @author Marcello de Sales
  */
 public final class NetBeamsMouseCollector implements NetBeamsMouseListener {
 	
@@ -30,11 +30,11 @@ public final class NetBeamsMouseCollector implements NetBeamsMouseListener {
 		return new NetBeamsMouseCollector();
 	}
 
-	//@Override
+	/* (non-Javadoc)
+	 * @see org.netbeams.dsp.demo.mouseactions.controller.NetBeamsMouseListener#trackMouseActionUpdate(org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo)
+	 */
 	public void trackMouseActionUpdate(NetBeamsMouseInfo nbMInfo) {
 		this.mouseEvents.add(nbMInfo);
-		//Send to DSP transfer channel...
-		System.out.println("Mouse Event: " + nbMInfo);
 	}
 
 }

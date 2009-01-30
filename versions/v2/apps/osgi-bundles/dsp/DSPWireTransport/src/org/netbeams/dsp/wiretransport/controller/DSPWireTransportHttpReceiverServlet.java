@@ -20,6 +20,7 @@ import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.message.MessagesContainer;
+import org.netbeams.dsp.message.ObjectFactory;
 import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 import org.netbeams.dsp.wiretransport.osgi.DSPWireTransportActivator;
 
@@ -161,6 +162,6 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
                 "org.netbeams.dsp.wiretransport");
         String correlationId = requestMessagesContainer.getUudi();
         Header header = bl.makeDSPMessageHeader(correlationId, producer, consumer);
-        return bl.makeDSPAcknowledgementMessage(header, new MessageContent());
+        return bl.makeDSPAcknowledgementMessage(header, new MessageContent(), ObjectFactory.class);
     }
 }

@@ -28,10 +28,6 @@ public enum NetBeamsMouseActionEnum {
 	 */
 	MOVED, 
 	/**
-	 * Whenever a mouse button is pressed
-	 */
-	PRESSED, 
-	/**
 	 * Whenever a mouse button is released
 	 */
 	RELEASED;
@@ -43,7 +39,6 @@ public enum NetBeamsMouseActionEnum {
 			case ENTERED: return "Mouse entered";
 			case EXITED: return "Mouse exited";
 			case MOVED: return "Mouse moved";
-			case PRESSED: return "Mouse pressed";
 			case RELEASED: return "Mouse released";
 			default: return null;
 		}

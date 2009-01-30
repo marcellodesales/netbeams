@@ -14,8 +14,8 @@ import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
+import org.netbeams.dsp.message.AcknowledgementMessage;
 import org.netbeams.dsp.message.DSPMessagesFactory;
-import org.netbeams.dsp.message.EventMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
 import org.netbeams.dsp.messagesdirectory.model.DirectoryData;
@@ -49,7 +49,6 @@ public enum DSPMessagesDirectory implements DSPComponent {
      */
     private Map<String, Queue<DirectoryData>> outboundQueue;
 
-    // DSP Component Type
     public static final String COMPONENT_TYPE = "org.netbeams.dsp.messagesdirectory";
     private static ComponentDescriptor componentDescriptor;
     private String componentNodeId;
@@ -73,7 +72,7 @@ public enum DSPMessagesDirectory implements DSPComponent {
      * @param valuesList the list of values from this producer.
      */
     public synchronized void addMessageToOutboundQueue(Message dspMessage) {
-        String destinationIp = dspMessage.getHeader().getConsumer().getComponentLocator().getNodeAddress().toString();
+        String destinationIp = dspMessage.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
         Queue<DirectoryData> outMsgs = this.outboundQueue.get(destinationIp);
         if (outMsgs == null) {
             outMsgs = this.makeMessageQueue();
@@ -172,7 +171,7 @@ public enum DSPMessagesDirectory implements DSPComponent {
     public void deliver(Message message) throws DSPException {
         log.debug("message class=" + message.getClass().getName());
 
-        if (message instanceof EventMessage) {
+        if (message instanceof AcknowledgementMessage) {
             
             String messagesContainerUUID = (String) message.getHeader().getCorrelationID();
             String messageIpAddr = message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue();

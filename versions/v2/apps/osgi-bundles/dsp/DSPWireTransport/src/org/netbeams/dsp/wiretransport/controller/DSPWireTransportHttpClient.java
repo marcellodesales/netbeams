@@ -33,6 +33,7 @@ import org.netbeams.dsp.message.AbstractMessage;
 import org.netbeams.dsp.message.AcknowledgementMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
+import org.netbeams.dsp.message.ObjectFactory;
 import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 
 public class DSPWireTransportHttpClient implements DSPComponent {
@@ -76,7 +77,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      * @throws JAXBException if any problem with regards to the marshall operation happens.
      */
     public static String serializeMessagesContainer(MessagesContainer messages) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance("org.netbeams.dsp.message");
+        JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
         Marshaller m = context.createMarshaller();
         StringWriter output = new StringWriter();
         m.marshal(messages, output);
@@ -90,7 +91,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      */
     public static MessagesContainer deserializeMessagesContainer(String responseStream) throws JAXBException {
         InputStream input = new ByteArrayInputStream(responseStream.getBytes());
-        JAXBContext context = JAXBContext.newInstance("org.netbeams.dsp.message");
+        JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
         Unmarshaller um = context.createUnmarshaller();
         return (MessagesContainer) um.unmarshal(input);
     }
@@ -184,7 +185,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                         String messagesForRequestInXml = serializeMessagesContainer(messagesForRequest);
                         thLog.trace("HTTP Request BODY: " + messagesForRequestInXml);
 
-                        destinationURL = new URL("http://" + messagesForRequest.getHost() + DESTINATION_PORT
+                        destinationURL = new URL("http://" + messagesForRequest.getHost() + ":"  +  DESTINATION_PORT
                                 + DSPWireTransportHttpReceiverServlet.BASE_URI);
 
                         String messagesFromResponseInXml = this.transmitMessagesReceiveResponse(
@@ -287,14 +288,4 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         this.dspContext = context;
         this.componentNodeId = componentNodeId;
     }
-
-    // public static void main(String[] args) throws JAXBException {
-    // System.out.println(UUID.randomUUID());
-    // JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.message");
-    // Unmarshaller unmarshaller = jc.createUnmarshaller();
-    // MessagesContainer messages = (MessagesContainer) unmarshaller.unmarshal(new File("/tmp/messagesExample.xml"));
-    //
-    // DSPWireTransportHttpClient wire = new DSPWireTransportHttpClient(messages);
-    //
-    // }
 }

@@ -150,6 +150,12 @@ public enum DSPMessagesFactory {
         EventMessage m1 = this.factory.createEventMessage();
         return (EventMessage) this.makeDSPMessage(m1, header, body);
     }
+    
+    public AcknowledgementMessage makeDSPAcknowledgementMessage(Header header, MessageContent body)
+            throws JAXBException, ParserConfigurationException {
+        AcknowledgementMessage m1 = this.factory.createAcknowledgementMessage();
+        return (AcknowledgementMessage) this.makeDSPMessage(m1, header, body);
+    }
 
     public ActionMessage makeDSPActionMessage(Header header, MessageContent body)
             throws JAXBException, ParserConfigurationException {

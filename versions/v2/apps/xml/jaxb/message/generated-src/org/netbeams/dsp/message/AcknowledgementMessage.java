@@ -14,12 +14,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for EventMessage complex type.
+ * <p>Java class for AcknowledgementMessage complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="EventMessage">
+ * &lt;complexType name="AcknowledgementMessage">
  *   &lt;complexContent>
  *     &lt;extension base="{http://www.netbeams.dsp.org/message.xsd}AbstractMessage">
  *     &lt;/extension>
@@ -30,8 +30,8 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "EventMessage")
-public class EventMessage
+@XmlType(name = "AcknowledgementMessage")
+public class AcknowledgementMessage
     extends Message
 {
 

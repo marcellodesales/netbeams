@@ -129,8 +129,8 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<xs:element name="AcknowledgeMessage"/>
-    	<xs:complexType name="AcknowledgeMessage">
+	<xs:element name="AcknowledgementMessage" />
+    <xs:complexType name="AcknowledgementMessage">
 	   	<xs:complexContent>
 			<xs:extension base="AbstractMessage"/>
 		</xs:complexContent>

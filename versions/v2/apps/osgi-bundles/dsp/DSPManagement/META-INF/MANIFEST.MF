@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.management.Activator
+Bundle-Category: DSP Core
+Bundle-Description: DSP Management
+Bundle-ManifestVersion: 2
+Bundle-Name: DSP Manager
+Bundle-SymbolicName: DSPManager
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.netbeams.dsp.data, org.osgi.framework, org.osgi.service.http, javax.servlet, javax.servlet.http

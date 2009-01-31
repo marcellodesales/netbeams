@@ -7,4 +7,12 @@ public class Message extends AbstractMessage {
 		return (content instanceof MessageContent);
 	}
 
+	public void setComponentIdentifier(ComponentIdentifier compIdent){
+		Header header = getHeader();
+		if(header == null){
+			header = new Header();
+			setHeader(header);
+		}
+		header.setConsumer(compIdent);
+	}
 }

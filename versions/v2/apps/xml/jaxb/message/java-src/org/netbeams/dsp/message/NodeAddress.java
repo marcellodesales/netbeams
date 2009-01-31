@@ -3,6 +3,12 @@ package org.netbeams.dsp.message;
 
 public class NodeAddress extends AbstractNodeAddress {
 
+	public NodeAddress(){}
+
+	public NodeAddress(String nodeAddress){
+		setValue(nodeAddress);
+	}
+
 	public int hashCode(){
 		return value.hashCode();
 	}

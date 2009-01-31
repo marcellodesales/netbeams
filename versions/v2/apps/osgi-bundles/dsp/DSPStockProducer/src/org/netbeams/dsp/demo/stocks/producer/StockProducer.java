@@ -7,6 +7,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.DSPComponent;
@@ -15,10 +19,14 @@ import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.MessageCategory;
 import org.netbeams.dsp.MessageFactory;
+import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.demo.stock.StockTick;
 import org.netbeams.dsp.demo.stock.StockTicks;
+import org.netbeams.dsp.message.AcknowledgementMessage;
 import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.Message;
+import org.netbeams.dsp.message.UpdateMessage;
+import org.w3c.dom.Node;
 
 
 public class StockProducer implements DSPComponent{
@@ -83,8 +91,9 @@ public class StockProducer implements DSPComponent{
 	/**
 	 * @Override
 	 */
-	public void deliver(Message request) throws DSPException {
-		log.debug("Delivering message.");
+	public void deliver(Message message) throws DSPException {
+		log.debug("deliver(Message)");
+		processMessage(message);
 	}
 
 	/**
@@ -169,6 +178,36 @@ public class StockProducer implements DSPComponent{
 		componentDescriptor.setMsgCategoryConsumed(consumedMessageCategories);
 		
 	}
+	
+	private void processMessage(Message message) {
+		log.debug("message class=" + message.getClass().getName());
+		
+		if(message instanceof UpdateMessage){			
+			DSProperties stockTicks = null;
+			Object content = message.getBody().getAny();
+			if(Message.isPojo(content)){
+				return;
+				
+//				if(content instanceof StockTicks){
+//					stockTicks = (StockTicks)content;
+//				}else{
+//					Log.log("StockConsumer.processMessage(): Invalid content type " + content.getClass().getName());
+//				}
+			}else{
+				try{
+					JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.data.property",
+							org.netbeams.dsp.demo.stock.ObjectFactory.class.getClassLoader());
+					Unmarshaller unmarshaller = jc.createUnmarshaller();
+					DSProperties dspProperty= (DSProperties)unmarshaller.unmarshal((Node)content);
+				}catch(JAXBException e){
+					log.error("Error unmarhalling the message", e);
+					return;
+				}
+
+			}			
+		}
+	}
+	
 
 	/////////////////////////////////
 	////////// Inner Class //////////

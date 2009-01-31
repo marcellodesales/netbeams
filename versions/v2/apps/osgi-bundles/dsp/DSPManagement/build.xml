@@ -6,32 +6,37 @@
 	<target name="dsp-management.all" depends="init, dsp-management.compile, dsp-management.jar" />
 	
 	<target name="dsp-management.init">
-		<property name="weblogger.base.dir" value="${DSP.BUNDLES}/DSPManagement"/>
+		<property name="dspmanagement.base.dir" value="${DSP.BUNDLES}/DSPManagement"/>
+		<path id="dsp-management.classpath.id">
+			<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+			<pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
+			<path refid="project.class.path"/>
+		</path>
+		
 	</target>
 	
 	<target name="dsp-management.compile" depends="dsp-management.init">
-		<mkdir dir="${weblogger.base.dir}/classes" />
-		<javac destdir="${weblogger.base.dir}/classes" debug="on" srcdir="${weblogger.base.dir}/src"
+		<mkdir dir="${dspmanagement.base.dir}/build" />
+		<javac destdir="${dspmanagement.base.dir}/build" debug="on" srcdir="${dspmanagement.base.dir}/src"
 			source="1.5" target="1.5">
-			<classpath refid="project.class.path"/>
+			<classpath refid="dsp-management.classpath.id"/>
 		</javac>
 	</target>
 	
-	<target name="dsp-weblogger.jar" depends="dsp-weblogger.init">
-		<mkdir dir="${DSP.RUNTIME}" />
-		<copy todir="${weblogger.base.dir}/classes/web/">
-			<fileset dir="${weblogger.base.dir}/web/DSP Web Logger/build/"/>
+	<target name="dsp-management.jar" depends="dsp-management.init">
+		<copy todir="${dspmanagement.base.dir}/build/web/">
+			<fileset dir="${dspmanagement.base.dir}/web/"/>
 		</copy>
-		<jar basedir="${weblogger.base.dir}/classes" 
-			 jarfile="${DSP.RUNTIME}/DSPWebLogger-${DSP.VERSION}.jar" 
+		<jar basedir="${dspmanagement.base.dir}/build" 
+			 jarfile="${DSP.RUNTIME}/DSPManager-${DSP.VERSION}.jar" 
 			 compress="true" includes="**/*" 
-			 manifest="${weblogger.base.dir}/META-INF/MANIFEST.MF" />
+			 manifest="${dspmanagement.base.dir}/META-INF/MANIFEST.MF" />
 		
-		<copy todir="${DSP.DEPLOYMENT}/" file="${DSP.RUNTIME}/DSPWebLogger-${DSP.VERSION}.jar"/>
+		<copy todir="${DSP.DEPLOYMENT}/" file="${DSP.RUNTIME}/DSPManager-${DSP.VERSION}.jar"/>
 		
 	</target>
 	
-	<target name="dsp-weblogger.clean" depends="dsp-weblogger.init">
-		<delete dir="${weblogger.base.dir}/classes" />
+	<target name="dsp-management.clean" depends="dsp-management.init">
+		<delete dir="${dspmanagement.base.dir}/classes" />
 	</target>
 </project>

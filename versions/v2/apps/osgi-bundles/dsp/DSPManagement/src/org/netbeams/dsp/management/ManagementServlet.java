@@ -59,6 +59,7 @@ public class ManagementServlet
     	
     	if("CONFIGURE_DSPCOMPONENT".equals(action)){
     		configureDSPComponent(response, params);	
+    		return;
     	}else{
     		log.warn("Request is unknown");
     	}
@@ -67,12 +68,18 @@ public class ManagementServlet
 
         response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
-        out.println(data);
+        out.println("Bla");
     }
 
 
 
-    private void configureDSPComponent(HttpServletResponse response, Map params) {
+    private void outputNoActive(HttpServletResponse response) throws IOException {
+    	response.sendRedirect("notActive.html");
+		
+	}
+
+	private void configureDSPComponent(HttpServletResponse response, Map params) {
+    	
     	String nodeAddressStr = (String)params.get("NODE_ADDRESS");
     	String componentNodeId = (String)params.get("COMPONENT_NODEID");
     	String propName = (String)params.get("PROPERTY_NAME");
@@ -102,10 +109,8 @@ public class ManagementServlet
         while ((l = is.read(b)) > 0) {
             out.write(b, 0, l);
         }
-    	
-		
-	}
 
+	}
 
 
 	private static final long serialVersionUID = ("urn:" + ManagementServlet.class

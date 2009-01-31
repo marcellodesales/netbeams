@@ -5,15 +5,10 @@ package org.netbeams.dsp.management;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.ServletException;
-import javax.servlet.Servlet;
 
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.data.property.DSProperties;
-import org.netbeams.dsp.data.property.DSProperty;
 import org.netbeams.dsp.message.AcknowledgementMessage;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.ComponentLocator;
@@ -27,10 +22,6 @@ import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.MessageFactory;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.util.DSPUtils;
-import org.netbeams.dsp.util.Log;
-import org.osgi.service.http.HttpService;
-import org.osgi.service.http.NamespaceException;
-
 
 
 public class DSPManager implements DSPComponent

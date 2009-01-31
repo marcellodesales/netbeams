@@ -19,6 +19,7 @@
 		
 	        <copy todir="${DSP.FRAMEWORK}/classes/libs">
 	            <fileset dir="${XML.JAXB}/message/dist" includes="*.jar"/>
+	            <fileset dir="${XML.JAXB}/dsproperty/dist" includes="*.jar"/>
 	        </copy>
 		
 	        <copy todir="${DSP.FRAMEWORK}/classes/libs">

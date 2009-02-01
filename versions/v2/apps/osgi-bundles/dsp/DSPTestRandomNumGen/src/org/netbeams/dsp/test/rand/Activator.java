@@ -1,9 +1,11 @@
 package org.netbeams.dsp.test.rand;
 
 import org.apache.log4j.Logger;
+import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
 /**
@@ -22,7 +24,16 @@ public class Activator implements BundleActivator {
 		log.info("Starting...");
 		
 		bundleContext = bc;
-		producer = new RandomProducer();
+		
+        ServiceReference sr = bc.getServiceReference(DSPMessagesDirectory.class.getName());
+        DSPMessagesDirectory messagesQueue = (DSPMessagesDirectory) bc.getService(sr);
+        if (messagesQueue == null) {
+            log.error("The Messages Queue serice could not be retrieved from the reference of the OSGi platform!!");
+            throw new IllegalStateException(
+                    "The Messages Queue serice could not be retrieved from the reference of the OSGi platform!!");
+        }
+
+		producer = new RandomProducer(messagesQueue);
 		//producer.start();
 		serviceRegistration = ActivatorHelper.registerOSGIService(bc, producer);
 	}
@@ -30,10 +41,10 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext bc) throws Exception {
 		log.info("Stopping...");
 		ActivatorHelper.unregisterOSGIService(bundleContext, serviceRegistration);
-		producer.stopComponent();
+		//producer.stopComponent();
 		//producer.stopThread();
 		//producer.join();
-		//bundleContext = null;
+		bundleContext = null;
 		
 	}
 

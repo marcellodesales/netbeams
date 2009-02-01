@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Category: DSP
-Bundle-ClassPath: ., libs/message.jar
+Bundle-ClassPath: ., libs/message.jar, libs/dsproperty.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: DSP Framework
 Bundle-SymbolicName: DSPFramework

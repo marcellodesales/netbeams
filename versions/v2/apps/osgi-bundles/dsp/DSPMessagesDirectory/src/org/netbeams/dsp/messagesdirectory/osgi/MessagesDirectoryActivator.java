@@ -7,7 +7,6 @@ package org.netbeams.dsp.messagesdirectory.osgi;
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
-import org.netbeams.dsp.wiretransport.osgi.DSPWireTransportActivator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;

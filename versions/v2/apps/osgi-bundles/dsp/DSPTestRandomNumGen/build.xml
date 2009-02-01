@@ -12,12 +12,13 @@
 			
 			<path id="test-random-number-generator.project.classpath">
 				<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+				<pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar" />
 				<path refid="project.class.path"/>
 			</path>
 						
 			<mkdir dir="${test.random.number.generator.base.dir}/classes" />
 			<javac destdir="${test.random.number.generator.base.dir}/classes" debug="on" srcdir="${test.random.number.generator.base.dir}/src" source="1.5" target="1.5">
-				<classpath refid="project.class.path"/>
+				<classpath refid="test-random-number-generator.project.classpath"/>
 			</javac>
 		</target>
 		

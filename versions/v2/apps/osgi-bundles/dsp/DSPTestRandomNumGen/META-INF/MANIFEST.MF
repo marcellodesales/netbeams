@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-Name: dsptestrandomnumber
+Bundle-Name: DSP Test Random Number
 Bundle-SymbolicName: dsptestrandomnumber
 Bundle-ClassPath: .
 Bundle-Version: 0.1
@@ -7,4 +7,4 @@ Bundle-Description: DSP Test Random Number Generator
 Bundle-Vendor: NetBEAMS.org
 Bundle-Activator: org.netbeams.dsp.test.rand.Activator
 Bundle-Category: DSP Core
-Import-Package: org.osgi.framework, org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.apache.log4j
+Import-Package: org.osgi.framework, org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.messagesdirectory.controller, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.netbeams.dsp.data.property, org.apache.log4j

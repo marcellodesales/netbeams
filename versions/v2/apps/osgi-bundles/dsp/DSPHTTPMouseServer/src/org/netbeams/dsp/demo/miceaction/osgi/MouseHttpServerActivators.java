@@ -22,7 +22,7 @@ public class MouseHttpServerActivators implements BundleActivator {
 
     private ServiceReference httpSR;
 
-    @Override
+    //@Override
     public void start(BundleContext bc) throws BundleException {
 
         System.out.println("Start Mice Actions Server");
@@ -114,7 +114,7 @@ public class MouseHttpServerActivators implements BundleActivator {
         }
     }
 
-    @Override
+    //@Override
     public void stop(BundleContext arg0) throws Exception {
         System.out.println("Stopping mice actions server");
         MouseHttpServerActivators.bc = null;

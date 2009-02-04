@@ -1,17 +1,17 @@
-package org.netbeams.dsp.messagesdirectory.model;
+package org.netbeams.dsp.wiretransport.model;
 
 import java.util.UUID;
 
 import org.netbeams.dsp.message.Message;
 
 /**
- * Representation of a given DSP Message in the Messages Directory. It contains references to the DSP message, the URL
+ * Representation of a given DSP Message in the Messages Queue. It contains references to the DSP message, the URL
  * destination, the state and the messages container identification in which the message will be "wrapped up".
  * 
  * @author Marcello de Sales (marcello.sales@gmail.com)
  * 
  */
-public class DirectoryData {
+public class QueueMessageData {
 
     /**
      * The destination URL of the component that will receive the message
@@ -24,7 +24,7 @@ public class DirectoryData {
     /**
      * The message state
      */
-    private MessagesQueueState state;
+    private QueueMessageState state;
     /**
      * The container ID. This value is only set when the message on the state MessagesQueueState.TRANSMITTED and
      * ACKNOWLEDGED.
@@ -38,10 +38,10 @@ public class DirectoryData {
      * @param componentDestinition is the URL of the DSP component.
      * @param dspMessage is the DSP message to be sent.
      */
-    public DirectoryData(Message dspMessage) {
+    public QueueMessageData(Message dspMessage) {
         this.destinitionIpAddress = dspMessage.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
         this.message = dspMessage;
-        this.state = MessagesQueueState.QUEUED;
+        this.state = QueueMessageState.QUEUED;
     }
 
     /**
@@ -51,11 +51,11 @@ public class DirectoryData {
      * @param dspMessage is the dspMessage.
      * @return a new instance of the DirectoryData.
      */
-    public static DirectoryData makeNewInstance(Message dspMessage) {
-        return new DirectoryData(dspMessage);
+    public static QueueMessageData makeNewInstance(Message dspMessage) {
+        return new QueueMessageData(dspMessage);
     }
 
-    public MessagesQueueState getState() {
+    public QueueMessageState getState() {
         return this.state;
     }
 
@@ -63,14 +63,14 @@ public class DirectoryData {
      * Whenever a message has been transmitted in a packet.
      */
     public void changeStateToTransmitted() {
-        this.state = MessagesQueueState.TRANSMITTED;
+        this.state = QueueMessageState.TRANSMITTED;
     }
 
     /**
      * Whenever a message has been acknowledged from the server-side.
      */
     public void changeStateToAcknowledged() {
-        this.state = MessagesQueueState.ACKNOWLEDGED;
+        this.state = QueueMessageState.ACKNOWLEDGED;
     }
 
     public UUID getContainerId() {
@@ -88,17 +88,15 @@ public class DirectoryData {
     public Message getMessage() {
         return this.message;
     }
-
-    @Override
+    
     public boolean equals(Object obj) {
-        if (obj instanceof DirectoryData) {
-            return this.destinitionIpAddress.equals(((DirectoryData) obj).destinitionIpAddress)
-                    && this.message.getMessageID().equals(((DirectoryData) obj).message.getMessageID());
+        if (obj instanceof QueueMessageData) {
+            return this.destinitionIpAddress.equals(((QueueMessageData) obj).destinitionIpAddress)
+                    && this.message.getMessageID().equals(((QueueMessageData) obj).message.getMessageID());
         }
         return super.equals(obj);
     }
 
-    @Override
     public int hashCode() {
         return this.destinitionIpAddress.hashCode() + this.state.hashCode() + this.containerId.hashCode()
                 + this.message.hashCode();

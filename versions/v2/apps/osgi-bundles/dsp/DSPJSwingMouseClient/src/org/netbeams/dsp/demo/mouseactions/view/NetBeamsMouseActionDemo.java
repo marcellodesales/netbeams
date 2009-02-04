@@ -23,10 +23,20 @@ import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseActionEnum;
 import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseButtonEnum;
 import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo;
 
+/**
+ * NetBeams Mouse Action demo is a Swing based application that captures the mouse motions
+ * on a JPanel screen.
+ * @author Marcello de Sales (marcello.sales@gmail.com)
+ */
 public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, MouseMotionListener {
 
+    /**
+     * Local logger for the demo
+     */
     private static final Logger log = Logger.getLogger(NetBeamsMouseActionDemo.class);
-
+    /**
+     * Serial number of the class 
+     */
     private static final long serialVersionUID = 1L;
     /**
      * Black area used to capture the mouse actions
@@ -50,10 +60,8 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
      * 
      * @param messageBroker is the DSP messages broker reference, used to deliver messages to the DSP broker.
      */
-//    public NetBeamsMouseActionDemo(MessageBrokerAccessor messageBroker) {
     public NetBeamsMouseActionDemo() {
         super(new GridBagLayout());
-//        this.dspMessageBroker = messageBroker;
         log.info("Starting the MouseActions User Interface");
 
         GridBagLayout gridbag = (GridBagLayout) getLayout();
@@ -90,7 +98,6 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
 
     /**
      * Adds a new listener to the NetBeamsMouse events.
-     * 
      * @param listener is a NetBeamsMouseListener that is interested in the mouse events.
      */
     public void addNetBeamsMouseListener(NetBeamsMouseListener listener) {
@@ -114,6 +121,12 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
         }
     }
 
+    /**
+     * Creates an output message for the frame.
+     * @param eventDescription is the event description
+     * @param e is the AWT event from the mouse.
+     * @param action is the action performed. This action is send from a wrapper method.
+     */
     private void eventOutput(String eventDescription, MouseEvent e, NetBeamsMouseActionEnum action) {
         String output = eventDescription + " detected on mouse button " + e.getButton()
                 + e.getComponent().getClass().getName() + "." + NEWLINE;
@@ -161,13 +174,21 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
     /**
      * Default executor for the application
      * 
-     * @author marcello
-     * 
+     * @author Marcello de Sales (marcello.sales@gmail.com)
      */
     public static class JFrameExecutorForMouseActions extends JFrame implements Runnable {
         
+        /**
+         * Serial version
+         */
+        private static final long serialVersionUID = 1L;
+        /**
+         * Local logger for the class
+         */
         private static final Logger thLog = Logger.getLogger(JFrameExecutorForMouseActions.class);
-
+        /**
+         * Instance of the demo Swing application
+         */
         private NetBeamsMouseActionDemo demo;
 
         public JFrameExecutorForMouseActions(NetBeamsMouseActionDemo demo) {
@@ -199,19 +220,5 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
             this.pack();
             this.setVisible(true);
         }
-    }
-
-    public static void main(String[] args) {
-        // Schedule a job for the event-dispatching thread:
-        // creating and showing this application's GUI.
-//        NetBeamsMouseActionDemo demo = new NetBeamsMouseActionDemo();
-//        NetBeamsMouseActionDemo.JFrameExecutorForMouseActions ex = new NetBeamsMouseActionDemo.JFrameExecutorForMouseActions(demo);
-//        javax.swing.SwingUtilities.invokeLater(ex);
-//        ex.addWindowListener(new WindowAdapter() {
-//            public void windowClosing(WindowEvent e) {
-//                System.out.println("Closing...");
-//
-//            }
-//        });
     }
 }

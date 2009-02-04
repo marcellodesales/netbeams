@@ -1,11 +1,22 @@
 Manifest-Version: 1.0
 Bundle-Activator: org.netbeams.dsp.wiretransport.osgi.DSPWireTransportActivator
 Bundle-Category: DSP
-Bundle-ClassPath: ., libs/commons-httpclient-3.1.jar, libs/commons-codec-1.3.jar, libs/commons-logging-1.1.1.jar, libs/jaxb-api.jar
-Bundle-Description: The DSP Wire Transport service 
+Bundle-ClassPath: ., 
+ libs/commons-httpclient-3.1.jar, 
+ libs/commons-codec-1.3.jar, 
+ libs/commons-logging-1.1.1.jar
+Bundle-Description: The DSP Wire Transport Client service sends messages to the DSP Wire Transport Server through HTTP requests 
 Bundle-ManifestVersion: 2
-Bundle-Name: DSP Wire Transport
-Bundle-SymbolicName: DSPWireTransport
+Bundle-Name: DSP Wire Transport Client
+Bundle-SymbolicName: DSPWireTransportClient
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.message.content, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.osgi.framework, org.netbeams.dsp.messagesdirectory.model, org.netbeams.dsp.messagesdirectory.controller, org.osgi.service.http, javax.servlet, javax.servlet.http, org.apache.log4j
+Export-Package: org.netbeams.dsp.wiretransport.model
+Import-Package: org.netbeams.dsp, 
+ org.netbeams.dsp.message, 
+ org.netbeams.dsp.message.content, 
+ org.netbeams.dsp.util, 
+ org.netbeams.dsp.platform.osgi, 
+ org.osgi.framework, 
+ org.apache.log4j,
+ javax.xml.bind

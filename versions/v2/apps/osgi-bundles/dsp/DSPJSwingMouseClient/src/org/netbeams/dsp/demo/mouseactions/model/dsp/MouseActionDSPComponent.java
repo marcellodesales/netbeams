@@ -14,7 +14,6 @@ import org.netbeams.dsp.MessageCategory;
 import org.netbeams.dsp.demo.mouseactions.controller.DSPMouseActionsProducer;
 import org.netbeams.dsp.demo.mouseactions.view.NetBeamsMouseActionDemo;
 import org.netbeams.dsp.message.Message;
-import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
 
 /**
  * MouseActionDSPComponent is the DSP component for the mouse actions. It starts a new JFrame where the user can
@@ -76,19 +75,14 @@ public class MouseActionDSPComponent implements DSPComponent {
      * it helps creating a new Swing thread.
      */
     private NetBeamsMouseActionDemo.JFrameExecutorForMouseActions jfexec;
-    /**
-     * The reference to the messages queue DSP component.
-     */
-    private DSPMessagesDirectory messagesQueueComp;
-
+    
     /**
      * Creates a new instance of the MouseActionDSPComponent with the given reference to the Messages Queue
      * 
      * @param messagesQueue is the service where the DSP component needs to send messages.
      */
-    public MouseActionDSPComponent(DSPMessagesDirectory messagesQueue) {
+    public MouseActionDSPComponent() {
         log.debug("Instantiating the DSPMouseActions component");
-        this.messagesQueueComp = messagesQueue;
     }
 
     public String getComponentType() {
@@ -100,10 +94,9 @@ public class MouseActionDSPComponent implements DSPComponent {
     }
 
     public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
-        log.info(COMPONENT_TYPE + ".initComponent()");
-
         this.context = context;
         this.componentNodeId = componentNodeId;
+        log.info(COMPONENT_TYPE + ".initComponent() with context " + this.context);
     }
 
     public String getComponentNodeId() {
@@ -111,12 +104,12 @@ public class MouseActionDSPComponent implements DSPComponent {
     }
 
     public void deliver(Message request) throws DSPException {
-        // TODO How we should handle an invokation to this method when the
+        // TODO How we should handle an invocation to this method when the
         // component is not a consumer?
     }
 
     public Message deliverWithReply(Message message) throws DSPException {
-        // TODO How we should handle an invokation to this method when the
+        // TODO How we should handle an invocation to this method when the
         // component is not a consumer?
         return null;
     }
@@ -155,7 +148,7 @@ public class MouseActionDSPComponent implements DSPComponent {
         // NetBeamsMouseSystemOutput systemOutObserver = new NetBeamsMouseSystemOutput();
         // demo.addNetBeamsMouseListener(systemOutObserver);
 
-        DSPMouseActionsProducer hs = new DSPMouseActionsProducer(this.messagesQueueComp);
+        DSPMouseActionsProducer hs = new DSPMouseActionsProducer(this.context);
         this.demo.addNetBeamsMouseListener(hs);
 
         log.debug("Mouse Actions demo UI is ready to receive interaction...");

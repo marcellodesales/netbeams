@@ -1,13 +1,13 @@
-package org.netbeams.dsp.messagesdirectory.model;
+package org.netbeams.dsp.wiretransport.model;
 
 /**
- * MessagesQueueState is designed to identify the state of the messages queue.
+ * QueueMessageState is designed to identify the state of the messages queue.
  * 
  * @author Marcello de Sales
  * Jan 10, 2009 13:05
  *
  */
-public enum MessagesQueueState {
+public enum QueueMessageState {
 	
 	/**
 	 * Whenever a messages queue is created to be transmitted;

@@ -6,17 +6,15 @@
 	<import file="apps/osgi-bundles/dsp/DSPStockData/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPStockConsumer/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml" />
-	<!--	<import file="apps/osgi-bundles/dsp/DSPDataPersistence/build.xml" />
-	<import file="apps/osgi-bundles/dsp/DSPHTTPMouseServer/build.xml" /> -->
 	<import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
-	<import file="apps/osgi-bundles/dsp/DSPMessagesDirectory/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPWireTransport/build.xml" />
+	<import file="apps/osgi-bundles/dsp/DSPWireTransportServer/build.xml" />
 	
 	<!--
 	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-data.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-data-persistence.all, dsp-mouse-http-consumer.all, dsp-mouse-producer-jswing.all"/>
 	-->
 
-	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-messages-dir.all, dsp-wire-transport.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-mouse-producer-jswing.all" />
+	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-wire-transport-client.all, dsp-wire-transport-server.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-mouse-producer-jswing.all" />
 
 	<target name="setup" depends="init, print-properties">
 		<!-- Setting up runtime directory -->
@@ -48,11 +46,11 @@
 		<exec executable="java" dir="${KNOPFLERFISH.HOME}/osgi">
 			<arg line='-Dlog4j.configuration="file:${DSP.RUNTIME}/log4j.xml" -jar framework.jar' />
 			<env key="DSP_HOME" value="${DSP.RUNTIME}" />
-			<env key="WIRE.TRANSPORT.SERVER" value="127.0.0.1" />
+			<env key="WIRE.TRANSPORT.SERVER" value="130.212.214.119" />
 		</exec>
 	</target>
 
-	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-data.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean, dsp-wire-transport.clean">
+	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-data.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean, dsp-wire-transport-client.clean, dsp-wire-transport-server.clean">
 		<delete dir="${DSP.RUNTIME}/" />
 	</target>
 </project>

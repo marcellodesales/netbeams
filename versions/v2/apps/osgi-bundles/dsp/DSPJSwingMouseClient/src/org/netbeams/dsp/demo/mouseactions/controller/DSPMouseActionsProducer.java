@@ -1,7 +1,5 @@
 package org.netbeams.dsp.demo.mouseactions.controller;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +7,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.netbeams.dsp.DSPContext;
+import org.netbeams.dsp.DSPException;
+import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.demo.mouseactions.ButtonName;
 import org.netbeams.dsp.demo.mouseactions.EventName;
 import org.netbeams.dsp.demo.mouseactions.MouseAction;
@@ -20,7 +21,7 @@ import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
-import org.netbeams.dsp.messagesdirectory.controller.DSPMessagesDirectory;
+import org.netbeams.dsp.util.NetworkUtil;
 
 /**
  * The DSPMouseActionsProducer creates the DSP Messages from the mouse actions captured from the
@@ -37,20 +38,17 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
      * The local memory defines the measurements from the mouse actions.
      */
     private List<NetBeamsMouseInfo> localMemory;
-    /**
-     * Reference to the DSP messages queue service where the messages are delivered.
-     */
-    private DSPMessagesDirectory messagesQueueService;
-
+    private DSPContext dspContext;
+    
     /**
      * Creates a new Mouse Actions client that is responsible for sending the information to the DSP component.
      * 
      * @param dspBc is the DSPContext implementation initialized by the OSGi framework.
      * @param component is the DSP base component responsible for this producer.
      */
-    public DSPMouseActionsProducer(DSPMessagesDirectory messagesQueue) {
+    public DSPMouseActionsProducer(DSPContext dspContext) {
+        this.dspContext = dspContext;
         this.localMemory = new LinkedList<NetBeamsMouseInfo>();
-        this.messagesQueueService = messagesQueue;
         log.trace("The DSPMouseActionsProducer initialized: internal sender at every 10 seconds");
     }
 
@@ -76,19 +74,15 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
         MouseActionsContainer data = this.makeMouseActionsContainerFromMouseActions();
 
         // Create the message
-        String localIPAddress;
-        try {
-            localIPAddress = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e1) {
-            localIPAddress = "127.0.0.1";
-        }
+        String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
         
         log.debug("Packaging Mouse Actions to be sent from " + localIPAddress);
         log.debug("Total number of Mouse Actions: " + data.getMouseAction().size());
         
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
                 MouseActionDSPComponent.class.getName(), localIPAddress, data.getContentContextForJAXB());
-        ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier("WEB",
+        
+        ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier("DSPWebLogger",
                 System.getenv("WIRE.TRANSPORT.SERVER"), null);
         // Note that the consumer has the Wire Transport default DEMO IP as the destination.
         
@@ -98,11 +92,20 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
 
         try {
             Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data, ObjectFactory.class);
-            messagesQueueService.addMessageToOutboundQueue(message);
-
+            
+            // Always check if there is a broker available
+            MessageBrokerAccessor messageBroker = this.dspContext.getDataBroker();
+            if(messageBroker != null){
+                    messageBroker.send(message);
+            }else{
+                    log.debug("Message broker not available");
+            }
+            
         } catch (JAXBException e) {
             log.error(e.getMessage(), e);
         } catch (ParserConfigurationException e) {
+            log.error(e.getMessage(), e);
+        } catch (DSPException e) {
             log.error(e.getMessage(), e);
         }
     }

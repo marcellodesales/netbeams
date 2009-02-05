@@ -24,7 +24,7 @@ public class ManagementServlet
 {
 	private static final Logger log = Logger.getLogger(ManagementServlet.class);
 	
-    final public static String BASE_URI     = "/dsp-management";
+    final public static String BASE_URI = "/dsp-management";
 
     private boolean isActive;
     private DSPManager dspManager;

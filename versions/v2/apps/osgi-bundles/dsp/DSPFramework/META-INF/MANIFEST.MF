@@ -6,4 +6,4 @@ Bundle-Name: DSP Framework
 Bundle-SymbolicName: DSPFramework
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Export-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.message.content, org.netbeams.dsp.util, org.netbeams.dsp.data.property
+Export-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.message.content, org.netbeams.dsp.util, org.netbeams.dsp.data.property, javax.xml.bind

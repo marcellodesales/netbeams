@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPFramework/src"/>
+	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPManagement/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPJSwingMouseClient/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPStockProducer/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPStockConsumer/src"/>
@@ -23,5 +24,6 @@
 	<classpathentry kind="lib" path="thirdparty/pax/pax-web-service-0.5.1.jar"/>
 	<classpathentry kind="lib" path="apps/xml/jaxb/message/dist/message.jar"/>
 	<classpathentry kind="lib" path="apps/xml/jaxb/stocktick/dist/stocktick.jar"/>
+	<classpathentry kind="lib" path="apps/xml/jaxb/dsproperty/dist/dsproperty.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

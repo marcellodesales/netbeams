@@ -5,32 +5,29 @@
     
     <property name="package" value="org.netbeams.dsp.data.property" />
 
-    <property name="java-src-dir" value="${basedir}/java-src" />
+    <property name="java-src-dir" value="${XML.JAXB}/dsproperty/java-src" />
 
     <target name="xjc-compile">
         <antcall target="jaxbsetup.xjc-compile">
             <param name="java-src" value="${java-src-dir}"/>
             <param name="schema.name" value="dsproperty.xsd" />
-            <param name="message-package" value="${package}" />
+            <param name="package" value="${package}" />
         </antcall>
     </target>
 
     <target name="java-compile" depends="xjc-compile">
-        <delete dir="${basedir}/classes" />
-        <mkdir dir="${basedir}/classes" />
-        <javac srcdir="${basedir}/java-src" destdir="${basedir}/classes" classpathref="jaxb.classpath" 
+        <delete dir="${XML.JAXB}/dsproperty/classes" />
+        <mkdir dir="${XML.JAXB}/dsproperty/classes" />
+        <javac srcdir="${XML.JAXB}/dsproperty/java-src" destdir="${XML.JAXB}/dsproperty/classes" classpathref="jaxb.classpath" 
         	source="1.5"
 		target="1.5"/>
     </target>
 
 
     <target name="create-jar" depends="java-compile">
-        <mkdir dir="${basedir}/dist" />
-        <jar destfile="${basedir}/dist/dsproperty.jar" basedir="${basedir}/classes" />
+        <mkdir dir="${XML.JAXB}/dsproperty/dist" />
+        <jar destfile="${XML.JAXB}/dsproperty/dist/dsproperty.jar" basedir="${XML.JAXB}/dsproperty/classes" />
     </target>
 
-    <target name="dist" depends="create-jar">
-        <copy file="${basedir}/dist/dsproperty.jar" todir="${basedir}/../message/lib" />
-    </target>
 
 </project>

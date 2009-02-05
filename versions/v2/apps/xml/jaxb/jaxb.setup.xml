@@ -31,7 +31,7 @@
     <target name="xjc-compile">
         <delete dir="${java-src}" />
         <mkdir dir="${java-src}" />
-        <xjc destdir="${java-src}" schema="${basedir}/../../schemas/${schema.name}" package="${package}" />
+        <xjc destdir="${java-src}" schema="${XML.JAXB}/../schemas/${schema.name}" package="${package}" />
     </target>
 
 </project>

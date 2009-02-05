@@ -28,7 +28,7 @@
 		<mkdir dir="${DSP.DEPLOYMENT}/logs" />
 		<copy file="${DSP.HOME}/config/log4j.xml" tofile="${DSP.RUNTIME}/log4j.xml" />
 		<replace file="${DSP.RUNTIME}/log4j.xml" token="DSP_HOME" value="${DSP.HOME}"/>
-        <copy file="${DSP.HOME}/config/matcher_config.xml" todir="${DSP.RUNTIME}"  />
+        	<copy file="${DSP.HOME}/config/matcher_config.xml" todir="${DSP.RUNTIME}"  />
 		
 		<antcall target="bootstrap-setup-messages" />
 	</target>
@@ -65,5 +65,10 @@
 	<target name="stocktick.all">
 		<ant antfile="apps/xml/jaxb/stocktick/build.xml" inheritAll="true"/> 		
 	</target>
+	
+	<target name=".all">
+		<ant antfile="apps/osgi-bundles/dsp/DSPManagement/build.xml" inheritAll="true"/> 		
+	</target>
+	
 	
 </project>

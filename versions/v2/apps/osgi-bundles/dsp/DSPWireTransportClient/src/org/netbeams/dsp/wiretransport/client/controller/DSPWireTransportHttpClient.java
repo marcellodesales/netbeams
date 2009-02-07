@@ -1,4 +1,4 @@
-package org.netbeams.dsp.wiretransport.controller;
+package org.netbeams.dsp.wiretransport.client.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,7 +38,7 @@ import org.netbeams.dsp.message.MessagesContainer;
 import org.netbeams.dsp.message.ObjectFactory;
 import org.netbeams.dsp.message.UpdateMessage;
 import org.netbeams.dsp.util.NetworkUtil;
-import org.netbeams.dsp.wiretransport.model.MessagesQueues;
+import org.netbeams.dsp.wiretransport.client.model.MessagesQueues;
 import org.w3c.dom.Node;
 
 public class DSPWireTransportHttpClient implements DSPComponent {
@@ -54,7 +54,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
     /**
      * Main component type descriptor
      */
-    private static final String COMPONENT_TYPE = "org.netbeams.dsp.wiretransport";
+    private static final String COMPONENT_TYPE = "org.netbeams.dsp.wiretransport.client";
     /**
      * Default component descriptor
      */
@@ -67,7 +67,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      * The DSP Node ID
      */
     private String componentNodeId;
-    
+
     /**
      * Constructs a new DSP Wire Transport HTTP client with an internal scheduler that retrieves messages from the local
      * Messages Queues.
@@ -146,8 +146,8 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                         String messagesForRequestInXml = serializeMessagesContainer(messagesForRequest);
                         thLog.trace("HTTP Request BODY: " + messagesForRequestInXml);
 
-                        destinationURL = new URL("http://" + messagesForRequest.getHost() + ":" + System.getProperty("")
-                                + DSPWireTransportHttpReceiverServlet.BASE_URI);
+                        destinationURL = new URL("http://" + messagesForRequest.getHost() + ":"
+                                + System.getProperty("WIRE_TRANSPORT_SERVER_PORT") + System.getProperty("BASE_URI"));
 
                         thLog.trace("Setting the messages in the container " + messagesForRequest.getUudi()
                                 + " to the 'transmitted' state...");
@@ -242,8 +242,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             PostMethod postMethod = new PostMethod(dest.toString());
 
             NameValuePair[] formValues = new NameValuePair[1];
-            formValues[0] = new NameValuePair(DSPWireTransportHttpReceiverServlet.TRANSPORT_HTTP_VARIABLE,
-                    messagesContainerXml);
+            formValues[0] = new NameValuePair(System.getProperty("HTTP_SERVER_REQUEST_VARIABLE"), messagesContainerXml);
             postMethod.setRequestBody(formValues);
             // execute method and handle any error responses.
 
@@ -297,10 +296,18 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                 if (property.getName().equals("WIRE_TRANSPORT_SERVER_IP")) {
                     System.setProperty("WIRE_TRANSPORT_SERVER_IP", property.getValue());
                     log.debug("Update Property: WIRE_TRANSPORT_SERVER_IP=" + property.getValue());
-                } else 
-                if (property.getName().equals("WIRE_TRANSPORT_SERVER_PORT")) {
+                    
+                } else if (property.getName().equals("WIRE_TRANSPORT_SERVER_PORT")) {
                     log.debug("Update Property: WIRE_TRANSPORT_SERVER_PORT=" + property.getValue());
                     System.setProperty("WIRE_TRANSPORT_SERVER_PORT", property.getValue());
+
+                } else if (property.getName().equals("HTTP_SERVER_BASE_URI")) {
+                    log.debug("Update Property: HTTP_SERVER_BASE_URI=" + property.getValue());
+                    System.setProperty("HTTP_SERVER_BASE_URI", property.getValue());
+                    
+                } else if (property.getName().equals("HTTP_SERVER_REQUEST_VARIABLE")) {
+                    log.debug("Update Property: HTTP_SERVER_REQUEST_VARIABLE=" + property.getValue());
+                    System.setProperty("HTTP_SERVER_REQUEST_VARIABLE", property.getValue());
                 }
             }
 

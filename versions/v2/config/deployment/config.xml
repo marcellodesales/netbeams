@@ -13,19 +13,19 @@
 		<required />
 	</component>
     <component>
-        <name>DSPMessagesDirectory</name>
-        <bundle>DSPMessagesDirectory-0.1.jar</bundle>
+        <name>DSPWireTransportClient</name>
+        <bundle>DSPWireTransportClient-0.1.jar</bundle>
         <priority>72</priority>
         <required />
     </component>
     <component>
-        <name>DSPWireTransport</name>
-        <bundle>DSPWireTransport-0.1.jar</bundle>
+        <name>DSPWireTransportServer</name>
+        <bundle>DSPWireTransportServer-0.1.jar</bundle>
         <priority>73</priority>
         <required />
     </component>
     <component>
-        <name>DSPJSwingMouseClient</name>
+        <name>DSPJSwingMouseProducer</name>
         <bundle>DSPJSwingMouseClient-0.1.jar</bundle>
         <priority>74</priority>
         <required />

@@ -6,37 +6,34 @@
 	<target name="dsp-framework.all" depends="init, dsp-framework.compile, dsp-framework.jar" />
 
 	<target name="dsp-framework.compile">
-	
-		<path id="framework.project.classpath">
-			<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
-			<path refid="project.class.path"/>
-		</path>
-	
+        <path id="framework.project.classpath">
+            <pathelement location="${THIRDPARTY}/apache/log4j-1.2.15.jar"/>
+            <pathelement location="${THIRDPARTY}/apache/xml-apis.jar"/>
+            <pathelement location="${THIRDPARTY}/apache/xerces.jar"/>
+            <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+            <path refid="project.class.path"/>
+        </path>
+		
 		<delete dir="${DSP.FRAMEWORK}/classes" />
 		<mkdir dir="${DSP.FRAMEWORK}/classes" />
 		<javac destdir="${DSP.FRAMEWORK}/classes" debug="on" srcdir="${DSP.FRAMEWORK}/src" source="1.5" target="1.5">
 			<classpath refid="framework.project.classpath"/>
-		</javac>	
+		</javac>	   
 	</target>
 	
 	
 	<target name="dsp-framework.jar">
 	
 		<mkdir dir="${DSP.FRAMEWORK}/classes/libs"/>
+        <copy todir="${DSP.FRAMEWORK}/classes/libs">
+            <fileset dir="${XML.JAXB}/message/dist" includes="*.jar"/>
+            <fileset dir="${XML.JAXB}/dsproperty/dist" includes="*.jar"/>
+        	<fileset dir="${THIRDPARTY}/apache/" includes="log4j-1.2.15.jar"/>
+            <fileset dir="${THIRDPARTY}/pax" includes="*.jar"/>
+            <fileset dir="${THIRDPARTY}/knopflerfish/2.1.1/" includes="http_all-2.1.0.jar" />
+            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="jaxb-api.jar" />
+        </copy>	
 		
-	        <copy todir="${DSP.FRAMEWORK}/classes/libs">
-	            <fileset dir="${XML.JAXB}/message/dist" includes="*.jar"/>
-	            <fileset dir="${XML.JAXB}/dsproperty/dist" includes="*.jar"/>
-	        </copy>
-		
-	        <copy todir="${DSP.FRAMEWORK}/classes/libs">
-	            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib">
-	            	<include name="*.jar"/>
-	            	<exclude name="jaxb-xjc.jar"/>
-	            </fileset>
-	        </copy>
-
-	
 		<jar basedir="${DSP.FRAMEWORK}/classes" 
 			 jarfile="${DSP.RUNTIME}/DSPFramework-${DSP.VERSION}.jar" 
 			 compress="true"

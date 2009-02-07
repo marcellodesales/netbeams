@@ -1,30 +1,25 @@
 /*
- * Created on Mon Feb 02 12:33:01 GMT-03:00
+ * Created on Sat Jan 02 12:33:01 GMT-03:00
  */
-package org.netbeams.dsp.wiretransport.osgi;
+
+package org.netbeams.dsp.wiretransport.client.osgi;
 
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
-import org.netbeams.dsp.wiretransport.controller.DSPWireTransportHttpReceiverServlet;
-import org.netbeams.dsp.wiretransport.controller.DSPWireTransportServerConsumer;
+import org.netbeams.dsp.wiretransport.client.controller.DSPWireTransportHttpClient;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.http.HttpService;
 
 /**
  * Activator class for the WireTransport DSP component
  * 
  * @author Marcello de Sales
  */
-public class DSPWireTransportServerActivator implements BundleActivator {
+public class DSPWireTransportClientActivator implements BundleActivator {
 
-    private static final Logger log = Logger.getLogger(DSPWireTransportServerActivator.class);
+    private static final Logger log = Logger.getLogger(DSPWireTransportClientActivator.class);
 
-    /**
-     * Http Service for the DSP Wire Transport HTTP Server
-     */
-    private HttpService httpService;
     /**
      * Bundle context
      */
@@ -34,9 +29,9 @@ public class DSPWireTransportServerActivator implements BundleActivator {
      */
     private ServiceRegistration serviceRegistration;
     /**
-     * The service reference to the DSP consumer 
+     * The reference to the Wire Transport client
      */
-    private DSPWireTransportServerConsumer consumer;
+    private DSPWireTransportHttpClient client;
 
     /*
      * (non-Javadoc)
@@ -44,23 +39,20 @@ public class DSPWireTransportServerActivator implements BundleActivator {
      * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
      */
     public void start(BundleContext bc) throws Exception {
-        log.info("WireTransportServer.Activate.start()");
-        
+        log.info("WireTransportClient.Activate.start()");
         this.bundleContext = bc;
-
-        this.consumer = new DSPWireTransportServerConsumer(this.bundleContext);
-        this.consumer.startComponent();
+        this.client = new DSPWireTransportHttpClient();
+        this.serviceRegistration = ActivatorHelper.registerOSGIService(bundleContext, this.client);
     }
-    
+
     /*
      * (non-Javadoc)
      * 
      * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
      */
     public void stop(BundleContext bc) throws Exception {
-        log.info("WireTransport.Activator.stop()");
-        this.httpService.unregister(DSPWireTransportHttpReceiverServlet.BASE_URI);
-        this.consumer.stopComponent();
+        log.info("WireTransportClient.Activator.stop()");
+        this.client.stopComponent();
         ActivatorHelper.unregisterOSGIService(this.bundleContext, this.serviceRegistration);
     }
 }

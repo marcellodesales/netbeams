@@ -8,6 +8,11 @@
 	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPHTTPMouseServer/src"/>
 	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src"/>
 	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPWebDataLogger/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/xml/jaxb/message/test"/>
+	<classpathentry kind="src" path="versions/v2/apps/xml/jaxb/message/java-src"/>
+	<classpathentry kind="src" path="versions/v2/apps/xml/jaxb/message/generated-src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPWireTransportServer/src"/>
+	<classpathentry kind="src" path="versions/v2/apps/osgi-bundles/dsp/DSPWireTransportClient/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="versions/v2/thirdparty/apache/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="versions/v2/thirdparty/ops4j/pax-web-service-0.5.1.jar"/>
@@ -21,9 +26,12 @@
 	<classpathentry kind="lib" path="versions/v2/thirdparty/jaxb/2.1.9/lib/jaxb-impl.jar"/>
 	<classpathentry kind="lib" path="versions/v2/thirdparty/jaxb/2.1.9/lib/jaxb-xjc.jar"/>
 	<classpathentry kind="lib" path="versions/v2/thirdparty/jaxb/2.1.9/lib/jsr173_1.0_api.jar"/>
-	<classpathentry kind="lib" path="versions/v2/apps/xml/jaxb/message/dist/message.jar"/>
+	<classpathentry kind="lib" path="versions/v2/apps/xml/jaxb/message/dist/message.jar" sourcepath="versions/v2/apps/xml/jaxb/message/classes/org/netbeams/dsp/message"/>
 	<classpathentry kind="lib" path="versions/v2/apps/xml/jaxb/stocktick/dist/stocktick.jar"/>
 	<classpathentry kind="lib" path="versions/v2/thirdparty/jaxb/2.1.9/lib/jaxb1-impl.jar"/>
 	<classpathentry kind="lib" path="versions/v2/apps/xml/jaxb/mouseactions/dist/mouseactions.jar"/>
+	<classpathentry kind="lib" path="versions/v2/apps/xml/jaxb/dsproperty/dist/dsproperty.jar"/>
+	<classpathentry kind="lib" path="versions/v2/runtime/DSPFramework-0.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

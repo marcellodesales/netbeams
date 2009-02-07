@@ -1,4 +1,4 @@
-package org.netbeams.dsp.wiretransport.model;
+package org.netbeams.dsp.wiretransport.client.model;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package org.netbeams.dsp.wiretransport.controller;
+package org.netbeams.dsp.wiretransport.server.controller;
 
 import javax.servlet.ServletException;
 
@@ -13,27 +13,40 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
-public class DSPWireTransportServerConsumer implements DSPComponent {
+/**
+ * DSP component responsible for receiving the DSP messages from a client. It publishes Servlets
+ * that are able to receive DSP Messages serialized in XML format.
+ * 
+ * @author Marcello de Sales (marcello.sales@gmail.com)
+ */
+public class DSPWireTransportServer implements DSPComponent {
 
-    private static final Logger log = Logger.getLogger(DSPWireTransportServerConsumer.class);
-
+    /**
+     * Default logger
+     */
+    private static final Logger log = Logger.getLogger(DSPWireTransportServer.class);
+    /**
+     * The DSP component type used to identify the component in match rules 
+     */
     private static final String COMPONENT_TYPE = "org.netbeams.dsp.wiretransport.server";
-
+    /**
+     * The component descriptor
+     */
     private static final ComponentDescriptor COMPONENT_DESCRIPTOR = null;
-
+    /**
+     * The main DSP context used by the DSP Platform
+     */
     private DSPContext dspContext;
-
     /**
      * The DSP Node ID
      */
     private String componentNodeId;
-
     /**
-     * Http Service for the DSP Wire Transport HTTP Server
+     * Http Service for the registration of Servlets
      */
     private HttpService httpService;
     /**
-     * The service reference to the HTTP
+     * The service reference to the HTTP service
      */
     private ServiceReference httpSR;
     /**
@@ -45,15 +58,12 @@ public class DSPWireTransportServerConsumer implements DSPComponent {
      * Creates a new DSP Wire Transport Server consumer with the reference to the HTTP service
      * @param httpServiceReference is the HTTP service reference.
      */
-    public DSPWireTransportServerConsumer(BundleContext bundleContext) {
+    public DSPWireTransportServer(BundleContext bundleContext) {
         this.bundleContext  = bundleContext;
     }
     
-    
     public void deliver(Message message) throws DSPException {
-        
-        log.debug("Delivering Messages to the component");
-        
+        log.debug("Delivering Messages to the component");        
     }
 
     public Message deliverWithReply(Message message) throws DSPException {
@@ -119,9 +129,9 @@ public class DSPWireTransportServerConsumer implements DSPComponent {
         try {
             
             log.info("Registering the DSP Wire Transport Messages Receiver Servlet as "
-                    + DSPWireTransportHttpReceiverServlet.BASE_URI);
+                    + System.getProperty("HTTP_SERVER_BASE_URI"));
             
-            this.httpService.registerServlet(DSPWireTransportHttpReceiverServlet.BASE_URI,
+            this.httpService.registerServlet(System.getProperty("HTTP_SERVER_BASE_URI"),
                     new DSPWireTransportHttpReceiverServlet(this.dspContext), null, null);
             
         } catch (ServletException e) {
@@ -133,7 +143,7 @@ public class DSPWireTransportServerConsumer implements DSPComponent {
 
     public void stopComponent() throws DSPException {
         log.info("DSPWireTransportServerConsumer.stopComponent()");
-        this.httpService.unregister(DSPWireTransportHttpReceiverServlet.BASE_URI);
+        this.httpService.unregister(System.getProperty("HTTP_SERVER_BASE_URI"));
     }
 
     public String getComponentNodeId() {
@@ -146,7 +156,6 @@ public class DSPWireTransportServerConsumer implements DSPComponent {
 
     public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
         this.componentNodeId = componentNodeId;
-        this.dspContext = context;
-        
+        this.dspContext = context;   
     }
 }

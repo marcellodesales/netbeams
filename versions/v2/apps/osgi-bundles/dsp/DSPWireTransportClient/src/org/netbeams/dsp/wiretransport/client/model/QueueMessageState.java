@@ -1,4 +1,4 @@
-package org.netbeams.dsp.wiretransport.model;
+package org.netbeams.dsp.wiretransport.client.model;
 
 /**
  * QueueMessageState is designed to identify the state of the messages queue.

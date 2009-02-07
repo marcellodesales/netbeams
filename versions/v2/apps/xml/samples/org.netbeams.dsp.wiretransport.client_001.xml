@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:MessagesContainer creationTime="2009-01-19T13:43:42-0300"
+	uudi="afb74083-dc4d-4c19-90be-15b0aa1c3823" xmlns:ns2="http://www.netbeams.dsp.org/message.xsd">
+	<message xsi:type="ns2:UpdateMessage" ContentType="org.netbeams.dsp.data.property"
+        messageID="12345" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Header>
+            <CreationTime>1232383422624</CreationTime>
+            <Producer>
+                <ComponentType>
+                    org.netbeams.dsp.platform.management.component.ComponentManager
+                </ComponentType>
+                <ComponentLocator>
+                    <ComponentNodeId>1</ComponentNodeId>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Producer>
+            <Consumer>
+                <ComponentType>org.netbeams.dsp.wiretransport.client</ComponentType>
+                <ComponentLocator>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Consumer>
+        </Header>
+        <Body>
+            <ns2:Dsproperties xmlns:ns2="http://www.netbeams.dsp.org/dsproperty.xsd">
+                <Property name="WIRE_TRANSPORT_SERVER_IP">
+                    <Value>127.0.0.1</Value>
+                </Property>
+                <Property name="WIRE_TRANSPORT_SERVER_PORT">
+                    <Value>8080</Value>
+                </Property>
+                <Property name="HTTP_SERVER_BASE_URI">
+                    <Value>/transportDspMessages</Value>
+                </Property>
+                <Property name="HTTP_SERVER_REQUEST_VARIABLE">
+                    <Value>dspMessagesContainer</Value>
+                </Property>                             
+            </ns2:Dsproperties>
+        </Body>
+    </message>
+</ns2:MessagesContainer>

@@ -7,7 +7,7 @@
 	<import file="apps/osgi-bundles/dsp/DSPStockConsumer/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
-	<import file="apps/osgi-bundles/dsp/DSPWireTransport/build.xml" />
+	<import file="apps/osgi-bundles/dsp/DSPWireTransportClient/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPWireTransportServer/build.xml" />
 	
 	<!--
@@ -46,7 +46,6 @@
 		<exec executable="java" dir="${KNOPFLERFISH.HOME}/osgi">
 			<arg line='-Dlog4j.configuration="file:${DSP.RUNTIME}/log4j.xml" -jar framework.jar' />
 			<env key="DSP_HOME" value="${DSP.RUNTIME}" />
-			<env key="WIRE.TRANSPORT.SERVER" value="130.212.214.119" />
 		</exec>
 	</target>
 

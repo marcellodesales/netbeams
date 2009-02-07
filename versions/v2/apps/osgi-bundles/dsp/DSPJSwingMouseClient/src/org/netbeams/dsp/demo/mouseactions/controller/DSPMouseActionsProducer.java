@@ -83,7 +83,7 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
                 MouseActionDSPComponent.class.getName(), localIPAddress, data.getContentContextForJAXB());
         
         ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier("DSPWebLogger",
-                System.getenv("WIRE.TRANSPORT.SERVER"), null);
+                System.getProperty("WIRE_TRANSPORT_SERVER_IP"), null);
         // Note that the consumer has the Wire Transport default DEMO IP as the destination.
         
         log.debug("Packaging Mouse Actions to be sent to "

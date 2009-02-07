@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-Activator: org.netbeams.dsp.wiretransport.osgi.DSPWireTransportServerActivator
+Bundle-Activator: org.netbeams.dsp.wiretransport.server.osgi.DSPWireTransportServerActivator
 Bundle-Category: DSP
 Bundle-Description: The DSP Wire Transport Server receives HTTP requests from the DSP Wire Transport client 
 Bundle-ManifestVersion: 2
@@ -12,7 +12,7 @@ Import-Package: org.netbeams.dsp,
  org.netbeams.dsp.message.content, 
  org.netbeams.dsp.util, 
  org.netbeams.dsp.platform.osgi,  
- org.netbeams.dsp.wiretransport.model, 
+ org.netbeams.dsp.wiretransport.client.model, 
  org.osgi.framework,
  org.osgi.service.http, 
  org.apache.log4j,

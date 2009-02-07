@@ -29,6 +29,7 @@ import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.message.AbstractMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
+import org.netbeams.dsp.message.ObjectFactory;
 
 public class BootstrapConfigurator {
 	
@@ -84,24 +85,19 @@ public class BootstrapConfigurator {
 		List<File> files = contentDataFiles.get(componentType);
 		if (files != null) {
 		    for (File file: messageFiles){
-		        //Just get messages whose file name includes "bootstrap". They contains the
-		        //dsp messages container. A set of messages container can be divided by
-		        //components, be sorted, etc...
-		        if (file.getName().contains("bootstrap")) {
-		            try {
-                                JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.message");
-                                Unmarshaller unmarshaller = jc.createUnmarshaller();
-                                MessagesContainer msgsCtn = (MessagesContainer)unmarshaller.unmarshal(file);
-                                for(AbstractMessage abstrMsg: msgsCtn.getMessage()) {
-                                    messages.add((Message)abstrMsg);
-                                }
-                            }catch(JAXBException e){
-                                e.printStackTrace();
+		        log.info("Unmarshalling configuration file " + file.getAbsolutePath());
+		        try {
+                            JAXBContext jc = JAXBContext.newInstance(ObjectFactory.class);
+                            Unmarshaller unmarshaller = jc.createUnmarshaller();
+                            MessagesContainer msgsCtn = (MessagesContainer)unmarshaller.unmarshal(file);
+                            for(AbstractMessage abstrMsg: msgsCtn.getMessage()) {
+                                messages.add((Message)abstrMsg);
                             }
+		        }catch(JAXBException e){
+                            e.printStackTrace();
 		        }
 		    }
 		}
-		
 		/*
 		// Messages are supposed to be local. Create local consumers identifiers
 		ComponentLocator locator = new ComponentLocator(null, NodeAddressHelper.LOCAL_NODEADDRESS);

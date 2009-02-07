@@ -22,7 +22,6 @@ import org.netbeams.dsp.MessageFactory;
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.demo.stock.StockTick;
 import org.netbeams.dsp.demo.stock.StockTicks;
-import org.netbeams.dsp.message.AcknowledgementMessage;
 import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.UpdateMessage;

@@ -1,9 +1,24 @@
 Manifest-Version: 1.0
 Bundle-Category: DSP
-Bundle-ClassPath: ., libs/message.jar, libs/dsproperty.jar
+Bundle-ClassPath: ., 
+ libs/message.jar, 
+ libs/dsproperty.jar,
+ libs/log4j-1.2.15.jar, 
+ libs/pax-web-service-0.5.1.jar,
+ libs/http_all-2.1.0.jar,
+ libs/jaxb-api.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: DSP Framework
 Bundle-SymbolicName: DSPFramework
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Export-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.message.content, org.netbeams.dsp.util, org.netbeams.dsp.data.property, javax.xml.bind
+Export-Package: org.netbeams.dsp, 
+ org.netbeams.dsp.message, 
+ org.netbeams.dsp.message.content, 
+ org.netbeams.dsp.util, 
+ org.netbeams.dsp.data.property, 
+ org.apache.log4j,
+ org.osgi.service.http, 
+ javax.servlet, 
+ javax.servlet.http,
+ javax.xml.bind

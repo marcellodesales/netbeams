@@ -13,29 +13,34 @@
 			<path refid="project.class.path" />
 		</path>
 
-		<mkdir dir="${DSP.WIRE.TRANSPORT}/classes" />
-		<javac destdir="${DSP.WIRE.TRANSPORT}/classes" debug="on" srcdir="${DSP.WIRE.TRANSPORT}/src">
+		<mkdir dir="${DSP.WIRE.TRANSPORT}Client/classes" />
+		<javac destdir="${DSP.WIRE.TRANSPORT}Client/classes" debug="on" srcdir="${DSP.WIRE.TRANSPORT}Client/src">
 			<classpath refid="wire-transport.classpath" />
 		</javac>
 	</target>
 
 	<target name="dsp-wire-transport-client.jar">
 
-		<mkdir dir="${DSP.WIRE.TRANSPORT}/tmp/" />
-		<copy todir="${DSP.WIRE.TRANSPORT}/tmp/">
+		<mkdir dir="${DSP.WIRE.TRANSPORT}Client/tmp/" />
+		<copy todir="${DSP.WIRE.TRANSPORT}Client/tmp/">
 			<fileset dir="${THIRDPARTY}/apache/" includes="commons-httpclient-3.1.jar" />
 			<fileset dir="${THIRDPARTY}/apache/" includes="commons-codec-1.3.jar" />
 			<fileset dir="${THIRDPARTY}/apache/" includes="commons-logging-1.1.1.jar" />
 		</copy>
 
-		<jar basedir="${DSP.WIRE.TRANSPORT}/classes" jarfile="${DSP.RUNTIME}/deployment/DSPWireTransport-${DSP.VERSION}.jar" compress="true" includes="**/*" manifest="${DSP.WIRE.TRANSPORT}/META-INF/MANIFEST.MF">
-			<zipfileset dir="${DSP.WIRE.TRANSPORT}/tmp/" includes="*.jar" prefix="libs" />
+		<jar basedir="${DSP.WIRE.TRANSPORT}Client/classes" 
+			 jarfile="${DSP.RUNTIME}/deployment/DSPWireTransportClient-${DSP.VERSION}.jar" 
+			 compress="true" includes="**/*" 
+			 manifest="${DSP.WIRE.TRANSPORT}Client/META-INF/MANIFEST.MF">
+			
+			<zipfileset dir="${DSP.WIRE.TRANSPORT}Client/tmp/" includes="*.jar" prefix="libs" />
 		</jar>
-		<delete dir="${DSP.WIRE.TRANSPORT}/tmp/" />
+		
+		<delete dir="${DSP.WIRE.TRANSPORT}Client/tmp/" />
 	</target>
 
 	<target name="dsp-wire-transport-client.clean">
-		<delete dir="${DSP.WIRE.TRANSPORT}/classes" />
-		<delete dir="${DSP.WIRE.TRANSPORT}/build" />
+		<delete dir="${DSP.WIRE.TRANSPORT}Client/classes" />
+		<delete dir="${DSP.WIRE.TRANSPORT}Client/build" />
 	</target>
 </project>

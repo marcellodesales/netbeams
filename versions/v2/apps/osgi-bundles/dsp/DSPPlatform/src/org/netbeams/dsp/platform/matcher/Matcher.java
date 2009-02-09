@@ -264,7 +264,7 @@ public class Matcher implements BaseComponent {
 	private String obtainConfigFilePath(){
 		String path;
 		
-		String deploymentDir = System.getProperty("dsp.deploymentdir");
+		String deploymentDir = System.getProperty("dsp.deployment");
 		if(deploymentDir == null){
 			deploymentDir = "deployment";
 		}

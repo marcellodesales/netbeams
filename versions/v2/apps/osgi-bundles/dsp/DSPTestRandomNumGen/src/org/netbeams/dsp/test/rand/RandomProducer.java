@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.SecureRandom;
 
 import javax.xml.bind.JAXBContext;
@@ -38,7 +36,7 @@ public class RandomProducer implements DSPComponent {
     
 	private DSPContext context;
     private String componentNodeId;
-    private List <RandomNumber> dataList;
+    private List <RandomNumber> numberList;
     private RandomNumberGenerator rngThread;
         
     public RandomProducer() {};
@@ -56,13 +54,13 @@ public class RandomProducer implements DSPComponent {
 		componentDescriptor.setMsgCategoryProduced(producedMessageCategories);
 		componentDescriptor.setMsgCategoryConsumed(consumedMessageCategories);
 		
-	}  
-    
+	}
     
  // Implemented methods of the DSPComponent interface.
     
     public void deliver(Message message) throws DSPException {
     	log.debug("Delivering message.");
+    	processMessage(message);
 	}
 
 	public Message deliverWithReply(Message message) throws DSPException {	
@@ -108,6 +106,28 @@ public class RandomProducer implements DSPComponent {
 		this.context = context;
 		this.componentNodeId = componentNodeId;
         
+	}
+	
+	private void processMessage(Message message) {
+		log.debug("message class=" + message.getClass().getName());
+		
+		if(message instanceof UpdateMessage){			
+			DSProperties randomNums = null;
+			Object content = message.getBody().getAny();
+			if(Message.isPojo(content)){
+				return;
+			}else{
+				try{
+					JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.data.property",
+									 org.netbeams.dsp.data.property.ObjectFactory.class.getClassLoader());
+					Unmarshaller unmarshaller = jc.createUnmarshaller();
+					DSProperties dspProperty = (DSProperties) unmarshaller.unmarshal((Node) content);
+				} catch(JAXBException je) {
+					log.error("Error unmarhalling the message", je);
+					return;
+				}
+			}			
+		}
 	}
 	
 	
@@ -190,7 +210,7 @@ public class RandomProducer implements DSPComponent {
     	}
     	
     	private void sendData() {
-			RandomNumbers data = generateRandomNumbers(RandomProducer.this.dataList);
+			RandomNumbers data = generateRandomNumbers(RandomProducer.this.numberList);
 			try {
 				send(data);
 			} catch (DSPException e) {

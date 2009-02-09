@@ -17,5 +17,4 @@ Import-Package: org.netbeams.dsp,
  org.osgi.service.http, 
  org.apache.log4j,
  javax.servlet, 
- javax.servlet.http,
- javax.xml.bind
+ javax.servlet.http

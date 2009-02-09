@@ -29,7 +29,6 @@ import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.message.AbstractMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
-import org.netbeams.dsp.message.ObjectFactory;
 
 public class BootstrapConfigurator {
 	
@@ -84,10 +83,10 @@ public class BootstrapConfigurator {
 		
 		List<File> files = contentDataFiles.get(componentType);
 		if (files != null) {
-		    for (File file: messageFiles){
+		    for (File file: files){
 		        log.info("Unmarshalling configuration file " + file.getAbsolutePath());
 		        try {
-                            JAXBContext jc = JAXBContext.newInstance(ObjectFactory.class);
+                            JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.message", org.netbeams.dsp.message.Message.class.getClassLoader());
                             Unmarshaller unmarshaller = jc.createUnmarshaller();
                             MessagesContainer msgsCtn = (MessagesContainer)unmarshaller.unmarshal(file);
                             for(AbstractMessage abstrMsg: msgsCtn.getMessage()) {
@@ -180,6 +179,15 @@ public class BootstrapConfigurator {
 		return nameParts;
 	}
 
-	
+	private String obtainBootstrapPath(){
+		String path;
+		
+		String boostrapDir = System.getProperty("dsp.bootstrapdir");
+		if(boostrapDir == null){
+			boostrapDir = BOOTSTRAP_MESSAGE_DIR;
+		}
+		
+		return DSP_HOME + File.separator + boostrapDir;
+	}	
 
 }

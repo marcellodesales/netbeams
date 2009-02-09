@@ -3,7 +3,6 @@
 	<import file="init-targets.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPFramework/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPPlatform/build.xml" />
-	<import file="apps/osgi-bundles/dsp/DSPStockData/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPStockConsumer/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
@@ -28,7 +27,7 @@
 		<mkdir dir="${DSP.DEPLOYMENT}/logs" />
 		<copy file="${DSP.HOME}/config/log4j.xml" tofile="${DSP.RUNTIME}/log4j.xml" />
 		<replace file="${DSP.RUNTIME}/log4j.xml" token="DSP_HOME" value="${DSP.HOME}"/>
-        	<copy file="${DSP.HOME}/config/matcher_config.xml" todir="${DSP.RUNTIME}"  />
+        <copy file="${DSP.HOME}/config/matcher_config.xml" todir="${DSP.DEPLOYMENT}"  />
 		
 		<antcall target="bootstrap-setup-messages" />
 	</target>
@@ -49,7 +48,23 @@
 		</exec>
 	</target>
 
-	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-data.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean, dsp-wire-transport-client.clean, dsp-wire-transport-server.clean">
+	<target name="run-teresa" depends="init">
+		<exec executable="java" dir="${KNOPFLERFISH.HOME}/osgi">
+			<arg line='-Dlog4j.configuration="file:${DSP.RUNTIME}/log4j.xml" -Ddsp.deploymentdir="deployment_teresa" -Ddsp.bootstrapdir="bootstrap_teresa" -jar framework.jar' />
+			<env key="DSP_HOME" value="${DSP.RUNTIME}" />
+		</exec>
+	</target>
+
+	<target name="run-debug" depends="init">
+		<exec executable="java" dir="${KNOPFLERFISH.HOME}/osgi">
+			<arg line='-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000' />
+			<arg line='-Dlog4j.configuration="file:${DSP.RUNTIME}/log4j.xml" -jar framework.jar' />
+			<env key="DSP_HOME" value="${DSP.RUNTIME}" />
+		</exec>
+	</target>
+	
+
+	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean, dsp-wire-transport-client.clean, dsp-wire-transport-server.clean">
 		<delete dir="${DSP.RUNTIME}/" />
 	</target>
 	

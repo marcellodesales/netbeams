@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <project name="stock" default="create-jar" basedir=".">
 
+    <import file="../../../../init-targets.xml"/>
+    
     <import file="../jaxb.setup.xml" />
     
     <property name="message-package" value="org.netbeams.dsp.demo.stock" />
@@ -24,7 +26,7 @@
     </target>
 
 
-    <target name="create-jar" depends="java-compile">
+    <target name="create-jar" depends="init, java-compile">
         <mkdir dir="${XML.JAXB}/stocktick/dist" />
         <jar destfile="${XML.JAXB}/stocktick/dist/stocktick.jar" basedir="${XML.JAXB}/stocktick/classes" />
     </target>

@@ -133,7 +133,7 @@ public class Platform implements DSPContextFactory{
 			broker.start();
 		} catch (DSPException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Could not start message broker", e);
 			throw new PlatformException(e);
 		}
 

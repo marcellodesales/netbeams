@@ -1,10 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Activator: org.netbeams.dsp.platform.Activator
 Bundle-Category: DSP
-Bundle-ClassPath: .,
- libs/jdom.jar,
- libs/xerces.jar,
- libs/xml-apis.jar
+Bundle-ClassPath: ., libs/jdom.jar, libs/xerces.jar, libs/xml-apis.jar
 Bundle-Description: DSP Platform implementation
 Bundle-ManifestVersion: 2
 Bundle-Name: DSP Platform
@@ -12,8 +9,4 @@ Bundle-SymbolicName: DSPPlatform
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
 Export-Package: org.netbeams.dsp.platform.osgi
-Import-Package: org.netbeams.dsp, 
- org.netbeams.dsp.message, 
- org.netbeams.dsp.util, 
- org.osgi.framework, 
- org.apache.log4j
+Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.osgi.framework, org.apache.log4j

@@ -193,7 +193,7 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	 * @throws IOException
 	 */
 	private void installDSPComponents() throws JDOMException, IOException {	
-		String configFilePath = HOME_PATH + File.separator + DSP_DEPLOYMENT_DIRECTORY;
+		String configFilePath = obtainDeploymentPath();
 		
 		log.info("Install dsp components. Deployment directory: " + configFilePath);
 
@@ -389,7 +389,7 @@ public class DSPBundleController implements DeploymentController, BundleListener
 	private Bundle installBundle(BundleContext bundleContext, String bundleFileName) {
 		log.info("Installing bundle file name " + bundleFileName);
 		
-		String bundlePath = HOME_PATH + File.separator + DSP_DEPLOYMENT_DIRECTORY + File.separator + bundleFileName;
+		String bundlePath = obtainDeploymentPath() + File.separator + bundleFileName;
 		FileInputStream fis = null;
 
 		try {
@@ -435,5 +435,15 @@ public class DSPBundleController implements DeploymentController, BundleListener
 		return config;
 	}
 
+	private String obtainDeploymentPath(){
+		String path;
+		
+		String deploymentDir = System.getProperty("dsp.deploymentdir");
+		if(deploymentDir == null){
+			deploymentDir = DSP_DEPLOYMENT_DIRECTORY;
+		}
+		
+		return HOME_PATH + File.separator + deploymentDir;
+	}
 
 }

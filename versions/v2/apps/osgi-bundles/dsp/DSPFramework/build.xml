@@ -32,6 +32,11 @@
             <fileset dir="${THIRDPARTY}/pax" includes="*.jar"/>
             <fileset dir="${THIRDPARTY}/knopflerfish/2.1.1/" includes="http_all-2.1.0.jar" />
             <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="jaxb-api.jar" />
+            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="jaxb1-impl.jar" />
+            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="jaxb-impl.jar" />
+            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="jsr173_1.0_api.jar" />
+            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="activation.jar" />
+            <fileset dir="${XML.JAXB}/stocktick/dist" includes="*.jar"/>
         </copy>	
 		
 		<jar basedir="${DSP.FRAMEWORK}/classes" 

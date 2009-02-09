@@ -231,7 +231,7 @@ public class Matcher implements BaseComponent {
 	}
 
 	private Document readConfigurationFile() throws JDOMException, IOException{
-		String configFilePath = context.getHomePlatformDirectoryPath() + File.separator + CONFIG_FILE_NAME;
+		String configFilePath = obtainConfigFilePath();
 		
 		log.info("Reading configuration file: " + configFilePath);
 		
@@ -259,6 +259,18 @@ public class Matcher implements BaseComponent {
 			}
 		}
 		return config;
+	}
+	
+	private String obtainConfigFilePath(){
+		String path;
+		
+		String deploymentDir = System.getProperty("dsp.deploymentdir");
+		if(deploymentDir == null){
+			deploymentDir = "deployment";
+		}
+		
+		return context.getHomePlatformDirectoryPath() + File.separator + 
+		deploymentDir +  File.separator + CONFIG_FILE_NAME;
 	}
 }
 

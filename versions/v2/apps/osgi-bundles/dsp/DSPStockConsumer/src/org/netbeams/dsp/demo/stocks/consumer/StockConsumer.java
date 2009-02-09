@@ -135,7 +135,7 @@ public class StockConsumer implements DSPComponent{
 			}else{
 				try{
 					JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.demo.stock",
-							org.netbeams.dsp.demo.stock.ObjectFactory.class.getClassLoader());
+							StockTicks.class.getClassLoader());
 					Unmarshaller unmarshaller = jc.createUnmarshaller();
 					stockTicks = (StockTicks)unmarshaller.unmarshal((Node)content);
 				}catch(JAXBException e){

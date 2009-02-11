@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.netbeams.dsp.org/randomnumber.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:mc="http://www.netbeams.dsp.org/message.xsd" xmlns:stk="http://www.netbeams.dsp.org/randomnumber.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:import namespace="http://www.netbeams.dsp.org/message.xsd" schemaLocation="message-content.xsd"/>
+	
+	<xs:element name="RandomNumbers">
+	<xs:complexType>
+		<xs:complexContent>
+			<xs:extension base="mc:AbstractMessageContent">
+				<xs:sequence maxOccurs="unbounded" minOccurs="1">
+					<xs:element name="RandomNumber" type="stk:RandomNumber"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:element>
+
+	<xs:complexType name="RandomNumber">
+ 		<xs:sequence>
+ 			<xs:element name="Value" type="xs:float"/>
+ 		</xs:sequence>
+	</xs:complexType>
+	
+</xs:schema>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="http://www.netbeams.dsp.org/randomnumber.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:mc="http://www.netbeams.dsp.org/message.xsd" xmlns:stk="http://www.netbeams.dsp.org/randomnumber.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema targetNamespace="http://www.netbeams.dsp.org/randomnumber.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:mc="http://www.netbeams.dsp.org/message.xsd" xmlns:rng="http://www.netbeams.dsp.org/randomnumber.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 	<xs:import namespace="http://www.netbeams.dsp.org/message.xsd" schemaLocation="message-content.xsd"/>
 	
@@ -8,7 +8,7 @@
 		<xs:complexContent>
 			<xs:extension base="mc:AbstractMessageContent">
 				<xs:sequence maxOccurs="unbounded" minOccurs="1">
-					<xs:element name="RandomNumber" type="stk:RandomNumber"/>
+					<xs:element name="RandomNumber" type="rng:RandomNumber"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

@@ -32,7 +32,7 @@ public class DSPWireTransportServerActivator implements BundleActivator {
     /**
      * The service reference to the DSP consumer 
      */
-    private DSPWireTransportServer consumer;
+    private DSPWireTransportServer serverConsumer;
 
     /*
      * (non-Javadoc)
@@ -44,8 +44,8 @@ public class DSPWireTransportServerActivator implements BundleActivator {
         
         this.bundleContext = bc;
 
-        this.consumer = new DSPWireTransportServer(this.bundleContext);
-        this.consumer.startComponent();
+        this.serverConsumer = new DSPWireTransportServer(this.bundleContext);
+        this.serviceRegistration = ActivatorHelper.registerOSGIService(bundleContext, this.serverConsumer);
     }
     
     /*
@@ -55,7 +55,7 @@ public class DSPWireTransportServerActivator implements BundleActivator {
      */
     public void stop(BundleContext bc) throws Exception {
         log.info("WireTransport.Activator.stop()");
-        this.consumer.stopComponent();
+        this.serverConsumer.stopComponent();
         ActivatorHelper.unregisterOSGIService(this.bundleContext, this.serviceRegistration);
     }
 }

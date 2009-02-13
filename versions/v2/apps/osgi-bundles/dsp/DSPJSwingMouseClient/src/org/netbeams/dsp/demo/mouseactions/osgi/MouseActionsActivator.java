@@ -34,9 +34,7 @@ public class MouseActionsActivator implements BundleActivator {
                 
         log.debug("Instantiating the mouse actions component...");
         this.producer = new MouseActionDSPComponent();
-        this.producer.startComponent();
         this.serviceRegistration = ActivatorHelper.registerOSGIService(bc, this.producer);
-
     }
 
     public void stop(BundleContext bc) throws Exception {

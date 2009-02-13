@@ -74,8 +74,6 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      */
     public DSPWireTransportHttpClient() {
         log.info("Starting DSP Transport Client...");
-        log.info("Scheduling the transport senders to wake up at every 60 seconds...");
-        scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, 60, TimeUnit.SECONDS);
     }
 
     /**
@@ -349,6 +347,9 @@ public class DSPWireTransportHttpClient implements DSPComponent {
     public void startComponent() throws DSPException {
         log.info("Starting component");
 
+        log.info("Scheduling the transport senders to wake up at every 60 seconds...");
+        scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, 60, TimeUnit.SECONDS);
+        
         String destIpAddress = null, hostName = null;
         try {
             destIpAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();

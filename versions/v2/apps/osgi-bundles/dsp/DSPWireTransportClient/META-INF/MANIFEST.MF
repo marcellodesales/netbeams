@@ -16,6 +16,7 @@ Import-Package: org.netbeams.dsp,
  org.netbeams.dsp.message, 
  org.netbeams.dsp.message.content, 
  org.netbeams.dsp.util, 
+ org.netbeams.dsp.data.property,
  org.netbeams.dsp.platform.osgi, 
  org.osgi.framework, 
  org.apache.log4j

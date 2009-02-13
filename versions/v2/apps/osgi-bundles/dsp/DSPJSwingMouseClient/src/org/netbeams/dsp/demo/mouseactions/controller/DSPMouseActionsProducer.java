@@ -16,7 +16,6 @@ import org.netbeams.dsp.demo.mouseactions.MouseAction;
 import org.netbeams.dsp.demo.mouseactions.MouseActionsContainer;
 import org.netbeams.dsp.demo.mouseactions.ObjectFactory;
 import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo;
-import org.netbeams.dsp.demo.mouseactions.model.dsp.MouseActionDSPComponent;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.message.Header;
@@ -62,7 +61,7 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
     public void trackMouseActionUpdate(NetBeamsMouseInfo netBeamsMouseInfo) {
         log.debug("Mouse Actions Local Memory size: " + this.localMemory.size());
         this.localMemory.add(netBeamsMouseInfo);
-        if (this.localMemory.size() <= 30) {
+        if (this.localMemory.size() < 30) {
             log.debug("Tracking updates since there are less than 30 items on the producer local memory...");
         } else {
             log.debug("Sending the Items to the Messages Queues...");
@@ -80,10 +79,10 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
         log.debug("Total number of Mouse Actions: " + data.getMouseAction().size());
         
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-                MouseActionDSPComponent.class.getName(), localIPAddress, data.getContentContextForJAXB());
+                "manual-producer-id", localIPAddress, data.getContentContextForJAXB());
         
-        ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier("DSPWebLogger",
-                System.getProperty("WIRE_TRANSPORT_SERVER_IP"), null);
+        ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
+                "DSPWireTransportClient", System.getProperty("WIRE_TRANSPORT_SERVER_IP"), "org.netbeams.dsp.wiretransport.client");
         // Note that the consumer has the Wire Transport default DEMO IP as the destination.
         
         log.debug("Packaging Mouse Actions to be sent to "

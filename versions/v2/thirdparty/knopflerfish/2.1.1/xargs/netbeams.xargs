@@ -1,0 +1,35 @@
+# Load common properties
+#-----------------------
+-xargs props.xargs
+
+# Initialize Knopflerfish
+#------------------------
+-init
+
+# Install/Start the basic KF bundles
+#-----------------------------------
+-install log/log_api-2.0.1.jar
+-install console/console_api-2.0.1.jar
+-istart  cm/cm_api-2.0.1.jar
+-istart  log/log-2.0.1.jar
+-istart  console/console-2.0.1.jar
+-istart  consoletty/consoletty-2.0.0.jar
+-istart  frameworkcommands/frameworkcommands-2.0.1.jar
+-istart  logcommands/logcommands-2.0.0.jar
+-istart  useradmin/useradmin_api-2.0.1.jar
+
+
+# Launch the Knopflerfish Framework
+#----------------------------------
+-launch
+
+
+# Install the DSP Framework and DSP Platform
+#-------------------------------------------
+-install netbeams/DSPFramework-0.1.jar
+-install netbeams/DSPPlatform-0.1.jar
+
+
+# Start the DSP Platform
+#-----------------------
+-istart netbeams/DSPPlatform-0.1.jar

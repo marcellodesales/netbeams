@@ -27,9 +27,9 @@
 		<copy todir="${weblogger.base.dir}/classes/web/">
 			<fileset dir="${weblogger.base.dir}/web/DSP Web Logger/build/" />
 		</copy>
-		<jar basedir="${weblogger.base.dir}/classes" jarfile="${DSP.RUNTIME}/DSPWebLogger-${DSP.VERSION}.jar" compress="true" includes="**/*" manifest="${weblogger.base.dir}/META-INF/MANIFEST.MF" />
-
-		<copy file="${DSP.RUNTIME}/DSPWebLogger-${DSP.VERSION}.jar" todir="${DSP.DEPLOYMENT}/" />
+		<jar basedir="${weblogger.base.dir}/classes" 
+			 jarfile="${DSP.DEPLOYMENT}/DSPWebLogger-${DSP.VERSION}.jar" 
+			 compress="true" includes="**/*" manifest="${weblogger.base.dir}/META-INF/MANIFEST.MF" />
 
 	</target>
 

@@ -33,6 +33,9 @@
                 <Property name="HTTP_SERVER_REQUEST_VARIABLE">
                     <Value>dspMessagesContainer</Value>
                 </Property>
+                <Property name="WIRE_TRANSPORT_TRANSFER_DELAY">
+                    <Value>20</Value>
+                </Property>
             </ns2:DSProperties>
         </Body>
     </message>

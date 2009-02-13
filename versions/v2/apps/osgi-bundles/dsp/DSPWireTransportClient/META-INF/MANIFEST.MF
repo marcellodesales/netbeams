@@ -11,7 +11,7 @@ Bundle-Name: DSP Wire Transport Client
 Bundle-SymbolicName: DSPWireTransportClient
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Export-Package: org.netbeams.dsp.wiretransport.client.model
+Export-Package: org.netbeams.dsp.wiretransport.client.model, org.netbeams.dsp.wiretransport.client.controller
 Import-Package: org.netbeams.dsp, 
  org.netbeams.dsp.message, 
  org.netbeams.dsp.message.content, 

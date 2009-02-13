@@ -76,11 +76,9 @@ public enum MessagesQueues {
      */
     public synchronized MessagesContainer retrieveQueuedMessagesForTransmission(String destinitionIp) {
         MessagesContainer container = DSPMessagesFactory.INSTANCE.makeDSPMessagesContainer(destinitionIp);
-        log.debug("The Messages queue is being queried for the ip address " + destinitionIp);
         Queue<QueueMessageData> outboutQueue = this.outboundQueue.get(destinitionIp);
         if (outboutQueue != null) {
             log.debug("The size of the messages in the outbound queue is " + outboutQueue.size());
-
             for (QueueMessageData data : outboutQueue) {
                 if (data.getState().equals(QueueMessageState.QUEUED)) {
                     container.getMessage().add(data.getMessage());
@@ -99,6 +97,7 @@ public enum MessagesQueues {
         MessagesContainer[] msgContainers = new MessagesContainer[ipAddresses.size()];
         int i = -1;
         for (String ipAddr : ipAddresses) {
+            log.debug("The Messages queue is being queried for the ip address " + ipAddr);
             msgContainers[++i] = this.retrieveQueuedMessagesForTransmission(ipAddr);
         }
         return msgContainers;

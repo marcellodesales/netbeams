@@ -79,7 +79,7 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
         log.debug("Total number of Mouse Actions: " + data.getMouseAction().size());
         
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-                "manual-producer-id", localIPAddress, data.getContentContextForJAXB());
+                "DSPJSwingMouseProducer", localIPAddress, data.getContentContextForJAXB());
         
         ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
                 "DSPWireTransportClient", System.getProperty("WIRE_TRANSPORT_SERVER_IP"), "org.netbeams.dsp.wiretransport.client");

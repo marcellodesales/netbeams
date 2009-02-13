@@ -123,15 +123,15 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             URL destinationURL = null;
             try {
                 MessagesQueues messagesQueue = MessagesQueues.INSTANCE;
-                MessagesContainer[] msgContainers = messagesQueue.retrieveAllQueuedMessagesForTransmission();
                 thLog.debug("Retrieving all messages from the Messages Queue for transmission...");
-                thLog.debug("Messages Container size is " + msgContainers.length + ".");
+                MessagesContainer[] msgContainers = messagesQueue.retrieveAllQueuedMessagesForTransmission();
+                thLog.debug("There are " + msgContainers.length + " Messages Containers...");
 
                 if (msgContainers.length > 0) {
                     thLog.debug("Sending each Messages Container to their own destinition...");
                 } else {
                     thLog.debug("No messages registered in the Messages Queue...");
-                    thLog.debug("Stopping the Wire Transport for 60 seconds...");
+                    thLog.debug("Stopping the Wire Transport for " + getDelayForTransportSender() + " seconds...");
                 }
 
                 for (MessagesContainer messagesForRequest : msgContainers) {
@@ -144,8 +144,9 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                         String messagesForRequestInXml = serializeMessagesContainer(messagesForRequest);
                         thLog.trace("HTTP Request BODY: " + messagesForRequestInXml);
 
-                        destinationURL = new URL("http://" + messagesForRequest.getHost() + ":"
-                                + System.getProperty("WIRE_TRANSPORT_SERVER_PORT") + System.getProperty("BASE_URI"));
+                        destinationURL = new URL("http://" + messagesForRequest.getHost() + ":" + 
+                                System.getProperty("WIRE_TRANSPORT_SERVER_PORT") + 
+                                System.getProperty("HTTP_SERVER_BASE_URI"));
 
                         thLog.trace("Setting the messages in the container " + messagesForRequest.getUudi()
                                 + " to the 'transmitted' state...");
@@ -193,7 +194,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
          * @param messagesQueue is the current MessagesQueues singleton instance.
          * @param messagesForRequest is the messages used for the request
          * @param messagesFromResponseInXml is the response
-         * @throws JAXBException if any problem occurs with the JAXB desirialization process.
+         * @throws JAXBException if any problem occurs with the JAXB deserialization process.
          * @throws DSPException if the data broker from the DSP Context is missing
          */
         private void processResponseMessagesContainer(MessagesQueues messagesQueue,
@@ -271,8 +272,8 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      */
     private void shutdownTransportWorkers() {
         if (!scheduler.isShutdown()) {
-            scheduler.shutdown();
             log.trace("Shutting down all transport workers...");
+            scheduler.shutdown();
         }
     }
 
@@ -291,32 +292,36 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             DSProperties properties = (DSProperties) unmarshaller.unmarshal((Node) propertiesNode);
             for (DSProperty property : properties.getProperty()) {
-                if (property.getName().equals("WIRE_TRANSPORT_SERVER_IP")) {
-                    System.setProperty("WIRE_TRANSPORT_SERVER_IP", property.getValue());
-                    log.debug("Update Property: WIRE_TRANSPORT_SERVER_IP=" + property.getValue());
-                    
-                } else if (property.getName().equals("WIRE_TRANSPORT_SERVER_PORT")) {
-                    log.debug("Update Property: WIRE_TRANSPORT_SERVER_PORT=" + property.getValue());
-                    System.setProperty("WIRE_TRANSPORT_SERVER_PORT", property.getValue());
-
-                } else if (property.getName().equals("HTTP_SERVER_BASE_URI")) {
-                    log.debug("Update Property: HTTP_SERVER_BASE_URI=" + property.getValue());
-                    System.setProperty("HTTP_SERVER_BASE_URI", property.getValue());
-                    
-                } else if (property.getName().equals("HTTP_SERVER_REQUEST_VARIABLE")) {
-                    log.debug("Update Property: HTTP_SERVER_REQUEST_VARIABLE=" + property.getValue());
-                    System.setProperty("HTTP_SERVER_REQUEST_VARIABLE", property.getValue());
-                }
+                System.setProperty(property.getName(), property.getValue());
+                log.debug("Update Property: " + property.getName() + "=" + property.getValue());
             }
 
         } catch (JAXBException e) {
             log.error(e.getMessage(), e);
         }
+        
+        long delay = this.getDelayForTransportSender();
+        
+        log.info("Scheduling the transport senders to wake up at every " + delay + " seconds...");
+        scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, delay, TimeUnit.SECONDS);
+    }
+
+    /**
+     * @return the value for the transport delay set from the system properties.
+     */
+    private long getDelayForTransportSender() {
+        long delay = 60;
+        try {
+            delay = Long.valueOf(System.getProperty("WIRE_TRANSPORT_TRANSFER_DELAY")).longValue();
+        } catch (NumberFormatException nfe) {
+            log.error(nfe.getMessage(), nfe);
+            log.error("The bootstrap property WIRE_TRANSPORT_TRANSFER_DELAY must be set with an int value.");
+            log.error("Using default value of 60 seconds for WIRE_TRANSPORT_TRANSFER_DELAY");
+        }
+        return delay;
     }
 
     public void deliver(Message message) throws DSPException {
-
-        log.debug("Deliverying DSP message to this component");
 
         // Processing start-up or configuration messages
         if (message instanceof UpdateMessage && message.getContentType().equals("org.netbeams.dsp.data.property")) {
@@ -325,6 +330,8 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             this.updateComponentProperties((UpdateMessage) message);
 
         } else {
+            
+            log.debug("Adding the DSP message to the Messages Outbound Queues...");
             // add the message to the queues
             MessagesQueues.INSTANCE.addMessageToOutboundQueue(message);
         }
@@ -346,9 +353,6 @@ public class DSPWireTransportHttpClient implements DSPComponent {
 
     public void startComponent() throws DSPException {
         log.info("Starting component");
-
-        log.info("Scheduling the transport senders to wake up at every 60 seconds...");
-        scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, 60, TimeUnit.SECONDS);
         
         String destIpAddress = null, hostName = null;
         try {
@@ -377,6 +381,6 @@ public class DSPWireTransportHttpClient implements DSPComponent {
     public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
         this.dspContext = context;
         this.componentNodeId = componentNodeId;
-        log.info("Initializing component: " + componentNodeId + " with context " + this.dspContext.toString());
+        log.info("Initializing component ID " + componentNodeId + " with context " + this.dspContext.toString());
     }
 }

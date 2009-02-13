@@ -23,6 +23,7 @@ import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
 import org.netbeams.dsp.message.content.AckType;
 import org.netbeams.dsp.message.content.AcksContainer;
+import org.netbeams.dsp.util.NetworkUtil;
 import org.netbeams.dsp.wiretransport.client.controller.DSPWireTransportHttpClient;
 import org.netbeams.dsp.wiretransport.client.model.MessagesQueues;
 
@@ -67,6 +68,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         if (messagesContainerXml != null && !"".equals(messagesContainerXml)) {
             try {
                 responseMessagesContainer = this.deliverMessagesToLocalDSP(messagesContainerXml);
+                log.debug("Messages Container for the response is ready to be serialized..." + responseMessagesContainer);
             } catch (JAXBException e) {
                 log.error(e.getMessage(), e);
                 throw new IllegalArgumentException(e.getMessage());
@@ -82,17 +84,15 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
                     + System.getProperty("HTTP_SERVER_REQUEST_VARIABLE") + "is missing");
         }
 
-        // The following generates a page showing all the request parameters
-        PrintWriter out = resp.getWriter();
-        resp.setContentType("text/xml");
-
         try {
+            // The following generates a page showing all the request parameters
+            PrintWriter out = resp.getWriter();
+            resp.setContentType("text/xml");
             out.println(DSPWireTransportHttpClient.serializeMessagesContainer(responseMessagesContainer));
-        } catch (JAXBException e) {
+            out.close();
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
-        out.close();
     }
 
     /**
@@ -111,25 +111,29 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
     private MessagesContainer deliverMessagesToLocalDSP(String messagesContainerRequestXML) throws JAXBException,
             DSPException {
 
+        log.debug("Retrieved messages container from the HTTP request... Deserializing XML from the client...");
         // Deliver all the messages to the DSP Broker component
         MessagesContainer requestMessagesContainer = DSPWireTransportHttpClient
                 .deserializeMessagesContainer(messagesContainerRequestXML);
-        log.debug("Retrieved messages container from the HTTP request");
 
+        log.debug("Delivering messages to the DSP Broker...");
         // Send all the messages to the local DSP broker.
         this.send(requestMessagesContainer.getMessage());
 
         String destIpAddress = requestMessagesContainer.getHost();
-        MessagesContainer responseMessagesContainer = MessagesQueues.INSTANCE
-                .retrieveQueuedMessagesForTransmission(destIpAddress);
-        log.trace("Retrieved the messages container for the given client IP: " + destIpAddress);
+        log.debug("Retrieving the messages container for the given client IP: " + destIpAddress);
+        MessagesContainer responseMessagesContainer = 
+                MessagesQueues.INSTANCE.retrieveQueuedMessagesForTransmission(destIpAddress);
+        
         // Adding the acknowledgment message to be sent back to the client
         try {
-            Message acknowledgeMessage = null;
-            acknowledgeMessage = this.generateAcknowledgmentMessageForRequest(responseMessagesContainer, destIpAddress);
-            responseMessagesContainer.getMessage().add(acknowledgeMessage);
             log.debug("Adding an acknowledgement message for the client's request");
-        } catch (ParserConfigurationException e) {
+            Message acknowledgeMessage = this.generateAcknowledgmentMessageForRequest(responseMessagesContainer, 
+                                                                                                        destIpAddress);
+            log.debug("Response Messages Container prepared with " + responseMessagesContainer.getMessage().size() + 
+                                                                                                          " messages");
+            responseMessagesContainer.getMessage().add(acknowledgeMessage);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         return responseMessagesContainer;
@@ -171,22 +175,25 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
     private AcknowledgementMessage generateAcknowledgmentMessageForRequest(MessagesContainer requestMessagesContainer,
             String destIpAddress) throws JAXBException, ParserConfigurationException {
 
+        log.debug("Building an acknowledgement message...");
         DSPMessagesFactory bl = DSPMessagesFactory.INSTANCE;
 
-        ComponentIdentifier producer = bl.makeDSPComponentIdentifier(this.getClass().toString(), System
-                .getenv("WIRE_TRANSPORT_SERVER_IP"), "org.netbeams.dsp.wiretransport");
+        ComponentIdentifier producer = bl.makeDSPComponentIdentifier(this.getClass().toString(), 
+                NetworkUtil.getCurrentEnvironmentNetworkIp(), "org.netbeams.dsp.wiretransport.server");
         ComponentIdentifier consumer = bl.makeDSPComponentIdentifier(this.getClass().toString(), destIpAddress,
-                "org.netbeams.dsp.wiretransport");
+                "org.netbeams.dsp.wiretransport.client");
 
         String correlationId = requestMessagesContainer.getUudi();
 
+        log.debug("Making the header with " + correlationId + " | producer " + producer + " and consumer " + consumer);
         Header header = bl.makeDSPMessageHeader(correlationId, producer, consumer);
 
         AcksContainer acks = new AcksContainer();
         AckType ackt = new AckType();
         ackt.setUuid(requestMessagesContainer.getUudi());
         acks.getAck().add(ackt);
-
+        
+        log.debug("Making an acknowledgement message...");
         return bl.makeDSPAcknowledgementMessage(header, acks, org.netbeams.dsp.message.content.ObjectFactory.class);
     }
 }

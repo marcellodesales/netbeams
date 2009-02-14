@@ -8,13 +8,14 @@
 	<import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPWireTransportClient/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPWireTransportServer/build.xml" />
+	<import file="apps/osgi-bundles/dsp/DSPTestRandomNumGen/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPManagement/build.xml" />
 	
 	<!--
 	<target name="all" depends="setup, dsp-framework.all, dsp-platform.all, dsp-stock-data.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-data-persistence.all, dsp-mouse-http-consumer.all, dsp-mouse-producer-jswing.all"/>
 	-->
 
-	<target name="all" depends="setup, message.all, dsproperty.all, stocktick.all, dsp-framework.all, dsp-platform.all, dsp-wire-transport-client.all, dsp-wire-transport-server.all, dsp-management.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-mouse-producer-jswing.all" />
+	<target name="all" depends="setup, message.all, dsproperty.all, stocktick.all, dsp-framework.all, dsp-platform.all, dsp-wire-transport-client.all, dsp-wire-transport-server.all, dsp-management.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-mouse-producer-jswing.all, dsp.rng.all" />
 
 	<target name="setup" depends="init, print-properties">
 		<!-- Setting up runtime directory -->
@@ -65,7 +66,7 @@
 	</target>
 	
 
-	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean, dsp-wire-transport-client.clean, dsp-wire-transport-server.clean">
+	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean, dsp-wire-transport-client.clean, dsp-wire-transport-server.clean, dsp.rng.clean">
 		<delete dir="${DSP.RUNTIME}/" />
 	</target>
 	
@@ -82,8 +83,7 @@
 	</target>
 	
 	<target name="management.all">
-		<ant antfile="apps/osgi-bundles/dsp/DSPManagement/build.xml" inheritAll="true"/> 		
+		<ant antfile="apps/osgi-bundles/dsp/DSPManagement/build.xml" inheritAll="true"/>	
 	</target>
-	
 	
 </project>

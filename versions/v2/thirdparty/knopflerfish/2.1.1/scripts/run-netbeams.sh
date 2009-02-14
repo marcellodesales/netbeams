@@ -19,7 +19,7 @@
 #
 # 4. This script can be executed from within your HOME directory.
 #
-# 5. Make sure a general build of the sources have been completed.
+# 5. Make sure a general build of the sources has been completed.
 #
 #####################################################################
 

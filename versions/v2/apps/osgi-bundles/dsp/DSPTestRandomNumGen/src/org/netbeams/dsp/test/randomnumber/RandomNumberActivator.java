@@ -33,8 +33,6 @@ public class RandomNumberActivator implements BundleActivator {
 		log.info("Stopping...");
 		ActivatorHelper.unregisterOSGIService(bundleContext, serviceRegistration);
 		producer.stopComponent();
-		//producer.stopThread();
-		//producer.join();
 		bundleContext = null;
 		
 	}

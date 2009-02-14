@@ -77,15 +77,11 @@ public class RandomNumberDSPComponent implements DSPComponent {
 	public void startComponent() {
 		log.info("Starting Random Number DSP component");
 		producer = new RandomNumberProducer(context);
-		//rng = new RandomNumberGenerator();
-		//rng.start();
+		producer.startProducer();
 	}
 
 	public void stopComponent() throws DSPException {
 		log.info("Stopping Random Number DSP component");
-		//if (rng != null) {
-		//	rng.stopGenerator();
-		//	rng = null;
-		//}
+		producer.stopProducer();
 	}
 }

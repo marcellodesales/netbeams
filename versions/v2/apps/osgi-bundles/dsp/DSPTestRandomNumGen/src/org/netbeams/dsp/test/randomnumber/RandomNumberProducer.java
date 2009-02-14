@@ -36,11 +36,23 @@ public class RandomNumberProducer {
 	
 	public RandomNumberProducer (DSPContext context) {
 		this.context = context;
-		
-        numberList = new ArrayList<RandomNumber>();
+	    numberList = new ArrayList<RandomNumber>();
         log.trace("The DSPRandomNumberProducer initialized: sends every 5 seconds");
 	};
 	
+	
+	public void startProducer() {
+		rng = new RandomNumberGenerator();
+		rng.start();
+	}
+	
+	
+	public void stopProducer() {
+		if (rng != null) {
+			rng.stopGenerator();
+			rng = null;
+		}
+	}
 	
 	private void send(RandomNumbers data) throws DSPException{
 		

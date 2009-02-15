@@ -72,4 +72,33 @@
         </matchTarget>
     </matchRule>
 
+
+	<matchRule>
+		<ruleid>producer_consumer_local_01</ruleid>
+		<matchCriteria>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.demo.stocks.producer
+			</componentType>
+			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
+		</matchCriteria>
+		<matchTarget>
+
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.wiretransport.client</componentType>
+		</matchTarget>
+	</matchRule>
+
+	<matchRule>
+		<ruleid>randomNum2WebLogger</ruleid>
+		<matchCriteria>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.test.randomnumber</componentType>	
+		</matchCriteria>
+		<matchTarget>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.weblogger
+			</componentType>
+		</matchTarget>
+	</matchRule>
+
 </config>

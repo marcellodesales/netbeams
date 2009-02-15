@@ -8,13 +8,6 @@
         <required />
     </component>
     
-    <component>
-    	<name>DSPWebDataLogger</name>
-    	<bundle>DSPWebLogger-0.1.jar</bundle>
-    	<priority>74</priority>
-    	<required />
-    </component>
-    
 	<component>
         <name>DSPTestRandomNumGen</name>
         <bundle>DSPTestRandomNumGen-0.1.jar</bundle>

@@ -10,13 +10,22 @@
 #-----------------------------------
 -install log/log_api-2.0.1.jar
 -install console/console_api-2.0.1.jar
+-install component/component_all-2.0.0.jar
+-install device/device_all-2.0.0.jar
+-install jsdk/jsdk_api-2.5.jar
+-install http/http_all-2.1.0.jar
 -istart  cm/cm_api-2.0.1.jar
 -istart  log/log-2.0.1.jar
 -istart  console/console-2.0.1.jar
+-istart  component/component_all-2.0.0.jar
 -istart  consoletty/consoletty-2.0.0.jar
+-istart  device/device_all-2.0.0.jar
 -istart  frameworkcommands/frameworkcommands-2.0.1.jar
 -istart  logcommands/logcommands-2.0.0.jar
 -istart  useradmin/useradmin_api-2.0.1.jar
+-istart  http/http_all-2.1.0.jar
+
+# Install/Start
 
 
 # Launch the Knopflerfish Framework
@@ -33,3 +42,4 @@
 # Start the DSP Platform
 #-----------------------
 -istart netbeams/DSPPlatform-0.1.jar
+

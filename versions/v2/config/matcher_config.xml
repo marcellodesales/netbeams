@@ -89,14 +89,14 @@
 	</matchRule>
 
 	<matchRule>
-		<ruleid>randomNum2WebLogger</ruleid>
+		<ruleid>randomNum2Transportclientr</ruleid>
 		<matchCriteria>
 			<nodeAddress>LOCAL</nodeAddress>
 			<componentType>org.netbeams.dsp.test.randomnumber</componentType>	
 		</matchCriteria>
 		<matchTarget>
 			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.weblogger
+			<componentType>org.netbeams.dsp.wiretransport.client
 			</componentType>
 		</matchTarget>
 	</matchRule>

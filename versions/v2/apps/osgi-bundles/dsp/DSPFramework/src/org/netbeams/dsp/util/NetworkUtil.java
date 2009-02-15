@@ -56,7 +56,9 @@ public final class NetworkUtil {
             Enumeration<InetAddress> address = ni.getInetAddresses();
             while (address.hasMoreElements()) {
                 InetAddress addr = address.nextElement();
-                if (!addr.isLoopbackAddress() && !addr.isSiteLocalAddress()
+                log.debug("Inetaddress:" + addr.getHostAddress() + " loop? " + addr.isLoopbackAddress() + " local? "
+                        + addr.isSiteLocalAddress());
+                if (!addr.isLoopbackAddress() && addr.isSiteLocalAddress()
                         && !(addr.getHostAddress().indexOf(":") > -1)) {
                     return addr.getHostAddress();
                 }

@@ -65,6 +65,9 @@ public enum MessagesQueues {
         if (outMsgs == null) {
             outMsgs = this.makeMessageQueue();
         }
+        // Adding the message ID to be a sequential number for a given IP address. This will follow the
+        // window slide protocol where a certain number of messages are acknowledged based by the highest number.
+        dspMessage.setMessageID(String.valueOf(outMsgs.size() + 1));
         outMsgs.add(QueueMessageData.makeNewInstance(dspMessage));
         this.outboundQueue.put(destinationIp, outMsgs);
     }
@@ -104,38 +107,13 @@ public enum MessagesQueues {
     }
 
     /**
-     * @param componentDestinition is the address of the component
-     * @param containerId is the identification of the MessagesContainer created during before the transmission
-     */
-    public synchronized void setMessagesToTransmitted(String destinationIpAddress, UUID containerId) {
-        for (QueueMessageData data : this.outboundQueue.get(destinationIpAddress)) {
-            if (data.getState().equals(QueueMessageState.QUEUED) && data.getContainerId().equals(containerId)) {
-                data.changeStateToTransmitted();
-            }
-        }
-    }
-
-    /**
-     * @param componentDestinition is the address of the destination of the component.
-     * @return the current list of messages on the TRANSMITTED state. The ones that were tried to be sent to the server.
-     */
-    public synchronized List<Message> retrieveTransmittedMessages(String destinationIpAddress) {
-        List<Message> messages = new ArrayList<Message>();
-        for (QueueMessageData data : this.outboundQueue.get(destinationIpAddress)) {
-            if (data.getState().equals(QueueMessageState.TRANSMITTED)) {
-                messages.add(data.getMessage());
-            }
-        }
-        return messages;
-    }
-
-    /**
      * @param componentDestinition is the component destination.
-     * @param containerId is the identification of the container.
+     * @param maxMessageId is the highest message id from the acknowledgment frame that was received.
      */
-    public synchronized void setMessagesToAcknowledged(String destinationIpAddress, UUID containerId) {
+    public synchronized void setMessagesToAcknowledged(String destinationIpAddress, int maxMessageId) {
         for (QueueMessageData data : this.outboundQueue.get(destinationIpAddress)) {
-            if (data.getState().equals(QueueMessageState.QUEUED) && data.getContainerId().equals(containerId)) {
+            if (data.getState().equals(QueueMessageState.QUEUED)
+                    && Integer.valueOf(data.getMessage().getMessageID()) <= maxMessageId) {
                 data.changeStateToAcknowledged();
             }
         }
@@ -154,15 +132,4 @@ public enum MessagesQueues {
         }
         return messages;
     }
-    //    
-    // public void deliver(Message message) throws DSPException {
-    // log.debug("message class=" + message.getClass().getName());
-    //
-    // if (message instanceof AcknowledgementMessage) {
-    //            
-    // String messagesContainerUUID = (String) message.getHeader().getCorrelationID();
-    // String messageIpAddr = message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue();
-    // this.setMessagesToAcknowledged(messageIpAddr, UUID.fromString(messagesContainerUUID));
-    // }
-    // }
 }

@@ -146,7 +146,8 @@
 			</xs:sequence>
 			<xs:attribute name="uudi" type="xs:string" use="required" />
 			<xs:attribute name="creationTime" type="xs:string" use="required" />
-			<xs:attribute name="host" type="xs:string" use="optional" />
+			<xs:attribute name="destinationHost" type="xs:string" use="optional" />
+			<xs:attribute name="acknowledgeUntil" type="xs:int" use="optional" />
 		</xs:complexType>	
 	</xs:element>
 </xs:schema>

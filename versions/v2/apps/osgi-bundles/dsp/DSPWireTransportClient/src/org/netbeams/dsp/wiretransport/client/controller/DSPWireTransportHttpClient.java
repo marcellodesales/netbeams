@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -32,7 +31,6 @@ import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
 import org.netbeams.dsp.message.AbstractMessage;
-import org.netbeams.dsp.message.AcknowledgementMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
 import org.netbeams.dsp.message.ObjectFactory;
@@ -131,54 +129,52 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                     thLog.debug("Sending each Messages Container to their own destinition...");
                 } else {
                     thLog.debug("No messages registered in the Messages Queue...");
-                    thLog.debug("Stopping the Wire Transport for " + getDelayForTransportSender() + " seconds...");
+                    thLog.debug("Stopping the Wire Transport client for " + getDelayForTransportSender()
+                            + " seconds...");
                 }
 
                 for (MessagesContainer messagesForRequest : msgContainers) {
 
                     thLog.debug("Messages Container UUID: " + messagesForRequest.getUudi());
-                    thLog.debug("Messages Container destiniation IP is " + messagesForRequest.getHost());
+                    thLog.debug("Messages Container destiniation IP is " + messagesForRequest.getDestinationHost());
                     thLog.debug("Messages Container # of messages " + messagesForRequest.getMessage().size());
 
                     if (messagesForRequest.getMessage().size() > 0) {
+                        thLog.debug("Ready to serialize " + messagesForRequest.getMessage().size() + " messages...");
                         String messagesForRequestInXml = serializeMessagesContainer(messagesForRequest);
-                        thLog.trace("HTTP Request BODY: " + messagesForRequestInXml);
+                        thLog.debug("HTTP Request BODY: " + messagesForRequestInXml);
 
-                        destinationURL = new URL("http://" + messagesForRequest.getHost() + ":" + 
-                                System.getProperty("WIRE_TRANSPORT_SERVER_PORT") + 
-                                System.getProperty("HTTP_SERVER_BASE_URI"));
+                        destinationURL = new URL("http://" + messagesForRequest.getDestinationHost() + ":"
+                                + System.getProperty("WIRE_TRANSPORT_SERVER_PORT")
+                                + System.getProperty("HTTP_SERVER_BASE_URI"));
 
-                        thLog.trace("Setting the messages in the container " + messagesForRequest.getUudi()
+                        thLog.debug("Setting the messages in the container " + messagesForRequest.getUudi()
                                 + " to the 'transmitted' state...");
-
-                        // Set the messages to transmitted before sending them. This avoid messages
-                        // sent to the local DSP to be in an inaccurate state.
-                        messagesQueue.setMessagesToTransmitted(messagesForRequest.getHost(), UUID
-                                .fromString(messagesForRequest.getUudi()));
 
                         String messagesFromResponseInXml = this.transmitMessagesReceiveResponse(
                                 messagesForRequestInXml, UUID.fromString(messagesForRequest.getUudi()), destinationURL);
-                        thLog.trace("HTTP Response BODY: " + messagesFromResponseInXml);
+                        thLog.debug("HTTP Response BODY: " + messagesFromResponseInXml);
 
                         if (messagesFromResponseInXml != null) {
 
-                            this.processResponseMessagesContainer(messagesQueue, messagesForRequest,
+                            this.processResponseMessagesContainer(messagesForRequest.getDestinationHost(),
                                     messagesFromResponseInXml);
-
                         } else {
-                            thLog.trace("No messages received from the HTTP response...");
+                            thLog.debug("No messages received from the HTTP response...");
                         }
                     }
                 }
 
-            } catch (ConnectException e) {
-                thLog.error("There's no HTTP server running at " + destinationURL
-                        + ". Please verify: \n1. There's a DSPWireTransport component running at the destination..."
-                        + "\n2. if there's HTTP connectivity");
             } catch (HttpException e) {
                 thLog.error(e.getMessage(), e);
             } catch (IOException e) {
-                thLog.error(e.getMessage(), e);
+                thLog.error("It seems that there's no HTTP server running at " + destinationURL);
+                thLog.error("Verification 1: Is the destination IP address correct?");
+                thLog.error("Verification 2: Is the destination IP address reachable? Can you ping it from this " +
+                		"machine?");
+                thLog.error("Verification 3: Is there a DSPWireTransportServer up and running at the destination?");
+                thLog.error("All messages in the outbound queues hasn't been transmitted due to this failure... "
+                        + "a new attempt will be made after "+ getDelayForTransportSender() + " seconds ");
             } catch (JAXBException e) {
                 thLog.error(e.getMessage(), e);
             } catch (DSPException e) {
@@ -197,30 +193,26 @@ public class DSPWireTransportHttpClient implements DSPComponent {
          * @throws JAXBException if any problem occurs with the JAXB deserialization process.
          * @throws DSPException if the data broker from the DSP Context is missing
          */
-        private void processResponseMessagesContainer(MessagesQueues messagesQueue,
-                MessagesContainer messagesForRequest, String messagesFromResponseInXml) throws JAXBException,
-                DSPException {
+        private void processResponseMessagesContainer(String destIp, String messagesFromResponseInXml)
+                throws JAXBException, DSPException {
+
             MessagesContainer messagesFromResponse = deserializeMessagesContainer(messagesFromResponseInXml);
             for (AbstractMessage abstrMessage : messagesFromResponse.getMessage()) {
-                if (abstrMessage instanceof AcknowledgementMessage) {
-                    thLog.trace("Received Acknowledge message with correlation ID = "
-                            + abstrMessage.getHeader().getCorrelationID());
-                    messagesQueue.setMessagesToTransmitted(messagesForRequest.getHost(), UUID.fromString(abstrMessage
-                            .getHeader().getCorrelationID().toString()));
+                thLog.trace("Delivering message ID " + abstrMessage.getMessageID() + " type "
+                        + abstrMessage.getContentType() + " to the DSP broker...");
+
+                // Always check if there is a broker available
+                MessageBrokerAccessor messageBroker = dspContext.getDataBroker();
+                if (messageBroker != null) {
+                    messageBroker.send((Message) abstrMessage);
                 } else {
-
-                    thLog.trace("Delivering message ID " + abstrMessage.getMessageID() + " type "
-                            + abstrMessage.getContentType() + " to the DSP broker...");
-
-                    // Always check if there is a broker available
-                    MessageBrokerAccessor messageBroker = dspContext.getDataBroker();
-                    if (messageBroker != null) {
-                        messageBroker.send((Message) abstrMessage);
-                    } else {
-                        log.debug("Message broker not available");
-                    }
+                    log.debug("Message broker not available");
                 }
             }
+            // Acknowledge all messages received from the server-side, based on the highest message ID. This
+            // value MUST be returned by the server-side.
+            int acknowledgeUntil = messagesFromResponse.getAcknowledgeUntil();
+            MessagesQueues.INSTANCE.setMessagesToAcknowledged(destIp, acknowledgeUntil);
         }
 
         /**
@@ -245,7 +237,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             postMethod.setRequestBody(formValues);
             // execute method and handle any error responses.
 
-            thLog.trace("Trying send the container " + messagesContainerId
+            thLog.debug("Trying send the container " + messagesContainerId
                     + " to the DSP Wire Transport Server located" + "at " + dest.toString());
             int statusCode = client.executeMethod(postMethod);
 
@@ -257,10 +249,21 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             if (statusCode == HttpStatus.SC_OK) {
                 responseXmlMessagesContainter = postMethod.getResponseBodyAsString();
                 thLog.debug("The DSP Transport Server responded with messages " + dest.toString());
-                thLog.trace(responseXmlMessagesContainter);
+                thLog.debug(responseXmlMessagesContainter);
             } else if (statusCode == HttpStatus.SC_NOT_FOUND) {
                 responseXmlMessagesContainter = null;
-                thLog.error("The server is running, but there's no service at " + dest.toString());
+
+                thLog.error("It seems that there is an HTTP server running at " + dest.toString()
+                        + ", but the expected " + "service at '" + System.getProperty("HTTP_SERVER_BASE_URI")
+                        + "' can't be reached...");
+                thLog.error("Verification 1: Is there a DSPWireTransportServer up and running at the destination?");
+                thLog.error("Verification 2: Is the HTTP server PORT ("
+                        + System.getProperty("WIRE_TRANSPORT_SERVER_PORT")
+                        + ") the one where the HTTP server receives the service '"
+                        + System.getProperty("HTTP_SERVER_BASE_URI") + "'?");
+                thLog.error("All messages in the outbound queue for this destination haven't been transmitted due "
+                        + "to this failure... A new attempt will be made after " + getDelayForTransportSender() 
+                        + " seconds ...");
             }
             postMethod.releaseConnection();
             return responseXmlMessagesContainter;
@@ -272,7 +275,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      */
     private void shutdownTransportWorkers() {
         if (!scheduler.isShutdown()) {
-            log.trace("Shutting down all transport workers...");
+            log.debug("Shutting down all transport workers...");
             scheduler.shutdown();
         }
     }
@@ -299,9 +302,9 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         } catch (JAXBException e) {
             log.error(e.getMessage(), e);
         }
-        
+
         long delay = this.getDelayForTransportSender();
-        
+
         log.info("Scheduling the transport senders to wake up at every " + delay + " seconds...");
         scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, delay, TimeUnit.SECONDS);
     }
@@ -330,7 +333,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             this.updateComponentProperties((UpdateMessage) message);
 
         } else {
-            
+
             log.debug("Adding the DSP message to the Messages Outbound Queues...");
             // add the message to the queues
             MessagesQueues.INSTANCE.addMessageToOutboundQueue(message);
@@ -353,7 +356,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
 
     public void startComponent() throws DSPException {
         log.info("Starting component");
-        
+
         String destIpAddress = null, hostName = null;
         try {
             destIpAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();

@@ -8,22 +8,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.message.AbstractMessage;
-import org.netbeams.dsp.message.AcknowledgementMessage;
-import org.netbeams.dsp.message.ComponentIdentifier;
-import org.netbeams.dsp.message.DSPMessagesFactory;
-import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
-import org.netbeams.dsp.message.content.AckType;
-import org.netbeams.dsp.message.content.AcksContainer;
-import org.netbeams.dsp.util.NetworkUtil;
 import org.netbeams.dsp.wiretransport.client.controller.DSPWireTransportHttpClient;
 import org.netbeams.dsp.wiretransport.client.model.MessagesQueues;
 
@@ -68,7 +60,8 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         if (messagesContainerXml != null && !"".equals(messagesContainerXml)) {
             try {
                 responseMessagesContainer = this.deliverMessagesToLocalDSP(messagesContainerXml);
-                log.debug("Messages Container for the response is ready to be serialized..." + responseMessagesContainer);
+                log.debug("Messages Container for the response is ready to be serialized..."
+                        + responseMessagesContainer);
             } catch (JAXBException e) {
                 log.error(e.getMessage(), e);
                 throw new IllegalArgumentException(e.getMessage());
@@ -111,7 +104,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
     private MessagesContainer deliverMessagesToLocalDSP(String messagesContainerRequestXML) throws JAXBException,
             DSPException {
 
-        log.debug("Retrieved messages container from the HTTP request... Deserializing XML from the client...");
+        log.debug("Retrieved messages container from the HTTP request... Deserializing the XML from the client...");
         // Deliver all the messages to the DSP Broker component
         MessagesContainer requestMessagesContainer = DSPWireTransportHttpClient
                 .deserializeMessagesContainer(messagesContainerRequestXML);
@@ -120,22 +113,16 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         // Send all the messages to the local DSP broker.
         this.send(requestMessagesContainer.getMessage());
 
-        String destIpAddress = requestMessagesContainer.getHost();
+        String destIpAddress = requestMessagesContainer.getDestinationHost();
         log.debug("Retrieving the messages container for the given client IP: " + destIpAddress);
-        MessagesContainer responseMessagesContainer = 
-                MessagesQueues.INSTANCE.retrieveQueuedMessagesForTransmission(destIpAddress);
-        
-        // Adding the acknowledgment message to be sent back to the client
-        try {
-            log.debug("Adding an acknowledgement message for the client's request");
-            Message acknowledgeMessage = this.generateAcknowledgmentMessageForRequest(responseMessagesContainer, 
-                                                                                                        destIpAddress);
-            log.debug("Response Messages Container prepared with " + responseMessagesContainer.getMessage().size() + 
-                                                                                                          " messages");
-            responseMessagesContainer.getMessage().add(acknowledgeMessage);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+        MessagesContainer responseMessagesContainer = MessagesQueues.INSTANCE
+                .retrieveQueuedMessagesForTransmission(destIpAddress);
+
+        log.debug("Acknowledment will be sent to the destination IP " + destIpAddress);
+        Integer ackUntil = Integer.valueOf(requestMessagesContainer.getMessage().get(
+                responseMessagesContainer.getMessage().size() - 1).getMessageID());
+        log.debug("Last message ID received is " + ackUntil);
+        responseMessagesContainer.setAcknowledgeUntil(ackUntil);
         return responseMessagesContainer;
     }
 
@@ -159,41 +146,5 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         } else {
             log.error("Message broker is not available from the DSP context");
         }
-    }
-
-    /**
-     * Generates the acknowledgment message for the client with the ID as the correlationId of the header of an instance
-     * of Event Message.
-     * 
-     * @param requestMessagesContainer it's the request messages container from the client. It's necessary to retrieve
-     *        the messages container UUID necessary to be sent back as the correlation Id.
-     * @param requestUrl it's the request URL, or the identification of the client.
-     * @return an instance of the AcknowledgementMessage with the values for the
-     * @throws JAXBException if problems with marshalling occurs
-     * @throws ParserConfigurationException is any problem with marshalling occurs
-     */
-    private AcknowledgementMessage generateAcknowledgmentMessageForRequest(MessagesContainer requestMessagesContainer,
-            String destIpAddress) throws JAXBException, ParserConfigurationException {
-
-        log.debug("Building an acknowledgement message...");
-        DSPMessagesFactory bl = DSPMessagesFactory.INSTANCE;
-
-        ComponentIdentifier producer = bl.makeDSPComponentIdentifier(this.getClass().toString(), 
-                NetworkUtil.getCurrentEnvironmentNetworkIp(), "org.netbeams.dsp.wiretransport.server");
-        ComponentIdentifier consumer = bl.makeDSPComponentIdentifier(this.getClass().toString(), destIpAddress,
-                "org.netbeams.dsp.wiretransport.client");
-
-        String correlationId = requestMessagesContainer.getUudi();
-
-        log.debug("Making the header with " + correlationId + " | producer " + producer + " and consumer " + consumer);
-        Header header = bl.makeDSPMessageHeader(correlationId, producer, consumer);
-
-        AcksContainer acks = new AcksContainer();
-        AckType ackt = new AckType();
-        ackt.setUuid(requestMessagesContainer.getUudi());
-        acks.getAck().add(ackt);
-        
-        log.debug("Making an acknowledgement message...");
-        return bl.makeDSPAcknowledgementMessage(header, acks, org.netbeams.dsp.message.content.ObjectFactory.class);
     }
 }

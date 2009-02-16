@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<matchRule>
+		<ruleid>producer_consumer_local_01</ruleid>
+		<matchCriteria>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.demo.stocks.producer
+			</componentType>
+			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
+		</matchCriteria>
+		<matchTarget>
+
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.demo.stocks.consumer
+			</componentType>
+		</matchTarget>
+	</matchRule>
+	<matchRule>
+		<ruleid>producer_consumer_local_02</ruleid>
+		<matchCriteria>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.demo.stocks.producer
+			</componentType>
+			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
+		</matchCriteria>
+		<matchTarget>
+
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.weblogger
+			</componentType>
+		</matchTarget>
+	<matchRule>
+		<ruleid>producer_consumer_local_03</ruleid>
+		<matchCriteria>
+			<nodeAddress>LOCAL</nodeAddress>
+
+			<componentType>ALL</componentType>
+			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
+		</matchCriteria>
+		<matchTarget>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.platform.channel
+			</componentType>
+		</matchTarget>
+	</matchRule>
+	</matchRule>
+	<matchRule>
+		<ruleid>mouse2weblogger</ruleid>
+		<matchCriteria>
+			<nodeAddress>LOCAL</nodeAddress>
+
+			<componentType>ALL</componentType>
+			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
+		</matchCriteria>
+		<matchTarget>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.platform.channel
+			</componentType>
+		</matchTarget>
+	</matchRule>
+
+    <matchRule>
+        <ruleid>mouseActionsToMessagesQueue</ruleid>
+        <matchCriteria>
+            <nodeAddress>LOCAL</nodeAddress>
+            <componentType>org.netbeams.dsp.demo.mouseactions</componentType>
+        </matchCriteria>
+        <matchTarget>
+            <nodeAddress>LOCAL</nodeAddress>
+            <componentType>org.netbeams.dsp.wiretransport.client
+            </componentType>
+        </matchTarget>
+    </matchRule>
+
+
+	<matchRule>
+		<ruleid>producer_consumer_local_01</ruleid>
+		<matchCriteria>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.demo.stocks.producer
+			</componentType>
+			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
+		</matchCriteria>
+		<matchTarget>
+
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.wiretransport.client</componentType>
+		</matchTarget>
+	</matchRule>
+
+	<matchRule>
+		<ruleid>randomNum2Transportclientr</ruleid>
+		<matchCriteria>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.test.randomnumber</componentType>	
+		</matchCriteria>
+		<matchTarget>
+			<nodeAddress>LOCAL</nodeAddress>
+			<componentType>org.netbeams.dsp.wiretransport.client
+			</componentType>
+		</matchTarget>
+	</matchRule>
+
+</config>

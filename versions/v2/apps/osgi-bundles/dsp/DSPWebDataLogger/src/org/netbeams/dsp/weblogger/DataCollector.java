@@ -1,27 +1,23 @@
-
 package org.netbeams.dsp.weblogger;
 
 
 
-import java.util.UUID;
-
 import javax.servlet.ServletException;
 
+import org.apache.log4j.Logger;
 import org.netbeams.dsp.ComponentDescriptor;
-import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
+import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.message.Message;
-import org.netbeams.dsp.util.Log;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
-
-
 
 public class DataCollector
     implements DSPComponent
 {
+    private static final Logger log = Logger.getLogger(DataCollector.class);
 
     // Component Type
     public final static String         COMPONENT_TYPE = "org.netbeams.dsp.weblogger";
@@ -38,7 +34,14 @@ public class DataCollector
     private Buffer                     theBuffer;
     private HttpService                httpService;
 
-
+    /**
+     * Creates a new DataCollector with the given reference to the HTTP service
+     * @param httpServ is the HttpService retrieved by the Activator
+     */
+    public DataCollector(HttpService httpServ) {
+        log.debug("Initializing the Data Collector with the HTTP instance " + httpServ);
+        this.httpService = httpServ;
+    }
 
     // ///////////////////////////////////////////
     // //////// DSP Component Interface //////////
@@ -66,7 +69,7 @@ public class DataCollector
     public void initComponent(String componentNodeId, DSPContext context)
         throws DSPException
     {
-        Log.log("DataCollector.initComponent()");
+        log.debug("DataCollector.initComponent()");
         this.context = context;
         this.componentNodeId = componentNodeId;
     }
@@ -84,22 +87,24 @@ public class DataCollector
     //@Override
     public void startComponent()
     {
-        Log.log("DataCollector.startComponent()");
+        log.debug("DataCollector.startComponent()");
         theBuffer = new Buffer();
-        httpService = (HttpService) context.getResource("osgi:HttpService");
+        
         try {
+            log.info("Registering Data Collection Servlets...");
+            log.info("Receiving data at " + GetDataServlet.BASE_URI);
+            log.info("Viewing data at " + WebAppServlet.BASE_URI);
+            
             httpService.registerServlet(GetDataServlet.BASE_URI,
                     new GetDataServlet(theBuffer), null, null);
             httpService.registerServlet(WebAppServlet.BASE_URI,
                     new WebAppServlet(), null, null);
         }
         catch (ServletException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         catch (NamespaceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -108,7 +113,8 @@ public class DataCollector
     //@Override
     public void stopComponent()
     {
-        Log.log("DataCollector.stopComponent()");
+        log.debug("DataCollector.stopComponent()");
+        log.debug("Unregistering Servlets...");
         httpService.unregister(GetDataServlet.BASE_URI);
         httpService.unregister(WebAppServlet.BASE_URI);
     }
@@ -119,7 +125,7 @@ public class DataCollector
     public void deliver(Message message)
         throws DSPException
     {
-        Log.log("DataCollector.deliver()");
+        log.debug("DataCollector.deliver(): delivering message to the data collector...");
         processMessage(message);
     }
 
@@ -154,7 +160,8 @@ public class DataCollector
     private void processMessage(Message message)
     {
         String newData = message.getClass().getName();
-        Log.log("DataCollector message.class=" + newData);
+        log.debug("DataCollector message.class=" + newData);
+        log.debug("Adding DSP message to the buffer...");
         theBuffer.add(newData);
     }
 

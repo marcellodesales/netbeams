@@ -31,8 +31,62 @@ EMail: XXX@sfsu.edu}}
 
 \section{Introduction}
 
-The introduction.
+The introduction should emphasize that we interpret sensor networks in
+a different way: our focus is on off-the-shelf, highly specialized
+sensors for environmental monitoring. Our focus is end-to-end: how to
+collect data from a remote location with no stationary power or
+Internet connection and deliver the data in near-realtime to a web
+browser. Length: first page (including title and abstract).
 
+\section{Use Case}
+
+Start with some related work. Who else has done an OSGi-based
+infrastructure for sensor networks? Kleber: I believe you have a few
+references. This section should be a combination of a use case (using
+the RTC and their YSI sonde as an example) and a requirements
+analysis: requirements such as remote management and monitoring
+capabilities, time-delayed communication, etc. In this section should
+be no mentioned of DSP or OSGi. Length: 1 page.
+
+\section{DSP}
+
+Should describe the OSGi-based NetBEAMS architecture. Total length of
+this section: 2 pages.
+
+\subsection{Data Sensor Framework and Platform}
+
+should include a picture of a standalone DSP showing a DC and a DP
+(general description only). Explain difference between DSP Framework
+and DSP Platform. This section should give a top-level overview.
+Subsequent sub-sections should explain certain features of the DSP in
+more detail.
+
+\subsection{DP and DC}
+
+Should give some API sniplets for DP and DC.
+
+\subsection{DSP Message}
+
+Should explain the way DSP Messages are defined: XML Schema and JAXB.
+
+\subsection{Matcher}
+
+
+\section{NetBEAMS}
+
+Should explain some specific DC and DP we have implemented for
+NetBEAMS. Length: 1 - 1.5 pages.
+
+\subsection{YSI Sonde DP}
+
+\subsection{Wire transport DC/DP}
+
+\subsection{Web Managements}
+
+
+\section{Conclusions and Outlook}
+
+Length (including bibliography): 0.5 pages.
 
 %\bibliography{../literature/lit}
 %\bibliographystyle{plain}

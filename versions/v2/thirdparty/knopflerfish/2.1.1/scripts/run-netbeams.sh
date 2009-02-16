@@ -1,13 +1,10 @@
 #!/bin/bash
 #####################################################################
-# To use script, please make sure the following is done:
+# Before executing script, please make sure the following is done:
 # 
-# 1. Modify the 1st line of this script, if Bash is located somewhere
-#    else on your filesytem.
+# 1. Check to make your environment variables:
 #
-# 2. Check to make your environment variables:
-#
-#		DSP_RUNTIME
+#       DSP_RUNTIME
 # 	    KNOPFLERFISH_HOME
 #
 #    are set.
@@ -17,9 +14,12 @@
 # 3. Download netbeams.xargs from the repository and place it in 
 #	 ${KNOPFLERFISH_HOME}.
 #
-# 4. This script can be executed from within your HOME directory.
+# 4. Make sure a general build of the sources has been completed.
+#####################################################################
 #
-# 5. Make sure a general build of the sources has been completed.
+# To run script:
+#
+#	$ bash run-netbeams.sh
 #
 #####################################################################
 

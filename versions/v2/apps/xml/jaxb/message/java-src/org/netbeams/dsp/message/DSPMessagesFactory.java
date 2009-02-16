@@ -97,7 +97,6 @@ public enum DSPMessagesFactory {
         //        
         // Date now2 = sdf.parse(sdf.format( now ));
         // System.out.println("ISO 8601: "+sdf.format( now2 ));
-
     }
 
     /**
@@ -108,7 +107,7 @@ public enum DSPMessagesFactory {
         MessagesContainer messages = this.factory.createMessagesContainer();
         messages.setCreationTime(this.makeCurrentIsoDateTime());
         messages.setUudi(UUID.randomUUID().toString());
-        messages.setHost(destIpAddress);
+        messages.setDestinationHost(destIpAddress);
         return messages;
     }
 

@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 #####################################################################
 # To use script, please make sure the following is done:
 # 

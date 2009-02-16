@@ -1,0 +1,37 @@
+<project name="DSP Sonde Producer" default="dsp.sonde.all">
+		
+		<import file="../../../../init-targets.xml"/>
+			
+		<target name="dsp.sonde.all" depends="init, dsp.sonde.compile, dsp.sonde.jar" />
+		
+		<target name="dsp.sonde.init">
+			<property name="dsp.sonde.base.dir" value="${DSP.BUNDLES}/DSPSondeProducer"/>
+		</target>
+		
+		<target name="dsp.sonde.compile" depends="dsp.sonde.init">
+				
+			<path id="dsp.sonde.project.classpath">
+				<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+				<pathelement location="${XML.JAXB}/sonde/dist/sonde.jar" />
+				<path refid="project.class.path"/>
+			</path>
+							
+			<mkdir dir="${dsp.sonde.base.dir}/classes" />
+			<javac destdir="${dsp.sonde.base.dir}/classes" debug="on" srcdir="${dsp.sonde.base.dir}/src" source="1.5" target="1.5">
+				<classpath refid="dsp.sonde.project.classpath"/>
+			</javac>
+		</target>
+	
+	
+		<target name="dsp.sonde.jar" depends="dsp.sonde.init">
+			<jar basedir="${dsp.sonde.base.dir}/classes" 
+				 jarfile="${DSP.DEPLOYMENT}/DSPSondeProducer-${DSP.VERSION}.jar" 
+				 compress="true" includes="**/*" 
+				 manifest="${dsp.sonde.base.dir}/META-INF/MANIFEST.MF">
+			</jar>			
+		</target>
+		
+		<target name="dsp.sonde.clean" depends="dsp.sonde.init">
+			<delete dir="${dsp.sonde.base.dir}/classes" />
+		</target>
+	</project>

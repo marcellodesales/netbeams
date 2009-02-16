@@ -2,8 +2,6 @@ package org.netbeams.dsp.weblogger;
 
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
-import org.netbeams.dsp.util.Log;
-import org.netbeams.dsp.wiretransport.server.osgi.DSPWireTransportServerActivator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;

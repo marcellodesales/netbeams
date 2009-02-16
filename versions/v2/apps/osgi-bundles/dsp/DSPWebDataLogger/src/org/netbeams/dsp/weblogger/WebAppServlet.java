@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.netbeams.dsp.util.Log;
+import org.apache.log4j.Logger;
 
 
 
@@ -21,6 +21,8 @@ public class WebAppServlet
     extends HttpServlet
 {
 
+    private static final Logger log = Logger.getLogger(WebAppServlet.class);
+    
     final public static String BASE_URI     = "/weblogger";
 
     private String             documentRoot = "/web/";
@@ -29,6 +31,7 @@ public class WebAppServlet
 
     public WebAppServlet()
     {
+        log.debug("Initializing the Data Logger Web Application...");
     }
 
 
@@ -39,7 +42,7 @@ public class WebAppServlet
         throws ServletException, IOException
     {
         String uri = request.getRequestURI();
-        Log.log("Processing URI: " + uri);
+        log.debug("Processing URI: " + uri);
         // Strip leading "/weblogger/"
         String resource = uri.substring(BASE_URI.length() + 1);
 
@@ -61,7 +64,7 @@ public class WebAppServlet
             sendImageFile(response, fileName);
         }
         else
-            Log.log("Unknown Content-Type: " + resource);
+            log.debug("Unknown Content-Type: " + resource);
     }
 
 

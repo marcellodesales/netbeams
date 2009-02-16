@@ -4,11 +4,15 @@ package org.netbeams.dsp.weblogger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 
 
 public class Buffer
 {
 
+    private static final Logger log = Logger.getLogger(Buffer.class);
+    
     private List<String> data = new ArrayList<String>();
 
 
@@ -28,7 +32,7 @@ public class Buffer
                 this.wait();
             }
             catch (InterruptedException ex) {
-                // Ignore
+                log.debug("A new message was added to the buffer...");
             }
         }
         String stringifiedData = "";

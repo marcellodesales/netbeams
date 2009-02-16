@@ -9,12 +9,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 
 
 public class GetDataServlet
     extends HttpServlet
 {
 
+    private static final Logger log = Logger.getLogger(GetDataServlet.class);
+    
     final public static String BASE_URI     = "/get-data";
 
     private Buffer theBuffer;
@@ -34,7 +38,7 @@ public class GetDataServlet
         throws ServletException, IOException
     {
         String uri = request.getRequestURI();
-        System.out.println("Data Servlet Processing URI: " + uri);
+        log.debug("Data Servlet Processing URI: " + uri);
         response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
         String data = theBuffer.getData();

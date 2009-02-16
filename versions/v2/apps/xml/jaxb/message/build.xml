@@ -21,7 +21,6 @@
 	    
 		<xjc schema="${XML.JAXB}/../schemas/message.xsd" package="${message-package}" destdir="${XML.JAXB}/message/generated-src" />
 	    <xjc schema="${XML.JAXB}/../schemas/message-content.xsd" package="${message-content-package}" destdir="${XML.JAXB}/message/generated-src" />
-		<xjc schema="${XML.JAXB}/../schemas/acknowledgements.xsd" package="${message-content-package}" destdir="${XML.JAXB}/message/generated-src" />
 	</target>
 
 	<target name="java-compile" depends="xjc-compile">

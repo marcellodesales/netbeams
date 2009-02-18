@@ -1,7 +1,7 @@
 anifest-Version: 1.0
 Bundle-Name: DSP Sonde Producer
 Bundle-SymbolicName: DSP Sonde Producer
-Bundle-ClassPath: .
+Bundle-ClassPath: ., libs/sonde.jar
 Bundle-Version: 0.1
 Bundle-Description: DSP Sonde Producer
 Bundle-Vendor: NetBEAMS.org

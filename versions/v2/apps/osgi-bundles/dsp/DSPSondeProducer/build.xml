@@ -24,6 +24,12 @@
 	
 	
 		<target name="dsp.sonde.jar" depends="dsp.sonde.init">
+			
+			<mkdir dir="${dsp.sonde.base.dir}/classes/libs"/>
+				<copy todir="${dsp.sonde.base.dir}/classes/libs">
+					<fileset dir="${XML.JAXB}/sonde/dist" includes="*.jar"/>
+				</copy>
+			
 			<jar basedir="${dsp.sonde.base.dir}/classes" 
 				 jarfile="${DSP.DEPLOYMENT}/DSPSondeProducer-${DSP.VERSION}.jar" 
 				 compress="true" includes="**/*" 

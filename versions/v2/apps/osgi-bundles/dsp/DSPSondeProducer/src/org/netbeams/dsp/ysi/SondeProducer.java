@@ -72,10 +72,13 @@ private static final Logger log = Logger.getLogger(SondeProducer.class);
         		log.debug("Message broker not available");
         	}
         } catch (JAXBException e) {
+        	log.error("JAXBException");
         	log.error(e.getMessage(), e);
         } catch (ParserConfigurationException e) {
+        	log.error("ParseConfigurationException");
         	log.error(e.getMessage(), e);        	
         } catch (DSPException e) {
+        	log.error("DSPException");
         	log.error(e.getMessage(), e);
         }		
 	}
@@ -89,9 +92,8 @@ private static final Logger log = Logger.getLogger(SondeProducer.class);
 		private List<SondeDataType> sondeData;
 		
 		public SondeHandler () {
-			sondeDataContainer = new SondeDataContainer();
 			sondeTestData = new SondeTestData();  // Get the test data
-			sondeData = sondeDataContainer.getSondeData();
+			sondeDataContainer = sondeTestData.getSondeTestData();
 		};
 		
 		

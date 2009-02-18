@@ -44,8 +44,9 @@ public class SondeDSPComponent implements DSPComponent {
     
     
     public void initComponent(String componentNodeId, DSPContext context) throws DSPException {
-		// TODO Auto-generated method stub
-
+    	this.context = context;
+		this.componentNodeId = componentNodeId;
+		log.info("Initializing Sonde DSP component: " + componentNodeId);
 	}
     
     public String getComponentNodeId() {

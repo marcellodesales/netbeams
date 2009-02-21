@@ -14,12 +14,7 @@ public enum QueueMessageState {
 	 */
 	QUEUED, 
 	/**
-	 * Whenever a messages queue has been transmitted to a destination. 
-	 */
-	TRANSMITTED, 
-	/**
 	 * Whenever a messages queue has been acknowledged to be received by the destination.
 	 */
 	ACKNOWLEDGED;
-		
 }

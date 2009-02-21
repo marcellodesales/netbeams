@@ -140,7 +140,10 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
 
             log.debug("Sending " + dspMessages.size() + " messages to the broker...");
             for (AbstractMessage msg : dspMessages) {
-                messageBroker.send((Message) msg);
+                String destinationIp = msg.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
+                if (!destinationIp.equals(System.getProperty("WIRE_TRANSPORT_SERVER_IP"))) {
+                    messageBroker.send((Message) msg);
+                }
             }
 
         } else {

@@ -81,13 +81,13 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
                 "DSPJSwingMouseProducer", localIPAddress, data.getContentContextForJAXB());
         
-        ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-                "DSPWireTransportClient", System.getProperty("WIRE_TRANSPORT_SERVER_IP"), "org.netbeams.dsp.wiretransport.client");
+//        ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
+//                "DSPWireTransportClient", System.getProperty("WIRE_TRANSPORT_SERVER_IP"), "org.netbeams.dsp.wiretransport.client");
         // Note that the consumer has the Wire Transport default DEMO IP as the destination.
         
-        log.debug("Packaging Mouse Actions to be sent to "
-                + consumer.getComponentLocator().getNodeAddress().getValue());
-        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, consumer);
+        log.debug("Packaging Mouse Actions to be sent to broker... No consumer defined...");
+//                + consumer.getComponentLocator().getNodeAddress().getValue());
+        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, null);
 
         try {
             Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data, ObjectFactory.class);

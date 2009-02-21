@@ -60,13 +60,6 @@ public class QueueMessageData {
     }
 
     /**
-     * Whenever a message has been transmitted in a packet.
-     */
-    public void changeStateToTransmitted() {
-        this.state = QueueMessageState.TRANSMITTED;
-    }
-
-    /**
      * Whenever a message has been acknowledged from the server-side.
      */
     public void changeStateToAcknowledged() {

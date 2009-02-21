@@ -3,21 +3,30 @@ package org.netbeams.dsp.util;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Network Utility class for the network card on a gumstix
+ * 
+ * @author Marcello de Sales (marcello.sales@gmail.com)
+ *
+ */
 public final class NetworkUtil {
     
     /**
      * Default Logger
      */
     private static final Logger log = Logger.getLogger(NetworkUtil.class);
+    /**
+     * The current host IP address is the IP address from the device.
+     */
+    private static String currentHostIpAddress;
     
     /**
      * @return the current environment's IP address, taking into account the Internet connection to any of the available
-     *         machine's Network interfaces. Examples of the outputs can be in octatos or in IPV6 format.
+     *         machine's Network interfaces. Examples of the outputs can be in octats or in IPV6 format.
      * <pre>
      *         ==> wlan0
      *         
@@ -44,30 +53,30 @@ public final class NetworkUtil {
      *  </pre>
      */
     public static String getCurrentEnvironmentNetworkIp() {
-        Enumeration<NetworkInterface> netInterfaces = null;
-        try {
-            netInterfaces = NetworkInterface.getNetworkInterfaces();
-        } catch (SocketException e) {
-            log.error("Somehow we have a socket error...");
-        }
+        if (currentHostIpAddress == null) {
+            Enumeration<NetworkInterface> netInterfaces = null;
+            try {
+                netInterfaces = NetworkInterface.getNetworkInterfaces();
 
-        while (netInterfaces.hasMoreElements()) {
-            NetworkInterface ni = netInterfaces.nextElement();
-            Enumeration<InetAddress> address = ni.getInetAddresses();
-            while (address.hasMoreElements()) {
-                InetAddress addr = address.nextElement();
-                log.debug("Inetaddress:" + addr.getHostAddress() + " loop? " + addr.isLoopbackAddress() + " local? "
-                        + addr.isSiteLocalAddress());
-                if (!addr.isLoopbackAddress() && addr.isSiteLocalAddress()
-                        && !(addr.getHostAddress().indexOf(":") > -1)) {
-                    return addr.getHostAddress();
+                while (netInterfaces.hasMoreElements()) {
+                    NetworkInterface ni = netInterfaces.nextElement();
+                    Enumeration<InetAddress> address = ni.getInetAddresses();
+                    while (address.hasMoreElements()) {
+                        InetAddress addr = address.nextElement();
+                        log.debug("Inetaddress:" + addr.getHostAddress() + " loop? " + addr.isLoopbackAddress() + " local? "
+                                + addr.isSiteLocalAddress());
+                        if (!addr.isLoopbackAddress() && addr.isSiteLocalAddress()
+                                && !(addr.getHostAddress().indexOf(":") > -1)) {
+                            currentHostIpAddress = addr.getHostAddress();
+                        }
+                    }
                 }
+
+            } catch (SocketException e) {
+                log.error("Somehow we have a socket error acquiring the host IP... Using loopback instead...");
+                currentHostIpAddress = "127.0.0.1";
             }
         }
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            return "127.0.0.1";
-        }
+        return currentHostIpAddress;
     }
 }

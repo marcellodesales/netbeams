@@ -159,7 +159,9 @@ public class DataCollector
 
     private void processMessage(Message message)
     {
-        String newData = message.getClass().getName();
+        String producer = message.getHeader().getProducer().getComponentType();
+        String newData = "[Producer]: " + producer + " [Content]:" + message.getContentType() + 
+                                                                    " [ID]:" + message.getMessageID();
         log.debug("DataCollector message.class=" + newData);
         log.debug("Adding DSP message to the buffer...");
         theBuffer.add(newData);

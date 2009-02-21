@@ -61,15 +61,21 @@ public enum MessagesQueues {
      */
     public synchronized void addMessageToOutboundQueue(Message dspMessage) {
         String destinationIp = dspMessage.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
-        Queue<QueueMessageData> outMsgs = this.outboundQueue.get(destinationIp);
-        if (outMsgs == null) {
-            outMsgs = this.makeMessageQueue();
-        }
-        // Adding the message ID to be a sequential number for a given IP address. This will follow the
-        // window slide protocol where a certain number of messages are acknowledged based by the highest number.
-        dspMessage.setMessageID(String.valueOf(outMsgs.size() + 1));
-        outMsgs.add(QueueMessageData.makeNewInstance(dspMessage));
-        this.outboundQueue.put(destinationIp, outMsgs);
+        
+        //if (!destinationIp.equals(System.getProperty("WIRE_TRANSPORT_SERVER_IP"))) {
+            Queue<QueueMessageData> outMsgs = this.outboundQueue.get(destinationIp);
+            if (outMsgs == null) {
+                outMsgs = this.makeMessageQueue();
+            }
+            // Adding the message ID to be a sequential number for a given IP address. This will follow the
+            // window slide protocol where a certain number of messages are acknowledged based by the highest number.
+            dspMessage.setMessageID(String.valueOf(outMsgs.size() + 1));
+            outMsgs.add(QueueMessageData.makeNewInstance(dspMessage));
+            this.outboundQueue.put(destinationIp, outMsgs);
+        //} else {
+//            log.info("Dropping DSP message ID "+ dspMessage.getMessageID() + " Content Type " + dspMessage.getContentType());
+//            log.info("Message was queued to the same host...");
+//        }
     }
 
     /**

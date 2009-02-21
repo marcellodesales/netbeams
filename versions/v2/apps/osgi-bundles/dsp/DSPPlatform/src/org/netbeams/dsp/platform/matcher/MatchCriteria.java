@@ -12,6 +12,18 @@ public class MatchCriteria {
 		this.componentType = componentType;
 		this.locator = locator;
 	}
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof MatchCriteria)) {
+                return false;
+            }
+            return this.componentType.equals(((MatchCriteria)obj).componentType) && 
+              this.locator.getNodeAddress().getValue().equals(((MatchCriteria)obj).locator.getNodeAddress().getValue());
+        }
+        
+        public int hashCode() {
+            return 10 * this.componentType.hashCode() + 20 * this.locator.getNodeAddress().getValue().hashCode();
+        }
 	
 	public String getComponentType() {
 		return componentType;

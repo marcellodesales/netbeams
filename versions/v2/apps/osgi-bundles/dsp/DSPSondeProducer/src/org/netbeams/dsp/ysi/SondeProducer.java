@@ -22,11 +22,17 @@ public class SondeProducer {
 	
 private static final Logger log = Logger.getLogger(SondeProducer.class);
 	
+	public static final String SERIAL_PORT = "/dev/ttyS0";
 	private DSPContext context;
 	private SondeHandler sondeHandler;
+	private SerialHandler serialHandler;
+	private String cmdBuffer;
+	private String rcvBuffer;
 	
 	public SondeProducer (DSPContext context) {
 		this.context = context;
+		serialHandler = new SerialHandler();
+		initSerialConnection();
         log.trace("Sonde Producer initialized");
 	};
 	
@@ -43,6 +49,28 @@ private static final Logger log = Logger.getLogger(SondeProducer.class);
 			sondeHandler = null;
 		}
 	}
+	
+	private void initSerialConnection() {
+		try {
+			serialHandler.connect(SERIAL_PORT);
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	private void configureSonde() {
+		serialHandler.sendSerial("\n");		// ----> [CR]
+		//serialHandler.recvSerial(rcvBuffer);			// <---- "#"
+		//sendSerial(cmdBuffer);		// ----> "menu"
+		//recvSerial(responseBuffer); // <---- (Main Menu)
+		//sendSerial(cmdBuffer);		// ----> "2"[CR]
+		//recvSerial(responseBuffer); // <---- (Unattended Sample Menu)
+		//sendSerial(cmdBuffer);		// ----> "1"[CR]
+		//recvSerial(responseBuffer); // <---- "00:00:00"
+		//sendSerial(cmdBuffer);		// ----> "00:15:00"
+	}
+	
 	
 	private void send(SondeDataContainer data) throws DSPException{
 		
@@ -98,17 +126,25 @@ private static final Logger log = Logger.getLogger(SondeProducer.class);
 		
 		
 		public void run() {			
-			while (running) {			
+			// Configure the sonde
+			configureSonde();
+			
+			//while (running) {
+				
+				// Communication with a consumer
+				/*
 				try {
+					
 					send(sondeDataContainer);
-					//System.out.println("Random Number: " + fData );
-					Thread.sleep(5000);  // simulates the sonde's sending rate
+					
 				} catch (InterruptedException e) {
 					System.err.println("ERROR: " + e.getMessage());
 				} catch (DSPException e) {
 					System.err.println("ERROR: " + e.getMessage());
 				}
-			}
+				*/
+				
+			//}
 		}
 		
 		public void stopHandler() {

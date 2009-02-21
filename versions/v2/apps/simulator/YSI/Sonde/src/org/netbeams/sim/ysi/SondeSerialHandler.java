@@ -27,7 +27,7 @@ public class SondeSerialHandler {
 		buffer = new byte[1024];
 	};
 	
-	void connect (String portName) throws Exception {
+	public void connect (String portName) throws Exception {
 
 		CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 		if (portIdentifier.isCurrentlyOwned()) {

@@ -8,29 +8,15 @@ package org.netbeams.sim.ysi;
  */
 public class SondeServer extends Thread {
 	
-	private static final String SONDE_PROMPT = "# ";
 	private static final String SERIAL_PORT = "/dev/ttyS0";
 	private SondeSerialHandler serialHandler;
-	private SondeMenu sondeMenu;
-	private byte[] buffer;
 	
 	public SondeServer() {
-		buffer = new byte[1024];
-		sondeMenu = new SondeMainMenu();
 		serialHandler = new SondeSerialHandler();
 	};
 	
-	public String getSondPrompt() {
-		return SONDE_PROMPT;
-	}
-
-	public void sendPrompt() {
-		System.out.println(SONDE_PROMPT);
-	}
 	
-	
-	public void run() {
-		
+	public void run() {		
 		try {
 				serialHandler.connect(SERIAL_PORT);
 				System.err.println("Connection Successful!");				

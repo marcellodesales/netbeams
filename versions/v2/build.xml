@@ -16,7 +16,10 @@
     <import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml" />
     <import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
 
-	<target name="all" depends="setup, message.all, dsproperty.all, stocktick.all, dsp-framework.all, dsp-platform.all, dsp-wire-transport-client.all, dsp-wire-transport-server.all, dsp-management.all, dsp-weblogger.all, dsp-stock-consumer.all, dsp-stock-producer.all, dsp-mouse-producer-jswing.all, dsp.rng.all, dsp.sonde.all" />
+	<target name="all" depends="setup, message.all, dsproperty.all, stocktick.all, sounde.all, mouseactions.all, 
+		dsp-framework.all, dsp-platform.all, dsp-wire-transport-client.all, dsp-wire-transport-server.all, 
+		dsp-management.all, dsp-weblogger.all, 
+		dsp-stock-consumer.all, dsp-stock-producer.all, dsp-mouse-producer-jswing.all, dsp.rng.all, dsp.sonde.all" />
 
 	<target name="setup" depends="init, print-properties">
 		<!-- Setting up runtime directory -->
@@ -50,6 +53,12 @@
 			<env key="DSP_HOME" value="${DSP.RUNTIME}" />
 		</exec>
 	</target>
+	
+	<target name="prepare-osgi-env" depends="init">
+		
+	    <mkdir dir="${DSP.RUNTIME}/osgi-env"/>
+		<unjar src="${THIRDPARTY}/knopflerfish/2.2/knopflerfish_osgi_2.2.0.jar" dest="${DSP.RUNTIME}/osgi-env" />
+	</target>
 
 	<target name="run-teresa" depends="init">
 		<exec executable="java" dir="${KNOPFLERFISH.HOME}/osgi">
@@ -82,6 +91,14 @@
 	<target name="stocktick.all">
 		<ant antfile="apps/xml/jaxb/stocktick/build.xml" inheritAll="true"/> 		
 	</target>
+
+   <target name="mouseactions.all">
+        <ant antfile="apps/xml/jaxb/mouseactions/build.xml" inheritAll="true"/>      
+   </target>
+	
+   <target name="sounde.all">
+        <ant antfile="apps/xml/jaxb/sonde/build.xml" inheritAll="true"/>        
+    </target>
 	
 	<target name="management.all">
 		<ant antfile="apps/osgi-bundles/dsp/DSPManagement/build.xml" inheritAll="true"/>	

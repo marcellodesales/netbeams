@@ -13,12 +13,18 @@ import java.io.OutputStream;
  * @author Teresa L. Johnson <gamma.particle@gmail.com>
  *
  */
-public class SondeSerialComm {
+public class SondeSerialHandler {
 	
-	public static final int BAUD_RATE = 9600;
+	private static final int BAUD_RATE = 9600;
+	private InputStream in;
+	private OutputStream out;
+	private SondeSerialReader ssr;
+	private SondeSerialWriter ssw;
+	private byte[] buffer;
 	
-	public SondeSerialComm() {
+	public SondeSerialHandler() {
 		super();
+		buffer = new byte[1024];
 	};
 	
 	void connect (String portName) throws Exception {
@@ -29,27 +35,26 @@ public class SondeSerialComm {
 		} else {
 			CommPort commPort = portIdentifier.open(this.getClass().getName(),2000);
 			if (commPort instanceof SerialPort) {
+				
 				SerialPort serialPort = (SerialPort) commPort;
 	            serialPort.setSerialPortParams(BAUD_RATE,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
 
-	            InputStream in = serialPort.getInputStream();
-	            OutputStream out = serialPort.getOutputStream();
+	            in = serialPort.getInputStream();
+	            out = serialPort.getOutputStream();
 
-	            (new Thread(new SondeSerialReader(in))).start();
-	            (new Thread(new SondeSerialWriter(out))).start();
+	            ssr = new SondeSerialReader(in);
+	    		ssw = new SondeSerialWriter(out);
+	    		
+	    		Thread ssrThread = new Thread(ssr);
+	    		Thread sswThread = new Thread(ssw);
+	    		
+	    		ssrThread.start();
+	    		sswThread.start();
+	            
 	            System.err.println("Success: Connection established");
 	        } else {
 	            System.err.println("Error: Only serial ports are handled by this example.");
 	        }
 		}		        
-	}
-	
-	public static void main ( String[] args ) {
-
-		try {
-			(new SondeSerialComm()).connect("/dev/ttyS0");
-		} catch (Exception e) {
-	        e.printStackTrace();
-	    }
 	}
 }

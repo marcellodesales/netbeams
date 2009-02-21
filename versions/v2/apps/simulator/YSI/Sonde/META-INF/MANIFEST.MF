@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: org.netbeams.sim.ysi.SondeSerialComm
+Main-Class: org.netbeams.sim.ysi.SondeServer

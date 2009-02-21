@@ -1,7 +1,7 @@
 package org.netbeams.dsp.platform.broker;
 
 /**
- * Simple Message Broker implementaion.
+ * Simple Message Broker implementation.
  * 
  * TODO: Handle concurrency.
  */
@@ -103,12 +103,12 @@ public class MessageBroker implements MessageBrokerAccessor {
                 }
 
                 if (this.isMessageForLocalConsumer(consumer)) {
-                    log.debug("Delivering message locally...");
+                    log.debug("Attempting to delivering message locally...");
                     DSPComponent localComponent = obtainDSPComponent(consumer);
                     if (localComponent != null) {
                         localComponent.deliver(message);
                     } else {
-                        log.warn("No attached dsp component " + DSPUtils.toString(consumer));
+                        log.warn("$$ Requered dsp component " + DSPUtils.toString(consumer) + " not attached!!!");
                     }
 
                 } else {

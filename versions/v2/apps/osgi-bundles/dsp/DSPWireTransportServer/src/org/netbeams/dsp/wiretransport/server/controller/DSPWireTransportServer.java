@@ -134,6 +134,11 @@ public class DSPWireTransportServer implements DSPComponent {
             this.httpService.registerServlet(System.getProperty("HTTP_SERVER_BASE_URI"),
                     new DSPWireTransportHttpReceiverServlet(this.dspContext), null, null);
             
+            log.info("Registering the DSP Wire Transport View Queues Servlet as /viewqueues");
+            
+            this.httpService.registerServlet("/viewqueues",
+                    new DSPWireTransportClientViewOutboundQueuesServlet(this.dspContext), null, null);
+            
         } catch (ServletException e) {
             log.error(e.getMessage(), e);
         } catch (NamespaceException e) {

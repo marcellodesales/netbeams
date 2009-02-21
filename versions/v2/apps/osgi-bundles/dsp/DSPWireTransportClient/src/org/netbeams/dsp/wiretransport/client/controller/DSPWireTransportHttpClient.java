@@ -197,6 +197,11 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                 throws JAXBException, DSPException {
 
             MessagesContainer messagesFromResponse = deserializeMessagesContainer(messagesFromResponseInXml);
+            // Acknowledge all messages received from the server-side, based on the highest message ID. This
+            // value MUST be returned by the server-side.
+            int acknowledgeUntil = messagesFromResponse.getAcknowledgeUntil();
+            MessagesQueues.INSTANCE.setMessagesToAcknowledged(destIp, acknowledgeUntil);
+            
             for (AbstractMessage abstrMessage : messagesFromResponse.getMessage()) {
                 thLog.trace("Delivering message ID " + abstrMessage.getMessageID() + " type "
                         + abstrMessage.getContentType() + " to the DSP broker...");
@@ -209,10 +214,6 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                     log.debug("Message broker not available");
                 }
             }
-            // Acknowledge all messages received from the server-side, based on the highest message ID. This
-            // value MUST be returned by the server-side.
-            int acknowledgeUntil = messagesFromResponse.getAcknowledgeUntil();
-            MessagesQueues.INSTANCE.setMessagesToAcknowledged(destIp, acknowledgeUntil);
         }
 
         /**

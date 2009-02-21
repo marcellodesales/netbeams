@@ -45,6 +45,10 @@ public enum MessagesQueues {
     private MessagesQueues() {
         this.outboundQueue = new LinkedHashMap<String, Queue<QueueMessageData>>();
     }
+    
+    public Map<String, Queue<QueueMessageData>> getOutboundQueues() {
+        return this.outboundQueue;
+    }
 
     /**
      * @return the default implementation of the queue
@@ -62,20 +66,15 @@ public enum MessagesQueues {
     public synchronized void addMessageToOutboundQueue(Message dspMessage) {
         String destinationIp = dspMessage.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
         
-        //if (!destinationIp.equals(System.getProperty("WIRE_TRANSPORT_SERVER_IP"))) {
-            Queue<QueueMessageData> outMsgs = this.outboundQueue.get(destinationIp);
-            if (outMsgs == null) {
-                outMsgs = this.makeMessageQueue();
-            }
-            // Adding the message ID to be a sequential number for a given IP address. This will follow the
-            // window slide protocol where a certain number of messages are acknowledged based by the highest number.
-            dspMessage.setMessageID(String.valueOf(outMsgs.size() + 1));
-            outMsgs.add(QueueMessageData.makeNewInstance(dspMessage));
-            this.outboundQueue.put(destinationIp, outMsgs);
-        //} else {
-//            log.info("Dropping DSP message ID "+ dspMessage.getMessageID() + " Content Type " + dspMessage.getContentType());
-//            log.info("Message was queued to the same host...");
-//        }
+        Queue<QueueMessageData> outMsgs = this.outboundQueue.get(destinationIp);
+        if (outMsgs == null) {
+            outMsgs = this.makeMessageQueue();
+        }
+        // Adding the message ID to be a sequential number for a given IP address. This will follow the
+        // window slide protocol where a certain number of messages are acknowledged based by the highest number.
+        dspMessage.setMessageID(String.valueOf(outMsgs.size() + 1));
+        outMsgs.add(QueueMessageData.makeNewInstance(dspMessage));
+        this.outboundQueue.put(destinationIp, outMsgs);
     }
 
     /**
@@ -83,19 +82,61 @@ public enum MessagesQueues {
      * @return a new instance of MessagesContainer of the current messages that are on the QUEUED state for the given
      *         component destination.
      */
-    public synchronized MessagesContainer retrieveQueuedMessagesForTransmission(String destinitionIp) {
-        MessagesContainer container = DSPMessagesFactory.INSTANCE.makeDSPMessagesContainer(destinitionIp);
-        Queue<QueueMessageData> outboutQueue = this.outboundQueue.get(destinitionIp);
+    public synchronized MessagesContainer retrieveQueuedMessagesForTransmission(String destinationIp) {
+        log.debug("Retrieving all queued messages for the destination IP " + destinationIp);
+        return this.retrieveAllMessagesByIpAndState(destinationIp, QueueMessageState.QUEUED);
+    }
+    
+    /**
+     * Retrieves all messages for a given IP address no matter what state it is.
+     * @param destinationIp the given IP address.
+     * @return a new instance of Messages container of the current messages for a given IP no matter which state.
+     */
+    private synchronized MessagesContainer retrieveAllMessagesOnClientForIp(String destinationIp) {
+        log.debug("Retrieving all messages registed on the running client for the destination IP " + destinationIp);
+        return this.retrieveAllMessagesByIpAndState(destinationIp, null);
+    }
+    
+    /**
+     * Retrieves all the messages for a given destination IP and state
+     * @param destinationIp is required for the lookup search.
+     * @param state if null, all messages in any state is retrieved
+     * @return a messages container with the messages that satisfy the given parameters.
+     */
+    public synchronized MessagesContainer retrieveAllMessagesByIpAndState(String destinationIp, QueueMessageState state) {
+        MessagesContainer container = DSPMessagesFactory.INSTANCE.makeDSPMessagesContainer(destinationIp);
+        Queue<QueueMessageData> outboutQueue = this.outboundQueue.get(destinationIp);
         if (outboutQueue != null) {
             log.debug("The size of the messages in the outbound queue is " + outboutQueue.size());
             for (QueueMessageData data : outboutQueue) {
-                if (data.getState().equals(QueueMessageState.QUEUED)) {
+                if (state != null) {
+                    //if the state is given, then it's restricted by it...
+                    if (data.getState().equals(state)) {
+                    container.getMessage().add(data.getMessage());
+                    data.setMessagesContainerId(UUID.fromString(container.getUudi()));
+                    }
+                } else { //if the state is null, just get anything...
                     container.getMessage().add(data.getMessage());
                     data.setMessagesContainerId(UUID.fromString(container.getUudi()));
                 }
             }
+        } else log.debug("There are no messages on the outbound queue for the client IP " + destinationIp);
+        return container;   
+    }
+    
+    /**
+     * @return an array of MessagesContainer for each IP address for different DSP components.
+     */
+    public synchronized MessagesContainer[] retrieveAllMessagesOnClient() {
+        log.debug("Retrieving all messages registered on this client, no matter the state of the messages...");
+        Set<String> ipAddresses = this.outboundQueue.keySet();
+        MessagesContainer[] msgContainers = new MessagesContainer[ipAddresses.size()];
+        int i = -1;
+        for (String ipAddr : ipAddresses) {
+            log.debug("The Messages queue is being queried for the ip address " + ipAddr);
+            msgContainers[++i] = this.retrieveAllMessagesOnClientForIp(ipAddr);
         }
-        return container;
+        return msgContainers;
     }
 
     /**
@@ -117,10 +158,13 @@ public enum MessagesQueues {
      * @param maxMessageId is the highest message id from the acknowledgment frame that was received.
      */
     public synchronized void setMessagesToAcknowledged(String destinationIpAddress, int maxMessageId) {
+        log.debug("===> Acknowledging messages up to message ID " + maxMessageId);
         for (QueueMessageData data : this.outboundQueue.get(destinationIpAddress)) {
+            log.debug("Traying to acknowledge message ID =>" + data.getMessage().getMessageID());
             if (data.getState().equals(QueueMessageState.QUEUED)
                     && Integer.valueOf(data.getMessage().getMessageID()) <= maxMessageId) {
                 data.changeStateToAcknowledged();
+                log.debug("Message Acknowledged =>" + data.getMessage().getMessageID());
             }
         }
     }

@@ -1,32 +1,35 @@
 <?xml version="1.0"?>
-<project name="mouseactions" default="create-jar">
+<project name="mouseactions" default="create-jar" basedir=".">
     
-    <import file="../jaxb.setup.xml"/>
+    <import file="../../../../init-targets.xml"/>
+    <import file="../jaxb.setup.xml" />
 	
     <property name="mouseactions-package" value="org.netbeams.dsp.demo.mouseactions" />
-    <property name="java-src-dir" value="./java-src" />
     
-    <target name="xjc-compile">
+    <target name="xjc-compile" depends="dsp-init.init">
+        <antcall target="dsp-init.print-properties"/>
+	
         <antcall target="jaxbsetup.xjc-compile">
-            <param name="java-src" value="${java-src-dir}"/>
+            <param name="java-src" value="${XML.JAXB}/mouseactions/java-src" />
             <param name="schema.name" value="mouseaction.xsd" />
             <param name="package" value="${mouseactions-package}" />
         </antcall>
     </target>
+	
+    <target name="get-properties">
+        <antcall target="print-properties" />           
+    </target>
 
     <target name="java-compile" depends="xjc-compile">
-        <delete dir="./classes" />
-        <mkdir dir="./classes" />
-        <javac srcdir="./java-src" destdir="./classes" classpathref="jaxb.classpath" source="1.5" target="1.5" />
+        <delete dir="${XML.JAXB}/mouseactions/classes" />
+        <mkdir dir="${XML.JAXB}/mouseactions/classes" />
+        <javac srcdir="${XML.JAXB}/mouseactions/java-src" destdir="${XML.JAXB}/mouseactions/classes" 
+        	classpathref="jaxb.classpath" source="1.5" target="1.5" />
     </target>
-
+	
     <target name="create-jar" depends="java-compile">
-        <mkdir dir="./dist" />
-        <jar destfile="./dist/mouseactions.jar" basedir="./classes" />
+        <mkdir dir="${XML.JAXB}/mouseactions/dist" />
+        <jar destfile="${XML.JAXB}/mouseactions/dist/mouseactions.jar" basedir="${XML.JAXB}/mouseactions/classes" />
     </target>
-
-    <target name="dist" depends="create-jar">
-        <copy file="./dist/mouseactions.jar" todir="./../message/lib" />
-    </target>
-
+	
 </project>

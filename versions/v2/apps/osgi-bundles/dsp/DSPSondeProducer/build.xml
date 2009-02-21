@@ -28,6 +28,7 @@
 			<mkdir dir="${dsp.sonde.base.dir}/classes/libs"/>
 				<copy todir="${dsp.sonde.base.dir}/classes/libs">
 					<fileset dir="${XML.JAXB}/sonde/dist" includes="*.jar"/>
+					<fileset dir="${THIRDPARTY}/rxtx/2.1-7r2/jar" includes="*.jar" />
 				</copy>
 			
 			<jar basedir="${dsp.sonde.base.dir}/classes" 

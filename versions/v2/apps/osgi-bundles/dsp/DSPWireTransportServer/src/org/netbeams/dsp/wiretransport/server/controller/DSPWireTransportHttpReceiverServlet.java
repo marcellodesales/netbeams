@@ -120,7 +120,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
 
         log.debug("Acknowledment will be sent to the destination IP " + destIpAddress);
         Integer ackUntil = Integer.valueOf(requestMessagesContainer.getMessage().get(
-                responseMessagesContainer.getMessage().size() - 1).getMessageID());
+                requestMessagesContainer.getMessage().size() - 1).getMessageID());
         log.debug("Last message ID received is " + ackUntil);
         responseMessagesContainer.setAcknowledgeUntil(ackUntil);
         return responseMessagesContainer;
@@ -140,10 +140,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
 
             log.debug("Sending " + dspMessages.size() + " messages to the broker...");
             for (AbstractMessage msg : dspMessages) {
-                String destinationIp = msg.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
-                if (!destinationIp.equals(System.getProperty("WIRE_TRANSPORT_SERVER_IP"))) {
-                    messageBroker.send((Message) msg);
-                }
+                messageBroker.send((Message) msg);
             }
 
         } else {

@@ -117,7 +117,11 @@ public class MessageBroker implements MessageBrokerAccessor {
                     log.debug("Delivering message to the default Wire Transport client...");
                     log.debug("The header of the message was updated with the consumer information from the matcher...");
                     DSPComponent transportComponent = this.obtainDSPDefaultWireTransport();
-                    transportComponent.deliver(message);
+                    if (transportComponent != null) {
+                        transportComponent.deliver(message);
+                    } else {
+                        
+                    }
                 }
             }
         } else {

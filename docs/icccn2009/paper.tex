@@ -40,6 +40,23 @@ browser. Length: first page (including title and abstract).
 
 \section{Use Case}
 
+Researchers in the geosciences rely on sensor data collected by highly
+specialized sensors such as the Seabird or YSI. These sensors are
+usually deployed in remote locations that not only make their
+maintenance difficult, but also access to their measurements.
+Typically the sensors are autonomous in the sense that they can run
+for a certain time on battery power and store the measurement data in
+internal memory. Only when the sensors are serviced, the measurement
+data they have collected since the last servicing are uploaded to a
+portable storage device. From there the data can be uploaded to
+server. This manual procedure to retrieve sensor data is not only
+error prone, but also results in a serious time lag between the time
+the sensor performs the measurement and when it becomes available for
+further processing. For many applications it would be beneficial to
+have near-realtime access to the sensor measurement. Being able to
+access data when they become available on the sensor device also
+reduces the maintenance overhead.
+
 Start with some related work. Who else has done an OSGi-based
 infrastructure for sensor networks? Kleber: I believe you have a few
 references. This section should be a combination of a use case (using
@@ -60,6 +77,12 @@ should include a picture of a standalone DSP showing a DC and a DP
 and DSP Platform. This section should give a top-level overview.
 Subsequent sub-sections should explain certain features of the DSP in
 more detail.
+
+\begin{figure}
+\centering
+\epsfig{file=dsp, width=7cm}
+\caption{\label{FIG_DSP} Data Sensor Platform (DSP).}
+\end{figure}
 
 \subsection{DP and DC}
 

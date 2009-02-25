@@ -25,7 +25,7 @@
 	<target name="dsp-weblogger.jar" depends="dsp-weblogger.init">
 		<mkdir dir="${DSP.RUNTIME}" />
 		<copy todir="${weblogger.base.dir}/classes/web/">
-			<fileset dir="${weblogger.base.dir}/web/DSP Web Logger/build/" />
+			<fileset dir="${weblogger.base.dir}/web/DSP Management/build/" />
 		</copy>
 		<jar basedir="${weblogger.base.dir}/classes" 
 			 jarfile="${DSP.DEPLOYMENT}/DSPWebLogger-${DSP.VERSION}.jar" 

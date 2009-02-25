@@ -2,6 +2,8 @@ package org.netbeams.dsp.weblogger;
 
 
 
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 
 import org.apache.log4j.Logger;
@@ -99,6 +101,8 @@ public class DataCollector
                     new GetDataServlet(theBuffer), null, null);
             httpService.registerServlet(WebAppServlet.BASE_URI,
                     new WebAppServlet(), null, null);
+            httpService.registerServlet(PropertyUIServlet.BASE_URI,
+                    new PropertyUIServlet(), null, null);
         }
         catch (ServletException e) {
             log.error(e.getMessage(), e);
@@ -106,9 +110,23 @@ public class DataCollector
         catch (NamespaceException e) {
             log.error(e.getMessage(), e);
         }
+        testPropertyUI();
     }
 
 
+    private void testPropertyUI()
+    {
+        PropertyUI.createButton(0, 0, "Button @ 0, 0");
+        PropertyUI.createInput(1, 0, "Input @ 1, 0");
+        PropertyUI.createLabel(2, 0, "Label @ 2, 0");
+        PropertyUI.createLabel(2, 1, "Label @ 2, 1");
+        ArrayList<String> components = new ArrayList<String>();
+        components.add("YSI Sonde");
+        components.add("Remote Communication");
+        PropertyUI.setComponents(components);
+        //PropertyUI.clear();
+
+    }
 
     //@Override
     public void stopComponent()

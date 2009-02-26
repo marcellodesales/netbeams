@@ -4,6 +4,7 @@ import javax.servlet.ServletException;
 import javax.servlet.Servlet;
 
 import org.apache.log4j.Logger;
+import org.netbeams.dsp.management.test.TestManagement;
 import org.netbeams.dsp.platform.PlatformException;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
 import org.osgi.framework.BundleActivator;
@@ -21,6 +22,7 @@ public class Activator implements BundleActivator {
 
 	private DSPManager dspManager;
 	private ManagementServlet mgrServlet;
+	private TestManagement tester;
 
 	/* (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
@@ -30,8 +32,10 @@ public class Activator implements BundleActivator {
 
 		this.bundleContext = bundleContext;
 		dspManager = new DSPManager();
-		registerServlet();
+//		registerServlet();
 		serviceRegistration = ActivatorHelper.registerOSGIService(bundleContext, dspManager);
+		tester = new TestManagement(dspManager);
+		tester.start();
 
 	}
 
@@ -41,7 +45,11 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext context) throws Exception {
 		log.info("stop invoked.");
 		ActivatorHelper.unregisterOSGIService(bundleContext, serviceRegistration);
-		unregisterServlet();
+//		unregisterServlet();
+		if(tester != null){
+			tester.shouldStop();
+			tester.interrupt();
+		}
 		dspManager.stopComponent();
 		dspManager = null;
 		mgrServlet = null;
@@ -56,7 +64,7 @@ public class Activator implements BundleActivator {
 					HttpService httpService = (HttpService)bundleContext.getService(srvRef);
 					// Create Servlet
 					mgrServlet = new ManagementServlet(dspManager);
-					httpService.registerServlet(ManagementServlet.BASE_URI, mgrServlet, null, null);
+					httpService.registerServlet(RESTDirectory.BASE_URI, mgrServlet, null, null);
 				} catch (Exception e) {
 					log.warn("could not register management servlet", e);
 					throw new PlatformException("could not register management servlet", e);
@@ -76,7 +84,7 @@ public class Activator implements BundleActivator {
 			if(srvRef != null){
 				try {
 					HttpService httpService = (HttpService)bundleContext.getService(srvRef);
-					httpService.unregister(ManagementServlet.BASE_URI);
+					httpService.unregister(RESTDirectory.BASE_URI);
 				} catch (Exception e) {
 					log.warn("could not unregister management servlet", e);
 					throw new PlatformException("could not unregister management servlet", e);

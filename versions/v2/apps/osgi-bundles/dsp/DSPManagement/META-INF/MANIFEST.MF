@@ -7,4 +7,4 @@ Bundle-Name: DSP Manager
 Bundle-SymbolicName: DSPManager
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.osgi.framework, org.osgi.service.http, javax.servlet, javax.servlet.http, javax.xml.bind
+Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.netbeams.dsp.platform.osgi, org.osgi.framework, org.osgi.service.http, javax.servlet, javax.servlet.http, org.netbeams.dsp.data.property, org.netbeams.dsp.platform, org.apache.log4j

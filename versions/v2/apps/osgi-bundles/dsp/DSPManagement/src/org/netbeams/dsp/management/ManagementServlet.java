@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
+import org.netbeams.dsp.management.handler.DSPGetHandler;
+import org.netbeams.dsp.management.handler.GetHandler;
 import org.netbeams.dsp.message.NodeAddress;
 
 
@@ -24,8 +26,6 @@ public class ManagementServlet
 {
 	private static final Logger log = Logger.getLogger(ManagementServlet.class);
 	
-    final public static String BASE_URI = "/dsp-management";
-
     private boolean isActive;
     private DSPManager dspManager;
     
@@ -45,10 +45,17 @@ public class ManagementServlet
         throws ServletException, IOException
     {
     	if(!dspManager.isActive()){
-    		log.warn("Management component is active ");
+    		log.warn("Management component is not active ");
     		outputNoActive(response);
     		return;
     	}
+    	
+    	GetHandler handler = selectHandler(request);
+    	if(handler != null){
+    		response.setContentType("text/html; charset=utf-8");
+    		outputFile(response, "Directory Unknown");   		
+    	}
+    	handler.doGet(request, response);
     	
     	Map params = request.getParameterMap();
     	String action = (String)params.get("ACTION");
@@ -73,7 +80,11 @@ public class ManagementServlet
 
 
 
-    private void outputNoActive(HttpServletResponse response) throws IOException {
+    private GetHandler selectHandler(HttpServletRequest request) {
+		return new DSPGetHandler();
+	}
+
+	private void outputNoActive(HttpServletResponse response) throws IOException {
     	response.sendRedirect("notActive.html");
 		
 	}
@@ -93,7 +104,7 @@ public class ManagementServlet
     	NodeAddress nodeAddress = new NodeAddress(nodeAddressStr);
     	
     	try {
-			dspManager.updateProperties(nodeAddress, componentNodeId, properties);
+			dspManager.query(componentNodeId, nodeAddressStr, properties);
 		} catch (DSPException e) {
 			log.warn("Could not update property for " + componentNodeId + ' ' + nodeAddressStr);
 		}   	

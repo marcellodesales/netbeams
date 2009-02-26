@@ -8,6 +8,10 @@ public class DSPException extends Exception {
 	
 	private int error;
 	
+	public DSPException(Throwable t){
+		super(t);
+	}
+
 	public DSPException(String msg){
 		this(ErrorCode.ERROR_UNKNOWN, msg);
 	}

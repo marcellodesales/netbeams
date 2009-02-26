@@ -244,14 +244,17 @@ public class MessageBroker implements MessageBrokerAccessor {
     }
 
     private String messageSummary(Message message) {
-        StringBuffer buff = new StringBuffer();
+        StringBuilder buff = new StringBuilder();
         buff.append("id=").append(message.getMessageID()).append("; ");
-        buff.append("producer=").append(message.getHeader().getProducer().getComponentType()).append("; ");
-        buff.append("content type=").append(message.getContentType()).append("; ");
+        buff.append("prod=").append(message.getHeader().getProducer().getComponentType()).append("; ");
+        buff.append("content_type=").append(message.getContentType()).append("; ");
         ComponentIdentifier consumer = message.getHeader().getConsumer();
         if (consumer != null) {
             buff.append("consumer=");
-            buff.append(consumer.getComponentType()).append(",");
+            buff.append(consumer.getComponentType()).append("; ");
+            buff.append("node=");
+            buff.append(consumer.getComponentLocator().getNodeAddress().getValue()).append("; ");
+
         }
         return buff.toString();
     }

@@ -8,5 +8,5 @@ Bundle-Name: DSP Platform
 Bundle-SymbolicName: DSPPlatform
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
-Export-Package: org.netbeams.dsp.platform.osgi
+Export-Package: org.netbeams.dsp.platform, org.netbeams.dsp.platform.osgi
 Import-Package: org.netbeams.dsp, org.netbeams.dsp.message, org.netbeams.dsp.util, org.osgi.framework, org.apache.log4j

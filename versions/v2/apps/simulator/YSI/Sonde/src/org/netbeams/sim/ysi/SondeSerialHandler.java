@@ -51,9 +51,9 @@ public class SondeSerialHandler {
 	    		ssrThread.start();
 	    		sswThread.start();
 	            
-	            System.err.println("Success: Connection established");
+	            System.out.println("Success: Connection established");
 	        } else {
-	            System.err.println("Error: Only serial ports are handled by this example.");
+	            System.out.println("Error: Only serial ports are handled.");
 	        }
 		}		        
 	}

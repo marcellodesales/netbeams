@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public class SondeSerialReader implements Runnable {
 	
-	InputStream in;
+	private InputStream in;
 	
 	public SondeSerialReader (InputStream in) {
 		this.in = in;

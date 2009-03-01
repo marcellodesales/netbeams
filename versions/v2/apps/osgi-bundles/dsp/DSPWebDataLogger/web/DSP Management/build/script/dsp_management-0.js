@@ -7839,11 +7839,13 @@ M.components.add(V);
 M.buttonPressed=function(H){var W=H.getTarget().getLabel();
 for(var T in M.widgets){var Q=M.widgets[T];
 if(Q instanceof qx.ui.form.TextField){W+=g+Q.getValue();
-}}alert(W);
+}}M.sendButtonEvent(W);
 };
 M.queryButtonPressed=function(H){var W=H.getTarget().getLabel();
 W+=g+M.components.getValue();
-var L=new qx.io.remote.Request(p+W,
+M.sendButtonEvent(W);
+};
+M.sendButtonEvent=function(X){var L=new qx.io.remote.Request(p+X,
 a,
 f);
 L.send();
@@ -7865,51 +7867,51 @@ qx.Class.define(s,
 {extend:qx.application.Standalone,
 members:{main:function(){arguments.callee.base.call(this);
 {};
-var X=this.getRoot();
-var Y=new qx.ui.basic.Label(y);
-var ba=new qx.bom.Font(18,
+var Y=this.getRoot();
+var ba=new qx.ui.basic.Label(y);
+var bb=new qx.bom.Font(18,
 [h]);
-ba.setBold(true);
-Y.setFont(ba);
-X.add(Y,
+bb.setBold(true);
+ba.setFont(bb);
+Y.add(ba,
 {top:20,
 left:50});
-var bb=new qx.ui.splitpane.Pane(B);
-X.add(bb,
+var bc=new qx.ui.splitpane.Pane(B);
+Y.add(bc,
 {left:50,
 top:50,
 right:50,
 bottom:50});
 var R=new qx.ui.layout.Grid(10,
 10);
-var bc=new qx.ui.container.Composite(R);
-bc.set({allowGrowX:true,
+var bd=new qx.ui.container.Composite(R);
+bd.set({allowGrowX:true,
 allowGrowY:true,
 padding:15});
-M.grid=bc;
+M.grid=bd;
 M.offset=2;
-Y=new qx.ui.basic.Label(A);
-ba=new qx.bom.Font(16,
+ba=new qx.ui.basic.Label(A);
+bb=new qx.bom.Font(16,
 [h]);
-Y.setFont(ba);
-bc.add(Y,
+ba.setFont(bb);
+bd.add(ba,
 {row:0,
 column:0,
 colSpan:2});
-Y=new qx.ui.basic.Label(t);
-bc.add(Y,
+ba=new qx.ui.basic.Label(t);
+bd.add(ba,
 {row:1,
 column:0});
-var bd=new qx.ui.form.ComboBox();
-M.components=bd;
-bc.add(bd,
+var be=new qx.ui.form.ComboBox();
+M.components=be;
+bd.add(be,
 {row:1,
 column:1});
-var be=new qx.ui.form.Button(F);
-be.addListener(d,
+var bf=new qx.ui.form.Button(F);
+bf.addListener(d,
 function(H){M.queryButtonPressed(H);
 });
-bc.add(be,
+bd.add(bf,
 {row:1,
 column:2});
 R=new qx.ui.layout.Grid(10,
@@ -7918,36 +7920,36 @@ R.setColumnFlex(0,
 1);
 R.setRowFlex(1,
 1);
-var bf=new qx.ui.container.Composite(R);
-bf.set({allowGrowX:true,
+var bg=new qx.ui.container.Composite(R);
+bg.set({allowGrowX:true,
 allowGrowY:true,
 padding:15});
-Y=new qx.ui.basic.Label(q);
-ba=new qx.bom.Font(16,
+ba=new qx.ui.basic.Label(q);
+bb=new qx.bom.Font(16,
 [h]);
-Y.setFont(ba);
-bf.add(Y,
+ba.setFont(bb);
+bg.add(ba,
 {row:0,
 column:0});
-var bg=new qx.ui.form.List();
-bg.set({allowGrowX:true,
+var bh=new qx.ui.form.List();
+bh.set({allowGrowX:true,
 allowGrowY:true});
-bf.add(bg,
+bg.add(bh,
 {row:1,
 column:0});
-var bh=new qx.ui.form.Button(o);
-bh.set({allowGrowX:false});
-bf.add(bh,
+var bi=new qx.ui.form.Button(o);
+bi.set({allowGrowX:false});
+bg.add(bi,
 {row:2,
 column:0});
-bh.addListener(d,
-function(H){bg.removeAll();
+bi.addListener(d,
+function(H){bh.removeAll();
 });
-bb.add(bc,
+bc.add(bd,
 0);
-bb.add(bf,
+bc.add(bg,
 1);
-G.list=bg;
+G.list=bh;
 G.loop();
 M.loop();
 }}});

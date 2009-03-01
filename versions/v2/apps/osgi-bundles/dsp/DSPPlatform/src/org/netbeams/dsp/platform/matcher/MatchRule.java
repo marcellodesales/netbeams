@@ -1,77 +1,54 @@
 package org.netbeams.dsp.platform.matcher;
 
+public class MatchRule {
 
-public class MatchRule implements Comparable<MatchRule>{
-	
-	private int priority;
+    boolean isDefault;
+    private String ruleID;
+    private MatchCriteria criteria;
+    private MatchTarget target;
 
-	private String ruleID;
-	private MatchCriteria criteria;
-	private MatchTarget target;
-	
-	public MatchRule(String ruleID, MatchCriteria criteria, MatchTarget target) {
-		super();
-		resetPriority();
-		this.ruleID = ruleID;
-		this.criteria = criteria;
-		this.target = target;
-	}
-	
-	public boolean equals(Object obj) {
-	    if (!(obj instanceof MatchRule)) {
-                return false;
-            }
-	    return this.ruleID.equals(((MatchRule)obj).ruleID) && this.criteria.equals(((MatchRule)obj).criteria) &&
-	        this.target.equals(((MatchRule)obj).target);
-	}
-	
-	public int hashCode() {
-	    return 10 * this.ruleID.hashCode() + 20 * this.criteria.hashCode() + 30 * this.target.hashCode();
-	}
-	
-	public String getRuleID() {
-		return ruleID;
-	}
+    public MatchRule(String ruleID, boolean isDefault, MatchCriteria criteria, MatchTarget target) {
+        super();
+        this.ruleID = ruleID;
+        this.isDefault = isDefault;
+        this.criteria = criteria;
+        this.target = target;
+    }
 
-	public MatchCriteria getCriteria() {
-		return criteria;
-	}
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MatchRule)) {
+            return false;
+        }
+        return this.ruleID.equals(((MatchRule) obj).ruleID) && this.criteria.equals(((MatchRule) obj).criteria)
+                && this.target.equals(((MatchRule) obj).target) && this.isDefault == ((MatchRule) obj).isDefault;
+    }
 
-	public void setCriteria(MatchCriteria criteria) {
-		this.criteria = criteria;
-	}
+    public int hashCode() {
+        return 10 * this.ruleID.hashCode() + 20 * this.criteria.hashCode() + 30 * this.target.hashCode() + 
+               (this.isDefault ? -1 : 1);
+    }
 
-	public MatchTarget getTarget() {
-		return target;
-	}
+    public String getRuleID() {
+        return ruleID;
+    }
 
-	public void setTarget(MatchTarget target) {
-		this.target = target;
-	}	
-	
-	/**
-	 * @Override
-	 */
-	public int compareTo(MatchRule o) {
-		return priority - o.priority;
-	}	
-	
-	public int getPriority() {
-		if(priority == -1){
-			generatePriority();
-		}
-		return priority;
-	}
+    public MatchCriteria getCriteria() {
+        return criteria;
+    }
 
-	private void resetPriority() {
-		priority= -1;
-	}
+    public void setCriteria(MatchCriteria criteria) {
+        this.criteria = criteria;
+    }
 
-	private void generatePriority() {
-		priority = 1;
-		if(criteria.getComponentType().indexOf('*') > -1){
-			priority = 10;
-		}		
-	}
-	
+    public MatchTarget getTarget() {
+        return target;
+    }
+
+    public void setTarget(MatchTarget target) {
+        this.target = target;
+    }
+
+    public boolean isDefault() {
+        return this.isDefault;
+    }
 }

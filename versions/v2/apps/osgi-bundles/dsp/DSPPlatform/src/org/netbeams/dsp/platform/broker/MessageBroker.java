@@ -6,7 +6,6 @@ package org.netbeams.dsp.platform.broker;
  * TODO: Handle concurrency.
  */
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,10 +19,9 @@ import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.message.Message;
+import org.netbeams.dsp.platform.matcher.MatchRule;
 import org.netbeams.dsp.platform.matcher.Matcher;
-import org.netbeams.dsp.util.DSPUtils;
 import org.netbeams.dsp.util.ErrorCode;
-import org.netbeams.dsp.util.NetworkUtil;
 
 public class MessageBroker implements MessageBrokerAccessor {
 
@@ -92,68 +90,81 @@ public class MessageBroker implements MessageBrokerAccessor {
             log.debug("message summary: " + messageSummary(message));
         }
 
-        Collection<ComponentIdentifier> consumers = obtainConsumers(message);
-
+        Set<MatchRule> consumers = obtainConsumers(message);
         // Deliver messages
         if (!consumers.isEmpty()) {
-            for (ComponentIdentifier consumer : consumers) {
+            for (MatchRule consumerRule : consumers) {
                 // We can deliberately ignore the message
-                if (GlobalComponentTypeName.NO_COMPONENT.equals(consumer.getComponentType())) {
+                if (GlobalComponentTypeName.NO_COMPONENT.equals(consumerRule.getTarget().getComponentType())) {
                     continue;
+                }   
+                
+                //Get the target identifier of the component that has to be sent    
+                ComponentIdentifier targetComponentcompIdent = new ComponentIdentifier();
+                targetComponentcompIdent.setComponentLocator(consumerRule.getTarget().getLocator());
+                targetComponentcompIdent.setComponentType(consumerRule.getTarget().getComponentType());
+                
+                //Update the header of the message with the target component from the component
+                if (message.getHeader().getConsumer() == null) {
+                    message.getHeader().setConsumer(targetComponentcompIdent);
+                    log.debug("Message Header updated: Consumer for message had not been defined...");
                 }
-
-                if (this.isMessageForLocalConsumer(consumer)) {
-                    log.debug("Attempting to delivering message locally...");
-                    DSPComponent localComponent = obtainDSPComponent(consumer);
+                
+                if (this.isMatchForLocalNode(message.getHeader().getProducer(), consumerRule)) {
+                    log.debug("Message is intendend for local delivery with the given rule...");
+                                        
+                    DSPComponent localComponent = this.obtainDSPComponent(targetComponentcompIdent);
+                    
                     if (localComponent != null) {
+                        log.debug("Ready to deliver message to the local component...");
                         localComponent.deliver(message);
                     } else {
-                        log.warn("$$ Requered dsp component " + DSPUtils.toString(consumer) + " not attached!!!");
+                        log.error("$$ Requered dsp component " + consumerRule.getTarget().getComponentType() + 
+                                " not attached!!!");
                     }
 
                 } else {
-                    //Updating the header of the message for this consumer from the rule...
-                    message.getHeader().setConsumer(consumer);
-                    log.debug("Delivering message to the default Wire Transport client...");
-                    log.debug("The header of the message was updated with the consumer information from the matcher...");
-                    DSPComponent transportComponent = this.obtainDSPDefaultWireTransport();
-                    if (transportComponent != null) {
-                        transportComponent.deliver(message);
+                    log.debug("Message is intendend for Global delivery...");   
+                    String gatewayComponentType = consumerRule.getTarget().getGatewayComponentType();
+                    if (gatewayComponentType != null) {
+                        log.debug("Message is to be delivered through the gateway " + gatewayComponentType);
+                        DSPComponent gatewayComponent = componentsByType.get(gatewayComponentType);
+                        gatewayComponent.deliver(message);
+                    
                     } else {
-                        
-                    }
+                        log.error("$$ Requered Gateway dsp component " + consumerRule.getTarget().getComponentType() + 
+                                " not attached!!!");
+                    }                    
                 }
             }
         } else {
             log.warn("No consumers found for message");
         }
     }
-
+    
     /**
-     * @return the name of the default wire transport client set on the bootstrap.
+     * Matches to any local representation or to ALL/ANY producer IP.
+     * 
+     * @param producer
+     * @param mr
+     * @return
      */
-    private DSPComponent obtainDSPDefaultWireTransport() {
-        String defaultWireTransport = System.getProperty("DEFAULT_WIRE_TRANSPORT_CLIENT");
-//        if (defaultWireTransport == null) {
-//            log.error("MessageBroker needs a bootstrap property message: DEFAULT_WIRE_TRANSPORT_CLIENT.");
-//            log.error("Please set this constant with the name of the default Wire Transport Component.");
-//            log.error("This should reflect the name of a given component type (wire transport client default).");
-//            throw new IllegalStateException("MessageBroker needs a bootstrap property message: "
-//                    + "DEFAULT_WIRE_TRANSPORT_CLIENT.");
-//        }
-        log.debug("Default wire transport client: org.netbeams.dsp.wiretransport.client");
-        return componentsByType.get("org.netbeams.dsp.wiretransport.client");
-    }
+    private boolean isMatchForLocalNode(ComponentIdentifier messageProducer, MatchRule mr) {
 
-    /**
-     * @param consumer is the identification of the consumer.
-     * @return true if the message is to be consumed locally. That is, if the consumer IP address is any of
-     * LOCAL, LOCALHOST, 127.0.0.1, or has the same IP address from the current running machine.
-     */
-    private boolean isMessageForLocalConsumer(ComponentIdentifier consumer) {
-        String destIp = consumer.getComponentLocator().getNodeAddress().getValue();
-        return destIp.equals(NetworkUtil.getCurrentEnvironmentNetworkIp()) || "LOCALHOST".equalsIgnoreCase(destIp)
-                || "LOCAL".equalsIgnoreCase(destIp) || "127.0.0.1".equals(destIp);
+        ComponentLocator producerLocator = messageProducer.getComponentLocator();
+        ComponentLocator criteriaLocator = mr.getCriteria().getLocator();
+
+        log.debug("Rule Criteria: " + criteriaLocator.getNodeAddress().getValue());
+        log.debug("Against Producer: " + producerLocator.getNodeAddress().getValue());
+        log.debug("Is the producer locator the same as the criteria?");
+        log.debug("If not, is it the same as LOCAL, LOCALHOST, or Loopback IP?");
+        return producerLocator.getNodeAddress() == null || producerLocator.getNodeAddress().getValue().equals("")
+                || producerLocator.getNodeAddress().getValue().equals(criteriaLocator.getNodeAddress().getValue())
+                || "ALL".equals(criteriaLocator.getNodeAddress().getValue())
+                || "ANY".equals(criteriaLocator.getNodeAddress().getValue())
+                || "LOCALHOST".equalsIgnoreCase(criteriaLocator.getNodeAddress().getValue())
+                || "LOCAL".equalsIgnoreCase(criteriaLocator.getNodeAddress().getValue())
+                || "127.0.0.1".equals(criteriaLocator.getNodeAddress().getValue());
     }
 
     /**
@@ -208,39 +219,22 @@ public class MessageBroker implements MessageBrokerAccessor {
     // //////// Private Section //////////
     // ///////////////////////////////////
 
-    private Set<ComponentIdentifier> obtainConsumers(Message message) {
-        Set<ComponentIdentifier> result = new HashSet<ComponentIdentifier>();
-
-        ComponentIdentifier consumer = message.getHeader().getConsumer(); // Optional
-        // If there are not target consumers, then try to find a match
-        if (consumer != null) {
-            log.debug("Message " + message.getContentType() + " ID " + message.getMessageID()
-                    + " has pre-defined consumer");
-            result.add(consumer);
-        }
-        // Try to find more matches
-        result.addAll(match(message));
-
+    private Set<MatchRule> obtainConsumers(Message message) {
+        Set<MatchRule> result = new HashSet<MatchRule>();
+        result.addAll(matcher.match(message));
         return result;
     }
-
-    private Collection<ComponentIdentifier> match(Message message) {
-        return matcher.match(message);
-    }
-
-    private DSPComponent obtainDSPComponent(ComponentIdentifier consumer) {
+    
+    private DSPComponent obtainDSPComponent(ComponentIdentifier consumerIdentifier) {
         // Let's try the UUID first
-        ComponentLocator locator = consumer.getComponentLocator();
-        if (locator != null) {
-            String comonentNodeId = locator.getComponentNodeId();
+        if (consumerIdentifier != null) {
+            String comonentNodeId = consumerIdentifier.getComponentLocator().getComponentNodeId();
             if (comonentNodeId != null) {
                 return components.get(comonentNodeId);
             } else {
-                return componentsByType.get(consumer.getComponentType());
+                return componentsByType.get(consumerIdentifier.getComponentType());
             }
-        }
-        String type = consumer.getComponentType();
-        return componentsByType.get(type);
+        } return null;
     }
 
     private String messageSummary(Message message) {

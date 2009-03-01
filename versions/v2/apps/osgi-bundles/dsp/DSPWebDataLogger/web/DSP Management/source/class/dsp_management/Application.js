@@ -109,17 +109,22 @@ function PropertyUI()
 				  input += ":" + widget.getValue();
 			  }
 		  }
-		  alert(input);
+		  PropertyUI.sendButtonEvent(input);
 	  }
 
 	  PropertyUI.queryButtonPressed = function(e)
 	  {
 		  var input = e.getTarget().getLabel();
 		  input += ":" + PropertyUI.components.getValue();
-	      var req = new qx.io.remote.Request("/property-ui/PUSH=" + input, "GET", "text/plain");
-		  req.send();
+		  PropertyUI.sendButtonEvent(input);
 	  }
 
+	  PropertyUI.sendButtonEvent = function(data)
+	  {
+	      var req = new qx.io.remote.Request("/property-ui/PUSH=" + data, "GET", "text/plain");
+		  req.send();
+	  }
+	  
 	  PropertyUI.callback = function(e)
 	  {
 	    var inst = eval("(" + e.getContent() + ")");
@@ -232,7 +237,7 @@ qx.Class.define("dsp_management.Application",
       rootPane.add(loggerPane, 1);
       DSPDataFetcher.list = list;
       DSPDataFetcher.loop();
-      
+
       PropertyUI.loop();
     }
   }

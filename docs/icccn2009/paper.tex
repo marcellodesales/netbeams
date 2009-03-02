@@ -31,12 +31,32 @@ EMail: XXX@sfsu.edu}}
 
 \section{Introduction}
 
-The introduction should emphasize that we interpret sensor networks in
-a different way: our focus is on off-the-shelf, highly specialized
-sensors for environmental monitoring. Our focus is end-to-end: how to
-collect data from a remote location with no stationary power or
-Internet connection and deliver the data in near-realtime to a web
-browser. Length: first page (including title and abstract).
+Environmental monitoring depends on the reliable collection of
+measurements from remotely deployed sensors and the rapid transfer of
+those measurements to data centers where processing and analysis may
+take place. Typically, sensors are deployed in out-of-the-way
+locations where physical access is limited and connections for
+telemetry are poor or nonexistent.   Maintaining the data stream from
+these sensors places demands on human resources, requiring site visits
+to service the sensors and to download data stored on internal memory.
+Consequently, there is a lag of days to months between the time the
+sensors perform the measurements and the time the measurements becomes
+available.   Advances in battery life and anti-fouling technology have
+extended service cycles for field sensors, with the unwanted result of
+further delaying access to monitoring data.  In addition, the
+dependence on field site visits to alter of sensor characteristics,
+such as sampling rate, prevents adjustment in monitoring strategy in
+response to rapidly developing events (e.g. oil spills, harmful algal
+blooms).
+
+To address these problems of data collection from remote
+sensors, we propose to develop an automated end-to-end system based on
+proven technology that provides a means to program and interrogate
+sensors at the remote field locations and to transmit collected
+measurements over long distances to data collections centers where the
+data is rapidly processed, archived, and made available to potential
+users in near real-time.
+
 
 \section{Use Case}
 
@@ -116,6 +136,31 @@ NetBEAMS. Length: 1 - 1.5 pages.
 \section{Conclusions and Outlook}
 
 Length (including bibliography): 0.5 pages.
+
+The California coastal region is populated by a vast number of
+remotely deployed sensors that monitor environmental conditions
+ranging from weather to water quality to ocean surface currents.
+These sensors are operated by data providers, including resource
+management groups, research scientists, municipalities, and state and
+federal agencies, who could use near real-time data streams to inform
+decision that impact public health, public safety, and the protection
+of resources.  In addition, there are efforts underway at the state
+and federal level to collate the data collected by the individual data
+providers into integrated monitoring networks that will enhance the
+distribution of monitoring data to public, private, and federal users
+groups.  Success of these efforts, whether small scale or a large
+integrated network, depends on the first step in the data management
+process: reliably obtaining data in near real-time from remotely
+located sensors.  This step can be the weak link in the data
+management pathway when telemetry options are unreliable.  The
+availability of a plug-and-play computing platform designed to
+communicate with a variety of sensor types and to provide data
+telemetry to distant brick and mortar data centers would stabilize
+data streams with poor telemetry and allowing expansion of sensor
+coverage into regions not presently served.  The low power consumption
+and low cost of these units would be particularly beneficial for
+applications with long service cycles and for data providers trying to
+maintain data streams on a limited budget.
 
 %\bibliography{../literature/lit}
 %\bibliographystyle{plain}

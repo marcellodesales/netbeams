@@ -58,7 +58,7 @@ data is rapidly processed, archived, and made available to potential
 users in near real-time.
 
 
-\section{Use Case}
+\section{Requirement Analysis}
 
 Researchers in the geosciences rely on sensor data collected by highly
 specialized sensors such as the Seabird or YSI. These sensors are
@@ -90,6 +90,8 @@ be no mentioned of DSP or OSGi. Length: 1 page.
 Should describe the OSGi-based NetBEAMS architecture. Total length of
 this section: 2 pages.
 
+Micro-kernel architecture.
+
 \subsection{Data Sensor Framework and Platform}
 
 should include a picture of a standalone DSP showing a DC and a DP
@@ -117,14 +119,43 @@ Should explain the way DSP Messages are defined: XML Schema and JAXB.
 
 \section{NetBEAMS}
 
-Should explain some specific DC and DP we have implemented for
-NetBEAMS. Length: 1 - 1.5 pages.
+In the following we present a practical application the the DSP
+presented in the previous section. We describe a deployment of the DSP
+using sensor owned and operated by the RTC. Our environmental sensor
+network is dubbed NetBEAMS (Networked Bay Environmental Assessment
+Monitoring System) and allows access to sensor equipment deployed
+throughout the San Francisco Bay Area. Figure \ref{FIG_NETBEAMS}
+provides an end-to-end overview of the NetBEAMS architecture. NetBEAMS
+is built using multiple installtion of the DSP. One DSP installation
+is collocated with each sensor and an additional DSP is running on the
+backend server.
 
 \begin{figure*}
 \centering
 \epsfig{file=netbeams, width=10cm}
 \caption{\label{FIG_NETBEAMS} NetBEAMS architecture.}
 \end{figure*}
+
+To describe NetBEAMS is to describe the specific DC and DP we have
+implemented. On the far left of Figure \ref{FIG_NETBEAMS} is the
+actual sensor; in our case the aforementioned Seabird sensor.
+Collocated with the Seabird is an embedded system. Here we make use of
+a platform called Gumstix. 
+
+The Gumstix is a single-board computers with 256 Mb of flash and 256
+Mb of SDRAM, and running a 600 MHz TI OMAP 3503 processor. Additional
+features can be added to the motherboard with expansion cards
+connected via on-board buses. The motherboards draw less than 250 mA
+@4V at 400 MHz and less than 50 mA while idling, waiting for input.
+Gumstix run Linux 2.6 with the BusyBox utilities, and use the
+OpenEmbedded build environment to provide a complete Linux
+environment and a large range of Linux applications. We use the JamVM
+implementation of Sun Microsystem's virtual machine to execute Java
+programs. 
+
+Cellular communication platform.
+
+
 
 \subsection{YSI Sonde DP}
 

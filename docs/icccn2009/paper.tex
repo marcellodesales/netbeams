@@ -204,7 +204,27 @@ DSP. Following the paradigm of a micro-kernel approach, the DSP has no
 notion of remote communication or sensor-specific details. All this
 knowledge is embodied in DSP Components.
 
-\subsection{Components}
+\subsection{DSP Components}
+
+A DSP Component encapsulates a particular functionality. We
+distinguish between those components that produce data (DP) and those
+that consume data (DC). An example for a DSP Component acting in the
+role of a DP is a sensor module. The sensor module reads data from the
+physical sensor and converts the data into a message that is forwarded
+to the DSP. Because this module generates data with respect to the
+DSP, it is a data producer. An example for a data consumer is a
+converter module that converts the internal, DSP-specific data format,
+suitable for consumption by external applications. One such common
+format used in the domain of environmental monitoring is OpenDAP
+(REF). Since the converter module accepts messages from the DSP, it
+acts in the role of a data consumer. Finally, a DSP Component
+implementing persistency is an example of a module that acts in the
+roles of both data producer and consumer. It accepts messages from the
+DSP and stores them in a database. At a later time, it may act as a
+data producer by resending previously stored messages.
+
+In order to enrich the DSP, a programmer has to implement new DSP
+Components. 
 
 Should give some API sniplets for DP and DC.
 

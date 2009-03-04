@@ -162,20 +162,35 @@ analysis: requirements such as remote management and monitoring
 capabilities, time-delayed communication, etc. In this section should
 be no mentioned of DSP or OSGi. Length: 1 page.
 
-\section{DSP}
+\section{Data Sensor Platform}
 
 Should describe the OSGi-based NetBEAMS architecture. Total length of
 this section: 2 pages.
 
 Micro-kernel architecture.
 
-\subsection{Data Sensor Framework and Platform}
+\subsection{Architecture}
 
-should include a picture of a standalone DSP showing a DC and a DP
-(general description only). Explain difference between DSP Framework
-and DSP Platform. This section should give a top-level overview.
-Subsequent sub-sections should explain certain features of the DSP in
-more detail.
+Our architecture is based on a micro-kernel approach. The core
+functionality is limited to a minimum and all extra services are built
+as plug-and-play modules on top of the micro-kernel. With the help of
+this approach we can keep the basic infrastructure compact while
+allowing customization via special-purpose modules. In our terminology
+we call the basic foundation the \emph{Data Sensor Platform}
+(DSP). The scope of the DSP is one address space of an execution
+platform. A sensor network is built from several DSPs that are linked
+with each other.
+
+Figure \ref{FIG_DSP} depicts the basic architecture of the
+DSP. We refer to the plug-and-play modules as DSP Components. DSP
+Components are self-contained modules that can be added and removed to
+a DSP installation at runtime. The basic communication paradigm within
+a DSP is a message. DSP Components can exchange messages of different
+types. We distinguish between Data Producers (DP) and Data Consumers
+(DP) within the scope of a DSP. DP and DC can be seen as roles that a
+DSP Component may have. It is possible for a DSP Component to act in
+the role of DC and DP at the same time.
+
 
 \begin{figure}
 \centering
@@ -183,11 +198,31 @@ more detail.
 \caption{\label{FIG_DSP} Data Sensor Platform (DSP).}
 \end{figure}
 
-\subsection{DP and DC}
+The DSP is responsible for routing messages between DPs and DCs. It is
+important to note that this routing only happens withing a
+DSP. Following the paradigm of a micro-kernel approach, the DSP has no
+notion of remote communication or sensor-specific details. All this
+knowledge is embodied in DSP Components.
+
+\subsection{Components}
 
 Should give some API sniplets for DP and DC.
 
-\subsection{DSP Message}
+\begin{code}
+interface DSPComponent
+{
+   public String getComponentType();
+   public void initComponent(...);
+   public void startComponent();
+   public void stopComponent();
+   public void deliver(DSPMessage msg);
+   public Message deliverWithReply(DSPMessage msg);
+   // ...
+}
+\end{code}
+
+
+\subsection{Message}
 
 \begin{code}
 <xs:schema ...>

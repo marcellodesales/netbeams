@@ -17,21 +17,21 @@
 	
 	<xs:complexType name="sondeDataType">
 		<xs:sequence>
- 				<xs:element name="Date" type="xs:string"/>
- 				<xs:element name="Time" type="xs:string"/>
- 				<xs:element name="Temp" type="xs:string"/>
- 				<xs:element name="SpCond" type="xs:string"/>
- 				<xs:element name="Cond" type="xs:string"/>
- 				<xs:element name="Resist" type="xs:string"/>
- 				<xs:element name="Sal" type="xs:string"/>
- 				<xs:element name="Press" type="xs:string"/>
- 				<xs:element name="Depth" type="xs:string"/>
- 				<xs:element name="pH" type="xs:string"/>
- 				<xs:element name="phmV" type="xs:string"/>
- 				<xs:element name="ODOSat" type="xs:string"/>
- 				<xs:element name="ODOConc" type="xs:string"/>
- 				<xs:element name="Turbid" type="xs:string"/>
- 				<xs:element name="Battery" type="xs:string"/>
+ 				<xs:element name="Date" type="xs:date"/>
+ 				<xs:element name="Time" type="xs:time"/>
+ 				<xs:element name="Temp" type="xs:float"/>
+ 				<xs:element name="SpCond" type="xs:float"/>
+ 				<xs:element name="Cond" type="xs:float"/>
+ 				<xs:element name="Resist" type="xs:float"/>
+ 				<xs:element name="Sal" type="xs:float"/>
+ 				<xs:element name="Press" type="xs:float"/>
+ 				<xs:element name="Depth" type="xs:float"/>
+ 				<xs:element name="pH" type="xs:float"/>
+ 				<xs:element name="phmV" type="xs:float"/>
+ 				<xs:element name="ODOSat" type="xs:float"/>
+ 				<xs:element name="ODOConc" type="xs:float"/>
+ 				<xs:element name="Turbid" type="xs:float"/>
+ 				<xs:element name="Battery" type="xs:float"/>
  		</xs:sequence>
   </xs:complexType>
 </xs:schema>

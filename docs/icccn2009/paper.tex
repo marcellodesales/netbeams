@@ -15,12 +15,19 @@
 
 \title{An OSGi-based Sensor Network for \\ Environmental Monitoring}
 
-\author{\authorblockN{XXX}
+\author{\authorblockN{A. Puder, T. Johnson, K. Sales, M. Sales}
 \authorblockA{San Francisco State University \\
 Computer Science Department \\
 1600 Holloway Avenue \\
 San Francisco, CA 94132 \\
-EMail: XXX@sfsu.edu}}
+EMail: \{arno$\mid$tlj$\mid$klebers$\mid$msales\}@sfsu.edu}
+\and
+\authorblockN{D. Robinson}
+\authorblockA{San Francisco State University \\
+Romberg Tiburon Center \\
+3150 Paradise Drive \\
+Tiburon, CA 94920 \\
+EMail: dhr@sfsu.edu}}
 
 
 \maketitle
@@ -30,6 +37,8 @@ EMail: XXX@sfsu.edu}}
 
 
 \section{Introduction}
+
+\cite{roemer:2004}
 
 Environmental monitoring depends on the reliable collection of
 measurements from remotely deployed sensors and the rapid transfer of
@@ -58,7 +67,7 @@ data is rapidly processed, archived, and made available to potential
 users in near real-time.
 
 
-\section{Requirement Analysis}
+\section{Background}
 
 Researchers in the geosciences rely on sensor data collected by highly
 specialized sensors such as the Seabird or YSI. These sensors are
@@ -76,6 +85,74 @@ further processing. For many applications it would be beneficial to
 have near-realtime access to the sensor measurement. Being able to
 access data when they become available on the sensor device also
 reduces the maintenance overhead.
+
+---
+
+The YSI 6600EDS V2 Sonde is a water quality monitoring device that
+gathers water quality data, and operates in fresh, sea, or
+polluted water. It is under 22 inches (under 55 cm) in length, 3.5
+inches (8.9 cm) in diameter, and weighs approximately 7 pounds (3.18
+kg). It operates at temperatures between -5 to +50 deg C and at depths
+up to 656 feet (200 meters).  It uses 8 C-size Alkaline Batteries or
+External 12 VDC. Battery life can last up to 75 days depending on
+sensor configuration. The Sonde's bulkhead contains multiple pin
+connectors to support sensor probes for measuring the following:
+
+\begin{table}[h]
+\caption{\label{TAB_SONDE_MEASUREMENTS} YSI Sonde measurements.}
+\centering
+\begin{tabular}{|l||l|}
+\hline
+\multicolumn{1}{|c||}{\textbf{Name}} &
+\multicolumn{1}{c|}{\textbf{Description}} \\ \hline \hline
+\texttt{Date}    & Year/Month/Day. \\ \hline
+\texttt{Time}    & Hour:Minute:Second. \\ \hline
+\texttt{Temp}    & Temperature in degrees Celcius. \\ \hline
+\texttt{SpCond}  & Specific Description in microSiemens
+                   per centimeter. \\ \hline
+\texttt{Cond}    & Conductivity in microSiemens per centimeter. \\ \hline
+\texttt{Resist}  & Resistivity in Ohms $*$ centimeter. \\ \hline
+\texttt{Sal}     & Salinity in parts per thousand. \\ \hline
+\texttt{Press}   & Pressure in pounds per square inch relative. \\ \hline
+\texttt{Depth}   & Water column in meters. \\ \hline
+\texttt{pH}      & pH in standard units. \\ \hline
+\texttt{phmV}    & millivolts associated with the pH reading. \\ \hline
+\texttt{ODOSat}  & Dissolved oxygen in \% air saturation. \\ \hline
+\texttt{ODOConc} & Dissolved oxygen in mg/L. \\ \hline
+\texttt{Turbid}  & Turbidity in nephelometric turbidity units. \\ \hline
+\texttt{Battery} & Total Volts remaining in batteries.  \\ \hline
+\end{tabular}
+\end{table}
+
+Dissolved oxygen
+Conductivity/Temperature
+Fouling Resistant pH/ORP
+Chloride
+Ammonium
+Nitrate
+Turbidity
+Chlorophyll
+Rhodamine
+PC-Blue-green Algae
+PE-Blue-gren Algae
+
+Each probe may have multiple sensors.  A computer can interface with
+the Sonde via RS-232C or SDI-12. The Sonde can be configured to
+collect data samples in discrete or unnattended mode.  Discrete mode
+is normally performed while a technician manages the Sonde during the
+sampling process. In this mode the Sonde is usually connected via 650
+MDS Display/Logger or a serial cable connected to a PC.  The sampling
+frequency is usually set to a high frequency in this mode.  Unattended
+mode is performed usually when the Sonde is deployed offshore or in a
+remote body of water.  The sampling frequency is usually set for a
+longer period of time (i.e. 5 - 15 min). The Sonde is configured via a
+set of menus that can be accessed through a terminal session over
+RS232. Through these menus, the Sonde can be configured to start
+logging data to an internal file.  To view the data as it's being
+captured, the option to show live data is chosen and the data can then
+seen via a serial terminal session at each interval.
+
+---
 
 Start with some related work. Who else has done an OSGi-based
 infrastructure for sensor networks? Kleber: I believe you have a few
@@ -112,6 +189,22 @@ Should give some API sniplets for DP and DC.
 
 \subsection{DSP Message}
 
+\begin{code}
+<xs:schema ...>
+  <xs:complexType name="DSPMessage">
+    <xs:element name="Header" type="Header"/>
+  </xs:complexType>
+
+  <xs:complexType name="Header">
+    <xs:sequence>
+      <xs:attribute name="messageID"/>
+      <xs:attribute name="originatingDP"/>
+      <!-- ... -->
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+\end{code}
+
 Should explain the way DSP Messages are defined: XML Schema and JAXB.
 
 \subsection{Matcher}
@@ -132,7 +225,7 @@ backend server.
 
 \begin{figure*}
 \centering
-\epsfig{file=netbeams, width=10cm}
+\epsfig{file=netbeams, width=14cm}
 \caption{\label{FIG_NETBEAMS} NetBEAMS architecture.}
 \end{figure*}
 
@@ -153,11 +246,49 @@ environment and a large range of Linux applications. We use the JamVM
 implementation of Sun Microsystem's virtual machine to execute Java
 programs. 
 
-Cellular communication platform.
+The Huawei E220 is a USB modem that supports HSDPA, UMTS, EDGE packet
+data services at maximum transmission rates of 3.6Mbps, 384kbps, and
+236.8kbps respectively. HSDPA and UMTS operate at 2100MHz while GSM,
+GPRS, and EDGE operate at 900, 1800, and 1900MHz. The modem connects
+to the Verdex Pro XM4 motherboard via a mini USB interface (supporting
+USB 2.0). Linux kernels since 2.6.20 include support for E220 drivers.
+This includes the linux kernel on the gumstix which runs 2.6.21.  The
+gumstix communicates with the modem using the PPP protocol and
+accesses the cellular network using a data plan from AT\&T.
 
 
 
 \subsection{YSI Sonde DP}
+
+\begin{code}
+<xs:schema ...>
+<xs:import schemaLocation="dsp-message.xsd"/>
+
+<xs:element name="SondeDataMessage">
+  <xs:complexType>
+    <xs:complexContent>
+      <xs:extension base="DSPMessage">
+        <xs:sequence maxOccurs="unbounded"
+                     minOccurs="1">
+          <xs:element name="sondeData"
+                      type="sondeDataType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:element>
+
+<xs:complexType name="sondeDataType">
+  <xs:sequence>
+    <xs:element name="Date" type="xs:date"/>
+    <xs:element name="Time" type="xs:time"/>
+    <xs:element name="Temp" type="xs:float"/>
+    <xs:element name="SpCond" type="xs:float"/>
+    <!-- ... -->
+  </xs:sequence>
+</xs:complexType>
+</xs:schema>
+\end{code}
 
 \subsection{Wire transport DC/DP}
 
@@ -193,8 +324,8 @@ and low cost of these units would be particularly beneficial for
 applications with long service cycles and for data providers trying to
 maintain data streams on a limited budget.
 
-%\bibliography{../literature/lit}
-%\bibliographystyle{plain}
+\bibliography{lit}
+\bibliographystyle{plain}
 
 
 \end{document}

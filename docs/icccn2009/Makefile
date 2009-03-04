@@ -13,9 +13,9 @@ FIG2DEV  = fig2dev
 %.dvi: %.tex
 	$(LATEX) $<
 	if grep Rerun `basename $< .tex`.log >/dev/null; then $(LATEX) $< ; fi
-	#$(BIBTEX) `basename $< .tex`
-	#$(LATEX) $<
-	#if grep Rerun `basename $< .tex`.log >/dev/null; then $(LATEX) $< ; fi
+	$(BIBTEX) `basename $< .tex`
+	$(LATEX) $<
+	if grep Rerun `basename $< .tex`.log >/dev/null; then $(LATEX) $< ; fi
 
 %.ps: %.dvi
 	$(DVIPS) -f < $< > $@

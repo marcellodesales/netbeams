@@ -11,15 +11,15 @@
 	<import file="apps/osgi-bundles/dsp/DSPManagement/build.xml" />
     <!-- Demo DSP components -->
 	<import file="apps/osgi-bundles/dsp/DSPTestRandomNumGen/build.xml" />
-	<import file="apps/osgi-bundles/dsp/DSPSondeProducer/build.xml" />
+	<!--<import file="apps/osgi-bundles/dsp/DSPSondeProducer/build.xml" /> -->
     <import file="apps/osgi-bundles/dsp/DSPStockConsumer/build.xml" />
     <import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml" />
     <import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
 
-	<target name="all" depends="setup, message.all, dsproperty.all, stocktick.all, sounde.all, mouseactions.all, 
+	<target name="all" depends="setup, message.all, dsproperty.all, stocktick.all, sonde.all, mouseactions.all, 
 		dsp-framework.all, dsp-platform.all, dsp-wire-transport-client.all, dsp-wire-transport-server.all, 
 		dsp-management.all, dsp-weblogger.all, 
-		dsp-stock-consumer.all, dsp-stock-producer.all, dsp-mouse-producer-jswing.all, dsp.rng.all, dsp.sonde.all" />
+		dsp-stock-consumer.all, dsp-stock-producer.all, dsp-mouse-producer-jswing.all, dsp.rng.all" />
 
 	<target name="setup" depends="init, print-properties">
 		<!-- Setting up runtime directory -->
@@ -96,7 +96,7 @@
         <ant antfile="apps/xml/jaxb/mouseactions/build.xml" inheritAll="true"/>      
    </target>
 	
-   <target name="sounde.all">
+   <target name="sonde.all">
         <ant antfile="apps/xml/jaxb/sonde/build.xml" inheritAll="true"/>        
     </target>
 	

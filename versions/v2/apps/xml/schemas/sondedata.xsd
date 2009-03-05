@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="http://www.netbeams.dsp.org/sondedata.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:mc="http://www.netbeams.dsp.org/message.xsd" xmlns:sndata="http://www.netbeams.dsp.org/sondedata.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema targetNamespace="http://www.netbeams.dsp.org/sondedata.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" xmlns:mc="http://www.netbeams.dsp.org/message.xsd" xmlns:sndata="http://www.netbeams.dsp.org/sondedata.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 	<xs:import namespace="http://www.netbeams.dsp.org/message.xsd" schemaLocation="message-content.xsd"/>
-	
+
+	<xs:annotation><xs:appinfo>
+    <jaxb:globalBindings>
+      <jaxb:javaType name="java.util.Calendar" xmlType="xs:date"
+        parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
+        printMethod="javax.xml.bind.DatatypeConverter.printDate"
+        />
+	  <jaxb:javaType name="java.util.Calendar" xmlType="xs:time"
+		parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
+		printMethod="javax.xml.bind.DatatypeConverter.printDate"
+		/>
+    </jaxb:globalBindings>
+    </xs:appinfo></xs:annotation>
+
 	<xs:element name="SondeDataContainer">
 	<xs:complexType>
 		<xs:complexContent>

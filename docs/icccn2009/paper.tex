@@ -15,7 +15,7 @@
 
 \title{An OSGi-based Sensor Network for \\ Environmental Monitoring}
 
-\author{\authorblockN{A. Puder, T. Johnson, K. Sales, M. Sales}
+\author{\authorblockN{A. Puder, T. Johnson, K. Sales, M. de Sales}
 \authorblockA{San Francisco State University \\
 Computer Science Department \\
 1600 Holloway Avenue \\
@@ -44,28 +44,27 @@ Environmental monitoring depends on the reliable collection of
 measurements from remotely deployed sensors and the rapid transfer of
 those measurements to data centers where processing and analysis may
 take place. Typically, sensors are deployed in out-of-the-way
-locations where physical access is limited and connections for
-telemetry are poor or nonexistent.   Maintaining the data stream from
+locations, where physical access is limited and connections for
+telemetry are poor or nonexistent. Maintaining the data stream from
 these sensors places demands on human resources, requiring site visits
 to service the sensors and to download data stored on internal memory.
 Consequently, there is a lag of days to months between the time the
-sensors perform the measurements and the time the measurements becomes
-available.   Advances in battery life and anti-fouling technology have
+sensors perform the measurements and the time the measurements become
+available. Advances in battery life and anti-fouling technology have
 extended service cycles for field sensors, with the unwanted result of
 further delaying access to monitoring data.  In addition, the
-dependence on field site visits to alter of sensor characteristics,
+dependence on field site visits to alter of sensor characteristics, 
 such as sampling rate, prevents adjustment in monitoring strategy in
 response to rapidly developing events (e.g. oil spills, harmful algal
 blooms).
 
 To address these problems of data collection from remote
 sensors, we propose to develop an automated end-to-end system based on
-proven technology that provides a means to program and interrogate
+proven technology. It provides means to program and interrogate
 sensors at the remote field locations and to transmit collected
-measurements over long distances to data collections centers where the
+measurements over long distances to data collections centers, where the
 data is rapidly processed, archived, and made available to potential
 users in near real-time.
-
 
 \section{Background}
 
@@ -73,18 +72,18 @@ Researchers in the geosciences rely on sensor data collected by highly
 specialized sensors such as the Seabird or YSI. These sensors are
 usually deployed in remote locations that not only make their
 maintenance difficult, but also access to their measurements.
-Typically the sensors are autonomous in the sense that they can run
+Typically, the sensors are autonomous in the sense that they can run
 for a certain time on battery power and store the measurement data in
 internal memory. Only when the sensors are serviced, the measurement
-data they have collected since the last servicing are uploaded to a
-portable storage device. From there the data can be uploaded to
-server. This manual procedure to retrieve sensor data is not only
-error prone, but also results in a serious time lag between the time
+data, which was collected since the last servicing, is uploaded to a 
+portable storage device. From there, the data can be uploaded to
+server. Notice that this manual procedure to retrieve sensor data is not only
+error prone, but also results are in a serious time lag between the time
 the sensor performs the measurement and when it becomes available for
-further processing. For many applications it would be beneficial to
-have near-realtime access to the sensor measurement. Being able to
-access data when they become available on the sensor device also
-reduces the maintenance overhead.
+further processing. For many applications, however, it would be beneficial to
+have near-realtime access to the sensor measurement. In this way, being able 
+to access data when they become available on the sensor device would also
+reduce the maintenance overhead.
 
 ---
 

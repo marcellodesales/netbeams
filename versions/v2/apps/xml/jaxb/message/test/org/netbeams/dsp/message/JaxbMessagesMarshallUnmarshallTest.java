@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
-import org.netbeams.dsp.data.property.ObjectFactory;
 import org.netbeams.dsp.demo.mouseactions.ButtonName;
 import org.netbeams.dsp.demo.mouseactions.EventName;
 import org.netbeams.dsp.demo.mouseactions.MouseAction;
@@ -64,7 +63,7 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
         body of the DSP message.
         */  
         
-        DSProperties properties = new ObjectFactory().createDSProperties();
+        DSProperties properties = new DSProperties();
         DSProperty serverIp = new DSProperty();
         serverIp.setName("WIRE_TRANSPORT_SERVER_IP");
         serverIp.setValue("127.0.0.1");

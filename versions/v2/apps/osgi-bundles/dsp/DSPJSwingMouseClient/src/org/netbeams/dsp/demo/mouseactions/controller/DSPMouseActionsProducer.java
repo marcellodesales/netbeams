@@ -3,9 +3,6 @@ package org.netbeams.dsp.demo.mouseactions.controller;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
@@ -14,7 +11,6 @@ import org.netbeams.dsp.demo.mouseactions.ButtonName;
 import org.netbeams.dsp.demo.mouseactions.EventName;
 import org.netbeams.dsp.demo.mouseactions.MouseAction;
 import org.netbeams.dsp.demo.mouseactions.MouseActionsContainer;
-import org.netbeams.dsp.demo.mouseactions.ObjectFactory;
 import org.netbeams.dsp.demo.mouseactions.model.NetBeamsMouseInfo;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.DSPMessagesFactory;
@@ -90,7 +86,7 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, null);
 
         try {
-            Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data, ObjectFactory.class);
+            Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data);
             
             // Always check if there is a broker available
             MessageBrokerAccessor messageBroker = this.dspContext.getDataBroker();
@@ -100,10 +96,6 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
                     log.debug("Message broker not available");
             }
             
-        } catch (JAXBException e) {
-            log.error(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
-            log.error(e.getMessage(), e);
         } catch (DSPException e) {
             log.error(e.getMessage(), e);
         }

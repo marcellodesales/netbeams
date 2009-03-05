@@ -4,14 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Element;
-
 /**
  * This is a factory method of the DSP messages
  * 
@@ -117,78 +109,62 @@ public enum DSPMessagesFactory {
      * @param header is the information of the header.
      * @param bodyNode is the instance of a JAXB generated object
      * @return an instance of the Measure Message with the given Id, header and the body with the given contentType.
-     * @throws JAXBException if there's a parsing error from JAXB
-     * @throws ParserConfigurationException if there's a problem parsing the body object
      */
-    private Message makeDSPMessage(Message m1, Header header, MessageContent bodyPayload, Class objectFactoryClass)
-            throws JAXBException, ParserConfigurationException {
+    private Message makeDSPMessage(Message m1, Header header, MessageContent bodyPayload) {
         m1.setContentType(bodyPayload.getContentContextForJAXB());
         m1.setMessageID(UUID.randomUUID().toString());
         m1.setHeader(header);
 
         Body dspMsgBody = this.factory.createBody();
-        JAXBContext context = JAXBContext.newInstance(objectFactoryClass);
-        Marshaller m = context.createMarshaller();
-        Element xmlDocumentNode = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()
-                .createElement("temp");
-        m.marshal(bodyPayload, xmlDocumentNode);
-        dspMsgBody.setAny(xmlDocumentNode.getFirstChild());
+        dspMsgBody.setAny(bodyPayload);
         m1.setBody(dspMsgBody);
 
         return m1;
     }
 
-    public MeasureMessage makeDSPMeasureMessage(Header header, MessageContent body, Class objectFactory)
-            throws JAXBException, ParserConfigurationException {
+    public MeasureMessage makeDSPMeasureMessage(Header header, MessageContent body) {
         MeasureMessage m1 = this.factory.createMeasureMessage();
-        return (MeasureMessage) this.makeDSPMessage(m1, header, body, objectFactory);
+        return (MeasureMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public EventMessage makeDSPEventMessage(Header header, MessageContent body, Class objectFactory)
-            throws JAXBException, ParserConfigurationException {
+    public EventMessage makeDSPEventMessage(Header header, MessageContent body) {
         EventMessage m1 = this.factory.createEventMessage();
-        return (EventMessage) this.makeDSPMessage(m1, header, body, objectFactory);
+        return (EventMessage) this.makeDSPMessage(m1, header, body);
     }
     
-    public AcknowledgementMessage makeDSPAcknowledgementMessage(Header header, MessageContent body, Class objectFactory)
-            throws JAXBException, ParserConfigurationException {
+    public AcknowledgementMessage makeDSPAcknowledgementMessage(Header header, MessageContent body)
+        {
         AcknowledgementMessage m1 = this.factory.createAcknowledgementMessage();
-        return (AcknowledgementMessage) this.makeDSPMessage(m1, header, body, objectFactory);
+        return (AcknowledgementMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public ActionMessage makeDSPActionMessage(Header header, MessageContent body, Class objectFactory)
-            throws JAXBException, ParserConfigurationException {
+    public ActionMessage makeDSPActionMessage(Header header, MessageContent body) {
         ActionMessage m1 = this.factory.createActionMessage();
-        return (ActionMessage) this.makeDSPMessage(m1, header, body, objectFactory);
+        return (ActionMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public QueryMessage makeDSPQueryMessage(Header header, MessageContent body, Class objectFactory)
-            throws JAXBException, ParserConfigurationException {
+    public QueryMessage makeDSPQueryMessage(Header header, MessageContent body) {
         QueryMessage m1 = this.factory.createQueryMessage();
-        return (QueryMessage) this.makeDSPMessage(m1, header, body, objectFactory);
+        return (QueryMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public CreateMessage makeDSPCreateMessage(Header header, MessageContent body, Class objectFactory)
-            throws JAXBException, ParserConfigurationException {
+    public CreateMessage makeDSPCreateMessage(Header header, MessageContent body) {
         CreateMessage m1 = this.factory.createCreateMessage();
-        return (CreateMessage) this.makeDSPMessage(m1, header, body, objectFactory);
+        return (CreateMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public DeleteMessage makeDSPDeleteMessage(Header header, MessageContent body, Class objectFactory)
-            throws JAXBException, ParserConfigurationException {
+    public DeleteMessage makeDSPDeleteMessage(Header header, MessageContent body) {
         DeleteMessage m1 = this.factory.createDeleteMessage();
-        return (DeleteMessage) this.makeDSPMessage(m1, header, body, objectFactory);
+        return (DeleteMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public InsertMessage makeDSPInsertMessage(Header header, MessageContent body, Class objectFactory)
-            throws JAXBException, ParserConfigurationException {
+    public InsertMessage makeDSPInsertMessage(Header header, MessageContent body) {
         InsertMessage m1 = this.factory.createInsertMessage();
-        return (InsertMessage) this.makeDSPMessage(m1, header, body, objectFactory);
+        return (InsertMessage) this.makeDSPMessage(m1, header, body);
     }
 
-    public UpdateMessage makeDSPUpdateMessage(Header header, MessageContent body, Class objectFactory)
-            throws JAXBException, ParserConfigurationException {
+    public UpdateMessage makeDSPUpdateMessage(Header header, MessageContent body) {
         UpdateMessage m1 = this.factory.createUpdateMessage();
-        return (UpdateMessage) this.makeDSPMessage(m1, header, body, objectFactory);
+        return (UpdateMessage) this.makeDSPMessage(m1, header, body);
     }
 }

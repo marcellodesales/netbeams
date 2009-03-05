@@ -1,6 +1,6 @@
 package org.netbeams.dsp.message;
 
-public class MessageContent /* extends AbstractMessageContent*/ {
+public abstract class MessageContent implements XmlDecoratable /* extends AbstractMessageContent*/ {
 
     // TODO: Find way to turn this into an abstract class
     public String getContentType() {

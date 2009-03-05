@@ -1,1 +1,82 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><MessagesContainer uudi="a6f537d7-af44-452e-9a1d-ed46dfd0f250" creationTime="2009-03-05T01:30:01-0800" destinationHost="192.168.0.106" ><MeasureMessage ContentType="org.netbeams.dsp.ysi" messageID="3b39415e-2962-4afc-abc2-3dce51cec94b"><Header><CreationTime>1236245401530</CreationTime><Producer><ComponentType>org.netbeams.dsp.platform.management.component.ComponentManager</ComponentType><ComponentLocator><ComponentNodeId>1234</ComponentNodeId><NodeAddress>LOCAL</NodeAddress></ComponentLocator></Producer><Consumer><ComponentType>org.netbeams.dsp.wiretransport.client</ComponentType><ComponentLocator><NodeAddress>LOCAL</NodeAddress></ComponentLocator></Consumer></Header><Body><SondeDataContainer><soundeData date="04/30/2009" time="20:30:40"><SpCond></SpCond><Cond>blue skies</Cond><Resist></Resist><Sal></Sal><Press>too-much</Press><Depth></Depth><pH>negative</pH><phmV></phmV><ODOSat></ODOSat><ODOConc></ODOConc><Turbid></Turbid><Battery>full-Power</Battery></soundeData></SondeDataContainer></Body></MeasureMessage><UpdateMessage ContentType="org.netbeams.dsp.data.property" messageID="d14ce95d-e042-4f5a-88be-581b03dd7d2a"><Header><CreationTime>1236245401530</CreationTime><Producer><ComponentType>org.netbeams.dsp.platform.management.component.ComponentManager</ComponentType><ComponentLocator><ComponentNodeId>1234</ComponentNodeId><NodeAddress>LOCAL</NodeAddress></ComponentLocator></Producer><Consumer><ComponentType>org.netbeams.dsp.wiretransport.client</ComponentType><ComponentLocator><NodeAddress>LOCAL</NodeAddress></ComponentLocator></Consumer></Header><Body><DSProperties><Property name="WIRE_TRANSPORT_SERVER_IP" ><Value>127.0.0.1</Value></Property><Property name="WIRE_TRANSPORT_SERVER_PORT" ><Value>8080</Value></Property><Property name="HTTP_SERVER_BASE_URI" ><Value>/transportDspMessages</Value></Property><Property name="HTTP_SERVER_REQUEST_VARIABLE" ><Value>dspMessagesContainer</Value></Property></DSProperties></Body></UpdateMessage></MessagesContainer>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MessagesContainer uudi="a6f537d7-af44-452e-9a1d-ed46dfd0f250"
+	creationTime="2009-03-05T01:30:01-0800" destinationHost="192.168.0.106">
+	<MeasureMessage ContentType="org.netbeams.dsp.ysi"
+		messageID="3b39415e-2962-4afc-abc2-3dce51cec94b">
+		<Header>
+			<CreationTime>1236245401530</CreationTime>
+			<Producer>
+				<ComponentType>
+					org.netbeams.dsp.platform.management.component.ComponentManager
+				</ComponentType>
+				<ComponentLocator>
+					<ComponentNodeId>1234</ComponentNodeId>
+					<NodeAddress>LOCAL</NodeAddress>
+				</ComponentLocator>
+			</Producer>
+			<Consumer>
+				<ComponentType>org.netbeams.dsp.wiretransport.client
+				</ComponentType>
+				<ComponentLocator>
+					<NodeAddress>LOCAL</NodeAddress>
+				</ComponentLocator>
+			</Consumer>
+		</Header>
+		<Body>
+			<SondeDataContainer>
+				<soundeData date="04/30/2009" time="20:30:40">
+					<SpCond></SpCond>
+					<Cond>blue skies</Cond>
+					<Resist></Resist>
+					<Sal></Sal>
+					<Press>too-much</Press>
+					<Depth></Depth>
+					<pH>negative</pH>
+					<phmV></phmV>
+					<ODOSat></ODOSat>
+					<ODOConc></ODOConc>
+					<Turbid></Turbid>
+					<Battery>full-Power</Battery>
+				</soundeData>
+			</SondeDataContainer>
+		</Body>
+	</MeasureMessage>
+	<UpdateMessage ContentType="org.netbeams.dsp.data.property"
+		messageID="d14ce95d-e042-4f5a-88be-581b03dd7d2a">
+		<Header>
+			<CreationTime>1236245401530</CreationTime>
+			<Producer>
+				<ComponentType>
+					org.netbeams.dsp.platform.management.component.ComponentManager
+				</ComponentType>
+				<ComponentLocator>
+					<ComponentNodeId>1234</ComponentNodeId>
+					<NodeAddress>LOCAL</NodeAddress>
+				</ComponentLocator>
+			</Producer>
+			<Consumer>
+				<ComponentType>org.netbeams.dsp.wiretransport.client
+				</ComponentType>
+				<ComponentLocator>
+					<NodeAddress>LOCAL</NodeAddress>
+				</ComponentLocator>
+			</Consumer>
+		</Header>
+		<Body>
+			<DSProperties>
+				<Property name="WIRE_TRANSPORT_SERVER_IP">
+					<Value>127.0.0.1</Value>
+				</Property>
+				<Property name="WIRE_TRANSPORT_SERVER_PORT">
+					<Value>8080</Value>
+				</Property>
+				<Property name="HTTP_SERVER_BASE_URI">
+					<Value>/transportDspMessages</Value>
+				</Property>
+				<Property name="HTTP_SERVER_REQUEST_VARIABLE">
+					<Value>dspMessagesContainer</Value>
+				</Property>
+			</DSProperties>
+		</Body>
+	</UpdateMessage>
+</MessagesContainer>

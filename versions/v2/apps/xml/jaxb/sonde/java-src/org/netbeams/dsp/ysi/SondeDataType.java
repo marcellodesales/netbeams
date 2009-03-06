@@ -8,6 +8,10 @@
 
 package org.netbeams.dsp.ysi;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * <p>Java class for sondeDataType complex type.
  * 
@@ -42,11 +46,14 @@ package org.netbeams.dsp.ysi;
  * 
  */
 public class SondeDataType {
+    
+    public static final DateFormat dateFormat = new SimpleDateFormat ("HH:mm:ss");
+    public static final DateFormat timeFormat = new SimpleDateFormat ("MM-dd-yyyy");
 
 //    @XmlElement(name = "Date", required = true)
-    protected String date;
+    protected Calendar date;
 //    @XmlElement(name = "Time", required = true)
-    protected String time;
+    protected Calendar time;
 //    @XmlElement(name = "Temp", required = true)
     protected String temp;
 //    @XmlElement(name = "SpCond", required = true)
@@ -75,8 +82,6 @@ public class SondeDataType {
     protected String battery;
 
     public SondeDataType() {
-        this.date = "";
-        this.time = "";
         this.temp = "";
         this.spCond = "";
         this.cond = "";
@@ -100,7 +105,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getDate() {
+    public Calendar getDate() {
         return date;
     }
 
@@ -112,7 +117,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setDate(String value) {
+    public void setDate(Calendar value) {
         this.date = value;
     }
 
@@ -124,7 +129,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getTime() {
+    public Calendar getTime() {
         return time;
     }
 
@@ -136,7 +141,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setTime(String value) {
+    public void setTime(Calendar value) {
         this.time = value;
     }
 
@@ -456,10 +461,10 @@ public class SondeDataType {
         StringBuilder builder = new StringBuilder();
         builder.append("<soundeData ");
         if (this.date != null) {
-            builder.append("date=\"" + this.date + "\" ");
+            builder.append("date=\"" + dateFormat.format (this.date.getTime()) + "\" ");
         }
         if (this.time != null) {
-            builder.append("time=\"" + this.time + "\"");
+            builder.append("time=\"" + timeFormat.format (this.time.getTime()) + "\"");
         }
         builder.append(">");
         builder.append("<SpCond>" + this.spCond + "</SpCond>");

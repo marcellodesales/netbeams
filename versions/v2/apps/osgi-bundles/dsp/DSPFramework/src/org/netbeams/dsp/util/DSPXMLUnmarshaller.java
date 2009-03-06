@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.StringReader;
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -66,22 +68,28 @@ public enum DSPXMLUnmarshaller {
         while ((line = reader.readLine()) != null) {
             fileLines = fileLines + line;
         }
-
         return this.unmarshallStream(fileLines);
     }
 
-    public AbstractMessage makeDSPMessage(Element messageElement) throws ClassNotFoundException,
-            InstantiationException, IllegalAccessException {
+    public AbstractMessage makeDSPMessage(Element messageElement) throws DSPException {
 
         String dspMessageClassName = messageElement.getName();
         dspMessageClassName = Message.class.getPackage().getName() + "." + dspMessageClassName;
         ClassLoader loader = Message.class.getClassLoader();
-        Class messageType = loader.loadClass(dspMessageClassName);
-        return (AbstractMessage) messageType.newInstance();
+        Class messageType;
+        try {
+            messageType = loader.loadClass(dspMessageClassName);
+            return (AbstractMessage) messageType.newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new DSPException(e);
+        } catch (InstantiationException e) {
+            throw new DSPException(e);
+        } catch (IllegalAccessException e) {
+            throw new DSPException(e);
+        }
     }
 
-    private List<AbstractMessage> parseMessagesOnContainer(Element messagesContainerNode)
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    private List<AbstractMessage> parseMessagesOnContainer(Element messagesContainerNode) throws DSPException {
 
         List<AbstractMessage> dspMessages = new LinkedList<AbstractMessage>();
         List<Element> messagesNodes = messagesContainerNode.getChildren();
@@ -93,8 +101,7 @@ public enum DSPXMLUnmarshaller {
         return dspMessages;
     }
 
-    private AbstractMessage parseDSPMessage(AbstractMessage dspMessage, Element dspMessageElement)
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    private AbstractMessage parseDSPMessage(AbstractMessage dspMessage, Element dspMessageElement) throws DSPException {
 
         String contentType = dspMessageElement.getAttributeValue("ContentType");
         dspMessage.setContentType(contentType != null ? contentType.trim() : null);
@@ -112,7 +119,16 @@ public enum DSPXMLUnmarshaller {
 
         Element dspBodyElement = dspMessageElement.getChild("Body");
         if (dspBodyElement != null) {
-            Body messageBody = this.parseMessageBody((Element) dspBodyElement.getChildren().get(0), contentType);
+            Body messageBody;
+            try {
+                messageBody = this.parseMessageBody((Element) dspBodyElement.getChildren().get(0), contentType);
+            } catch (ClassNotFoundException e) {
+                throw new DSPException(e);
+            } catch (InstantiationException e) {
+                throw new DSPException(e);
+            } catch (IllegalAccessException e) {
+                throw new DSPException(e);
+            } 
             dspMessage.setBody(messageBody);
         } else {
             throw new IllegalArgumentException("The header is not present!");
@@ -121,7 +137,7 @@ public enum DSPXMLUnmarshaller {
     }
 
     private Body parseMessageBody(Element dspBodyElement, String contentType) throws ClassNotFoundException,
-            InstantiationException, IllegalAccessException {
+            InstantiationException, IllegalAccessException, DSPException {
         Body dspBody = new Body();
 
         if (contentType == null) {
@@ -137,9 +153,12 @@ public enum DSPXMLUnmarshaller {
         if (content instanceof DSProperties) {
             content = this.parseDSProperties(content, dspBodyElement);
         } else if (content instanceof SondeDataContainer) {
-            content = this.parseSondeDataContainer(content, dspBodyElement);
+            try {
+                content = this.parseSondeDataContainer(content, dspBodyElement);
+            } catch (ParseException e) {
+                throw new DSPException(e);
+            }
         }
-
         dspBody.setAny(content);
         return dspBody;
     }
@@ -214,20 +233,25 @@ public enum DSPXMLUnmarshaller {
         }
     }
 
-    private MessageContent parseSondeDataContainer(MessageContent content, Element sondeDataContainerElement) {
+    private MessageContent parseSondeDataContainer(MessageContent content, Element sondeDataContainerElement) throws ParseException {
         SondeDataContainer sondeContainer = (SondeDataContainer) content;
         List<Element> sondeDataElements = sondeDataContainerElement.getChildren("soundeData");
         for (Element sondeDataElem : sondeDataElements) {
             SondeDataType sondeData = new SondeDataType();
 
             String date = sondeDataElem.getAttributeValue("date");
-            sondeData.setDate(date != null ? date.trim() : null);
+            if (date != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(SondeDataType.dateFormat.parse(date.trim()));
+                sondeData.setDate(cal);
+            }
 
             String time = sondeDataElem.getAttributeValue("time");
-            sondeData.setTime(time != null ? time.trim() : null);
-
-            String temp = sondeDataElem.getChildText("Temp");
-            sondeData.setTime(temp != null ? temp.trim() : null);
+            if (time != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(SondeDataType.timeFormat.parse(time.trim()));
+                sondeData.setTime(cal);
+            }
 
             String SpCond = sondeDataElem.getChildText("SpCond");
             sondeData.setSpCond(SpCond != null ? SpCond.trim() : null);
@@ -248,7 +272,7 @@ public enum DSPXMLUnmarshaller {
             sondeData.setDepth(Depth != null ? Depth.trim() : null);
 
             String pH = sondeDataElem.getChildText("pH");
-            sondeData.setPH(temp != null ? pH.trim() : null);
+            sondeData.setPH(pH != null ? pH.trim() : null);
 
             String phmV = sondeDataElem.getChildText("phmV");
             sondeData.setPhmV(phmV != null ? phmV.trim() : null);

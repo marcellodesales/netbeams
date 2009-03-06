@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<MessagesContainer uudi="a6f537d7-af44-452e-9a1d-ed46dfd0f250"
-	creationTime="2009-03-05T01:30:01-0800" destinationHost="192.168.0.106">
+<MessagesContainer uudi="24929c29-60ee-4d17-af08-64d9446277ef"
+	creationTime="2009-03-06T15:17:18-0800" destinationHost="192.168.0.106">
 	<MeasureMessage ContentType="org.netbeams.dsp.ysi"
-		messageID="3b39415e-2962-4afc-abc2-3dce51cec94b">
+		messageID="435a61f6-370f-458d-aeb7-6e92270a79cb">
 		<Header>
-			<CreationTime>1236245401530</CreationTime>
+			<CreationTime>1236381438480</CreationTime>
 			<Producer>
 				<ComponentType>
 					org.netbeams.dsp.platform.management.component.ComponentManager
@@ -24,7 +24,7 @@
 		</Header>
 		<Body>
 			<SondeDataContainer>
-				<soundeData date="04/30/2009" time="20:30:40">
+				<soundeData date="15:17:18" time="03-06-2009">
 					<SpCond></SpCond>
 					<Cond>blue skies</Cond>
 					<Resist></Resist>
@@ -42,9 +42,9 @@
 		</Body>
 	</MeasureMessage>
 	<UpdateMessage ContentType="org.netbeams.dsp.data.property"
-		messageID="d14ce95d-e042-4f5a-88be-581b03dd7d2a">
+		messageID="9f33232f-5574-412a-99c7-ca38a169baf6">
 		<Header>
-			<CreationTime>1236245401530</CreationTime>
+			<CreationTime>1236381438480</CreationTime>
 			<Producer>
 				<ComponentType>
 					org.netbeams.dsp.platform.management.component.ComponentManager

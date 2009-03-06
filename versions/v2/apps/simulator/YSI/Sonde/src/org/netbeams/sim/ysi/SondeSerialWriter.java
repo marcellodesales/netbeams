@@ -10,10 +10,10 @@ import java.io.IOException;
  */
 public class SondeSerialWriter implements Runnable {
 
-	private long interval = 5000;
+	public static long interval = 5000;
 	private OutputStream out;
 	private SondeTestData sdt;
-	private StringBuffer strBuffer; 
+	private StringBuffer strBuffer;
 
 	
 	public SondeSerialWriter(OutputStream out) {

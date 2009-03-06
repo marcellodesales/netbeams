@@ -52,4 +52,10 @@ public class AbstractNodeAddress {
     public void setValue(String value) {
         this.value = value;
     }
+    
+    public String toXml() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<NodeAddress>" + this.value + "</NodeAddress>");
+        return builder.toString();
+    }
 }

@@ -13,6 +13,7 @@ import org.netbeams.dsp.demo.mouseactions.MouseAction;
 import org.netbeams.dsp.demo.mouseactions.MouseActionsContainer;
 import org.netbeams.dsp.demo.stock.StockTick;
 import org.netbeams.dsp.demo.stock.StockTicks;
+import org.netbeams.dsp.util.DSPXMLUnmarshaller;
 import org.netbeams.dsp.util.NetworkUtil;
 import org.netbeams.dsp.ysi.SondeDataContainer;
 import org.netbeams.dsp.ysi.SondeDataType;
@@ -20,7 +21,7 @@ import org.netbeams.dsp.ysi.SondeDataType;
 public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
 
     private DSPMessagesFactory fac;
-    private File xmlObjectPersisted = new File("/tmp/messagesExample2.xml");
+    private File xmlObjectPersisted = new File("/media/disk/development/workspaces/sfsu/netBEAMS2 OSGi General/docs/messagesExample-dsp.xml");
 
     public JaxbMessagesMarshallUnmarshallTest() {
         this.fac = DSPMessagesFactory.INSTANCE;        
@@ -150,50 +151,67 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
         }
     }
     
-//    public void testUnmashallMessagesContainerWithDifferentMessages() {
-//        try {
-//            JAXBContext context = JAXBContext.newInstance("org.netbeams.dsp.message");
-//            Unmarshaller um = context.createUnmarshaller();
-//            MessagesContainer container = (MessagesContainer)um.unmarshal(this.xmlObjectPersisted);
-//            
-//            assertNotNull("The messages container was not unmarshalled", container);
-//            assertNotNull("The messages container must not be null", container.getMessage());
-//            assertEquals("The messages container must have 2 messages", 2, container.getMessage().size()); 
-//            
-//            for(AbstractMessage dspMsg : container.getMessage()) {
-//                Object obj = dspMsg.getBody().getAny();
-//                assertTrue("The body is not an instance of Node", obj instanceof Node);
-//                JAXBContext payloadCtx = JAXBContext.newInstance(dspMsg.getContentType());
-//                Unmarshaller umPayLoad = payloadCtx.createUnmarshaller();
-//
-//                assertTrue("The message is not an instance of MeasureMessage", dspMsg instanceof MeasureMessage);
-//                
-//                if (dspMsg.getContentType().equals("org.netbeams.dsp.demo.stock")) {
-//                    StockTicks ticks = (StockTicks)umPayLoad.unmarshal((Node)obj);
-//                    assertNotNull("The payload was not unmashalled", ticks);
-//                    assertNotNull("The list of stock ticks is null", ticks.getStockTick());
-//                    assertEquals("The list of stock ticks must have one element", 1, ticks.getStockTick().size());
-//                    for (StockTick sttk : ticks.getStockTick()) {
-//                        assertEquals("The name of the stock is different", "Google, Inc.", sttk.getName());
-//                    }
-//                } else 
-//                if (dspMsg.getContentType().equals("org.netbeams.dsp.demo.mouseactions")) {
-//                    MouseActionsContainer mouseacts = (MouseActionsContainer)umPayLoad.unmarshal((Node)obj);
-//                    assertNotNull("The payload was not unmashalled", mouseacts);
-//                    assertNotNull("The list of stock ticks is null", mouseacts.getMouseAction());
-//                    assertEquals("The list of stock ticks must have one element", 2, mouseacts.getMouseAction().size());
-//                    for (MouseAction sttk : mouseacts.getMouseAction()) {
-//                        assertNotNull("The mouse action is null", sttk);
-//                    }
-//                }                
-//            }
-//            //Tearing down from the unmarshall method.
-//            if (this.xmlObjectPersisted.exists()) {
-//                this.xmlObjectPersisted.delete();
-//            }
-//            
-//        } catch (JAXBException e) {
-//            fail(e.getMessage());
-//        }
-//    }
+    public void testUnmashallMessagesContainerWithDifferentMessages() {
+        try {
+            MessagesContainer container = DSPXMLUnmarshaller.INSTANCE.unmarshallStream(this.xmlObjectPersisted);
+            
+            assertNotNull("The messages container was not unmarshalled", container);
+            assertNotNull("The messages container must not be null", container.getMessage());
+            assertEquals("The messages container must have 2 messages", 2, container.getMessage().size()); 
+            
+            for(AbstractMessage dspMsg : container.getMessage()) {
+                MessageContent obj = dspMsg.getBody().getAny();
+                
+                if (dspMsg.getContentType().equals("org.netbeams.dsp.ysi")) {
+                    SondeDataContainer sondeData = (SondeDataContainer)obj;
+                    assertNotNull("The payload was not unmashalled", sondeData);
+                    assertNotNull("The list of stock ticks is null", sondeData.getSondeData());
+                    assertEquals("The list of stock ticks must have one element", 1, sondeData.getSondeData().size());
+                    for (SondeDataType sttk : sondeData.getSondeData()) {
+                        assertEquals("The Battery level is incorrect", "full-Power", sttk.getBattery());
+                        assertEquals("The Conditions is incorrect", "blue skies", sttk.getCond());
+                        assertEquals("The Pressure is incorrect", "too-much", sttk.getPress());
+                    }
+                    
+                } else 
+                if (dspMsg.getContentType().equals("org.netbeams.dsp.data.property")) {
+                    DSProperties propts = (DSProperties)obj;
+                    assertNotNull("The payload was not unmashalled", propts);
+                    assertNotNull("The list of properties is null", propts.getProperty());
+                    assertEquals("The list properties must have one element", 4, propts.getProperty().size());
+                    for (DSProperty dsProp: propts.getProperty()) {
+                        assertNotNull("The DSP property is null", dsProp);
+                        assertNotNull("The name of the property is null", dsProp.getName());
+                        assertNotNull("The value of the property is null", dsProp.getValue());
+                    }
+                    
+                } else
+                if (dspMsg.getContentType().equals("org.netbeams.dsp.demo.stock")) {
+                    StockTicks ticks = (StockTicks)obj;
+                    assertNotNull("The payload was not unmashalled", ticks);
+                    assertNotNull("The list of stock ticks is null", ticks.getStockTick());
+                    assertEquals("The list of stock ticks must have one element", 1, ticks.getStockTick().size());
+                    for (StockTick sttk : ticks.getStockTick()) {
+                        assertEquals("The name of the stock is different", "Google, Inc.", sttk.getName());
+                    }
+                } else 
+                if (dspMsg.getContentType().equals("org.netbeams.dsp.demo.mouseactions")) {
+                    MouseActionsContainer mouseacts = (MouseActionsContainer)obj;
+                    assertNotNull("The payload was not unmashalled", mouseacts);
+                    assertNotNull("The list of stock ticks is null", mouseacts.getMouseAction());
+                    assertEquals("The list of stock ticks must have one element", 2, mouseacts.getMouseAction().size());
+                    for (MouseAction sttk : mouseacts.getMouseAction()) {
+                        assertNotNull("The mouse action is null", sttk);
+                    }
+                }                
+            }
+            //Tearing down from the unmarshall method.
+            if (this.xmlObjectPersisted.exists()) {
+                this.xmlObjectPersisted.delete();
+            }
+            
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
 }

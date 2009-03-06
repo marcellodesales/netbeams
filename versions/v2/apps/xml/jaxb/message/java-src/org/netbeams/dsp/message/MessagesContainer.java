@@ -189,9 +189,4 @@ public class MessagesContainer {
         builder.append("</MessagesContainer>");
         return builder.toString();
     }
-
-    public static MessagesContainer unmarshall(String responseStream) {
-        return null;
-    }
-
 }

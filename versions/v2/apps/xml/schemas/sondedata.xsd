@@ -21,8 +21,11 @@
 		<xs:complexContent>
 			<xs:extension base="mc:AbstractMessageContent">
 				<xs:sequence maxOccurs="unbounded" minOccurs="1">
-					<xs:element name="sondeData" type="sndata:sondeDataType"/>
+					<xs:element name="sondeData"
+						type="sndata:sondeDataType" />
 				</xs:sequence>
+				<xs:attribute name="date" type="xs:string"></xs:attribute>
+				<xs:attribute name="time" type="xs:string"></xs:attribute>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -30,8 +33,6 @@
 	
 	<xs:complexType name="sondeDataType">
 		<xs:sequence>
- 				<xs:element name="Date" type="xs:date"/>
- 				<xs:element name="Time" type="xs:time"/>
  				<xs:element name="Temp" type="xs:float"/>
  				<xs:element name="SpCond" type="xs:float"/>
  				<xs:element name="Cond" type="xs:float"/>

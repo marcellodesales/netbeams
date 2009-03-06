@@ -16,6 +16,7 @@ import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.message.AbstractMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessagesContainer;
+import org.netbeams.dsp.util.DSPXMLUnmarshaller;
 import org.netbeams.dsp.wiretransport.client.controller.DSPWireTransportHttpClient;
 import org.netbeams.dsp.wiretransport.client.model.MessagesQueues;
 
@@ -62,9 +63,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
                 responseMessagesContainer = this.deliverMessagesToLocalDSP(messagesContainerXml);
                 log.debug("Messages Container for the response is ready to be serialized..."
                         + responseMessagesContainer);
-            } catch (JAXBException e) {
-                log.error(e.getMessage(), e);
-                throw new IllegalArgumentException(e.getMessage());
+                
             } catch (DSPException e) {
                 log.error(e.getMessage(), e);
                 throw new IllegalArgumentException(e.getMessage());
@@ -101,13 +100,17 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
      * @throws JAXBException if any unmarshalling error occurs.
      * @throws DSPException if any problem occur with the delivery of messages to the DSP Broker via the Broker.
      */
-    private MessagesContainer deliverMessagesToLocalDSP(String messagesContainerRequestXML) throws JAXBException,
+    private MessagesContainer deliverMessagesToLocalDSP(String messagesContainerRequestXML) throws 
             DSPException {
 
         log.debug("Retrieved messages container from the HTTP request... Deserializing the XML from the client...");
         // Deliver all the messages to the DSP Broker component
-        MessagesContainer requestMessagesContainer = DSPWireTransportHttpClient
-                .deserializeMessagesContainer(messagesContainerRequestXML);
+        MessagesContainer requestMessagesContainer;
+        try {
+            requestMessagesContainer = DSPXMLUnmarshaller.INSTANCE.unmarshallStream(messagesContainerRequestXML);
+        } catch (Exception e) {
+            throw new DSPException(e);
+        }
 
         log.debug("Delivering messages to the DSP Broker...");
         // Send all the messages to the local DSP broker.

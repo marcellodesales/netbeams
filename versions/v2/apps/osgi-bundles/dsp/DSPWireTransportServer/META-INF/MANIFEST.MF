@@ -8,6 +8,8 @@ Bundle-SymbolicName: DSPWireTransportServer
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
 Import-Package: org.netbeams.dsp, 
+ org.netbeams.dsp.data.property,
+ org.netbeams.dsp.ysi, 
  org.netbeams.dsp.message, 
  org.netbeams.dsp.message.content, 
  org.netbeams.dsp.util, 

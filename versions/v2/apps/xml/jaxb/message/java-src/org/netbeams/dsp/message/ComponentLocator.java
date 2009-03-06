@@ -33,7 +33,7 @@ public class ComponentLocator {
 //    @XmlElement(name = "ComponentNodeId", required = true)
     protected String componentNodeId;
 //    @XmlElement(name = "NodeAddress", required = true, type = NodeAddress.class)
-    protected NodeAddress nodeAddress;
+    protected AbstractNodeAddress nodeAddress;
 
     /**
      * Gets the value of the componentNodeId property.
@@ -80,7 +80,7 @@ public class ComponentLocator {
      *     
      */
     public void setNodeAddress(AbstractNodeAddress value) {
-        this.nodeAddress = ((NodeAddress) value);
+        this.nodeAddress = value;
     }
     
     public String toXml() {

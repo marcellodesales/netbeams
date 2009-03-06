@@ -76,37 +76,6 @@ public class MessageFactory {
         return message;
     }
 
-//    static private Node marshallMessageContent(BaseComponent component, MessageContent content) {
-//
-//        DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
-//        df.setNamespaceAware(true);
-//        DocumentBuilder db = null;
-//        try {
-//            db = df.newDocumentBuilder();
-//        } catch (ParserConfigurationException e) {
-//            log.warn("Cannot create DOM builder", e);
-//        }
-//        Document doc = db.newDocument();
-//
-//        try {
-//            String className = content.getClass().getPackage().getName() + ".ObjectFactory";
-//
-//            log.debug("Class=" + className);
-//
-//            Class clazz = content.getClass().getClassLoader().loadClass(className);
-//            // JAXBContext jc = JAXBContext.newInstance(clazz);
-//            JAXBContext jc = JAXBContext.newInstance(content.getClass().getPackage().getName(), component.getClass()
-//                    .getClassLoader());
-//            Marshaller marshaller = jc.createMarshaller();
-//            marshaller.marshal(content, doc);
-//        } catch (JAXBException e) {
-//            log.warn("Cannot marshall to DOM", e);
-//        } catch (ClassNotFoundException e) {
-//            log.warn("Cannot load class", e);
-//        }
-//        return doc;
-//    }
-
     private static Message createMessage(Class<? extends Message> messageType, MessageContent messageContent,
             ComponentIdentifier producer) throws DSPException {
         Message message = null;

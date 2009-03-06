@@ -1,9 +1,6 @@
 package org.netbeams.dsp.wiretransport.client.controller;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -11,11 +8,6 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -32,12 +24,12 @@ import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
 import org.netbeams.dsp.message.AbstractMessage;
 import org.netbeams.dsp.message.Message;
+import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.message.MessagesContainer;
-import org.netbeams.dsp.message.ObjectFactory;
 import org.netbeams.dsp.message.UpdateMessage;
+import org.netbeams.dsp.util.DSPXMLUnmarshaller;
 import org.netbeams.dsp.util.NetworkUtil;
 import org.netbeams.dsp.wiretransport.client.model.MessagesQueues;
-import org.w3c.dom.Node;
 
 public class DSPWireTransportHttpClient implements DSPComponent {
 
@@ -78,26 +70,22 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      * @param messages is the messages container instance with the set of messages located at the outbound queue at the
      *        messages directory.
      * @return The xml version of the DSP Messages of the given container.
-     * @throws JAXBException if any problem with regards to the marshall operation happens.
      */
-    public static String serializeMessagesContainer(MessagesContainer messages) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
-        Marshaller m = context.createMarshaller();
-        StringWriter output = new StringWriter();
-        m.marshal(messages, output);
-        return output.toString();
+    public static String serializeMessagesContainer(MessagesContainer messages) {
+        return messages.toXml();
     }
 
     /**
      * @param responseStream the marshalled version of the Messages Container
      * @return the Messages Container instance from the the xml version of the message
-     * @throws JAXBException if any problem with the unmarshall operation occurs.
      */
-    public static MessagesContainer deserializeMessagesContainer(String responseStream) throws JAXBException {
-        InputStream input = new ByteArrayInputStream(responseStream.getBytes());
-        JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
-        Unmarshaller um = context.createUnmarshaller();
-        return (MessagesContainer) um.unmarshal(input);
+    public MessagesContainer deserializeMessagesContainer(String responseStream) {
+        try {
+            return DSPXMLUnmarshaller.INSTANCE.unmarshallStream(responseStream);
+        } catch (Exception e) {
+            log.debug(e.getMessage(), e);
+            return null;
+        }
     }
 
     /**
@@ -175,8 +163,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                 thLog.error("Verification 3: Is there a DSPWireTransportServer up and running at the destination?");
                 thLog.error("All messages in the outbound queues hasn't been transmitted due to this failure... "
                         + "a new attempt will be made after "+ getDelayForTransportSender() + " seconds ");
-            } catch (JAXBException e) {
-                thLog.error(e.getMessage(), e);
+
             } catch (DSPException e) {
                 thLog.error(e.getMessage(), e);
             } catch (Exception e) {
@@ -190,11 +177,10 @@ public class DSPWireTransportHttpClient implements DSPComponent {
          * @param messagesQueue is the current MessagesQueues singleton instance.
          * @param messagesForRequest is the messages used for the request
          * @param messagesFromResponseInXml is the response
-         * @throws JAXBException if any problem occurs with the JAXB deserialization process.
          * @throws DSPException if the data broker from the DSP Context is missing
          */
-        private void processResponseMessagesContainer(String destIp, String messagesFromResponseInXml)
-                throws JAXBException, DSPException {
+        private void processResponseMessagesContainer(String destIp, String messagesFromResponseInXml) 
+               throws DSPException {
 
             MessagesContainer messagesFromResponse = deserializeMessagesContainer(messagesFromResponseInXml);
             // Acknowledge all messages received from the server-side, based on the highest message ID. This
@@ -289,19 +275,12 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      */
     private void updateComponentProperties(UpdateMessage updateMessage) {
 
-        Object propertiesNode = updateMessage.getBody().getAny();
+        MessageContent propertiesNode = updateMessage.getBody().getAny();
 
-        try {
-            JAXBContext jc = JAXBContext.newInstance(org.netbeams.dsp.data.property.ObjectFactory.class);
-            Unmarshaller unmarshaller = jc.createUnmarshaller();
-            DSProperties properties = (DSProperties) unmarshaller.unmarshal((Node) propertiesNode);
-            for (DSProperty property : properties.getProperty()) {
-                System.setProperty(property.getName(), property.getValue());
-                log.debug("Update Property: " + property.getName() + "=" + property.getValue());
-            }
-
-        } catch (JAXBException e) {
-            log.error(e.getMessage(), e);
+        DSProperties properties = (DSProperties) propertiesNode;
+        for (DSProperty property : properties.getProperty()) {
+            System.setProperty(property.getName(), property.getValue());
+            log.debug("Update Property: " + property.getName() + "=" + property.getValue());
         }
 
         long delay = this.getDelayForTransportSender();

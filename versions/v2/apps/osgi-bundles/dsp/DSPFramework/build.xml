@@ -11,6 +11,9 @@
             <pathelement location="${THIRDPARTY}/apache/xml-apis.jar"/>
             <pathelement location="${THIRDPARTY}/apache/xerces.jar"/>
             <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+        	<pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
+            <pathelement location="${XML.JAXB}/sonde/dist/sonde.jar"/>
+        	
             <path refid="project.class.path"/>
         </path>
 		

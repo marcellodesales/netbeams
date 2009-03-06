@@ -23,10 +23,4 @@ public class NodeAddress extends AbstractNodeAddress {
         }
         return false;
     }
-
-    public String toXml() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<NodeAddress>" + this.value + "</NodeAddress>");
-        return builder.toString();
-    }
 }

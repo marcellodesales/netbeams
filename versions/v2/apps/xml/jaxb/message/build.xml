@@ -12,7 +12,7 @@
 
 	<target name="create-jar" depends="dsp-init.init, java-compile">
 		<mkdir dir="${XML.JAXB}/message/dist" />
-		<jar destfile="${XML.JAXB}/message/dist/message.jar" basedir="${XML.JAXB}/message/classes" />
+		<jar destfile="${XML.JAXB}/message/dist/message.jar" basedir="${XML.JAXB}/message/classes"/>
 	</target>
 
 </project>

@@ -8,8 +8,6 @@
 
 
 <target name="dsp-platform.compile">
-	<echo message="XML.JAXB=${XML.JAXB}/message/dist/message.jar"/>
-	
 	<path id="platform.project.classpath">
 		<path refid="project.class.path"/>
 		<pathelement location="${XML.JAXB}/message/dist/message.jar"/>

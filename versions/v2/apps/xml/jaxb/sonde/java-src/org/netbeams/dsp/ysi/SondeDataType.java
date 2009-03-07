@@ -9,6 +9,7 @@
 package org.netbeams.dsp.ysi;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -47,55 +48,36 @@ import java.util.Calendar;
  */
 public class SondeDataType {
     
-    public static final DateFormat dateFormat = new SimpleDateFormat ("HH:mm:ss");
-    public static final DateFormat timeFormat = new SimpleDateFormat ("MM-dd-yyyy");
+    public static final DateFormat dateTimeFormat = new SimpleDateFormat ("MM/dd/yyyy HH:mm:ss");
 
 //    @XmlElement(name = "Date", required = true)
-    protected Calendar date;
-//    @XmlElement(name = "Time", required = true)
-    protected Calendar time;
+    protected Calendar dateTime;
 //    @XmlElement(name = "Temp", required = true)
-    protected String temp;
+    protected Float temp;
 //    @XmlElement(name = "SpCond", required = true)
-    protected String spCond;
+    protected Float spCond;
 //    @XmlElement(name = "Cond", required = true)
-    protected String cond;
+    protected Float cond;
 //    @XmlElement(name = "Resist", required = true)
-    protected String resist;
+    protected Float resist;
 //    @XmlElement(name = "Sal", required = true)
-    protected String sal;
+    protected Float sal;
 //    @XmlElement(name = "Press", required = true)
-    protected String press;
+    protected Float press;
 //    @XmlElement(name = "Depth", required = true)
-    protected String depth;
+    protected Float depth;
 //    @XmlElement(name = "pH", required = true)
-    protected String ph;
+    protected Float ph;
 //    @XmlElement(required = true)
-    protected String phmV;
+    protected Float phmV;
 //    @XmlElement(name = "ODOSat", required = true)
-    protected String odoSat;
+    protected Float odoSat;
 //    @XmlElement(name = "ODOConc", required = true)
-    protected String odoConc;
+    protected Float odoConc;
 //    @XmlElement(name = "Turbid", required = true)
-    protected String turbid;
+    protected Float turbid;
 //    @XmlElement(name = "Battery", required = true)
-    protected String battery;
-
-    public SondeDataType() {
-        this.temp = "";
-        this.spCond = "";
-        this.cond = "";
-        this.resist = "";
-        this.sal = "";
-        this.press = "";
-        this.depth = ""; 
-        this.ph = "";
-        this.phmV = "";
-        this.odoSat = "";
-        this.odoConc = "";
-        this.turbid = "";
-        this.battery = "";
-    }
+    protected Float battery;
     
     /**
      * Gets the value of the date property.
@@ -105,8 +87,26 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public Calendar getDate() {
-        return date;
+    public Calendar getDateTime() {
+        return this.dateTime;
+    }
+    
+    /**
+     * @param format is an instance of a SimpleDateFormat. If you want to obtain
+     * the information about time or date in separate, just build an instance with
+     * the parameters you want. The instance used is the dateTime captured.
+     * @return the string representation of the dateTime instance based on the formatter.
+     */
+    public String getDateAsString(SimpleDateFormat format) {
+        return format.format(this.dateTime.getTime());
+    }
+    
+    public String getDateString() {
+        return new SimpleDateFormat("MM/dd/yyyy").format(this.dateTime.getTime());
+    }
+    
+    public String getTimeString() {
+        return new SimpleDateFormat("HH:mm:ss").format(this.dateTime.getTime());
     }
 
     /**
@@ -117,32 +117,12 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setDate(Calendar value) {
-        this.date = value;
-    }
-
-    /**
-     * Gets the value of the time property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public Calendar getTime() {
-        return time;
-    }
-
-    /**
-     * Sets the value of the time property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTime(Calendar value) {
-        this.time = value;
+    public void setDateTime(String date, String time) {
+        this.dateTime = Calendar.getInstance();
+        try {
+            this.dateTime.setTime(dateTimeFormat.parse(date + " " + time));
+        } catch (ParseException e) {
+        }
     }
 
     /**
@@ -153,7 +133,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getTemp() {
+    public Float getTemp() {
         return temp;
     }
 
@@ -165,7 +145,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setTemp(String value) {
+    public void setTemp(Float value) {
         this.temp = value;
     }
 
@@ -177,7 +157,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getSpCond() {
+    public Float getSpCond() {
         return spCond;
     }
 
@@ -189,7 +169,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setSpCond(String value) {
+    public void setSpCond(Float value) {
         this.spCond = value;
     }
 
@@ -201,7 +181,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getCond() {
+    public Float getCond() {
         return cond;
     }
 
@@ -213,7 +193,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setCond(String value) {
+    public void setCond(Float value) {
         this.cond = value;
     }
 
@@ -225,7 +205,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getResist() {
+    public Float getResist() {
         return resist;
     }
 
@@ -237,7 +217,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setResist(String value) {
+    public void setResist(Float value) {
         this.resist = value;
     }
 
@@ -249,7 +229,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getSal() {
+    public Float getSal() {
         return sal;
     }
 
@@ -261,7 +241,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setSal(String value) {
+    public void setSal(Float value) {
         this.sal = value;
     }
 
@@ -273,7 +253,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getPress() {
+    public Float getPress() {
         return press;
     }
 
@@ -285,7 +265,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setPress(String value) {
+    public void setPress(Float value) {
         this.press = value;
     }
 
@@ -297,7 +277,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getDepth() {
+    public Float getDepth() {
         return depth;
     }
 
@@ -309,7 +289,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setDepth(String value) {
+    public void setDepth(Float value) {
         this.depth = value;
     }
 
@@ -321,7 +301,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getPH() {
+    public Float getPH() {
         return ph;
     }
 
@@ -333,7 +313,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setPH(String value) {
+    public void setPH(Float value) {
         this.ph = value;
     }
 
@@ -345,7 +325,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getPhmV() {
+    public Float getPhmV() {
         return phmV;
     }
 
@@ -357,7 +337,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setPhmV(String value) {
+    public void setPhmV(Float value) {
         this.phmV = value;
     }
 
@@ -369,7 +349,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getODOSat() {
+    public Float getODOSat() {
         return odoSat;
     }
 
@@ -381,7 +361,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setODOSat(String value) {
+    public void setODOSat(Float value) {
         this.odoSat = value;
     }
 
@@ -393,7 +373,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getODOConc() {
+    public Float getODOConc() {
         return odoConc;
     }
 
@@ -405,7 +385,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setODOConc(String value) {
+    public void setODOConc(Float value) {
         this.odoConc = value;
     }
 
@@ -417,7 +397,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getTurbid() {
+    public Float getTurbid() {
         return turbid;
     }
 
@@ -429,7 +409,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setTurbid(String value) {
+    public void setTurbid(Float value) {
         this.turbid = value;
     }
 
@@ -441,7 +421,7 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public String getBattery() {
+    public Float getBattery() {
         return battery;
     }
 
@@ -453,18 +433,15 @@ public class SondeDataType {
      *     {@link String }
      *     
      */
-    public void setBattery(String value) {
+    public void setBattery(Float value) {
         this.battery = value;
     }
 
     public String toXml() {
         StringBuilder builder = new StringBuilder();
         builder.append("<soundeData ");
-        if (this.date != null) {
-            builder.append("date=\"" + dateFormat.format (this.date.getTime()) + "\" ");
-        }
-        if (this.time != null) {
-            builder.append("time=\"" + timeFormat.format (this.time.getTime()) + "\"");
+        if (this.dateTime != null) {
+            builder.append("dateTime=\"" + dateTimeFormat.format (this.dateTime) + "\" ");
         }
         builder.append(">");
         builder.append("<SpCond>" + this.spCond + "</SpCond>");

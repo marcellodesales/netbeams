@@ -122,12 +122,11 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
         
         SondeDataContainer sondeContainer = new SondeDataContainer();
         SondeDataType sData = new SondeDataType();
-        sData.setTime(Calendar.getInstance());
-        sData.setDate(Calendar.getInstance());
-        sData.setCond("blue skies");
-        sData.setBattery("full-Power");
-        sData.setPH("negative");
-        sData.setPress("too-much");
+        sData.setDateTime("12/10/2009", "14:23:44");
+        sData.setCond(Float.parseFloat("35.4"));
+        sData.setBattery(Float.parseFloat("377"));
+        sData.setPH(Float.parseFloat("845"));
+        sData.setPress(Float.parseFloat("443"));
         sondeContainer.getSondeData().add(sData);
         MeasureMessage sondeMeasurements = this.fac.makeDSPMeasureMessage(header3, sondeContainer);
         

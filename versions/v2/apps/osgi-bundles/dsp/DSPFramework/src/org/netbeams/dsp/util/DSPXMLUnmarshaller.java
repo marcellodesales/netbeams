@@ -37,11 +37,11 @@ import org.xml.sax.InputSource;
  * @author Marcello de Sales (marcello.sales@gmail.com)
  */
 public enum DSPXMLUnmarshaller {
-    
+
     INSTANCE;
 
     private static final Logger log = Logger.getLogger(DSPXMLUnmarshaller.class);
-    
+
     /**
      * Unmarshall a messages container in XML format to the POJO format. Please verify messages.xsd for more details on
      * the MessagesContainer value.
@@ -137,7 +137,7 @@ public enum DSPXMLUnmarshaller {
                 throw new DSPException(e);
             } catch (IllegalAccessException e) {
                 throw new DSPException(e);
-            } 
+            }
             dspMessage.setBody(messageBody);
         } else {
             throw new IllegalArgumentException("The header is not present!");
@@ -243,62 +243,78 @@ public enum DSPXMLUnmarshaller {
         }
     }
 
-    private MessageContent parseSondeDataContainer(MessageContent content, Element sondeDataContainerElement) throws ParseException {
+    private MessageContent parseSondeDataContainer(MessageContent content, Element sondeDataContainerElement)
+            throws ParseException {
         SondeDataContainer sondeContainer = (SondeDataContainer) content;
         List<Element> sondeDataElements = sondeDataContainerElement.getChildren("soundeData");
         for (Element sondeDataElem : sondeDataElements) {
             SondeDataType sondeData = new SondeDataType();
 
-            String date = sondeDataElem.getAttributeValue("date");
-            if (date != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(SondeDataType.dateFormat.parse(date.trim()));
-                sondeData.setDate(cal);
-            }
-
-            String time = sondeDataElem.getAttributeValue("time");
-            if (time != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(SondeDataType.timeFormat.parse(time.trim()));
-                sondeData.setTime(cal);
+            String dateTime = sondeDataElem.getAttributeValue("dateTime");
+            if (dateTime != null) {
+                sondeData.setDateTime(dateTime.substring(0, dateTime.indexOf(" ")), dateTime.substring(dateTime
+                        .indexOf(" ") + 1, dateTime.length()));
             }
 
             String SpCond = sondeDataElem.getChildText("SpCond");
-            sondeData.setSpCond(SpCond != null ? SpCond.trim() : null);
+            if (SpCond != null) {
+                sondeData.setSpCond(Float.parseFloat(SpCond.trim()));
+            }
 
             String Cond = sondeDataElem.getChildText("Cond");
-            sondeData.setCond(Cond != null ? Cond.trim() : null);
+            if (Cond != null) {
+                sondeData.setCond(Float.parseFloat(Cond.trim()));
+            }
 
             String Resist = sondeDataElem.getChildText("Resist");
-            sondeData.setResist(Resist != null ? Resist.trim() : null);
+            if (Resist != null) {
+                sondeData.setResist(Float.parseFloat(Resist.trim()));
+            }
 
             String Sal = sondeDataElem.getChildText("Sal");
-            sondeData.setSal(Sal != null ? Sal.trim() : null);
+            if (Sal != null) {
+                sondeData.setSal(Float.parseFloat(Sal.trim()));
+            }
 
             String Press = sondeDataElem.getChildText("Press");
-            sondeData.setPress(Press != null ? Press.trim() : null);
+            if (Press != null) {
+                sondeData.setPress(Float.parseFloat(Press.trim()));
+            }
 
             String Depth = sondeDataElem.getChildText("Depth");
-            sondeData.setDepth(Depth != null ? Depth.trim() : null);
+            if (Depth != null) {
+                sondeData.setDepth(Float.parseFloat(Depth.trim()));
+            }
 
             String pH = sondeDataElem.getChildText("pH");
-            sondeData.setPH(pH != null ? pH.trim() : null);
+            if (pH != null) {
+                sondeData.setPH(Float.parseFloat(pH.trim()));
+            }
 
             String phmV = sondeDataElem.getChildText("phmV");
-            sondeData.setPhmV(phmV != null ? phmV.trim() : null);
+            if (phmV != null) {
+                sondeData.setPhmV(Float.parseFloat(phmV.trim()));
+            }
 
             String ODOSat = sondeDataElem.getChildText("ODOSat");
-            sondeData.setODOSat(ODOSat != null ? ODOSat.trim() : null);
+            if (ODOSat != null) {
+                sondeData.setODOSat(Float.parseFloat(ODOSat.trim()));
+            }
 
             String ODOConc = sondeDataElem.getChildText("ODOConc");
-            sondeData.setODOConc(ODOConc != null ? ODOConc.trim() : null);
+            if (ODOConc != null) {
+                sondeData.setODOConc(Float.parseFloat(ODOConc.trim()));
+            }
 
             String Turbid = sondeDataElem.getChildText("Turbid");
-            sondeData.setTurbid(Turbid != null ? Turbid.trim() : null);
+            if (Turbid != null) {
+                sondeData.setTurbid(Float.parseFloat(Turbid.trim()));
+            }
 
             String Battery = sondeDataElem.getChildText("Battery");
-            sondeData.setBattery(Battery != null ? Battery.trim() : null);
-
+            if (Battery != null) {
+                sondeData.setBattery(Float.parseFloat(Battery.trim()));
+            }
             sondeContainer.getSondeData().add(sondeData);
         }
         return sondeContainer;
@@ -345,22 +361,22 @@ public enum DSPXMLUnmarshaller {
         return properties;
     }
 
-//    public static void main(String[] args) throws IOException {
-//
-//        File a = new File("/media/disk/development/workspaces/sfsu/netBEAMS2 OSGi General/docs/messagesExample-dsp.xml");
-//
-//        BufferedReader reader = new BufferedReader(new FileReader(a));
-//        String line = null, fileLines = "";
-//
-//        while ((line = reader.readLine()) != null) {
-//            fileLines = fileLines + line;
-//        }
-//
-//        try {
-//            MessagesContainer container = DSPXMLUnmarshaller.INSTANCE.unmarshallStream(fileLines);
-//            container.getMessage().size();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    // public static void main(String[] args) throws IOException {
+    //
+    // File a = new File("/media/disk/development/workspaces/sfsu/netBEAMS2 OSGi General/docs/messagesExample-dsp.xml");
+    //
+    // BufferedReader reader = new BufferedReader(new FileReader(a));
+    // String line = null, fileLines = "";
+    //
+    // while ((line = reader.readLine()) != null) {
+    // fileLines = fileLines + line;
+    // }
+    //
+    // try {
+    // MessagesContainer container = DSPXMLUnmarshaller.INSTANCE.unmarshallStream(fileLines);
+    // container.getMessage().size();
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // }
 }

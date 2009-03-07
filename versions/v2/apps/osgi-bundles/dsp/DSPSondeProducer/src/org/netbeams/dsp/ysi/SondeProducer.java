@@ -20,7 +20,7 @@ import org.netbeams.dsp.util.NetworkUtil;
  */
 public class SondeProducer {
 	
-private static final Logger log = Logger.getLogger(SondeProducer.class);
+	private static final Logger log = Logger.getLogger(SondeProducer.class);
 	
 	private DSPContext context;
 	private SondeHandler sondeHandler;
@@ -87,26 +87,36 @@ private static final Logger log = Logger.getLogger(SondeProducer.class);
 
 	private class SondeHandler extends Thread {
 
+		private static final String SERIAL_PORT = "/dev/ttyS0";
 		private boolean running = true;
-		private SondeDataContainer sondeDataContainer;
-		private SondeTestData sondeTestData;
-		private List<SondeDataType> sondeData;
+		private SerialHandler serialHandler;
+		//private SondeDataContainer sondeDataContainer;
+		//private SondeTestData sondeTestData;
+		//private List<SondeDataType> sondeData;
 		
 		public SondeHandler () {
-			sondeTestData = new SondeTestData();  // Get producer test data.
-			sondeDataContainer = sondeTestData.getSondeTestData();
+			serialHandler = new SerialHandler();
+			//sondeTestData = new SondeTestData();  // Get producer test data.
+			//sondeDataContainer = sondeTestData.getSondeTestData();
 		};
 		
 		
 		public void run() {			
 			while (running) {
-				
+				try { 
+					log.debug("Serial connection established from bundle...");
+					serialHandler.connect(SERIAL_PORT);
+				} catch (Exception e) {
+					System.out.println("ERROR: " + e.getMessage());
+					e.printStackTrace();
+				}
 				// Communication with the consumer
+				/*
 				try {
 					send(sondeDataContainer);
 				} catch (DSPException e) {
 					System.err.println("ERROR: " + e.getMessage());
-				}
+				}*/
 			}
 		}
 		

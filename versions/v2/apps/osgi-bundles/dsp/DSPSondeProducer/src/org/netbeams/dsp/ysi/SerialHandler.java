@@ -7,11 +7,14 @@ import gnu.io.SerialPort;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * 
+ * @author Teresa L. Johnson <gamma.particle@gmail.com>
+ *
+ */
 public class SerialHandler {
 
 	private static final int BAUD_RATE = 9600;
-	private CommPort commPort;
-	private SerialPort serialPort;
 	private InputStream in;
 	private OutputStream out;
 	private SerialReader sr;
@@ -28,39 +31,28 @@ public class SerialHandler {
 		if (portIdentifier.isCurrentlyOwned()) {
 			System.err.println("Error: Port is currently in use");
 		} else {
-			commPort = portIdentifier.open(this.getClass().getName(),2000);
+			CommPort commPort = portIdentifier.open(this.getClass().getName(),2000);
 			if (commPort instanceof SerialPort) {
 				
-				serialPort = (SerialPort) commPort;
+				SerialPort serialPort = (SerialPort) commPort;
 	            serialPort.setSerialPortParams(BAUD_RATE,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
 	            
 	            in  = serialPort.getInputStream();
 	            out = serialPort.getOutputStream();
 	    		
+	            sr = new SerialReader(in);
+	    		sw = new SerialWriter(out);
+	            
+	    		Thread srThread = new Thread(sr);
+	    		Thread swThread = new Thread(sw);
+	    		
+	    		srThread.start();
+	    		swThread.start();
+	            
 	            System.err.println("Success: Connection established");
 	        } else {
-	            System.err.println("Error: Only serial ports are handled by this example.");
+	            System.err.println("Error: Only serial ports are handled.");
 	        }
 		}		        
 	}
-	
-	public void sendSerial(String cmdBuffer) {		
-		byte[] buffer = new byte[1024];
-		
-		buffer = cmdBuffer.getBytes();
-		try {
-			out.write(buffer);
-		} catch (Exception e) {
-			System.err.println("ERROR: " + e.getMessage());
-			e.printStackTrace();
-		}
-		sw = new SerialWriter(out);
-		sw.run();
-	}
-	
-	public void recvSerial() {
-		
-	}
-	
-	
 }

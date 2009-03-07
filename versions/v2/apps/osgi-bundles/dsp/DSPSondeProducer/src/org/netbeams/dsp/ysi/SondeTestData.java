@@ -49,8 +49,8 @@ public class SondeTestData {
 	
 	private void setDataSet1() {
 		sdt = new SondeDataType();
-		sdt.setDate(dateTime);
-		sdt.setTime(dateTime);
+		//sdt.setDate(dateTime);
+		//sdt.setTime(dateTime);
 		sdt.setTemp((float) 22.69);
 		sdt.setSpCond((float) 183.0);
 		sdt.setCond((float) 175.0);
@@ -69,8 +69,8 @@ public class SondeTestData {
 	
 	private void setDataSet2() {
 		sdt = new SondeDataType();
-		sdt.setDate(dateTime);
-		sdt.setTime(dateTime);
+		//sdt.setDate(dateTime);
+		//sdt.setTime(dateTime);
 		sdt.setTemp((float) 22.69);
 		sdt.setSpCond((float) 183.0);
 		sdt.setCond((float) 175.0);
@@ -88,8 +88,8 @@ public class SondeTestData {
 	
 	private void setDataSet3() {
 		sdt = new SondeDataType();
-		sdt.setDate(dateTime);
-		sdt.setTime(dateTime);
+		//sdt.setDate(dateTime);
+		//sdt.setTime(dateTime);
 		sdt.setTemp((float) 22.70);
 		sdt.setSpCond((float) 183.0);
 		sdt.setCond((float) 175.0);

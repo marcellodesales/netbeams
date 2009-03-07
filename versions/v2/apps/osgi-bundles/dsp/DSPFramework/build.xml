@@ -12,8 +12,7 @@
             <pathelement location="${THIRDPARTY}/apache/xerces.jar"/>
             <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
         	<pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
-            <pathelement location="${XML.JAXB}/sonde/dist/sonde.jar"/>
-        	
+            <pathelement location="${XML.JAXB}/sonde/dist/sonde.jar"/>        	
             <path refid="project.class.path"/>
         </path>
 		
@@ -31,15 +30,16 @@
         <copy todir="${DSP.FRAMEWORK}/classes/libs">
             <fileset dir="${XML.JAXB}/message/dist" includes="*.jar"/>
             <fileset dir="${XML.JAXB}/dsproperty/dist" includes="*.jar"/>
+        	<fileset dir="${XML.JAXB}/sonde/dist" includes="*.jar"/>
         	<fileset dir="${THIRDPARTY}/apache/" includes="log4j-1.2.15.jar"/>
             <fileset dir="${THIRDPARTY}/pax" includes="*.jar"/>
             <fileset dir="${THIRDPARTY}/knopflerfish/2.1.1/" includes="http_all-2.1.0.jar" />
-            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="jaxb-api.jar" />
-            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="jaxb1-impl.jar" />
-            <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="jaxb-impl.jar" />
             <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="jsr173_1.0_api.jar" />
             <fileset dir="${THIRDPARTY}/jaxb/2.1.9/lib/" includes="activation.jar" />
             <fileset dir="${XML.JAXB}/stocktick/dist" includes="*.jar"/>
+            <fileset dir="${THIRDPARTY}/apache" includes="xerces.jar"/>
+            <fileset dir="${THIRDPARTY}/apache" includes="xml-apis.jar"/>
+            <fileset dir="${THIRDPARTY}/jdom" includes="jdom.jar"/>
         </copy>	
 		
 		<jar basedir="${DSP.FRAMEWORK}/classes" 

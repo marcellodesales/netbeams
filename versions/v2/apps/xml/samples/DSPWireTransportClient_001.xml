@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:MessagesContainer creationTime="2009-01-19T13:43:42-0300"
-	uudi="afb74083-dc4d-4c19-90be-15b0aa1c3823" xmlns:ns2="http://www.netbeams.dsp.org/message.xsd">
-    <message xsi:type="ns2:UpdateMessage" ContentType="org.netbeams.dsp.data.property"
-        messageID="632600ac-136e-41b0-9692-607fed480300" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<MessagesContainer uudi="24929c29-60ee-4d17-af08-64d9446277ef"
+    creationTime="2009-03-06T15:17:18-0800" destinationHost="localhost">
+    <UpdateMessage ContentType="org.netbeams.dsp.data.property"
+        messageID="9f33232f-5574-412a-99c7-ca38a169baf6">
         <Header>
-            <CreationTime>1234489014141</CreationTime>
+            <CreationTime>1236381438480</CreationTime>
             <Producer>
-                <ComponentType>org.netbeams.dsp.platform.management.component.ComponentManager</ComponentType>
+                <ComponentType>
+                    org.netbeams.dsp.platform.management.component.ComponentManager
+                </ComponentType>
                 <ComponentLocator>
                     <ComponentNodeId>1234</ComponentNodeId>
                     <NodeAddress>LOCAL</NodeAddress>
                 </ComponentLocator>
             </Producer>
             <Consumer>
-                <ComponentType>org.netbeams.dsp.wiretransport.client</ComponentType>
+                <ComponentType>org.netbeams.dsp.wiretransport.client
+                </ComponentType>
                 <ComponentLocator>
                     <NodeAddress>LOCAL</NodeAddress>
                 </ComponentLocator>
             </Consumer>
         </Header>
         <Body>
-            <ns2:DSProperties xmlns:ns2="http://www.netbeams.dsp.org/dsproperty.xsd">
+            <DSProperties>
                 <Property name="WIRE_TRANSPORT_SERVER_IP">
                     <Value>127.0.0.1</Value>
                 </Property>
@@ -36,7 +39,7 @@
                 <Property name="WIRE_TRANSPORT_TRANSFER_DELAY">
                     <Value>20</Value>
                 </Property>
-            </ns2:DSProperties>
+            </DSProperties>
         </Body>
-    </message>
-</ns2:MessagesContainer>
+    </UpdateMessage>
+</MessagesContainer>

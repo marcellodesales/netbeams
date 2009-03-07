@@ -33,6 +33,7 @@ import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.GlobalComponentTypeName;
 import org.netbeams.dsp.NodeAddressHelper;
+import org.netbeams.dsp.message.AbstractNodeAddress;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.message.Message;
@@ -94,13 +95,19 @@ public class Matcher implements BaseComponent {
 
         ComponentIdentifier producer = message.getHeader().getProducer();
         ComponentIdentifier consumer = message.getHeader().getConsumer();
+        
+        MatchCriteria crit = new MatchCriteria(producer.getComponentType(), producer.getComponentLocator());
+        MatchTarget targ = new MatchTarget(consumer.getComponentType(), consumer.getComponentLocator(), null);        
+        MatchRule localRule = new MatchRule("defaultRule", true, crit, targ);
+        consumers.add(localRule);
+        
         for (MatchRule mr : rules) {
             log.debug("Verifying matcher for rule: " + mr.getRuleID() + " Is Default? " + mr.isDefault());
             log.debug("Message's producer: " + producer.getComponentType());
             log.debug("Message's consumer: " + consumer.getComponentType());
             log.debug("component type matches rule criteria?");
             log.debug("Rule Criteria: Producer=" + mr.getCriteria().getProducerComponentType());
-            log.debug("Rule Criteria: Consumer=" + mr.getCriteria().getConsumerComponentType());
+            log.debug("Rule Criteria: Consumer=" + mr.getTarget().getConsumerComponentType());
             if (isMatchForComponentType(producer, consumer, mr)) {
                 log.debug("Producer matches for producer and consumer types...");
                 consumers.add(mr);
@@ -123,7 +130,7 @@ public class Matcher implements BaseComponent {
             log.debug("Producer Criteria is ALL/ANY, so matches criteria!");
             producerValidation = true;
         }
-        String consCriteriaType = mr.getCriteria().getConsumerComponentType();
+        String consCriteriaType = mr.getCriteria().getProducerComponentType();
         boolean consumerValidation = false;
         if ("ALL".equals(consCriteriaType) || "ANY".equals(consCriteriaType)) {
             log.debug("Consumer Criteria is ALL/ANY, so matches criteria!");
@@ -157,40 +164,32 @@ public class Matcher implements BaseComponent {
             if (isDefaultAttr != null) {
                 isDefaultRule = isDefaultAttr.getBooleanValue();
             }
-            Element eMatchCriteria = eMatchRule.getChild("matchCriteria");
-            Element eMatchTarget = eMatchRule.getChild("matchTarget");
-
             // Rule ID
             String ruleID = eMatchRule.getChildTextTrim("ruleid");
 
-            // matchCriteria
-            Element eNodeAddressCriteria = eMatchCriteria.getChild("nodeAddress");
-            Element eProdComponentTypeCriteria = eMatchCriteria.getChild("producerComponentType");
-            Element eConsComponentTypeCriteria = eMatchCriteria.getChild("consumerComponentType");
-
-            NodeAddress nodeCriteria = obtainNodeAddress(eNodeAddressCriteria);
-
+            //setting up the criteria
+            Element matchCriteriaElement = eMatchRule.getChild("matchCriteria");
+            String producerCompType = matchCriteriaElement.getChildText("componentType");
+            
+            AbstractNodeAddress nodeAddr = obtainNodeAddress(matchCriteriaElement.getChild("nodeAddress"));
             ComponentLocator locatorCriteria = new ComponentLocator();
             locatorCriteria.setComponentNodeId(null);
-            locatorCriteria.setNodeAddress(nodeCriteria);
+            locatorCriteria.setNodeAddress(nodeAddr);
 
-            MatchCriteria criteria = new MatchCriteria(eProdComponentTypeCriteria.getTextTrim(),
-                    eConsComponentTypeCriteria.getTextTrim(), locatorCriteria);
+            MatchCriteria criteria = new MatchCriteria(producerCompType, locatorCriteria);
 
-            // matchTarget
-            Element eNodeAddressTarget = eMatchTarget.getChild("nodeAddress");
-            Element eComponentTypeTarget = eMatchTarget.getChild("componentType");
-            Element eGatewayComponentTypeTarget = eMatchTarget.getChild("gatewayComponentType");
+            // setting up the target
+            Element matchTargetElement = eMatchRule.getChild("matchTarget");
+            String consumerCompType = matchTargetElement.getChildText("componentType");
+            String gatewayComponentTypeTarget = matchTargetElement.getChildText("gatewayComponentType");
 
-            NodeAddress nodeTarget = obtainNodeAddress(eNodeAddressTarget);
+            NodeAddress nodeTarget = obtainNodeAddress(matchTargetElement.getChild("nodeAddress"));
 
             ComponentLocator locatorTarget = new ComponentLocator();
             locatorTarget.setComponentNodeId(null);
             locatorTarget.setNodeAddress(nodeTarget);
 
-            String gatewayCompTyp = eGatewayComponentTypeTarget == null ? null : eGatewayComponentTypeTarget
-                    .getTextTrim();
-            MatchTarget target = new MatchTarget(eComponentTypeTarget.getTextTrim(), locatorTarget, gatewayCompTyp);
+            MatchTarget target = new MatchTarget(consumerCompType, locatorTarget, gatewayComponentTypeTarget);
 
             // Create Rule
             MatchRule rule = new MatchRule(ruleID, isDefaultRule, criteria, target);
@@ -200,16 +199,16 @@ public class Matcher implements BaseComponent {
         log.debug(rules.size() + " different rules recognized as valid, non-repeated rules... ");
     }
 
-    private NodeAddress obtainNodeAddress(Element nodeAddressCriteria) {
-        String nodeStr = nodeAddressCriteria.getTextTrim();
+    private NodeAddress obtainNodeAddress(Element nodeAddress) {
+        String nodeStr = nodeAddress.getTextTrim();
         if (nodeStr.equals("LOCAL")) {
             return NodeAddressHelper.LOCAL_NODEADDRESS;
         } else if (nodeStr.equals("*")) {
             return NodeAddressHelper.NO_ADDRESS;
         } else {
-            NodeAddress nodeAddress = new NodeAddress();
-            nodeAddress.setValue(nodeStr);
-            return nodeAddress;
+            NodeAddress nodeAddressDsp = new NodeAddress();
+            nodeAddressDsp.setValue(nodeStr);
+            return nodeAddressDsp;
         }
     }
 

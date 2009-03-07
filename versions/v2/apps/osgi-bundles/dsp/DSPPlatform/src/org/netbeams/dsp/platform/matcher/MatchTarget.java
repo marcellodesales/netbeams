@@ -11,7 +11,7 @@ import org.netbeams.dsp.message.ComponentLocator;
  */
 public class MatchTarget {
 
-    private String componentType;
+    private String consumerComponentType;
     private ComponentLocator locator;
     private String gatewayComponentType;
 
@@ -24,9 +24,9 @@ public class MatchTarget {
      * @param gatewayComponentType is the default gateway component that will transfer the message to an external DSP.
      *        This gateway component might use any sort of DSP message serialization mechanism.
      */
-    public MatchTarget(String componentType, ComponentLocator locator, String gatewayComponentType) {
+    public MatchTarget(String consumerComponentType, ComponentLocator locator, String gatewayComponentType) {
         super();
-        this.componentType = componentType;
+        this.consumerComponentType = consumerComponentType;
         this.locator = locator;
         this.gatewayComponentType = gatewayComponentType == null ? "" : gatewayComponentType;
     }
@@ -36,30 +36,30 @@ public class MatchTarget {
             return false;
         }
         if (this.gatewayComponentType != null)
-            return this.componentType.equals(((MatchTarget) obj).componentType)
+            return this.consumerComponentType.equals(((MatchTarget) obj).consumerComponentType)
                     && this.locator.getNodeAddress().getValue().equals(
                             ((MatchTarget) obj).locator.getNodeAddress().getValue())
                     && this.gatewayComponentType.equals(((MatchTarget) obj).gatewayComponentType);
         else
-            return this.componentType.equals(((MatchTarget) obj).componentType)
+            return this.consumerComponentType.equals(((MatchTarget) obj).consumerComponentType)
                     && this.locator.getNodeAddress().getValue().equals(
                             ((MatchTarget) obj).locator.getNodeAddress().getValue());
     }
 
     public int hashCode() {
         if (this.gatewayComponentType != null)
-            return 10 * this.componentType.hashCode() + 20 * this.locator.getNodeAddress().getValue().hashCode() + 30
+            return 10 * this.consumerComponentType.hashCode() + 20 * this.locator.getNodeAddress().getValue().hashCode() + 30
                     * this.gatewayComponentType.hashCode();
         else
-            return 10 * this.componentType.hashCode() + 20 * this.locator.getNodeAddress().getValue().hashCode();
+            return 10 * this.consumerComponentType.hashCode() + 20 * this.locator.getNodeAddress().getValue().hashCode();
     }
 
-    public String getComponentType() {
-        return componentType;
+    public String getConsumerComponentType() {
+        return this.consumerComponentType;
     }
 
-    public void setComponentType(String componentType) {
-        this.componentType = componentType;
+    public void setConsumerComponentType(String consumerComponentType) {
+        this.consumerComponentType = consumerComponentType;
     }
 
     public ComponentLocator getLocator() {

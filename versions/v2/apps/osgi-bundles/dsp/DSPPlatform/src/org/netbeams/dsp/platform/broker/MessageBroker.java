@@ -95,14 +95,14 @@ public class MessageBroker implements MessageBrokerAccessor {
         if (!consumers.isEmpty()) {
             for (MatchRule consumerRule : consumers) {
                 // We can deliberately ignore the message
-                if (GlobalComponentTypeName.NO_COMPONENT.equals(consumerRule.getTarget().getComponentType())) {
+                if (GlobalComponentTypeName.NO_COMPONENT.equals(consumerRule.getTarget().getConsumerComponentType())) {
                     continue;
                 }   
                 
                 //Get the target identifier of the component that has to be sent    
                 ComponentIdentifier targetComponentcompIdent = new ComponentIdentifier();
                 targetComponentcompIdent.setComponentLocator(consumerRule.getTarget().getLocator());
-                targetComponentcompIdent.setComponentType(consumerRule.getTarget().getComponentType());
+                targetComponentcompIdent.setComponentType(consumerRule.getTarget().getConsumerComponentType());
                 
                 //Update the header of the message with the target component from the component
                 if (message.getHeader().getConsumer() == null) {
@@ -119,7 +119,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                         log.debug("Ready to deliver message to the local component...");
                         localComponent.deliver(message);
                     } else {
-                        log.error("$$ Requered dsp component " + consumerRule.getTarget().getComponentType() + 
+                        log.error("$$ Requered dsp component " + consumerRule.getTarget().getConsumerComponentType() + 
                                 " not attached!!!");
                     }
 
@@ -132,7 +132,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                         gatewayComponent.deliver(message);
                     
                     } else {
-                        log.error("$$ Requered Gateway dsp component " + consumerRule.getTarget().getComponentType() + 
+                        log.error("$$ Requered Gateway dsp component " + consumerRule.getTarget().getConsumerComponentType() + 
                                 " not attached!!!");
                     }                    
                 }

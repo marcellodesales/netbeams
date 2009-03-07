@@ -71,6 +71,9 @@ public final class NetworkUtil {
                         }
                     }
                 }
+                if (currentHostIpAddress == null) {
+                    currentHostIpAddress = "127.0.0.1";
+                }
 
             } catch (SocketException e) {
                 log.error("Somehow we have a socket error acquiring the host IP... Using loopback instead...");

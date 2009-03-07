@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -36,9 +37,11 @@ import org.xml.sax.InputSource;
  * @author Marcello de Sales (marcello.sales@gmail.com)
  */
 public enum DSPXMLUnmarshaller {
-
+    
     INSTANCE;
 
+    private static final Logger log = Logger.getLogger(DSPXMLUnmarshaller.class);
+    
     /**
      * Unmarshall a messages container in XML format to the POJO format. Please verify messages.xsd for more details on
      * the MessagesContainer value.
@@ -50,6 +53,7 @@ public enum DSPXMLUnmarshaller {
      * @throws DSPException if any problem related to the XML schema occurs.
      */
     public MessagesContainer unmarshallStream(String messagesContainerXml) throws Exception {
+        log.debug("Unmarshalling stream " + messagesContainerXml);
         SAXBuilder parser = new SAXBuilder();
         Document domDoc = parser.build(new InputSource(new StringReader(messagesContainerXml)));
 
@@ -58,10 +62,12 @@ public enum DSPXMLUnmarshaller {
         MessagesContainer container = this.parseMessagesContainerElement(messagesContainerNode);
         List<AbstractMessage> messagesContained = this.parseMessagesOnContainer(messagesContainerNode);
         container.getMessage().addAll(messagesContained);
+        log.debug("Unmarshalled stream success: container ID " + container.getUudi());
         return container;
     }
 
     public MessagesContainer unmarshallStream(File dspMessagesContainerFile) throws Exception {
+        log.debug("Unmarshalling stream from file " + dspMessagesContainerFile);
         BufferedReader reader = new BufferedReader(new FileReader(dspMessagesContainerFile));
         String line = null, fileLines = "";
 
@@ -81,10 +87,13 @@ public enum DSPXMLUnmarshaller {
             messageType = loader.loadClass(dspMessageClassName);
             return (AbstractMessage) messageType.newInstance();
         } catch (ClassNotFoundException e) {
+            log.error(e.getMessage(), e);
             throw new DSPException(e);
         } catch (InstantiationException e) {
+            log.error(e.getMessage(), e);
             throw new DSPException(e);
         } catch (IllegalAccessException e) {
+            log.error(e.getMessage(), e);
             throw new DSPException(e);
         }
     }
@@ -224,11 +233,12 @@ public enum DSPXMLUnmarshaller {
             container.setCreationTime(creationTime != null ? creationTime.trim() : null);
 
             String ack = messagesContainerNode.getAttributeValue("acknowledgeUntil");
-            container.setAcknowledgeUntil(new Integer(ack != null ? ack.trim() : "-1"));
+            container.setAcknowledgeUntil(ack != null ? new Integer(ack.trim()) : null);
 
             return container;
 
         } else {
+            log.error("DSP XML Unmarshaller could not unmarshall MessagesContainer");
             throw new IllegalArgumentException("DSP XML Unmarshaller could not unmarshall MessagesContainer");
         }
     }

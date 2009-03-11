@@ -2,6 +2,7 @@
 
 \usepackage{epsfig}
 \usepackage{fancyvrb}
+\usepackage{url}
 
 \DefineVerbatimEnvironment%
   {code}{Verbatim}{numbers=left,numbersep=3pt,frame=lines,%
@@ -92,7 +93,7 @@ reduce the maintenance overhead.
 
 ---
 
-The YSI 6600EDS V2 Sonde is a water quality monitoring device that
+The YSI 6600EDS V2 Sonde \cite{Sonde01} is a water quality monitoring device that
 gathers water quality data, and operates in fresh, sea, or polluted
 water. Some of the measurements that the YSI is capable of are
 conductivity, temperature, chloride, ammonium, nitrate, turbidity, and
@@ -211,7 +212,7 @@ DSP, it is a data producer. An example for a data consumer is a
 converter module that converts the internal, DSP-specific data format,
 suitable for consumption by external applications. One such common
 format used in the domain of environmental monitoring is OpenDAP
-(REF). Since the converter module accepts messages from the DSP, it
+\cite{opendap01}. Since the converter module accepts messages from the DSP, it
 acts in the role of a data consumer. Finally, a DSP Component
 implementing persistency is an example of a module that acts in the
 roles of both data producer and consumer. It accepts messages from the
@@ -320,7 +321,7 @@ discussing its hardware and software components.
 \subsection{Hardware}
 
 Figure \ref{FIG_NETBEAMS} provides an end-to-end overview of the
-NetBEAMS architecture. NetBEAMS is built using multiple installation
+NetBEAMS architecture. NetBEAMS is built using multiple installations
 of the DSP and by providing special purpose components for the various
 tasks. One DSP installation is collocated with each sensor and an
 additional DSP is running on the backend server. Because of the remote
@@ -335,27 +336,30 @@ structure of depth 1.
 \caption{\label{FIG_NETBEAMS} NetBEAMS architecture.}
 \end{figure*}
 
-NetBEAMS supports environmental sensor such as the YSI Sonde
+NetBEAMS supports an environmental sensor such as the YSI Sonde,
 introduced in Section \ref{SEC_BACKGROUND}. In order to access its
 sensor readings, we collocate it with an off-the-shelf embedded
-computing platform called Gumstix (REF) (far left in Figure
+computing platform called Gumstix \cite{gumstix01} (far left in Figure
 \ref{FIG_NETBEAMS}). The Gumstix is a single-board computers with 256
 Mb of flash and 256 Mb of SDRAM, and running a 600 MHz TI OMAP 3503
 processor. Additional features can be added to the motherboard with
 expansion cards connected via on-board buses. The motherboards draw
 less than 250 mA @4V at 400 MHz and less than 50 mA while idling,
 waiting for input.  Gumstix runs Linux 2.6 with the BusyBox utilities,
-and use the OpenEmbedded build environment to provide a complete Linux
+and uses the OpenEmbedded build environment to provide a complete Linux
 environment and a large range of Linux applications. We use the JamVM
-(REF) implementation of Sun Microsystem's virtual machine in order to
-run the DSP
+\cite{jamvm01} implementation of Sun Microsystem's virtual machine in order to
+run the DSP.
+
+The Gumstix connects to the RS232 serial port of the YSI Sonde via via a
+null-modem cable.  
 
 We make use of the cellular phone network to establish a communication
 link with the backend server. The cellular phone network has the
 advantages of reaching well beyond telemetry options such as wireless
 networks and being a significantly lower cost solution than satellite
 communications. We make use of the Huawei E220. The E220 is a USB
-modem that supports HSDPA, UMTS, EDGE packet data services at maximum
+modem that supports HSDPA, UMTS, and EDGE packet data services at maximum
 transmission rates of 3.6Mbps, 384kbps, and 236.8kbps respectively.
 HSDPA and UMTS operate at 2100MHz while GSM, GPRS, and EDGE operate at
 900, 1800, and 1900MHz. The modem connects to the Verdex Pro XM4
@@ -370,16 +374,16 @@ cellular network using a data plan from AT\&T.
 \subsection{YSI Sonde Component}
 
 Our implementation of the DSP is based on the Open Source
-implementation of OSGi called Knopflerfish (REF). Since Sun
+implementation of OSGi called Knopflerfish \cite{knopflerfish01}. Since Sun
 Microsystems does not support its JDK for the Gumstix, we use JamVM
-(REF) as the Java virtual machine implementation and GNU Classpath
-(REF) for the runtime libraries. We have implemented various DSP
+\cite{jamvm01} as the Java virtual machine implementation and GNU Classpath
+\cite{classpath01} for the runtime libraries. We have implemented various DSP
 Components that implement the functionality needed for NetBEAMS. On
 the far left of Figure \ref{FIG_NETBEAMS} is the actual sensor; in our
-case the aforementioned YSI Sonde. A YSI Sonde data procuder (1) is a DSP
-component that uses the RS232 to read the physical measurements from
-the device. This component converts the physical measurement into a
-DSP-specific message. The following XML Schema defines the YSI Sonde
+case the aforementioned YSI Sonde. A YSI Sonde data producer (1) is a DSP
+component that uses the RS232 standard to read the physical measurements from
+the device over a serial port. This component converts the physical measurements 
+into a DSP-specific message. The following XML Schema defines the YSI Sonde
 specific message that captures all measurement points mentioned in
 Table \ref{TAB_SONDE_MEASUREMENTS}:
 

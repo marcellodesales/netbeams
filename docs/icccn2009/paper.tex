@@ -33,43 +33,81 @@ EMail: dhr@sfsu.edu}}
 
 \maketitle
 \begin{abstract}
-  Abstract.
+  In this paper we describe a sensor network for environmental
+  monitoring based on highly specialized, off-the-shelf sensing
+  devices.  Environmental monitoring depends on the reliable
+  collection of measurements from remotely deployed sensors and the
+  rapid transfer of those measurements to data centers. Typically,
+  sensors are deployed in out-of-the-way locations, where physical
+  access is limited and connections for telemetry are poor or
+  nonexistent. Maintaining the data stream from these sensors places
+  demands on human resources, requiring site visits to service the
+  sensors and to download data stored on internal memory.  The work
+  described in this paper is a collaborative effort between the
+  Computer Science Department at San Francisco State University and
+  the Romberg Tiburon Center. The result of this collaboration is an
+  environmental sensor network deployed in the San Francisco Bay. It
+  provides means to program and interrogate sensors at the remote
+  field locations and to transmit collected measurements to a remote
+  database.
 \end{abstract}
 
 
 \section{Introduction}
 
-Mention the nature of our sensor network: highly specialized sensors,
-sparse topology, remote locations, long range communication.
-\cite{roemer:2004}
-
----
+A wireless sensor network consists of spatially distributed autonomous
+devices using sensors to cooperatively monitor physical or
+environmental conditions at different locations \cite{roemer:2004}.
+Much research effort is focused on building wireless ad-hoc networks
+where each sensor node participates in a multi-hop routing algorithm.
+One the earliest examples of a wireless sensor network is the
+SmartDust project \cite{smartdust:2001} where one objective was to
+create autonomous sensing and communication in a cubic
+millimeter-sized device.  While most wireless sensor networks focus on
+small sensing devices such as the SmartDust mote, there exist a wide
+variety of off-the-shelf commercially available sensors that are used
+by environmental researchers. In contrast to the small sensing
+devices, sensors for environmental monitoring are typically on the
+order of one to two feet in length weighing several pounds. Our
+focus is on building an end-to-end infrastructure for environmental
+monitoring using specialized sensing devices.
 
 Environmental monitoring depends on the reliable collection of
 measurements from remotely deployed sensors and the rapid transfer of
-those measurements to data centers where processing and analysis may
-take place. Typically, sensors are deployed in out-of-the-way
-locations, where physical access is limited and connections for
-telemetry are poor or nonexistent. Maintaining the data stream from
-these sensors places demands on human resources, requiring site visits
-to service the sensors and to download data stored on internal memory.
-Consequently, there is a lag of days to months between the time the
-sensors perform the measurements and the time the measurements become
-available. Advances in battery life and anti-fouling technology have
-extended service cycles for field sensors, with the unwanted result of
-further delaying access to monitoring data.  In addition, the
-dependence on field site visits to alter of sensor characteristics, 
-such as sampling rate, prevents adjustment in monitoring strategy in
-response to rapidly developing events (e.g. oil spills, harmful algal
-blooms).
+those measurements to data centers. Typically, sensors are deployed in
+out-of-the-way locations, where physical access is limited and
+connections for telemetry are poor or nonexistent. Maintaining the
+data stream from these sensors places demands on human resources,
+requiring site visits to service the sensors and to download data
+stored on internal memory.  Consequently, there is a lag of days to
+months between the time the sensors perform the measurements and the
+time the measurements become available. Advances in battery life and
+anti-fouling technology have extended service cycles for field
+sensors, with the unwanted result of further delaying access to
+monitoring data.  In addition, the dependence on field site visits to
+alter of sensor characteristics, such as sampling rate, prevents
+adjustment in monitoring strategy in response to rapidly developing
+events (e.g. oil spills, harmful algal blooms).
 
-To address these problems of data collection from remote
-sensors, we propose to develop an automated end-to-end system based on
-proven technology. It provides means to program and interrogate
-sensors at the remote field locations and to transmit collected
-measurements over long distances to data collections centers, where the
-data is rapidly processed, archived, and made available to potential
-users in near real-time.
+The work described in this paper is a collaborative effort between the
+Computer Science Department at San Francisco State University and the
+Romberg Tiburon Center (RTC), a research institute focusing on the
+understanding of complex marine and estuarine environments. The result
+of this collaboration is NetBEAMS (Networked Bay Environmental
+Assessment Monitoring System), an environmental sensor network
+deployed in the San Francisco Bay. NetBEAMS provides means to program
+and interrogate sensors at the remote field locations and to transmit
+collected measurements to a database, where the data is rapidly
+processed, archived, and made available to potential users in near
+real-time. In the following we give an overview of the NetBEAMS
+architecture and implementation.  Section \ref{SEC_BACKGROUND}
+describes a typical environmental sensor used by the RTC. Section
+\ref{SEC_DSP} describes our Data Sensor Platform (DSP) that allows us
+to efficiently build up an end-to-end environmental sensor network.
+Section \ref{SEC_NETBEAMS} describes NetBEAMS; a practical application
+of the DSP. In Section \ref{SEC_CONCLUSION} we provide a conclusion
+and outlook.
+
 
 \section{Background}
 \label{SEC_BACKGROUND}
@@ -159,6 +197,7 @@ capabilities, time-delayed communication, etc. In this section should
 be no mentioning of DSP. Length: 1 page.
 
 \section{Data Sensor Platform}
+\label{SEC_DSP}
 
 Sensor networks, especially of environmental sensors, are normally deployed
 over distributed locations where communication infrastructure are not always 
@@ -178,8 +217,6 @@ constructed on top of these simple interfaces ( a good example of this strategy 
 world-wide-web). 
 
 In the following we discuss how our proposed architechure addresses those issues.
-
-\subsection{Architecture}
 
 \subsection{Architecture}
 
@@ -381,6 +418,7 @@ DSP can be implemented in different ways, but OSGi is a natural match.
 DSP Components are mapped to bundles. DSP itself is a bundle.
 
 \section{NetBEAMS}
+\label{SEC_NETBEAMS}
 
 \begin{figure*} 
 \centering
@@ -557,7 +595,7 @@ Container.
 
 \begin{figure}[!htb]
 \centering
-\epsfig{file=dsp-messages-container, width=8cm}
+%\epsfig{file=dsp-messages-container, width=8cm}
 \caption{\label{FIG_DSP_MSGS_CONTAINER} The structure of Messages Container.}
 \end{figure}
 
@@ -600,6 +638,7 @@ DSPMessages. Asynchronous UI: UI may only build up after next
 communication cycle.
 
 \section{Conclusions and Outlook}
+\label{SEC_CONCLUSION}
 
 The California coastal region is populated by a vast number of
 remotely deployed sensors that monitor environmental conditions

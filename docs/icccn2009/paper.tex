@@ -340,19 +340,61 @@ NetBEAMS supports an environmental sensor such as the YSI Sonde,
 introduced in Section \ref{SEC_BACKGROUND}. In order to access its
 sensor readings, we collocate it with an off-the-shelf embedded
 computing platform called Gumstix \cite{gumstix01} (far left in Figure
-\ref{FIG_NETBEAMS}). The Gumstix is a single-board computers with 256
-Mb of flash and 256 Mb of SDRAM, and running a 600 MHz TI OMAP 3503
-processor. Additional features can be added to the motherboard with
-expansion cards connected via on-board buses. The motherboards draw
-less than 250 mA @4V at 400 MHz and less than 50 mA while idling,
-waiting for input.  Gumstix runs Linux 2.6 with the BusyBox utilities,
-and uses the OpenEmbedded build environment to provide a complete Linux
-environment and a large range of Linux applications. We use the JamVM
-\cite{jamvm01} implementation of Sun Microsystem's virtual machine in order to
-run the DSP.
+\ref{FIG_NETBEAMS}).  The Gumstix is an ARM architecture and comes in various 
+hardware configurations.  A typical Gumstix configuration consists 
+of a motherboard and one or more expansion boards which connect to the 
+motherboard via on-board buses.  The motherboards draw less than 250 mA @4V 
+at 400 MHz and less than 50 mA while idling, waiting for input.
 
-The Gumstix connects to the RS232 serial port of the YSI Sonde via via a
-null-modem cable.  
+ 
+In our project, we use the Verdex Pro XM4 motherboard with 64MB of SDRAM, 16MB of Flash, and 
+a 400MHz Marvell PXA270 with XScale processor.  We also use two expansion boards:
+the Console-VX which comes with three RS232 serial ports and the Netpro-VX which
+features one 10/100baseT ethernet port.  The Gumstix runs Linux 2.6 with the 
+BusyBox utilities, and uses the OpenEmbedded cross-compile build environment to 
+provide a complete Linux environment and a large range of Linux applications for
+the ARM architecture.  We use the JamVM \cite{jamvm01} implementation of Sun 
+Microsystem's virtual machine in order to run the DSP. The Gumstix communicates 
+with the YSI Sonde via an RS232 serial port using a null-modem cable since both 
+the Sonde and the Gumstix are DTE devices. The serial port configuration is:
+
+
+
+\begin{table}
+\caption{\label{tab:RS232_Config}RS232 Serial Port Configuration}
+\centering
+\begin{tabular}{l l}
+\hline
+Baud Rate&9600\\
+Data Bit&8\\
+Parity&None\\
+Handshake&None\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}
+\caption{\label{TAB_RS232_Pinout}RS232 Serial Pinout}
+\centering
+\begin{tabular} {|l|l|l|}
+\hline
+Wire Color	&Pin Description        &DB-9\\ 
+\hline
+Yellow 		&RS232 TX    &2\\
+Orange		&RS232 RX    &3\\  
+Green  		&Alarm       &----\\ 
+Grey			&RTS         &----\\
+Blue  		&CTS         &----\\
+Red			&+ 12V DC    &9\\
+Black			&GND         &5\\  
+Purple		&SDI-12      &----\\ 
+Bare			&Shield      &----\\
+\hline
+\end{tabular}
+\end{table}
+ 
 
 We make use of the cellular phone network to establish a communication
 link with the backend server. The cellular phone network has the
@@ -419,7 +461,9 @@ Table \ref{TAB_SONDE_MEASUREMENTS}:
 
 The schema is derived from DSPMessage. As a payload it adds an
 unbounded sequence of sondeDataType. Each instance of this type
-captures one timestamped measure point. The YSI Sonde component can be
+captures one timestamped measure point. 
+
+The YSI Sonde component can be
 configured via special DSP messages that define properties such as the
 sampling frequency. These property messages originate from the web
 frontend that we will explain in a subsequent section.

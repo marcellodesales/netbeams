@@ -380,8 +380,13 @@ OSGi lends itself naturally to implement the DSP.
 DSP can be implemented in different ways, but OSGi is a natural match.
 DSP Components are mapped to bundles. DSP itself is a bundle.
 
-
 \section{NetBEAMS}
+
+\begin{figure*} 
+\centering
+\epsfig{file=netbeams, width=14cm}
+\caption{\label{FIG_NETBEAMS} NetBEAMS architecture.}
+\end{figure*}
 
 In the following we present a practical application of the DSP
 presented in the previous section. We describe a deployment of the DSP
@@ -414,13 +419,6 @@ locations where each individual sensor is deployed in the field and
 the sparse nature of the network, the resulting topology is a tree
 structure of depth 1.
 
-
-\begin{figure*}
-\centering
-\epsfig{file=netbeams, width=14cm}
-\caption{\label{FIG_NETBEAMS} NetBEAMS architecture.}
-\end{figure*}
-
 NetBEAMS supports an environmental sensor such as the YSI Sonde,
 introduced in Section \ref{SEC_BACKGROUND}. In order to access its
 sensor readings, we collocate it with an off-the-shelf embedded
@@ -443,9 +441,7 @@ Microsystem's virtual machine in order to run the DSP. The Gumstix communicates
 with the YSI Sonde via an RS232 serial port using a null-modem cable since both 
 the Sonde and the Gumstix are DTE devices. The serial port configuration is:
 
-
-
-\begin{table}
+\begin{table}[!htb]
 \caption{\label{tab:RS232_Config}RS232 Serial Port Configuration}
 \centering
 \begin{tabular}{l l}
@@ -457,7 +453,6 @@ Handshake&None\\
 \hline
 \end{tabular}
 \end{table}
-
 
 
 \begin{table}
@@ -534,13 +529,67 @@ frontend that we will explained in a subsequent section.
 
 \subsection{Remote Communication}
 
-The YSI Sonde component will pass any messages it generates to the
-local DSP. Via the matcher configuration these messages are forwarded
-to the remote communication component (2). It is the responsibility of
-this component to upload the message to its remote peer component
-(3). Since we use a data channel of a cellular phone network, the
-remote communication component only uploads the buffered data in
-certain configurable time intervals. 
+After producing the SondeDataContainer data, the YSI Sonde component will wrap
+it up in a DSP Message Message and pass it to the DSP Broker for its delivery.
+However, our use case scenario is that the message must go from the local
+sensor device to the server. For this reason, we have developed a pair of
+client and server DSP components specialized in transferring and receiving 
+serialized objects throught the communication channel using the HTTP protocol
+\cite{RFC2068}.
+
+\begin{itemize}
+  \item DSP Wire Transport Client: takes a collection of DSP messages and
+  transmit them using an HTTP client API written in JAVA \cite{http-client}. As
+  a non-functional requirement, a DSP administrator can set the interval in
+  which this component will transmit messages to other components;
+  \item DSP Wire Transport Server: is implemented using the Java Servlets
+  technology \cite{java-servlets}, and is used to receive the collection of DSP
+  messages transmitted, and potentially send DSP messages back to the sensor
+  station. 
+\end{itemize}
+
+One of the non-functional requirements for the DSP is to maximize the
+utilization of the communication channel. For this specific reason, we opted to
+add the type Messages Container, which contains a collection of DSP messages,
+and specific identifiers of the hosting sensor. Figure
+\ref{FIG_DSP_MSGS_CONTAINER} contains the structure of the DSP Messages
+Container.
+
+\begin{figure}[!htb]
+\centering
+\epsfig{file=dsp-messages-container, width=8cm}
+\caption{\label{FIG_DSP_MSGS_CONTAINER} The structure of Messages Container.}
+\end{figure}
+
+Some remarks regarding the Messages Container and it's implementation are as
+follows:
+
+\begin{itemize}
+  \item Container with or without Messages Container: an instance of
+  MessagesContainer may or may not have DSP messages;
+  \item Container may be used to acknowledge messages using a similar strategy
+  as the Slide Windowing protocol \cite{slide-window}. 
+\end{itemize}
+
+\subsection{Sending Messages Container}
+
+It's important to note that, at this point, the DSP Broker had already checked
+with the Matcher which are the DSP components that will be receive a copy of
+the message in question. The matcher had specific instructions to use the DSP
+Wire Transport Client component as the default ``Proxy'' or default gateway, if
+you prefer.
+
+By building a MessagesContainer instance, the Wire Transport Client adds all
+the messages addressed to the ``destinationHost'', with specific UUID of
+the component (2).
+
+\subsection{Receiving Messages Container}
+
+After the DSP server receives the message, it directly delivers to the
+local DSP Broker all the messages contained in the Messages Container server.
+In addition to that, the Messages Container might also include an attribute
+called acknowledgeUntil, which determines the next actions that will occur in
+the system.
 
 \subsection{Web Management}
 

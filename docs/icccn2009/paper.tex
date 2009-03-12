@@ -425,48 +425,76 @@ the far left of Figure \ref{FIG_NETBEAMS} is the actual sensor; in our
 case the aforementioned YSI Sonde. A YSI Sonde data producer (1) is a DSP
 component that uses the RS232 standard to read the physical measurements from
 the device over a serial port. This component converts the physical measurements 
-into a DSP-specific message. The following XML Schema defines the YSI Sonde
-specific message that captures all measurement points mentioned in
-Table \ref{TAB_SONDE_MEASUREMENTS}:
+into a DSP-specific message. The following XML Schema defines the YSI Sonde's
+specific message format which includes each measurement data point, described in
+Table \ref{TAB_SONDE_MEASUREMENTS}, and its type:
 
 \begin{code}
-<xs:schema ...>
-<xs:import schemaLocation="dsp-message.xsd"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.netbeams.dsp.org/sondedata.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" xmlns:mc="http://www.netbeams.dsp.org/message.xsd" xmlns:sndata="http://www.netbeams.dsp.org/sondedata.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-<xs:element name="SondeDataMessage">
-  <xs:complexType>
-    <xs:complexContent>
-      <xs:extension base="DSPMessage">
-        <xs:sequence maxOccurs="unbounded"
-                     minOccurs="1">
-          <xs:element name="sondeData"
-                      type="sondeDataType"/>
+    <xs:import namespace="http://www.netbeams.dsp.org/message.xsd" schemaLocation="message-content.xsd"/>
+
+    <xs:annotation><xs:appinfo>
+    <jaxb:globalBindings>
+      <jaxb:javaType name="java.util.Calendar" xmlType="xs:date"
+        parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
+        printMethod="javax.xml.bind.DatatypeConverter.printDate"
+        />
+      <jaxb:javaType name="java.util.Calendar" xmlType="xs:time"
+        parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
+        printMethod="javax.xml.bind.DatatypeConverter.printDate"
+        />
+    </jaxb:globalBindings>
+    </xs:appinfo></xs:annotation>
+
+    <xs:element name="SondeDataMessage">
+    <xs:complexType>
+        <xs:complexContent>
+            <xs:extension base="mc:AbstractMessageContent">
+                <xs:sequence maxOccurs="unbounded" minOccurs="1">
+                    <xs:element name="sondeData"
+                        type="sndata:sondeDataType" />
+                </xs:sequence>
+                <xs:attribute name="date" type="xs:date"></xs:attribute>
+                <xs:attribute name="time" type="xs:time"></xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="sondeDataType">
+        <xs:sequence>
+                <xs:element name="Temp" type="xs:float"/>
+                <xs:element name="SpCond" type="xs:float"/>
+                <xs:element name="Cond" type="xs:float"/>
+                <xs:element name="Resist" type="xs:float"/>
+                <xs:element name="Sal" type="xs:float"/>
+                <xs:element name="Press" type="xs:float"/>
+                <xs:element name="Depth" type="xs:float"/>
+                <xs:element name="pH" type="xs:float"/>
+                <xs:element name="phmV" type="xs:float"/>
+                <xs:element name="ODOSat" type="xs:float"/>
+                <xs:element name="ODOConc" type="xs:float"/>
+                <xs:element name="Turbid" type="xs:float"/>
+                <xs:element name="Battery" type="xs:float"/>
         </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
   </xs:complexType>
-</xs:element>
-
-<xs:complexType name="sondeDataType">
-  <xs:sequence>
-    <xs:element name="Date" type="xs:date"/>
-    <xs:element name="Time" type="xs:time"/>
-    <xs:element name="Temp" type="xs:float"/>
-    <xs:element name="SpCond" type="xs:float"/>
-    <!-- ... -->
-  </xs:sequence>
-</xs:complexType>
 </xs:schema>
 \end{code}
 
-The schema is derived from DSPMessage. As a payload it adds an
-unbounded sequence of sondeDataType. Each instance of this type
-captures one timestamped measure point. 
+The schema describes two Java classes, sondeDataType and SondeDataMessage, 
+which are used to package the Sonde's incoming data into a DSP message for delivery 
+to a remote consumer.  The SondeDataMessage class extends the AbstractMessageContent 
+class by adding a new type to the message payload, SondeDataType.  Each time the Sonde
+transmits its payload of measurement data during a sampling interval, the data is converted 
+into a SondeDataType which is then encapsulated within SondeDataMessage and then sent 
+to a remote consumer.
 
-The YSI Sonde component can be
-configured via special DSP messages that define properties such as the
-sampling frequency. These property messages originate from the web
-frontend that we will explain in a subsequent section.
+
+The YSI Sonde component can also be configured via special DSP messages, to direct the 
+Sonde to change its sampling frequency.  These property messages originate from the web 
+frontend that we will explained in a subsequent section.
 
 \subsection{Remote Communication}
 

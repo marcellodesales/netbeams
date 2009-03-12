@@ -585,11 +585,13 @@ the component (2).
 
 \subsection{Receiving Messages Container}
 
-After the DSP server receives the message, it directly delivers to the
-local DSP Broker all the messages contained in the Messages Container server.
-In addition to that, the Messages Container might also include an attribute
-called acknowledgeUntil, which determines the next actions that will occur in
-the system.
+After the DSP Wire Transport Server receives the Messages Container (3), it
+unmarshalls the messages and forward them to the local DSP Broker. 
+
+The reception of those messages will ALWAYS depend on the local DSP Broker and
+its combination with the Matcher. The steps (4), (5) and (6) are the
+actual reception of DSP messages. Container might also include an attribute
+called acknowledgeUntil, which determines the next actions that will occur in the system.
 
 \subsection{Web Management}
 

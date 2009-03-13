@@ -112,36 +112,21 @@ and outlook.
 \section{Background}
 \label{SEC_BACKGROUND}
 
-Researchers in the geosciences rely on sensor data collected by highly
-specialized sensors such as the Seabird or YSI. These sensors are
-usually deployed in remote locations that not only make their
-maintenance difficult, but also access to their measurements.
-Typically, the sensors are autonomous in the sense that they can run
-for a certain time on battery power and store the measurement data in
-internal memory. Only when the sensors are serviced, the measurement
-data, which was collected since the last servicing, is uploaded to a 
-portable storage device. From there, the data can be uploaded to
-server. Notice that this manual procedure to retrieve sensor data is not only
-error prone, but also results are in a serious time lag between the time
-the sensor performs the measurement and when it becomes available for
-further processing. For many applications, however, it would be beneficial to
-have near-realtime access to the sensor measurement. In this way, being able 
-to access data when they become available on the sensor device would also
-reduce the maintenance overhead.
-
----
-
-The YSI 6600EDS V2 Sonde \cite{Sonde01} is a water quality monitoring device that
-gathers water quality data, and operates in fresh, sea, or polluted
-water. Some of the measurements that the YSI is capable of are
-conductivity, temperature, chloride, ammonium, nitrate, turbidity, and
-chlorophyll.  It is under 55 cm in length, 8.9 cm in diameter, and
-weighs approximately 3.18 kg. It operates at temperatures between -5
-to +50 deg C and at depths up to 200 meters.  It uses 8 C-size
-Alkaline Batteries or External 12 VDC. Battery life can last up to 75
-days depending on sensor configuration. The Sonde's bulkhead contains
-multiple pin connectors to support sensor probes for measuring the
-following:
+Environmental researchers typically use standard, off-the-shelf
+sensing devices for their purposes. These sensing devices are at the
+opposite spectrum of miniature sensors such as SmartDust. One such
+device is the YSI 6600EDS V2 Sonde \cite{Sonde01}. It is a water
+quality monitoring device that gathers water quality data, and
+operates in fresh, sea, or polluted water. Some of the measurements
+that the YSI is capable of are conductivity, temperature, chloride,
+ammonium, nitrate, turbidity, and chlorophyll.  It is under 55 cm in
+length, 8.9 cm in diameter, and weighs approximately 3.18 kg. It
+operates at temperatures between -5 to +50 deg C and at depths up to
+200 meters.  It uses 8 C-size Alkaline Batteries or External 12 VDC.
+Battery life can last up to 75 days depending on sensor configuration.
+The Sonde's bulkhead contains multiple pin connectors to support
+sensor probes for measuring parameters as shown in Table
+\ref{TAB_SONDE_MEASUREMENTS}.
 
 \begin{table}[h]
 \caption{\label{TAB_SONDE_MEASUREMENTS} YSI Sonde measurements.}
@@ -186,15 +171,36 @@ logging data to an internal file.  To view the data as it's being
 captured, the option to show live data is chosen and the data can then
 seen via a serial terminal session at each interval.
 
----
+We provide these details to show that sensing devices such as the YSI
+are highly specialized devices with a unit price of several thousand
+dollars. These sensors are usually sparsely deployed in remote
+locations that not only make their maintenance difficult, but also
+access to their measurements.  Typically, the sensors are autonomous
+in the sense that they can run for a certain time on battery power and
+store the measurement data in internal memory. Only when the sensors
+are serviced, the measurement data, which was collected since the last
+servicing, is uploaded to a portable storage device. From there, the
+data can be uploaded to server. This manual procedure to retrieve
+sensor data is not only error prone, but also results are in a serious
+time lag between the time the sensor performs the measurement and when
+it becomes available for further processing. For many applications,
+however, it would be beneficial to have near-realtime access to the
+sensor measurement. We identify the following requirements that an
+end-to-end infrastructure supporting devices such as the YSI should
+offer:
 
-Start with some related work. Who else has done an OSGi-based
-infrastructure for sensor networks? Kleber: I believe you have a few
-references. This section should be a combination of a use case (using
-the RTC and their YSI sonde as an example) and a requirements
-analysis: requirements such as remote management and monitoring
-capabilities, time-delayed communication, etc. In this section should
-be no mentioning of DSP. Length: 1 page.
+\begin{itemize}
+\item Allow near-realtime access to sensor measurements.
+\item Allow remote servicing that include changing of configuration
+  parameters as well as software upgrades.
+\item Support cost-effective long distance communication link.
+\item Can be deployed in remote locations in unprotected outdoor
+  conditions.
+\end{itemize}
+
+In the next section we describe a software architecture that provides
+a foundation to fulfill these requirements.
+
 
 \section{Data Sensor Platform}
 \label{SEC_DSP}
@@ -595,7 +601,7 @@ Container.
 
 \begin{figure}[!htb]
 \centering
-%\epsfig{file=dsp-messages-container, width=8cm}
+\epsfig{file=dsp-messages-container, width=8cm}
 \caption{\label{FIG_DSP_MSGS_CONTAINER} The structure of Messages Container.}
 \end{figure}
 

@@ -99,7 +99,7 @@ deployed in the San Francisco Bay. NetBEAMS provides means to program
 and interrogate sensors at the remote field locations and to transmit
 collected measurements to a database, where the data is rapidly
 processed, archived, and made available to potential users in near
-real-time. In the following we give an overview of the NetBEAMS
+real-time. In the following sections we give an overview of the NetBEAMS
 architecture and implementation.  Section \ref{SEC_BACKGROUND}
 describes a typical environmental sensor used by the RTC. Section
 \ref{SEC_DSP} describes our Data Sensor Platform (DSP) that allows us
@@ -113,8 +113,8 @@ of the DSP. Section \ref{SEC_CONCLUSION} concludes this paper.
 
 Environmental researchers typically use standard, off-the-shelf
 sensing devices for their purposes. These sensing devices are at the
-opposite spectrum of miniature sensors such as SmartDust. One such
-device is the YSI 6600EDS V2 Sonde \cite{Sonde01}. It is a water
+opposite end of the size spectrum of miniature sensors such as SmartDust. One such
+device is the YSI 6600EDS V2 Sonde \cite{Sonde01}, a water
 quality monitoring device that gathers water quality data, and
 operates in fresh, sea, or polluted water. Some of the measurements
 that the YSI is capable of are conductivity, temperature, chloride,
@@ -559,7 +559,7 @@ the cellular phone network has sufficient coverage for more
 environmental sensor networks, it is not cost effective to keep a data
 link permanently open. The remote communiction components can be
 configured to upload buffered sensor data only in certain time
-intervals.Messages are transported via HTTP \cite{RFC2068}. The
+intervals. Messages are transported via HTTP \cite{RFC2068}. The
 matching DP/DC pair for remote communication has the following
 properties:
 

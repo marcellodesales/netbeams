@@ -3,6 +3,7 @@
 \usepackage{epsfig}
 \usepackage{fancyvrb}
 \usepackage{url}
+\usepackage{pifont}
 
 \DefineVerbatimEnvironment%
   {code}{Verbatim}{numbers=left,numbersep=3pt,frame=lines,%
@@ -531,7 +532,7 @@ and GNU Classpath \cite{classpath01} for the runtime libraries. We
 have implemented various DSP Components that implement the
 functionality needed for NetBEAMS. On the far left of Figure
 \ref{FIG_NETBEAMS} is the actual sensor; in our case the
-aforementioned YSI Sonde. The YSI Sonde DP (1) uses the RS232 standard
+aforementioned YSI Sonde. The YSI Sonde DP \ding{192} uses the RS232 standard
 to read the physical measurements from the device over a serial port.
 This component converts the physical measurements into a DSP-specific
 message. Figure \ref{FIG_DSP_YSI_DATA} depicts the YSI Sonde's
@@ -555,7 +556,7 @@ from there they are forwarded to the remote communication component
 described in the next section.  The YSI Sonde DP can also be
 configured via special DSP messages, to direct the Sonde to change its
 sampling frequency.  These property messages originate from a web
-management interface (component (6) in Figure \ref{FIG_NETBEAMS}).
+management interface (component \ding{197} in Figure \ref{FIG_NETBEAMS}).
 
 
 \subsection{Remote Communication}
@@ -563,7 +564,7 @@ management interface (component (6) in Figure \ref{FIG_NETBEAMS}).
 All messages sent by the YSI Sonde DP need to be uploaded to a remote
 database. Since the DSP itself can only handle communication within
 its local DPs and DCs, we have created a matching pair of DC and DP
-that can handle remote communication (components (2) and (3) in Figure
+that can handle remote communication (components \ding{193} and \ding{194} in Figure
 \ref{FIG_NETBEAMS}). As explained earlier, we make use of the cellular
 phone network to upload sensor data to a remote backend server. While
 the cellular phone network has sufficient coverage for more

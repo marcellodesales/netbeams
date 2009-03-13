@@ -361,6 +361,7 @@ type of payload processed by that component. An example illustrating a
 DSP message is given when we discuss the YSI Sonde Component.
 
 \subsection{DSP Broker}
+\label{SEC_DSP_BROKER}
 
 In order to keep the API symmetrical, the DSP is itself implemented as
 a DSP Component, the so-called DSP Broker. While technically the DSP
@@ -522,22 +523,34 @@ accesses the cellular network using a data plan from AT\&T.
 
 
 
-\subsection{YSI Sonde Component}
+\subsection{DSP Implementation}
+
+The DSP is implemented in Java using the OSGi platform. OSGi
+\cite{osgi} is a Java-based component system. So-called bundles, which
+are self-contained Java JAR files, can be deployed and undeployed at
+runtime via special purpose class loaders. In fact, the API of the DSP
+is inspired by OSGi. All DSP Components depicted in Figure
+\ref{FIG_NETBEAMS} are implemented as OSGi bundles. The DSP Broker
+discussed in Section \ref{DSP_BROKER} is mapped to an OSGi bundle as well.
 
 Our implementation of the DSP is based on the Open Source
 implementation of OSGi called Knopflerfish \cite{knopflerfish01}.
 Since Sun Microsystems does not support its JDK for the Gumstix, we
 use JamVM \cite{jamvm01} as the Java virtual machine implementation
-and GNU Classpath \cite{classpath01} for the runtime libraries. We
-have implemented various DSP Components that implement the
-functionality needed for NetBEAMS. On the far left of Figure
-\ref{FIG_NETBEAMS} is the actual sensor; in our case the
-aforementioned YSI Sonde. The YSI Sonde DP \ding{192} uses the RS232 standard
-to read the physical measurements from the device over a serial port.
-This component converts the physical measurements into a DSP-specific
-message. Figure \ref{FIG_DSP_YSI_DATA} depicts the YSI Sonde's
-specific message format which includes each measurement data point,
-described in Table \ref{TAB_SONDE_MEASUREMENTS}.
+and GNU Classpath \cite{classpath01} for the runtime libraries. In the
+following sections we provide further details of some of the DSP
+Components that we have implemented as part of the NetBEAMS project.
+
+\subsection{YSI Sonde Component}
+
+On the far left of Figure \ref{FIG_NETBEAMS} is the actual sensor; in
+our case the aforementioned YSI Sonde. The YSI Sonde DP \ding{192}
+uses the RS232 standard to read the physical measurements from the
+device over a serial port.  This component converts the physical
+measurements into a DSP-specific message. Figure
+\ref{FIG_DSP_YSI_DATA} depicts the YSI Sonde's specific message format
+which includes each measurement data point, described in Table
+\ref{TAB_SONDE_MEASUREMENTS}.
 
 \begin{figure}[!htb]
 \centering
@@ -545,10 +558,10 @@ described in Table \ref{TAB_SONDE_MEASUREMENTS}.
 \caption{\label{FIG_DSP_YSI_DATA} YSI message format.}
 \end{figure}
 
-The SondeDataContainerType defines the payload of messages generated
+The \texttt{SondeDataContainerType} defines the payload of messages generated
 by the YSI Sonde DP. As all DSP messages, it is derived from the
-AbstractMessageContent. The payload mainly consists of the
-SondeDataType that defines all the sensor data that the YSI Sonde is
+\texttt{AbstractMessageContent}. The payload mainly consists of the
+\texttt{SondeDataType} that defines all the sensor data that the YSI Sonde is
 capable of producing. The YSI Sonde DP uses the RS232 to query the
 physical device for its data in regular intervals. The measurements
 are then converted into a DSP message and forwarded to the DSP Broker

@@ -205,24 +205,20 @@ a foundation to fulfill these requirements.
 \section{Data Sensor Platform}
 \label{SEC_DSP}
 
-Sensor networks, especially of environmental sensors, are normally deployed
-over distributed locations where communication infrastructure are not always 
-reliable or, at least, not countinuously available. Additionally, different
-sensors and communication protocols might be available in throughout the network.
-
-As the network grows in size and complexity scalability, reliabilty and maintainability
-become critical issues. Additional components 
-might be added to the network, the network configuration might be altered or 
-new versions of components might be deployed. The sensor network must be able to 
-support such adjustments without significant overhead for network administrators and
-the components in the network.
-
-From system development and integration point of view, interfaces among components and
-between components and the network should be simple. Complex interaction can be 
-constructed on top of these simple interfaces ( a good example of this strategy is the 
-world-wide-web). 
-
-In the following we discuss how our proposed architechure addresses those issues.
+Sensor networks, especially of environmental sensors, are normally
+deployed over a geographically wide area where the communication
+infrastructure is not always reliable or, at least, not countinuously
+available. As the sensor network grows in size and complexity
+scalability, reliabilty and maintainability become critical issues.
+Additional components might be added to the network, sensor
+configuration might be altered, or new versions of components might be
+deployed. The sensor network must be able to support such adjustments
+without significant overhead for maintainers.  From system
+development and integration point of view, interfaces among components
+and between components and the network should be simple. Complex
+interaction can be constructed on top of these simple interfaces.  In
+the following we discuss how our proposed architechure addresses those
+issues.
 
 \subsection{Architecture}
 
@@ -236,51 +232,53 @@ we call the basic foundation the \emph{Data Sensor Platform}
 platform. A sensor network is built from several DSPs that are linked
 with each other.
 
-Figure \ref{FIG_DSP} depicts the basic architecture of the
-DSP. We refer to the plug-and-play modules as DSP Components. DSP
-Components are self-contained modules that can be added and removed to
-a DSP installation at runtime. The basic communication paradigm within
-a DSP is a message. DSP Components can exchange messages of different
-types. Actually, all interactions between DSP Components are implemented
-through messages yielding simple but powerful communication instructure.
-We distinguish between Data Producers (DP) and Data Consumers
-(DC) within the scope of a DSP. DP and DC can be seen as roles that a
-DSP Component may have. It is possible for a DSP Component to act in
-the role of DC and DP at the same time. Messages in DSPs are routed based 
-on rules. Rules can be statically or dynamically configured. Rules can use 
-different source information when routing a message: producers or consumers of the message, 
-the message itself or specific configuration provided by the administrators.
+Figure \ref{FIG_DSP} depicts the basic architecture of the DSP. We
+refer to the plug-and-play modules as DSP Components. DSP Components
+are self-contained modules that can be added and removed to a DSP
+installation at runtime. The basic communication paradigm within a DSP
+is a message. DSP Components can exchange messages of different types.
+Actually, all interactions between DSP Components are implemented
+through messages yielding simple but powerful communication
+instructure.  We distinguish between \emph{Data Producers} (DP) and
+\emph{Data Consumers} (DC) within the scope of a DSP. DP and DC can be
+seen as roles that a DSP Component may have. It is possible for a DSP
+Component to act in the role of DC and DP at the same time. Messages
+in DSPs are routed based on rules. Rules can be configured statically
+or dynamically. Rules for routing messages can be based on different
+information: producers or consumers of the message, the message
+itself, or specific configuration parameters provided externally.
 
 \begin{figure}
 \centering
-\epsfig{file=dsp-platform, width=7cm}
+\epsfig{file=dsp, width=7cm}
 \caption{\label{FIG_DSP} Data Sensor Platform (DSP).}
 \end{figure}
 
 The DSP is responsible for routing messages between DPs and DCs. It is
-important to note that this routing only happens withing a
+important to note that this routing only happens within a
 DSP. Following the paradigm of a micro-kernel approach, the DSP has no
 notion of remote communication or sensor-specific details. All this
-knowledge is embodied in DSP Components.
+knowledge is embodied in special purpose DSP Components.
 
 \subsection{DSP Components}
 
 A DSP Component encapsulates a particular functionality. We
 distinguish between those components that produce data (DP) and those
 that consume data (DC). An example for a DSP Component acting in the
-role of a DP is a sensor module. The sensor module reads data from the
-physical sensor and converts the data into a message that is forwarded
-to the DSP. Because this module generates data with respect to the
-DSP, it is a data producer. An example for a data consumer is a
-converter module that converts the internal, DSP-specific data format,
-suitable for consumption by external applications. One such common
-format used in the domain of environmental monitoring is OpenDAP
-\cite{opendap01}. Since the converter module accepts messages from the DSP, it
-acts in the role of a data consumer. Finally, a DSP Component
-implementing persistency is an example of a module that acts in the
-roles of both data producer and consumer. It accepts messages from the
-DSP and stores them in a database. At a later time, it may act as a
-data producer by resending previously stored messages.
+role of a DP is a module that interfaces with a physical sensor. Such
+a module reads data from the sensor and converts the data into a
+message that is forwarded to the DSP. Because this module generates
+data with respect to the DSP, it is a data producer. An example for a
+data consumer is a converter module that converts the internal,
+DSP-specific data format to a format suitable for consumption by
+external applications. One such common format used in the domain of
+environmental monitoring is OpenDAP \cite{opendap01}.  Since the
+converter module accepts messages from the DSP, it acts in the role of
+a data consumer. Finally, a DSP Component implementing persistency is
+an example of a module that acts in the roles of both data producer
+and consumer. It accepts messages from the DSP and stores them in a
+database. At a later time, it may act as a data producer by resending
+previously stored messages.
 
 All DSP Components need to implement the following Java interface:
 
@@ -292,105 +290,101 @@ interface DSPComponent
    public void startComponent();
    public void stopComponent();
    public void deliver(DSPMessage msg);
-   public Message deliverWithReply(DSPMessage msg);
    // ...
 }
 \end{code}
 
 By implementing the above Java interface, the resuling code
-effectively becomes a DSP Component that can be deployed at runtime. A
-component is identified by its type. Only one component of a certain type per DSP 
-is permissible. A type identifier much be unique across all DSP Components in DSP. 
-Upon deploying a DSP Component, an initialization function is called (line 4). Once a
+effectively becomes a DSP Component that can be deployed on a DSP at
+runtime. A component is identified by its type (line 3). Only one
+component of a certain type per DSP is permissible. A type identifier
+must be unique across all DSP Components in a DSP.  Upon deploying a
+component, an initialization function is called (line 4). Once a
 component is initialized, it may be started (line 5) and stopped (line
 6) multiple time. Whenever the DSP wishes to pass a message (that was
-generated by some DP), it invokes the \texttt{deliver()} method (ine
+generated by some DP), it invokes the \texttt{deliver()} method (line
 7). The message structure will be explained in the following section.
-One important feature of the DSP is the ability to redeploy (maybe with a new version) at 
-runtime. This allows DSPs to be updated remotely. This process is managed through
-messages sent to a special DSP Component which represents the DSP itself.
+One important feature of the DSP is the ability to redeploy (maybe
+with a new version) at runtime. This allows DSPs to be updated
+remotely. This process is managed through messages sent to a special
+DSP Component that is able to manage its local DSP.
 
-\subsection{Message}
+\subsection{Message Structure}
 
 Message passing is the main paradigm for exchanging information within
-a DSP. After producing data, DP component wraps that data in the 
-body of a message, so that DC components can receive the message and consume 
-the data on the message's body. When it comes to passing messages to a remote
-DSP instane, messages are serialized in XML \cite{xml2000} and automatically 
-deserialized for DC located in the remote DSP. In order to serialize and
-deserialize DSP messages, the DSP infrastructure uses the XML Schema 
-standard \cite{xml-schema2004} to generate and validate the DSP message. Figure
-\ref{FIG_DSP_MESSAGE} defines the structure of a general DSP Message.
+a DSP. After producing data, a DP wraps that data in the body
+of a message, so that DC components can receive the message and
+consume the data contained in the message's body. When it comes to passing
+messages to a remote DSP instance, messages are serialized in XML
+\cite{xml2000} and automatically deserialized for DC located in the
+remote DSP. In order to serialize and deserialize DSP messages, the
+DSP infrastructure uses the XML Schema standard \cite{xml-schema2004}
+to generate and validate the DSP message. Figure \ref{FIG_DSP_MESSAGE}
+defines the structure of a general DSP message.
 
 \begin{figure}[!htb]
  \centering
  \epsfig{file=dsp-message, width=9cm, height=4cm}
- \caption{\label{FIG_DSP_MESSAGE} Structure of a DSP Message.}
+ \caption{\label{FIG_DSP_MESSAGE} Structure of a DSP message.}
 \end{figure}
 
-The above XML Schema is defined for an ``Abstract Message'' type, whose
-structure serves as a base schema for all different types of messages. Any
-message will contain two basic attributes: ``messageID'' and ``ContentType''. 
-The former uniquely identifies a message and the latter the data in the body of
-the message. Complementary identification information such as the message 
-producer and consumer are located in the header of the message, which are
-defined by the schema type ``ComponenIdentifier''. A ``ComponentIdentifier''
-carries out information about the component name and its physical host address.
-Finally, the body of the message may contain any data type defined by the component 
-developer, and it can be interpreted as the DSP payload.
+The basic message structure is defined by an \texttt{AbstractMessage}
+type, whose structure serves as a base schema for all different types
+of messages. Any message will contain two basic attributes:
+\texttt{messageID} and \texttt{ContentType}.  The former uniquely
+identifies a message and the latter the data in the body of the
+message. Complementary identification information such as the message
+producer and consumer are located in the header of the message, which
+are defined by the schema type \texttt{ComponenIdentifier}. A
+\texttt{ComponentIdentifier} carries out information about the
+component name and its physical host address.  Finally, the body of
+the message represents the payload and may contain any data type
+defined by the component developer.
 
-Although XML schema is the de-facto standard to bind and validate xml data to
-its type, the architectural infrastructure of DSP uses an XML Data Bindining
-Technology \cite{xml-dbind} called JAXB \cite{xml-jaxb}. It is used to generate
-a type safe API for handling in-memory object graphs from the XML instances of 
-DSP Messages and the content of its data payload. Moreover, taking advantage 
-of the data type polimorphirsm of XML schema data types - concept borrowed from 
-Object-Oriented Design \cite{Rumbaugh1991} - we defined different types of 
-messages in order to allow specific DP and DC interpret the payload of any 
-given message solely based on their runtime type, as follows:
+Although XML schema is the de-facto standard to bind and validate XML
+data to its type, the architectural infrastructure of DSP uses an XML
+data binding technology \cite{xml-dbind} called JAXB \cite{xml-jaxb}.
+It is used to generate a type safe API for handling in-memory object
+graphs from the XML instances of DSP Messages and the content of its
+data payload. Moreover, taking advantage of the data type polymorphism
+of XML schema data types -- a concept borrowed from object oriented
+principles -- we defined different categories of messages in order to
+reflect the nature of the message content. Among those categories are
+query and update messages for configuring various properties supported
+by DSP Components and measurement messages that actually contain
+sensor readings.
 
-\begin{itemize}
-  \item Action Message;
-  \item Event Message;
-  \item Create Message;
-  \item Insert Message;
-  \item Update Message;
-  \item Delete Message;
-  \item Query Message;
-  \item Measure Message.
-\end{itemize}
+The payload of a message is itself described via an XML schema in
+order to integrate it seemingly with the general message structure. A
+developer of a DSP Component can define a schema that represents the
+type of payload processed by that component. An example illustrating a
+DSP message is given when we discuss the YSI Sonde Component.
 
-Not only the message structure is defined by XML schemas, but also the body
-content is and may be of any user-defined type. Therefore, the data
-defined to be sent from any given DP to any DC can be also in XML format or
-in-memory. An example illustrating a DSP message is given in the YSI section.
+\subsection{DSP Broker}
 
-\subsection{Broker}
-
-As soon as a DP produces data and wraps it up in a DSP Message, the DP only
-interact with the DSP platform via the DSP Broker by making the call
-``Broker.deliver(DSP Message)''. In this way, DSP broker is responsible for
-delivering the produced message to DSP consumers DCs, as well as verifying
-whether the delivery of the message is going to be done locally or remotely. 
+In order to keep the API symmetrical, the DSP is itself implemented as
+a DSP Component, the so-called DSP Broker. While technically the DSP
+Broker has the same API as any component, it serves a special role and
+cannot be removed. When a DP sends a message, it actually
+invokes the \texttt{deliver()} method of the DSP Broker. The broker is
+responsible for routing the message to one or several DCs. It
+distinguishes between local and remote destinations:
 
 \begin{itemize}
- \item Local delivery of messages: it uses local object reference to deliver the
-DSP message;
- \item Remote delivery of messages: it uses any DSP component that is
-specialized in remote delivery defined as ``Gateway DSP Component''.
+\item Local delivery of messages: it uses local object reference to
+  deliver the DSP message.
+\item Remote delivery of messages: it uses a DSP Component marked as a
+  default gateway to handle remote message delivery.
 \end{itemize}
 
-The selection of the DCs for a given message to where the Broker will deliver
-messages or use a gateway component is determined by an object called Matcher.
-
-\subsection{Matcher}
-
-The Matcher is an object responsible to find the possible set of DCs for a given
-DSP message, and its ``deterministic intelligence'' relies on matching rules
-defined by the DSP administrator. In this way, a set of matching rules is define
-in XML and stored at the DSP run-time directory, where each matching rule is
-uniquely identified by a rule ID and determines the following (see
-figure \ref{FIG_MATCHER_RULE}):
+The selection of the DCs for a given message to where the broker will
+deliver messages to is determined by a matcher.  The matcher is
+responsible to find the possible set of DCs for a given DSP message,
+and it relies on matching rules defined statically or at runtim. In
+this way, a set of matching rules is defined in XML and stored at the
+DSP run-time directory, where each matching rule is uniquely
+identified by a rule ID and determines the following (see Figure
+\ref{FIG_MATCHER_RULE}):
 
 \begin{figure}[!htb]
  \epsfig{file=dsp-match-rule, width=9cm, height=4cm}
@@ -398,30 +392,20 @@ figure \ref{FIG_MATCHER_RULE}):
 \end{figure}
 
 \begin{itemize}
- \item Match Criteria: given the DSP message delivered to the Broker, which
-component(s) produced that message and in which node? It defines the name of
-the component type of the producer and its physical location (IP address);
- \item Match Target: given the DSP message, which component(s) are going
-to consume the message, and in which node? It defines the name of the component
-type of the consumer, and optionally defines a gateway component.
+\item The \emph{match criteria} defines the name of the component type
+  of the producer and its physical location (IP address);
+\item The \emph{match target} defines the name of the component type
+  of the consumer, and optionally defines a gateway component.
 \end{itemize}
 
-\subsection{Matcher replies to Broker}
+When analyzing the matching rules, the matcher only selects the rules
+that satisfy the matching criteria and forwards them back to the
+broker. Once the broker has the matching rules, it determines whether
+the delivery is done directly to a component defined on the match
+target, or if the message is delivered to the optional gateway. We
+have defined special gateway DSP components that is used to transport
+the DSP Messages, serialized in XML, to any remote DSP instance.
 
-When analyzing the matching rules, the Matcher only selects the rules that
-satisfy the Matching Criteria and forwards them back to the Broker. Once the
-broker has the matching rules, it determines whether the delivery is done
-directly to a component defined on the Match Target, or if the message is
-delivered to the optional gateway. We have defined special gateway DSP
-components that is used to transport the DSP Messages, serialized in
-XML, to any remote DSP instance. 
-  
-\subsection{OSGi}
-
-OSGi lends itself naturally to implement the DSP.
-
-DSP can be implemented in different ways, but OSGi is a natural match.
-DSP Components are mapped to bundles. DSP itself is a bundle.
 
 \section{NetBEAMS}
 \label{SEC_NETBEAMS}
@@ -474,16 +458,18 @@ motherboard via on-board buses.  The motherboards draw less than 250 mA @4V
 at 400 MHz and less than 50 mA while idling, waiting for input.
 
  
-In our project, we use the Verdex Pro XM4 motherboard with 64MB of SDRAM, 16MB of Flash, and 
-a 400MHz Marvell PXA270 with XScale processor.  We also use two expansion boards:
-the Console-VX which comes with three RS232 serial ports and the Netpro-VX which
-features one 10/100baseT ethernet port.  The Gumstix runs Linux 2.6 with the 
-BusyBox utilities, and uses the OpenEmbedded cross-compile build environment to 
-provide a complete Linux environment and a large range of Linux applications for
-the ARM architecture.  We use the JamVM \cite{jamvm01} implementation of Sun 
-Microsystem's virtual machine in order to run the DSP. The Gumstix communicates 
-with the YSI Sonde via an RS232 serial port using a null-modem cable since both 
-the Sonde and the Gumstix are DTE devices. The serial port configuration is:
+In our project, we use the Verdex Pro XM4 motherboard with 64MB of
+SDRAM, 16MB of Flash, and a 400MHz Marvell PXA270 with XScale
+processor.  We also use two expansion boards: the Console-VX which
+comes with three RS232 serial ports and the Netpro-VX which features
+one 10/100baseT ethernet port.  The Gumstix runs Linux 2.6 with the
+BusyBox utilities, and uses the OpenEmbedded cross-compile build
+environment to provide a complete Linux environment and a large range
+of Linux applications for the ARM architecture.  We use the JamVM
+\cite{jamvm01} implementation of Sun Microsystem's virtual machine in
+order to run the DSP. The Gumstix communicates with the YSI Sonde via
+an RS232 serial port using a null-modem cable since both the Sonde and
+the Gumstix are DTE devices. The serial port configuration is:
 
 \begin{table}[!htb]
 \caption{\label{tab:RS232_Config}RS232 Serial Port Configuration}
@@ -540,18 +526,20 @@ cellular network using a data plan from AT\&T.
 \subsection{YSI Sonde Component}
 
 Our implementation of the DSP is based on the Open Source
-implementation of OSGi called Knopflerfish \cite{knopflerfish01}. Since Sun
-Microsystems does not support its JDK for the Gumstix, we use JamVM
-\cite{jamvm01} as the Java virtual machine implementation and GNU Classpath
-\cite{classpath01} for the runtime libraries. We have implemented various DSP
-Components that implement the functionality needed for NetBEAMS. On
-the far left of Figure \ref{FIG_NETBEAMS} is the actual sensor; in our
-case the aforementioned YSI Sonde. A YSI Sonde data producer (1) is a DSP
-component that uses the RS232 standard to read the physical measurements from
-the device over a serial port. This component converts the physical measurements 
-into a DSP-specific message. The following XML Schema on figure \ref{FIG_DSP_YSI_DATA} 
-defines the YSI Sonde's specific message format which includes each measurement data point, described in
-Table \ref{TAB_SONDE_MEASUREMENTS}, and its type:
+implementation of OSGi called Knopflerfish \cite{knopflerfish01}.
+Since Sun Microsystems does not support its JDK for the Gumstix, we
+use JamVM \cite{jamvm01} as the Java virtual machine implementation
+and GNU Classpath \cite{classpath01} for the runtime libraries. We
+have implemented various DSP Components that implement the
+functionality needed for NetBEAMS. On the far left of Figure
+\ref{FIG_NETBEAMS} is the actual sensor; in our case the
+aforementioned YSI Sonde. A YSI Sonde data producer (1) is a DSP
+component that uses the RS232 standard to read the physical
+measurements from the device over a serial port. This component
+converts the physical measurements into a DSP-specific message. The
+following XML Schema on figure \ref{FIG_DSP_YSI_DATA} defines the YSI
+Sonde's specific message format which includes each measurement data
+point, described in Table \ref{TAB_SONDE_MEASUREMENTS}, and its type:
 
 \begin{figure}[!htb]
 \centering
@@ -559,45 +547,49 @@ Table \ref{TAB_SONDE_MEASUREMENTS}, and its type:
 \caption{\label{FIG_DSP_YSI_DATA} Structure of the YSI Component Data.}
 \end{figure}
 
-The schema describes two Java classes, sondeDataType and SondeDataMessage, 
-which are used to package the Sonde's incoming data into a DSP message for delivery 
-to a remote consumer.  The SondeDataMessage class extends the AbstractMessageContent 
-class by adding a new type to the message payload, SondeDataType.  Each time the Sonde
-transmits its payload of measurement data during a sampling interval, the data is converted 
-into a SondeDataType which is then encapsulated within SondeDataMessage and then sent 
-to a remote consumer.
+The schema describes two Java classes, sondeDataType and
+SondeDataMessage, which are used to package the Sonde's incoming data
+into a DSP message for delivery to a remote consumer.  The
+SondeDataMessage class extends the AbstractMessageContent class by
+adding a new type to the message payload, SondeDataType.  Each time
+the Sonde transmits its payload of measurement data during a sampling
+interval, the data is converted into a SondeDataType which is then
+encapsulated within SondeDataMessage and then sent to a remote
+consumer.
 
-The YSI Sonde component can also be configured via special DSP messages, to direct the 
-Sonde to change its sampling frequency.  These property messages originate from the web 
-frontend that we will explained in a subsequent section.
+The YSI Sonde component can also be configured via special DSP
+messages, to direct the Sonde to change its sampling frequency.  These
+property messages originate from the web frontend that we will
+explained in a subsequent section.
 
 \subsection{Remote Communication}
 
-After producing the SondeDataContainer data, the YSI Sonde component will wrap
-it up in a DSP Message Message and pass it to the DSP Broker for its delivery.
-However, our use case scenario is that the message must go from the local
-sensor device to the server. For this reason, we have developed a pair of
-client and server DSP components specialized in transferring and receiving 
-serialized objects throught the communication channel using the HTTP protocol
-\cite{RFC2068}.
+After producing the SondeDataContainer data, the YSI Sonde component
+will wrap it up in a DSP Message Message and pass it to the DSP Broker
+for its delivery.  However, our use case scenario is that the message
+must go from the local sensor device to the server. For this reason,
+we have developed a pair of client and server DSP components
+specialized in transferring and receiving serialized objects throught
+the communication channel using the HTTP protocol \cite{RFC2068}.
 
 \begin{itemize}
-  \item DSP Wire Transport Client: takes a collection of DSP messages and
-  transmit them using an HTTP client API written in JAVA \cite{http-client}. As
-  a non-functional requirement, a DSP administrator can set the interval in
-  which this component will transmit messages to other components;
-  \item DSP Wire Transport Server: is implemented using the Java Servlets
-  technology \cite{java-servlets}, and is used to receive the collection of DSP
-  messages transmitted, and potentially send DSP messages back to the sensor
-  station. 
+\item DSP Wire Transport Client: takes a collection of DSP messages
+  and transmit them using an HTTP client API written in JAVA
+  \cite{http-client}. As a non-functional requirement, a DSP
+  administrator can set the interval in which this component will
+  transmit messages to other components;
+\item DSP Wire Transport Server: is implemented using the Java
+  Servlets technology \cite{java-servlets}, and is used to receive the
+  collection of DSP messages transmitted, and potentially send DSP
+  messages back to the sensor station.
 \end{itemize}
 
 One of the non-functional requirements for the DSP is to maximize the
-utilization of the communication channel. For this specific reason, we opted to
-add the type Messages Container, which contains a collection of DSP messages,
-and specific identifiers of the hosting sensor. Figure
-\ref{FIG_DSP_MSGS_CONTAINER} contains the structure of the DSP Messages
-Container.
+utilization of the communication channel. For this specific reason, we
+opted to add the type Messages Container, which contains a collection
+of DSP messages, and specific identifiers of the hosting sensor.
+Figure \ref{FIG_DSP_MSGS_CONTAINER} contains the structure of the DSP
+Messages Container.
 
 \begin{figure}[!htb]
 \centering
@@ -617,20 +609,21 @@ follows:
 
 \subsection{Sending Messages Container}
 
-It's important to note that, at this point, the DSP Broker had already checked
-with the Matcher which are the DSP components that will be receive a copy of
-the message in question. The matcher had specific instructions to use the DSP
-Wire Transport Client component as the default ``Proxy'' or default gateway, if
-you prefer.
+It's important to note that, at this point, the DSP Broker had already
+checked with the Matcher which are the DSP components that will be
+receive a copy of the message in question. The matcher had specific
+instructions to use the DSP Wire Transport Client component as the
+default ``Proxy'' or default gateway, if you prefer.
 
-By building a MessagesContainer instance, the Wire Transport Client adds all
-the messages addressed to the ``destinationHost'', with specific UUID of
-the component (2).
+By building a MessagesContainer instance, the Wire Transport Client
+adds all the messages addressed to the ``destinationHost'', with
+specific UUID of the component (2).
 
 \subsection{Receiving Messages Container}
 
-After the DSP Wire Transport Server receives the Messages Container (3), it
-unmarshalls the messages and forward them to the local DSP Broker. 
+After the DSP Wire Transport Server receives the Messages Container
+(3), it unmarshalls the messages and forward them to the local DSP
+Broker.
 
 The reception of those messages will ALWAYS depend on the local DSP Broker and
 its combination with the Matcher. The steps (4), (5) and (6) are the

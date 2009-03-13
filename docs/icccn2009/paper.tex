@@ -459,41 +459,41 @@ architecture.  We use the JamVM \cite{jamvm01} implementation of Sun
 Microsystem's virtual machine in order to run the DSP. The Gumstix
 communicates with the YSI Sonde via an RS232 serial port using a
 null-modem cable since both the Sonde and the Gumstix are DTE devices.
-The serial port configuration is:
+%The serial port configuration is:
 
-\begin{table}[!htb]
-\caption{\label{tab:RS232_Config}RS232 Serial Port Configuration}
-\centering
-\begin{tabular}{l l}
-\hline
-Baud Rate&9600\\
-Data Bit&8\\
-Parity&None\\
-Handshake&None\\
-\hline
-\end{tabular}
-\end{table}
+%\begin{table}[!htb]
+%\caption{\label{tab:RS232_Config}RS232 Serial Port Configuration}
+%\centering
+%\begin{tabular}{l l}
+%\hline
+%Baud Rate&9600\\
+%Data Bit&8\\
+%Parity&None\\
+%Handshake&None\\
+%\hline
+%\end{tabular}
+%\end{table}
 
 
-\begin{table}
-\caption{\label{TAB_RS232_Pinout}RS232 Serial Pinout}
-\centering
-\begin{tabular} {|l|l|l|}
-\hline
-Wire Color	&Pin Description        &DB-9\\ 
-\hline
-Yellow 		&RS232 TX    &2\\
-Orange		&RS232 RX    &3\\  
-Green  		&Alarm       &----\\ 
-Grey			&RTS         &----\\
-Blue  		&CTS         &----\\
-Red			&+ 12V DC    &9\\
-Black			&GND         &5\\  
-Purple		&SDI-12      &----\\ 
-Bare			&Shield      &----\\
-\hline
-\end{tabular}
-\end{table}
+%\begin{table}
+%\caption{\label{TAB_RS232_Pinout}RS232 Serial Pinout}
+%\centering
+%\begin{tabular} {|l|l|l|}
+%\hline
+%Wire Color	&Pin Description        &DB-9\\ 
+%\hline
+%Yellow 		&RS232 TX    &2\\
+%Orange		&RS232 RX    &3\\  
+%Green  		&Alarm       &----\\ 
+%Grey			&RTS         &----\\
+%Blue  		&CTS         &----\\
+%Red			&+ 12V DC    &9\\
+%Black			&GND         &5\\  
+%Purple		&SDI-12      &----\\ 
+%Bare			&Shield      &----\\
+%\hline
+%\end{tabular}
+%\end{table}
  
 
 We make use of the cellular phone network to establish a communication
@@ -501,15 +501,13 @@ link with the backend server. The cellular phone network has the
 advantages of reaching well beyond telemetry options such as wireless
 networks and being a significantly lower cost solution than satellite
 communications. We make use of the Huawei E220. The E220 is a USB
-modem that supports HSDPA, UMTS, and EDGE packet data services at maximum
-transmission rates of 3.6Mbps, 384kbps, and 236.8kbps respectively.
-HSDPA and UMTS operate at 2100MHz while GSM, GPRS, and EDGE operate at
-900, 1800, and 1900MHz. The modem connects to the Verdex Pro XM4
-motherboard via a mini USB interface (supporting USB 2.0). Linux
-kernels since 2.6.20 include support for E220 drivers.  This includes
-the linux kernel on the Gumstix which runs 2.6.21.  The Gumstix
-communicates with the modem using the PPP protocol and accesses the
-cellular network using a data plan from AT\&T.
+modem that supports HSDPA, UMTS, and EDGE packet data services at
+maximum transmission rates of 3.6Mbps, 384kbps, and 236.8kbps
+respectively.  HSDPA and UMTS operate at 2100MHz while GSM, GPRS, and
+EDGE operate at 900, 1800, and 1900MHz. The modem connects to the
+Gumstix motherboard via a mini USB interface (supporting USB 2.0).The
+Gumstix communicates with the modem using the PPP protocol and
+accesses the cellular network using a data plan from AT\&T.
 
 
 
@@ -523,102 +521,70 @@ and GNU Classpath \cite{classpath01} for the runtime libraries. We
 have implemented various DSP Components that implement the
 functionality needed for NetBEAMS. On the far left of Figure
 \ref{FIG_NETBEAMS} is the actual sensor; in our case the
-aforementioned YSI Sonde. A YSI Sonde data producer (1) is a DSP
-component that uses the RS232 standard to read the physical
-measurements from the device over a serial port. This component
-converts the physical measurements into a DSP-specific message. The
-following XML Schema on figure \ref{FIG_DSP_YSI_DATA} defines the YSI
-Sonde's specific message format which includes each measurement data
-point, described in Table \ref{TAB_SONDE_MEASUREMENTS}, and its type:
+aforementioned YSI Sonde. The YSI Sonde DP (1) uses the RS232 standard
+to read the physical measurements from the device over a serial port.
+This component converts the physical measurements into a DSP-specific
+message. Figure \ref{FIG_DSP_YSI_DATA} depicts the YSI Sonde's
+specific message format which includes each measurement data point,
+described in Table \ref{TAB_SONDE_MEASUREMENTS}.
 
 \begin{figure}[!htb]
 \centering
 \epsfig{file=dsp-message-body-ysi, width=8cm, height=7cm}
-\caption{\label{FIG_DSP_YSI_DATA} Structure of the YSI Component Data.}
+\caption{\label{FIG_DSP_YSI_DATA} YSI message format.}
 \end{figure}
 
-The schema describes two Java classes, sondeDataType and
-SondeDataMessage, which are used to package the Sonde's incoming data
-into a DSP message for delivery to a remote consumer.  The
-SondeDataMessage class extends the AbstractMessageContent class by
-adding a new type to the message payload, SondeDataType.  Each time
-the Sonde transmits its payload of measurement data during a sampling
-interval, the data is converted into a SondeDataType which is then
-encapsulated within SondeDataMessage and then sent to a remote
-consumer.
+The SondeDataContainerType defines the payload of messages generated
+by the YSI Sonde DP. As all DSP messages, it is derived from the
+AbstractMessageContent. The payload mainly consists of the
+SondeDataType that defines all the sensor data that the YSI Sonde is
+capable of producing. The YSI Sonde DP uses the RS232 to query the
+physical device for its data in regular intervals. The measurements
+are then converted into a DSP message and forwarded to the DSP Broker
+from there they are forwarded to the remote communication component
+described in the next section.  The YSI Sonde DP can also be
+configured via special DSP messages, to direct the Sonde to change its
+sampling frequency.  These property messages originate from a web
+management interface (component (6) in Figure \ref{FIG_NETBEAMS}).
 
-The YSI Sonde component can also be configured via special DSP
-messages, to direct the Sonde to change its sampling frequency.  These
-property messages originate from the web frontend that we will
-explained in a subsequent section.
 
 \subsection{Remote Communication}
 
-After producing the SondeDataContainer data, the YSI Sonde component
-will wrap it up in a DSP Message Message and pass it to the DSP Broker
-for its delivery.  However, our use case scenario is that the message
-must go from the local sensor device to the server. For this reason,
-we have developed a pair of client and server DSP components
-specialized in transferring and receiving serialized objects throught
-the communication channel using the HTTP protocol \cite{RFC2068}.
+All messages sent by the YSI Sonde DP need to be uploaded to a remote
+database. Since the DSP itself can only handle communication within
+its local DPs and DCs, we have created a matching pair of DC and DP
+that can handle remote communication (components (2) and (3) in Figure
+\ref{FIG_NETBEAMS}). As explained earlier, we make use of the cellular
+phone network to upload sensor data to a remote backend server. While
+the cellular phone network has sufficient coverage for more
+environmental sensor networks, it is not cost effective to keep a data
+link permanently open. The remote communiction components can be
+configured to upload buffered sensor data only in certain time
+intervals.Messages are transported via HTTP \cite{RFC2068}. The
+matching DP/DC pair for remote communication has the following
+properties:
 
 \begin{itemize}
 \item DSP Wire Transport Client: takes a collection of DSP messages
-  and transmit them using an HTTP client API written in JAVA
-  \cite{http-client}. As a non-functional requirement, a DSP
-  administrator can set the interval in which this component will
-  transmit messages to other components;
-\item DSP Wire Transport Server: is implemented using the Java
-  Servlets technology \cite{java-servlets}, and is used to receive the
-  collection of DSP messages transmitted, and potentially send DSP
-  messages back to the sensor station.
+  and transmit them via HTTP. As a non-functional requirement, the
+  interval in which this component will transmit messages to other
+  components can be configured via the management interface.
+\item DSP Wire Transport Server: is a HTTP server that receives the
+  collection of DSP messages sent by the client, and piggy backs any
+  messages destined for the remote client that may have queued up in
+  the meantime.
 \end{itemize}
 
-One of the non-functional requirements for the DSP is to maximize the
-utilization of the communication channel. For this specific reason, we
-opted to add the type Messages Container, which contains a collection
-of DSP messages, and specific identifiers of the hosting sensor.
-Figure \ref{FIG_DSP_MSGS_CONTAINER} contains the structure of the DSP
-Messages Container.
+The HTTP request and response are used to upload and download any
+messages that have been queued at the respective end of the
+communication link. The client and server component are capable of
+buffering messages until they are sent to the remote destination
+during the next communication cycle. Once messages have been
+transported to their final destinations, they are unmarshalled and
+passed on to the local DSP Broker for further dispatching. In this
+regard the client and server are completely symmetrical. Messages are
+dispatched with the help of the matcher to their final destinations.
 
-\begin{figure}[!htb]
-\centering
-\epsfig{file=dsp-messages-container, width=8cm}
-\caption{\label{FIG_DSP_MSGS_CONTAINER} The structure of Messages Container.}
-\end{figure}
-
-Some remarks regarding the Messages Container and it's implementation are as
-follows:
-
-\begin{itemize}
-  \item Container with or without Messages Container: an instance of
-  MessagesContainer may or may not have DSP messages;
-  \item Container may be used to acknowledge messages using a similar strategy
-  as the Slide Windowing protocol \cite{slide-window}. 
-\end{itemize}
-
-\subsection{Sending Messages Container}
-
-It's important to note that, at this point, the DSP Broker had already
-checked with the Matcher which are the DSP components that will be
-receive a copy of the message in question. The matcher had specific
-instructions to use the DSP Wire Transport Client component as the
-default ``Proxy'' or default gateway, if you prefer.
-
-By building a MessagesContainer instance, the Wire Transport Client
-adds all the messages addressed to the ``destinationHost'', with
-specific UUID of the component (2).
-
-\subsection{Receiving Messages Container}
-
-After the DSP Wire Transport Server receives the Messages Container
-(3), it unmarshalls the messages and forward them to the local DSP
-Broker.
-
-The reception of those messages will ALWAYS depend on the local DSP Broker and
-its combination with the Matcher. The steps (4), (5) and (6) are the
-actual reception of DSP messages. Container might also include an attribute
-called acknowledgeUntil, which determines the next actions that will occur in the system.
 
 \subsection{Web Management}
 

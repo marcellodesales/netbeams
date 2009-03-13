@@ -417,22 +417,16 @@ the DSP Messages, serialized in XML, to any remote DSP instance.
 \end{figure*}
 
 In the following we present a practical application of the DSP
-presented in the previous section. We describe a deployment of the DSP
-using sensor owned and operated by the RTC. Our environmental sensor
-network is dubbed NetBEAMS (Networked Bay Environmental Assessment
-Monitoring System) and allows access to sensor equipment deployed
-throughout the San Francisco Bay Area.  Our goal is to address the
-problem of data collection from remote sensors by using the DSP to
-automatically interrogate sensors at the remote field locations and
-transmit the collected measurements over long distances to a backend
-server where the data is made available to potential users in near
-real-time. This end-to-end system will be a ready-to-use turnkey
-solution that is adaptable to a wide variety of sensor types and
-requires no programming expertise to operate. Configuration of the
+introduced in the previous section. Our environmental sensor network
+is dubbed NetBEAMS (Networked Bay Environmental Assessment Monitoring
+System) and allows access to sensor equipment deployed throughout the
+San Francisco Bay Area. This end-to-end system is a ready-to-use
+turnkey solution that is adaptable to a wide variety of sensor types
+and requires no programming expertise to operate. Configuration of the
 system will be possible when the sensor is deployed in the field via a
 web-based interface, eliminating the need for extra site visits by
 technicians between service cycles to change systems functionalities
-(e.g. sampling rate). We present the NetBEAMS infrastructure by
+(e.g. sampling rate).  We present the NetBEAMS infrastructure by
 discussing its hardware and software components.
 
 
@@ -444,32 +438,28 @@ of the DSP and by providing special purpose components for the various
 tasks. One DSP installation is collocated with each sensor and an
 additional DSP is running on the backend server. Because of the remote
 locations where each individual sensor is deployed in the field and
-the sparse nature of the network, the resulting topology is a tree
+the sparse density of the network, the resulting topology is a tree
 structure of depth 1.
 
 NetBEAMS supports an environmental sensor such as the YSI Sonde,
 introduced in Section \ref{SEC_BACKGROUND}. In order to access its
 sensor readings, we collocate it with an off-the-shelf embedded
 computing platform called Gumstix \cite{gumstix01} (far left in Figure
-\ref{FIG_NETBEAMS}).  The Gumstix is an ARM architecture and comes in various 
-hardware configurations.  A typical Gumstix configuration consists 
-of a motherboard and one or more expansion boards which connect to the 
-motherboard via on-board buses.  The motherboards draw less than 250 mA @4V 
-at 400 MHz and less than 50 mA while idling, waiting for input.
+\ref{FIG_NETBEAMS}).  The Gumstix is an ARM architecture and comes in
+various hardware configurations.  A typical Gumstix configuration
+consists of a motherboard and one or more expansion boards which
+connect to the motherboard via on-board buses.  The motherboards draw
+less than 250 mA @4V at 400 MHz and less than 50 mA while idling,
+waiting for input.
 
- 
-In our project, we use the Verdex Pro XM4 motherboard with 64MB of
-SDRAM, 16MB of Flash, and a 400MHz Marvell PXA270 with XScale
-processor.  We also use two expansion boards: the Console-VX which
-comes with three RS232 serial ports and the Netpro-VX which features
-one 10/100baseT ethernet port.  The Gumstix runs Linux 2.6 with the
-BusyBox utilities, and uses the OpenEmbedded cross-compile build
-environment to provide a complete Linux environment and a large range
-of Linux applications for the ARM architecture.  We use the JamVM
-\cite{jamvm01} implementation of Sun Microsystem's virtual machine in
-order to run the DSP. The Gumstix communicates with the YSI Sonde via
-an RS232 serial port using a null-modem cable since both the Sonde and
-the Gumstix are DTE devices. The serial port configuration is:
+The Gumstix runs Linux 2.6 with the BusyBox utilities, and uses the
+OpenEmbedded cross-compile build environment to provide a complete
+Linux environment and a large range of Linux applications for the ARM
+architecture.  We use the JamVM \cite{jamvm01} implementation of Sun
+Microsystem's virtual machine in order to run the DSP. The Gumstix
+communicates with the YSI Sonde via an RS232 serial port using a
+null-modem cable since both the Sonde and the Gumstix are DTE devices.
+The serial port configuration is:
 
 \begin{table}[!htb]
 \caption{\label{tab:RS232_Config}RS232 Serial Port Configuration}

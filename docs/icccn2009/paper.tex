@@ -612,9 +612,32 @@ dispatched with the help of the matcher to their final destinations.
 
 \subsection{Web Management}
 
-Web Interface. Management messages are regular
-DSPMessages. Asynchronous UI: UI may only build up after next
-communication cycle.
+One of NetBEAMS goals is the ability to easily configure the sensor
+network without programming skills. Technicians should be able to
+change configuration parameters of various DSP Components via an
+easy-to-use web interface. With regards to the NetBEAMS specific
+components discussed in earlier sections, these configuration
+parameters are for example the sampling frequency of the YSI Sonde DP
+and the upload frequency of the the wire transport DC.
+
+The way this configuration is done by a special DSP Component that
+offers a web interface through which a technician can define the
+configuration parameters (component \ding{197} in Figure
+\ref{FIG_NETBEAMS}). The web management component first queries the remote
+component to get a list of configuration parameters. Once the remote
+component sends a reply, a user interface is automatically built up
+to allow the entry of user defined values. When those values are
+submitted, an update message is sent back to the remote component that
+will then change the appropriate configuration parameters.
+
+The user interface offered by the web management component is
+asynchronous in the sense that there might be a time lag between a
+request and a response. This has to do with the fact that the remote
+DSP will only establish a communication link in certain time intervals
+during which the query and update messages will be forwarded. Apart
+from component configuration, the web management component is also
+capable to remotely start, stop, and re-deploy new versions of DSP
+Components.
 
 \section{Conclusions}
 \label{SEC_CONCLUSION}

@@ -405,6 +405,17 @@ target, or if the message is delivered to the optional gateway. We
 have defined special gateway DSP components that is used to transport
 the DSP Messages, serialized in XML, to any remote DSP instance.
 
+\subsection{OSGi}
+
+OSGi \cite{osgi} is a generic platform for "dynamic module system for Java\texttrademark".
+\cite{Mueller07} used OSGi as platform their sensor network.
+In \cite{Baude07} OSGi is used to support large scale deployment. OSGi is flexible
+enough to be used in mobile devices and in application servers. One aspect not addressed
+by OSGi is distributed communication (although some extensions have
+been proposed,e.g., \cite{Rellermeyer}). DSP was designed to handle remote communication and,
+therefore, can complement OSGi capability. DSP Components are OSGi bundles (in fact, DSP itself
+is a bundle) and can be remotely and dynamically maintained. OSGi capabilities along with DSP
+design make well suitable for our project.
 
 \section{NetBEAMS}
 \label{SEC_NETBEAMS}

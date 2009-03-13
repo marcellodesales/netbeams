@@ -105,8 +105,7 @@ describes a typical environmental sensor used by the RTC. Section
 \ref{SEC_DSP} describes our Data Sensor Platform (DSP) that allows us
 to efficiently build up an end-to-end environmental sensor network.
 Section \ref{SEC_NETBEAMS} describes NetBEAMS; a practical application
-of the DSP. In Section \ref{SEC_CONCLUSION} we provide a conclusion
-and outlook.
+of the DSP. Section \ref{SEC_CONCLUSION} concludes this paper.
 
 
 \section{Background}
@@ -592,7 +591,7 @@ Web Interface. Management messages are regular
 DSPMessages. Asynchronous UI: UI may only build up after next
 communication cycle.
 
-\section{Conclusions and Outlook}
+\section{Conclusions}
 \label{SEC_CONCLUSION}
 
 The California coastal region is populated by a vast number of
@@ -602,23 +601,28 @@ These sensors are operated by data providers, including resource
 management groups, research scientists, municipalities, and state and
 federal agencies, who could use near real-time data streams to inform
 decision that impact public health, public safety, and the protection
-of resources.  In addition, there are efforts underway at the state
-and federal level to collate the data collected by the individual data
-providers into integrated monitoring networks that will enhance the
-distribution of monitoring data to public, private, and federal users
-groups.  Success of these efforts, whether small scale or a large
+of resources. Success of these efforts, whether small scale or a large
 integrated network, depends on the first step in the data management
 process: reliably obtaining data in near real-time from remotely
 located sensors.  This step can be the weak link in the data
 management pathway when telemetry options are unreliable.  The
 availability of a plug-and-play computing platform designed to
-communicate with a variety of sensor types and to provide data
-telemetry to distant brick and mortar data centers would stabilize
-data streams with poor telemetry and allowing expansion of sensor
-coverage into regions not presently served.  The low power consumption
-and low cost of these units would be particularly beneficial for
-applications with long service cycles and for data providers trying to
-maintain data streams on a limited budget.
+communicate with a variety of sensor types would stabilize data
+streams with poor telemetry and allowing expansion of sensor coverage
+into regions not presently served.
+
+In this paper we introduce a practical application of a sensor network
+in the domain of environmental monitoring. We have built an
+environmental sensor network in the San Francisco Bay using highly
+specialized, off-the-shelf water quality sensors. The resulting
+infrastructure enables near-realtime access to sensor data collected
+from remote locations. Our end-to-end solution furthermore allows
+configuration and management of remotely deployed sensors. The key to
+our infrastructure is the DSP; a micro-kernel plug-and-play
+architecure that can be configured flexibly to specific needs through
+special purpose components. The NetBEAMS infrastructure as described
+in the paper is available as Open Source and can be viewed in
+operation at \texttt{www.netbeams.org}.
 
 \bibliography{lit}
 \bibliographystyle{plain}

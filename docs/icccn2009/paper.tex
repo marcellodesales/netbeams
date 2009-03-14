@@ -62,7 +62,7 @@ environmental conditions at different locations \cite{roemer:2004}.
 Much research effort is focused on building wireless ad-hoc networks, 
 where each sensor node participates in a multi-hop routing algorithm.
 One of the earliest examples of a wireless sensor network is the
-SmartDust project \cite{smartdust:2001}, where one objectives was to
+SmartDust project \cite{smartdust:2001}, where one objective was to
 create autonomous sensing and communication in a cubic
 millimeter-sized device.  While most wireless sensor networks focus on
 small sensing devices such as the SmartDust mote, there exist a wide
@@ -86,8 +86,8 @@ time the measurements become available. Advances in battery life and
 anti-fouling technology have extended service cycles for field
 sensors, with the unwanted result of further delaying access to
 monitoring data.  In addition, the dependence on field site visits to
-alter of sensor characteristics, such as sampling rate, prevents
-adjustment in monitoring strategy in response to rapidly developing
+alter sensor characteristics, such as sampling rate, prevents
+adjustments in monitoring strategy in response to rapidly developing
 events (e.g. oil spills, harmful algal blooms, among others).
 
 The work described in this paper is a collaborative effort between the
@@ -96,8 +96,8 @@ Romberg Tiburon Center (RTC), a research institute focusing on the
 understanding of complex marine and estuarine environments. The result
 of this collaboration is NetBEAMS (Networked Bay Environmental
 Assessment Monitoring System), an environmental sensor network
-deployed in the San Francisco Bay. NetBEAMS provides means to program
-and interrogate sensors at the remote field locations and to transmit
+deployed in the San Francisco Bay. NetBEAMS provides the means to program
+and interrogate sensors at remote field locations and to transmit
 collected measurements to a database, where the data is rapidly
 processed, archived, and made available to potential users in near
 real-time. In the following sections we give an overview of the NetBEAMS
@@ -159,10 +159,10 @@ Each probe may have multiple sensors.  A computer can interface with
 the Sonde via RS-232C or SDI-12. The Sonde can be configured to
 collect data samples in discrete or unnattended mode.  Discrete mode
 is normally performed while a technician manages the Sonde during the
-sampling process. In this mode, the Sonde is usually connected via 650
+sampling process. In this mode, the Sonde is connected via 650
 MDS Display/Logger or a serial cable connected to a PC, where the sampling
 frequency is usually set to a high frequency. In contrast, Unattended
-mode is performed usually when the Sonde is deployed offshore or in a
+mode is performed when the Sonde is deployed offshore or in a
 remote body of water, where the sampling frequency is usually set for a
 longer period of time (i.e. 5 - 15 min). In order to be configured,
 the Sonde offers a set of menus that can be accessed through a terminal session
@@ -175,17 +175,17 @@ We provide these details to show that sensing devices such as the YSI
 are highly specialized devices with a unit price of several thousand
 dollars. These sensors are usually sparsely deployed in remote
 locations that not only make their maintenance difficult, but also
-the access to their measurements.  Typically, the sensors are autonomous
+access to their measurements difficult.  Typically, the sensors are autonomous
 in the sense that they can run for a certain amount of time on battery power and
 store the measurement data in internal memory. Only when the sensors
 are serviced, the measurement data, which was collected since the last
 servicing, is uploaded to a portable storage device. From there, the
 data can be uploaded to server. This manual procedure to retrieve
-sensor data is not only error prone, but also results are in a serious
-time lag between the time the sensor performs the measurement and when
+sensor data is not only error prone, but the results greatly differ
+between the time the sensor performs the measurement and when
 it becomes available for further processing. For many applications,
 however, it would be beneficial to have near-realtime access to the
-sensor measurement. We identify the following requirements that an
+sensor measurements. We identify the following requirements that an
 end-to-end infrastructure supporting devices such as the YSI should
 offer:
 
@@ -205,7 +205,7 @@ a foundation to fulfill these requirements.
 \section{Data Sensor Platform}
 \label{SEC_DSP}
 
-Sensor networks, especially of environmental sensors, are normally
+Sensor networks, especially environmental sensors, are normally
 deployed over a geographically wide area, where the communication
 infrastructure is not always reliable or, at least, not coutinuously
 available. As the sensor network grows in size and complexity, 
@@ -213,10 +213,10 @@ scalability, reliability and maintainability become critical issues.
 For instance, additional components might be added to the network, sensor
 configuration might be altered, or new versions of components might have to be
 deployed. As a consequence, the sensor network must be able to support such
-adjustments without significant overhead for maintainers.  From system
+adjustments without significant overhead for maintainers.  From a system
 development and integration point of view, interfaces among components
 and between components and the network should be simple. As a result, complex
-interaction can be constructed on top of these simple interfaces.  In
+interaction can be constructed on top of these simple interfaces. In
 the following subsections, we discuss how our proposed architecture addresses
 those issues.
 
@@ -238,7 +238,7 @@ are self-contained modules that can be added and removed to a DSP
 installation at runtime. The basic communication unit within a DSP
 is a message. DSP Components can exchange messages of different types.
 Actually, all interactions between DSP Components are implemented
-through messages yielding simple but powerful communication
+through messages yielding a simple but powerful communication
 structure. Moreover, we distinguish between \emph{Data Producers} (DP) and
 \emph{Data Consumers} (DC) within the scope of a DSP. DP and DC can be
 seen as roles that a DSP Component may have, as it may also 
@@ -352,7 +352,7 @@ properties supported by DSP Components, and the latter is used for measurement
 messages that actually contain sensor readings.
 
 The payload of a message is itself described via an XML schema in
-order to integrate it seemingly with the general message structure. By this
+order to integrate it seemingly with the general message structure. By these
 means, a developer of a DSP Component can define a schema that represents the
 type of payload processed by that component. An example illustrating a DSP
 message is given when we discuss the YSI Sonde Component.
@@ -369,11 +369,11 @@ several DCs. It distinguishes between local and remote destinations:
   gateway to handle remote message delivery.
 \end{itemize}
 
-The broker is can deliver messages concurrently and asynchronously. It
+The broker can deliver messages concurrently and asynchronously. It
 sets any additional message header information necessary for proper
-routing. The broker does not make and routing decisions. It delegates
+routing. The broker does not make any routing decisions. It delegates
 this responsibility to the \emph{matcher}. The matcher is responsible
-for matching messages sent by a DP and route it to one or more DCs.
+for matching messages sent by a DP and routes it to one or more DCs.
 This decision is based on a set of routing rules (see Figure
 \ref{FIG_MATCHER_RULE}) which can be statically or dynamically
 configured.
@@ -390,12 +390,12 @@ configured.
   of the consumer, and optionally defines a gateway component.
 \end{itemize}
 
-The matcher's main purpose is to achieve a loosely coupling between
+The matcher's main purpose is to achieve a loose coupling between
 DCs and DPs. DPs may create messages without specifying a specific
-destination DC. Once the message is sent through DSP, the matcher will
+destination DC. Once the message is sent through the DSP, the matcher will
 determine which DCs should receive the message. Note that, a DP can
 still specify a DC for its message. In this case, the matcher includes
-this DC in list of DCs to receive the message.
+this DC in a list of DCs to receive the message.
 
 
 
@@ -417,8 +417,8 @@ turnkey solution that is adaptable to a wide variety of sensor types
 and requires no programming expertise to operate. Configuration of the
 system will be possible when the sensor is deployed in the field via a
 web-based interface, eliminating the need for extra site visits by
-technicians between service cycles to change systems functionalities
-such as sampling rate.  We present the NetBEAMS infrastructure by
+technicians between service cycles to change system characteristics
+such as the sampling rate.  We present the NetBEAMS infrastructure by
 discussing its hardware and software components.
 
 
@@ -437,7 +437,7 @@ NetBEAMS supports an environmental sensor such as the YSI Sonde,
 introduced in Section \ref{SEC_BACKGROUND}. In order to access its
 sensor readings, we collocate it with an off-the-shelf embedded
 computing platform called Gumstix \cite{gumstix01} (far left in Figure
-\ref{FIG_NETBEAMS}).  The Gumstix is an ARM architecture hardware and comes in
+\ref{FIG_NETBEAMS}).  The Gumstix is an ARM-based single board computer and comes in
 various configurations.  A typical Gumstix configuration
 consists of a motherboard and one or more expansion boards that
 connect to the motherboard via on-board buses.  The motherboards draw
@@ -505,19 +505,19 @@ accesses the cellular network using a data plan from AT\&T.
 
 \subsection{DSP Implementation}
 
-The DSP is implemented in java and serves as a container environment where 
-DSP Components execute. Due to its micro-kernel, modular and dynamic characteristics 
+The DSP is implemented in Java and serves as a container environment where 
+DSP Components execute. Due to its micro-kernel, modular and dynamic characteristics, 
 the current DSP implementation uses OSGi \cite{osgi} as a deployment and execution 
 infrastucture. One important DSP requirement is to impose on DSP components minimal 
-dependency on DSP itself and no depency on OSGi. To this extent, all DSP resources
+dependency on the DSP itself and no depency on OSGi. To this extent, all DSP resources
 accessible to DSP components are specified by \texttt{DSPContext} interface.
-DSP also uses message to communicate with DSP Components. It has a special "adapter"
-that acts like a DSPComponent. Therefore, configuring DSP is no different from configuring
+The DSP also uses messages to communicate with DSP Components. It has a special "adapter"
+that acts like a DSPComponent. Therefore, configuring the DSP is no different from configuring
 a DSP component.
 
 DSP compoments are deployed as OSGi bundles. OSGi defines bundles life-cycle and
 runtime upgrade mechanism. DSP uses these capabilities to allow remote deployment 
-(bundles with DSP Components are trasmitted as message to the DSP Component Adaptor) 
+(bundles with DSP Components are transmitted as message to the DSP Component Adaptor) 
 and activation/deactivation of DSP Components. 
 
 Our implementation of the DSP is based on the Open-Source
@@ -552,7 +552,7 @@ by the YSI Sonde DP. As all DSP messages, it is derived from the
 capable of producing. The YSI Sonde DP uses the RS232 to query the
 physical device for its data in regular intervals. The measurements
 are then converted into a DSP message and forwarded to the DSP Broker,
-from where they are forwarded to the remote communication component
+from which they are forwarded to the remote communication component
 described in the next section.  The YSI Sonde DP can also be
 configured via special Update DSP messages, to direct the Sonde to change its
 sampling frequency.  These property messages originate from a web
@@ -571,7 +571,7 @@ the cellular phone network has sufficient coverage for more
 environmental sensor networks, it is not cost effective to keep a data
 link permanently open. The remote communication components can be
 configured to upload buffered sensor data only in certain time
-intervals. Having this in mind, DSP Messages are transported via HTTP
+intervals. With this in mind, DSP Messages are transported via HTTP
 \cite{RFC2068}. In this way, the matching DP/DC pair for remote communication
 has the following properties:
 
@@ -599,15 +599,15 @@ are dispatched with the help of the matcher to their final destinations.
 
 \subsection{Web Management}
 
-One of NetBEAMS goals is the ability to easily configure the sensor
+One of the NetBEAMS goals is to easily configure the sensor
 network without programming skills. Technicians should be able to
 change configuration parameters of various DSP Components via an
 easy-to-use web interface. With regards to the NetBEAMS specific
 components discussed in earlier sections, these configuration
-parameters are for example the sampling frequency of the YSI Sonde DP
+parameters are, for example, the sampling frequency of the YSI Sonde DP
 and the upload frequency of the the wire transport DC.
 
-The way this configuration is done by a special DSP Component that
+This configuration is performed by a special DSP Component that
 offers a web interface through which a technician can define the
 configuration parameters (component \ding{197} in Figure
 \ref{FIG_NETBEAMS}). The web management component first queries the remote
@@ -620,7 +620,7 @@ will then change the appropriate configuration parameters.
 The user interface offered by the web management component is
 asynchronous in the sense that there might be a time lag between a
 request and a response. This has to do with the fact that the remote
-DSP will only establish a communication link in certain time intervals
+DSP will only establish a communication link at certain time intervals
 during which the query and update messages will be forwarded. Apart
 from component configuration, the web management component is also
 capable to remotely start, stop, and re-deploy new versions of DSP
@@ -660,11 +660,11 @@ special purpose components.
 
 Furthermore, our work improves upon existing technologies in earlier sensor network implementations.
 Many sensor networks use PIC microcontrollers \cite{Pic01} and specialized operating systems
-such as TinyOS \cite{tinyos01}. However PICs are usually too buggy,
+such as TinyOS \cite{tinyos01}. However, PICs are usually too buggy,
 requiring non-standard operating systems \cite{Martinez04}. Likewise, TinyOS exhibits limited 
 constraints on storage, restricting any complex processing of sensor data
 that can be performed \cite{Martinez04}. OSGi has been used in other sensor network
-project \cite{Mueller07, Baude07}. Although some OSGi sensor networks also include remote 
+projects \cite{Mueller07, Baude07}. Although some OSGi sensor networks also include remote 
 communication capabilities \cite{Rellermeyer}, our DSP is designed to support asynchronous 
 communication in loosely coupled networks. It is a contribution to the OSGi
 project, providing an optional way of unified loosely-coupled bundle

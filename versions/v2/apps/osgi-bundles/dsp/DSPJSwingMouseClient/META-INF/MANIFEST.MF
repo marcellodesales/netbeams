@@ -8,6 +8,7 @@ Bundle-Name: Mouse Action
 Bundle-SymbolicName: DSPMouseActionsDemo
 Bundle-Vendor: NetBEAMS.org
 Bundle-Version: 0.1
+Export-Package: org.netbeams.dsp.demo.mouseactions
 Import-Package: org.netbeams.dsp, 
  org.netbeams.dsp.message, 
  org.netbeams.dsp.util, 

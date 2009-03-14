@@ -24,8 +24,8 @@ public class MatchRule {
     }
 
     public int hashCode() {
-        return 10 * this.ruleID.hashCode() + 20 * this.criteria.hashCode() + 30 * this.target.hashCode() + 
-               (this.isDefault ? -1 : 1);
+        return 10 * this.ruleID.hashCode() + 20 * this.criteria.hashCode()
+                + (this.target != null ? 30 * this.target.hashCode() : 0) + (this.isDefault ? -1 : 1);
     }
 
     public String getRuleID() {

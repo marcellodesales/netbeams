@@ -629,22 +629,22 @@ Components.
 \section{Conclusions}
 \label{SEC_CONCLUSION}
 
-The California coastal region is populated by a vast number of
-remotely deployed sensors that monitor environmental conditions
-ranging from weather to water quality to ocean surface currents.
-These sensors are operated by data providers, including resource
-management groups, research scientists, municipalities, state and
-federal agencies, who could use near real-time data streams to inform
-decisions that impact public health, public safety, and the protection
-of resources. Success of these efforts, whether small scale or a large
-integrated network, depends on the first step in the data management
-process: reliably obtaining data in near real-time from remotely
-located sensors.  This step can be the weak link in the data
-management pathway when telemetry options are unreliable.  The
-availability of a plug-and-play computing platform designed to
-communicate with a variety of sensor types would stabilize data
-streams with poor telemetry and allowing expansion of sensor coverage
-into regions not presently served.
+%The California coastal region is populated by a vast number of
+%remotely deployed sensors that monitor environmental conditions
+%ranging from weather to water quality to ocean surface currents.
+%These sensors are operated by data providers, including resource
+%management groups, research scientists, municipalities, state and
+%federal agencies, who could use near real-time data streams to inform
+%decisions that impact public health, public safety, and the protection
+%of resources. Success of these efforts, whether small scale or a large
+%integrated network, depends on the first step in the data management
+%process: reliably obtaining data in near real-time from remotely
+%located sensors.  This step can be the weak link in the data
+%management pathway when telemetry options are unreliable.  The
+%availability of a plug-and-play computing platform designed to
+%communicate with a variety of sensor types would stabilize data
+%streams with poor telemetry and allowing expansion of sensor coverage
+%into regions not presently served.
 
 In this paper, we introduce a practical application of a sensor network
 in the domain of environmental monitoring. We have built an
@@ -655,11 +655,24 @@ from remote locations. Our end-to-end solution, furthermore, allows
 configuration and management of remotely deployed sensors. In this sense, the
 key to our infrastructure is the DSP, a micro-kernel plug-and-play
 architecture that can flexibly be configured to specific needs through
-special purpose components. Furthermore, DSP is a contribution to the OSGi
+special purpose components. 
+
+
+Furthermore, our work improves upon existing technologies in earlier sensor network implementations.
+Many sensor networks use PIC microcontrollers \cite{Pic01} and specialized operating systems
+such as TinyOS \cite{tinyos01}. However PICs are usually too buggy,
+requiring non-standard operating systems \cite{Martinez04}. Likewise, TinyOS exhibits limited 
+constraints on storage, restricting any complex processing of sensor data
+that can be performed \cite{Martinez04}. OSGi has been used in other sensor network
+project \cite{Mueller07, Baude07}. Although some OSGi sensor networks also include remote 
+communication capabilities \cite{Rellermeyer}, our DSP is designed to support asynchronous 
+communication in loosely coupled networks. It is a contribution to the OSGi
 project, providing an optional way of unified loosely-coupled bundle
 interaction and distributed communication. The NetBEAMS infrastructure, as
 described in the paper, is available as an Open-Source project and can be 
 viewed in operation at \texttt{www.netbeams.org}.
+
+
 
 \bibliography{lit}
 \bibliographystyle{plain}

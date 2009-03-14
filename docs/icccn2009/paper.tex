@@ -408,22 +408,6 @@ achieve this goal by deploying a DSP component which implements persistence and 
 rules to divert messages to the new DSP Component and from the component to the original destination.
 
 
-\subsection{OSGi}
-
-OSGi \cite{osgi} is a generic platform for "dynamic module system for Java\texttrademark".
-Many researchers have been using OSGi to support different requirements similar
-to the DSP. For instance, \cite{Mueller07} used OSGi as a platform to their
-sensor network, while \cite{Baude07} used OSGi to support large scale
-deployment. As many have researchers have noticed, OSGi is flexible enough to be
-used in memory-limited mobile devices or in larger application servers.
-However, as being primarily focused on providing an infrastructure for
-loosely-coupled module interaction, OSGi does not address distributed
-communication although some extensions have been proposed, e.g.,
-\cite{Rellermeyer}). As one of the contributions of this project, DSP was
-designed to handle remote communication and, therefore, can complement OSGi
-capability. Therefore, DSP Components are OSGi bundles (in fact, DSP itself is a
-bundle) and they can be remotely and dynamically maintained, so that OSGi
-capabilities along with DSP design make well suitable for our project.
 
 \section{NetBEAMS}
 \label{SEC_NETBEAMS}

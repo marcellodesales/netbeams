@@ -5,15 +5,12 @@ import java.util.ArrayList;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.security.SecureRandom;
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
-import org.netbeams.dsp.data.property.ObjectFactory;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.message.Header;
@@ -76,7 +73,7 @@ public class RandomNumberProducer {
         prop.setValue(data.getRandomNumbers().get(0).toString());
         
         try {
-        	Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, props, ObjectFactory.class);
+        	Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, props);
 		
         	// Always check if there is a broker available
         	MessageBrokerAccessor messageBroker = context.getDataBroker();
@@ -85,10 +82,7 @@ public class RandomNumberProducer {
         	}else{
         		log.debug("Message broker not available");
         	}
-        } catch (JAXBException e) {
-        	log.error(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
-        	log.error(e.getMessage(), e);        	
+        	
         } catch (DSPException e) {
         	log.error(e.getMessage(), e);
         }		

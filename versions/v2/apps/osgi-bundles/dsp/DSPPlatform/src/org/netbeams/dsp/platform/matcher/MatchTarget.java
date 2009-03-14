@@ -47,11 +47,10 @@ public class MatchTarget {
     }
 
     public int hashCode() {
-        if (this.gatewayComponentType != null)
-            return 10 * this.consumerComponentType.hashCode() + 20 * this.locator.getNodeAddress().getValue().hashCode() + 30
-                    * this.gatewayComponentType.hashCode();
-        else
-            return 10 * this.consumerComponentType.hashCode() + 20 * this.locator.getNodeAddress().getValue().hashCode();
+    	int value = (this.gatewayComponentType != null) ? 10 * this.consumerComponentType.hashCode() : 0;
+    	value += this.gatewayComponentType != null ? 30 * this.gatewayComponentType.hashCode() : 0;
+    	value += this.locator != null ? 20 * this.locator.getNodeAddress().getValue().hashCode() : 0;
+        return value;
     }
 
     public String getConsumerComponentType() {

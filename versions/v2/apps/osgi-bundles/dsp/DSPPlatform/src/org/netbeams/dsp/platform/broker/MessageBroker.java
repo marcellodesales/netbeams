@@ -230,7 +230,8 @@ public class MessageBroker implements MessageBrokerAccessor {
         if (consumerIdentifier != null) {
             String comonentNodeId = consumerIdentifier.getComponentLocator().getComponentNodeId();
             if (comonentNodeId != null) {
-                return components.get(comonentNodeId);
+                DSPComponent a = components.get(comonentNodeId);  
+                return a != null ? a : componentsByType.get(consumerIdentifier.getComponentType());
             } else {
                 return componentsByType.get(consumerIdentifier.getComponentType());
             }

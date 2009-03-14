@@ -16,4 +16,9 @@ public class RandomNumbers extends MessageContent {
 		return rNumbers;
 	}
 
+	public String toXml() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

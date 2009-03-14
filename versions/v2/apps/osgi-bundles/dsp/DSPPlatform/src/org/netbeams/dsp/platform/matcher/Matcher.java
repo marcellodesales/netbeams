@@ -96,20 +96,27 @@ public class Matcher implements BaseComponent {
         ComponentIdentifier producer = message.getHeader().getProducer();
         ComponentIdentifier consumer = message.getHeader().getConsumer();
         
-        MatchCriteria crit = new MatchCriteria(producer.getComponentType(), producer.getComponentLocator());
-        MatchTarget targ = new MatchTarget(consumer.getComponentType(), consumer.getComponentLocator(), null);        
-        MatchRule localRule = new MatchRule("defaultRule", true, crit, targ);
-        consumers.add(localRule);
+        ComponentLocator locator = new ComponentLocator();
+        locator.setComponentNodeId("local_id");
+        NodeAddress nodeAddr = new NodeAddress();
+        nodeAddr.setValue("LOCAL");
+        locator.setNodeAddress(nodeAddr);
         
+        if (consumer != null) {
+	        MatchCriteria crit = new MatchCriteria(producer.getComponentType(), locator);
+	        MatchTarget targ = new MatchTarget(consumer.getComponentType(), locator, null);        
+	        MatchRule localRule = new MatchRule("defaultRule", true, crit, targ);
+	        consumers.add(localRule);
+        }
         for (MatchRule mr : rules) {
             log.debug("Verifying matcher for rule: " + mr.getRuleID() + " Is Default? " + mr.isDefault());
             log.debug("Message's producer: " + producer.getComponentType());
             log.debug("Message's consumer: " + consumer.getComponentType());
-            log.debug("component type matches rule criteria?");
+            log.debug("Component type matches rule criteria?");
             log.debug("Rule Criteria: Producer=" + mr.getCriteria().getProducerComponentType());
             log.debug("Rule Criteria: Consumer=" + mr.getTarget().getConsumerComponentType());
             if (isMatchForComponentType(producer, consumer, mr)) {
-                log.debug("Producer matches for producer and consumer types...");
+                log.debug("Component type matches for producer and consumer types...");
                 consumers.add(mr);
             } else {
                 log.debug("Message doesn't match on Component Type");

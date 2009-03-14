@@ -20,7 +20,7 @@
         <antcall target="print-properties" />           
     </target>
 
-    <target name="java-compile" depends="xjc-compile">
+    <target name="java-compile" depends="init">
         <delete dir="${XML.JAXB}/mouseactions/classes" />
         <mkdir dir="${XML.JAXB}/mouseactions/classes" />
         <javac srcdir="${XML.JAXB}/mouseactions/java-src" destdir="${XML.JAXB}/mouseactions/classes" 

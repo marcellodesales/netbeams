@@ -48,10 +48,10 @@ import java.util.Calendar;
  */
 public class SondeDataType {
     
-    public static final DateFormat dateTimeFormat = new SimpleDateFormat ("MM/dd/yyyy HH:mm:ss");
+    public static final DateFormat dateTimeFormat = new SimpleDateFormat ("yyyy/MM/dd HH:mm:ss");
 
 //    @XmlElement(name = "Date", required = true)
-    protected Calendar dateTime;
+    protected Calendar samplingTimeStamp;
 //    @XmlElement(name = "Temp", required = true)
     protected Float temp;
 //    @XmlElement(name = "SpCond", required = true)
@@ -88,7 +88,7 @@ public class SondeDataType {
      *     
      */
     public Calendar getDateTime() {
-        return this.dateTime;
+        return this.samplingTimeStamp;
     }
     
     /**
@@ -98,15 +98,15 @@ public class SondeDataType {
      * @return the string representation of the dateTime instance based on the formatter.
      */
     public String getDateAsString(SimpleDateFormat format) {
-        return format.format(this.dateTime.getTime());
+        return format.format(this.samplingTimeStamp.getTime());
     }
     
     public String getDateString() {
-        return new SimpleDateFormat("MM/dd/yyyy").format(this.dateTime.getTime());
+        return new SimpleDateFormat("MM/dd/yyyy").format(this.samplingTimeStamp.getTime());
     }
     
     public String getTimeString() {
-        return new SimpleDateFormat("HH:mm:ss").format(this.dateTime.getTime());
+        return new SimpleDateFormat("HH:mm:ss").format(this.samplingTimeStamp.getTime());
     }
 
     /**
@@ -118,9 +118,9 @@ public class SondeDataType {
      *     
      */
     public void setDateTime(String date, String time) {
-        this.dateTime = Calendar.getInstance();
+        this.samplingTimeStamp = Calendar.getInstance();
         try {
-            this.dateTime.setTime(dateTimeFormat.parse(date + " " + time));
+            this.samplingTimeStamp.setTime(dateTimeFormat.parse(date + " " + time));
         } catch (ParseException e) {
         }
     }
@@ -440,8 +440,9 @@ public class SondeDataType {
     public String toXml() {
         StringBuilder builder = new StringBuilder();
         builder.append("<soundeData ");
-        if (this.dateTime != null) {
-            builder.append("dateTime=\"" + dateTimeFormat.format (this.dateTime) + "\" ");
+        if (this.samplingTimeStamp != null) {
+            System.out.println(this.samplingTimeStamp);
+            builder.append("samplingTimeStamp=\"" + dateTimeFormat.format (this.samplingTimeStamp.getTime()) + "\" ");
         }
         builder.append(">");
         builder.append("<SpCond>" + this.spCond + "</SpCond>");

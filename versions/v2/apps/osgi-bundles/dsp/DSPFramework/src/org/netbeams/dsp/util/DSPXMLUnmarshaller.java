@@ -152,10 +152,8 @@ public enum DSPXMLUnmarshaller {
             throw new IllegalArgumentException("Content Type must be provided in order to unmashall the body!");
         }
 
-        String dspMessageContentClassName = dspBodyElement.getName();
-        String fullyQualifiedContentType = contentType + "." + dspMessageContentClassName;
         ClassLoader loader = DSPXMLUnmarshaller.class.getClassLoader();
-        Class messageType = loader.loadClass(fullyQualifiedContentType);
+        Class messageType = loader.loadClass(contentType);
 
         MessageContent content = (MessageContent) messageType.newInstance();
         if (content instanceof DSProperties) {

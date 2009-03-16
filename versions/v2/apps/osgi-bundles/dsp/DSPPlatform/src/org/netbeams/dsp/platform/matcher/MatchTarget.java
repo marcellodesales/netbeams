@@ -28,7 +28,7 @@ public class MatchTarget {
         super();
         this.consumerComponentType = consumerComponentType;
         this.locator = locator;
-        this.gatewayComponentType = gatewayComponentType == null ? "" : gatewayComponentType;
+        this.gatewayComponentType = gatewayComponentType;
     }
 
     public boolean equals(Object obj) {

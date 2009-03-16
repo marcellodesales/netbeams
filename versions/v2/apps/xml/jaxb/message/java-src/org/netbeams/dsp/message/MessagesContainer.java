@@ -182,11 +182,15 @@ public class MessagesContainer {
         if (this.acknowledgeUntil != null) {
              builder.append("acknowledgeUntil=\"" + this.acknowledgeUntil + "\"");
         }
-        builder.append(">");
-        for(AbstractMessage message : this.message) {
-            builder.append(message.toXml());
+        if (this.message != null) {
+            builder.append(">");
+            for(AbstractMessage message : this.message) {
+                builder.append(message.toXml());
+            }
+            builder.append("</MessagesContainer>");
+        } else {
+            builder.append(" />");
         }
-        builder.append("</MessagesContainer>");
         return builder.toString();
     }
 }

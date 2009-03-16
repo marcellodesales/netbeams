@@ -55,10 +55,11 @@ public class SondeProducer {
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
                 "SondeProducer", localIPAddress, data.getContentContextForJAXB());
 		
-        ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-        		"DSPWireTransportClient", System.getProperty("WIRE_TRANSPORT_SERVER_IP"), "org.netbeams.dsp.wiretransport.client");
+        //ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
+        //		"DSPWireTransportClient", System.getProperty("WIRE_TRANSPORT_SERVER_IP"), "org.netbeams.dsp.wiretransport.client");
+        ComponentIdentifier consumer = null;
         
-        log.debug("Sonde Data to be sent to " + consumer.getComponentLocator().getNodeAddress().getValue());
+        //log.debug("Sonde Data to be sent to " + consumer.getComponentLocator().getNodeAddress().getValue());
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, consumer);
         
         

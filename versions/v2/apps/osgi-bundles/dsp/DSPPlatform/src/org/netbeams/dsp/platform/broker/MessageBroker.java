@@ -129,8 +129,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                         log.error("Ready to deliver message to the local GATEWAY component "
                                 + localComponent.getComponentType() + " not attached!!!");
                     } else {
-                        log.error("$$ Requered gateway dsp component "
-                                + consumerRule.getTarget().getConsumerComponentType() + " not attached!!!");
+                        log.error("$$ Requered gateway dsp component " + gatewayComponentType + " not attached!!!");
                     }
                 }
 

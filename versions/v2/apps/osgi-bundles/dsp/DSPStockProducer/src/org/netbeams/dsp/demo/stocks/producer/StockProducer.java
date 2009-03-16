@@ -121,8 +121,8 @@ public class StockProducer implements DSPComponent{
 	 */
 	public void startComponent() {
 		log.info("Starting component");
-//		engine = new Engine("[" + componentNodeId + "] " + COMPONENT_TYPE);
-//		engine.start();
+		engine = new Engine("[" + componentNodeId + "] " + COMPONENT_TYPE);
+		engine.start();
 		
 	}
 	
@@ -141,7 +141,15 @@ public class StockProducer implements DSPComponent{
 	
 	private void send(StockTicks data) throws DSPException{
 		//Create the message
-		Message message = MessageFactory.newMessage(MeasureMessage.class, data, this);
+    	    DSProperties properties = new DSProperties();
+    	    for(StockTick tk : data.getStockTick()) {
+    	        DSProperty p = new DSProperty();
+    	        p.setName(tk.getSymbol());
+    	        p.setValue(tk.getValue()+"");
+    	        properties.getProperty().add(p);
+    	    }
+	    
+		Message message = MessageFactory.newMessage(MeasureMessage.class, properties, this);
 		log.debug("Send stock ticks");
 				
 		if(data == null){
@@ -336,8 +344,9 @@ public class StockProducer implements DSPComponent{
 				}
 				gatherStockTickers();
 				pushMeasurements();
+				
 				try {
-					Thread.sleep(15 * 1000);
+					Thread.sleep(15000 * 1000);
 				} catch (InterruptedException e) {
 					break;
 				}

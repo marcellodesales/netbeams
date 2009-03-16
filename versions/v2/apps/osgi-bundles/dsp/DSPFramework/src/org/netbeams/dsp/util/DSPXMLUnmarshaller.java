@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -247,76 +246,84 @@ public enum DSPXMLUnmarshaller {
             throws ParseException {
         SondeDataContainer sondeContainer = (SondeDataContainer) content;
         List<Element> sondeDataElements = sondeDataContainerElement.getChildren("soundeData");
-        for (Element sondeDataElem : sondeDataElements) {
-            SondeDataType sondeData = new SondeDataType();
-
-            String dateTime = sondeDataElem.getAttributeValue("dateTime");
-            if (dateTime != null) {
-                sondeData.setDateTime(dateTime.substring(0, dateTime.indexOf(" ")), dateTime.substring(dateTime
-                        .indexOf(" ") + 1, dateTime.length()));
+        
+            for (Element sondeDataElem : sondeDataElements) {
+                try {
+                    SondeDataType sondeData = new SondeDataType();
+        
+                    String dateTime = sondeDataElem.getAttributeValue("samplingTimeStamp");
+                    if (dateTime != null) {
+                        sondeData.setDateTime(dateTime.substring(0, dateTime.indexOf(" ")), dateTime.substring(dateTime
+                                .indexOf(" ") + 1, dateTime.length()));
+                    }
+        
+                    String SpCond = sondeDataElem.getChildText("SpCond");
+                    if (SpCond != null) {
+                        sondeData.setSpCond(Float.parseFloat(SpCond.trim()));
+                    }
+        
+                    String Cond = sondeDataElem.getChildText("Cond");
+                    if (Cond != null) {
+                        sondeData.setCond(Float.parseFloat(Cond.trim()));
+                    }
+        
+                    String Resist = sondeDataElem.getChildText("Resist");
+                    if (Resist != null) {
+                        sondeData.setResist(Float.parseFloat(Resist.trim()));
+                    }
+        
+                    String Sal = sondeDataElem.getChildText("Sal");
+                    if (Sal != null) {
+                        sondeData.setSal(Float.parseFloat(Sal.trim()));
+                    }
+        
+                    String Press = sondeDataElem.getChildText("Press");
+                    if (Press != null) {
+                        sondeData.setPress(Float.parseFloat(Press.trim()));
+                    }
+        
+                    String Depth = sondeDataElem.getChildText("Depth");
+                    if (Depth != null) {
+                        sondeData.setDepth(Float.parseFloat(Depth.trim()));
+                    }
+        
+                    String pH = sondeDataElem.getChildText("pH");
+                    if (pH != null) {
+                        sondeData.setPH(Float.parseFloat(pH.trim()));
+                    }
+        
+                    String phmV = sondeDataElem.getChildText("phmV");
+                    if (phmV != null) {
+                        sondeData.setPhmV(Float.parseFloat(phmV.trim()));
+                    }
+        
+                    String ODOSat = sondeDataElem.getChildText("ODOSat");
+                    if (ODOSat != null) {
+                        sondeData.setODOSat(Float.parseFloat(ODOSat.trim()));
+                    }
+        
+                    String ODOConc = sondeDataElem.getChildText("ODOConc");
+                    if (ODOConc != null) {
+                        sondeData.setODOConc(Float.parseFloat(ODOConc.trim()));
+                    }
+        
+                    String Turbid = sondeDataElem.getChildText("Turbid");
+                    if (Turbid != null) {
+                        sondeData.setTurbid(Float.parseFloat(Turbid.trim()));
+                    }
+        
+                    String Battery = sondeDataElem.getChildText("Battery");
+                    if (Battery != null) {
+                        sondeData.setBattery(Float.parseFloat(Battery.trim()));
+                    }
+                    sondeContainer.getSondeData().add(sondeData);
+            
+                } catch (NumberFormatException e){
+                    e.printStackTrace();
+                    continue;
+                }
+                
             }
-
-            String SpCond = sondeDataElem.getChildText("SpCond");
-            if (SpCond != null) {
-                sondeData.setSpCond(Float.parseFloat(SpCond.trim()));
-            }
-
-            String Cond = sondeDataElem.getChildText("Cond");
-            if (Cond != null) {
-                sondeData.setCond(Float.parseFloat(Cond.trim()));
-            }
-
-            String Resist = sondeDataElem.getChildText("Resist");
-            if (Resist != null) {
-                sondeData.setResist(Float.parseFloat(Resist.trim()));
-            }
-
-            String Sal = sondeDataElem.getChildText("Sal");
-            if (Sal != null) {
-                sondeData.setSal(Float.parseFloat(Sal.trim()));
-            }
-
-            String Press = sondeDataElem.getChildText("Press");
-            if (Press != null) {
-                sondeData.setPress(Float.parseFloat(Press.trim()));
-            }
-
-            String Depth = sondeDataElem.getChildText("Depth");
-            if (Depth != null) {
-                sondeData.setDepth(Float.parseFloat(Depth.trim()));
-            }
-
-            String pH = sondeDataElem.getChildText("pH");
-            if (pH != null) {
-                sondeData.setPH(Float.parseFloat(pH.trim()));
-            }
-
-            String phmV = sondeDataElem.getChildText("phmV");
-            if (phmV != null) {
-                sondeData.setPhmV(Float.parseFloat(phmV.trim()));
-            }
-
-            String ODOSat = sondeDataElem.getChildText("ODOSat");
-            if (ODOSat != null) {
-                sondeData.setODOSat(Float.parseFloat(ODOSat.trim()));
-            }
-
-            String ODOConc = sondeDataElem.getChildText("ODOConc");
-            if (ODOConc != null) {
-                sondeData.setODOConc(Float.parseFloat(ODOConc.trim()));
-            }
-
-            String Turbid = sondeDataElem.getChildText("Turbid");
-            if (Turbid != null) {
-                sondeData.setTurbid(Float.parseFloat(Turbid.trim()));
-            }
-
-            String Battery = sondeDataElem.getChildText("Battery");
-            if (Battery != null) {
-                sondeData.setBattery(Float.parseFloat(Battery.trim()));
-            }
-            sondeContainer.getSondeData().add(sondeData);
-        }
         return sondeContainer;
     }
 

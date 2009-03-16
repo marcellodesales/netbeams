@@ -87,11 +87,12 @@ public class Matcher implements BaseComponent {
     public Collection<MatchRule> match(Message message) {
 
         log.debug("Finding a matcher for Message Content Type " + message.getContentType());
-        log.debug("message ID: " + message.getMessageID());
+        log.debug("message ID: " + message.getMessageID()); 
         ComponentIdentifier producer = message.getHeader().getProducer();
-        ComponentIdentifier consumer = message.getHeader().getProducer();
+        ComponentIdentifier consumer = message.getHeader().getConsumer();
         log.debug("Message's producer: " + producer.getComponentType());
-        log.debug("Message's consumer: " + consumer != null ? consumer.getComponentType() : "Not Defined");
+        String messageConsumerName = (consumer != null && consumer.getComponentType() != null ? consumer.getComponentType() : "Not Defined");
+        log.debug("Message's consumer: " + messageConsumerName);
         
         Collection<MatchRule> matchedRules = new HashSet<MatchRule>();
 
@@ -101,7 +102,7 @@ public class Matcher implements BaseComponent {
         nodeAddr.setValue("LOCAL");
         locator.setNodeAddress(nodeAddr);
         
-        if (consumer != null) {
+        if (consumer != null && consumer.getComponentType() != null) {
 	        MatchCriteria crit = new MatchCriteria(producer.getComponentType(), locator);
 	        MatchTarget targ = new MatchTarget(consumer.getComponentType(), locator, null);        
 	        MatchRule localRule = new MatchRule("defaultRule", true, crit, targ);
@@ -109,11 +110,10 @@ public class Matcher implements BaseComponent {
         }
         for (MatchRule mr : rules) {
             log.debug("Verifying matcher for rule: " + mr.getRuleID() + " Is Default? " + mr.isDefault());
-            log.debug("Message's producer: " + producer.getComponentType());
-            log.debug("Message's consumer: " + consumer.getComponentType());
+            log.debug("Message's Producer: " + producer.getComponentType());
+            log.debug("Message's Consumer: " + messageConsumerName);
             log.debug("Component type matches rule criteria?");
             log.debug("Rule Criteria: Producer=" + mr.getCriteria().getProducerComponentType());
-            log.debug("Rule Criteria: Consumer=" + mr.getTarget().getConsumerComponentType());
             if (isMatchForComponentType(producer, mr)) {
                 log.debug("Component type matches for producer and consumer types...");
                 matchedRules.add(mr);

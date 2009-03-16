@@ -125,7 +125,7 @@ public class MessageBroker implements MessageBrokerAccessor {
 
                     log.debug("Delivery must go through the gateway component " + gatewayComponentType);
                     localComponent = componentsByType.get(gatewayComponentType);
-                    if (!gatewayComponentType.trim().equals("")) {
+                    if (localComponent != null) {
                         log.error("Ready to deliver message to the local GATEWAY component "
                                 + localComponent.getComponentType() + " not attached!!!");
                     } else {

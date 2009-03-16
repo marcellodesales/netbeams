@@ -307,7 +307,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
     public void deliver(Message message) throws DSPException {
 
         // Processing start-up or configuration messages
-        if (message instanceof UpdateMessage && message.getContentType().equals("org.netbeams.dsp.data.property")) {
+        if (message instanceof UpdateMessage) {
 
             log.debug("Update messages delivered: configuring DSP Wire Transport Server with Properties");
             this.updateComponentProperties((UpdateMessage) message);

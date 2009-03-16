@@ -63,21 +63,16 @@ public class SondeProducer {
         
         
         try {
-        	Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data, org.netbeams.dsp.ysi.ObjectFactory.class);
+        	Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data);
 		
+        	
         	// Always check if there is a broker available
         	MessageBrokerAccessor messageBroker = context.getDataBroker();
         	if(messageBroker != null){
         		messageBroker.send(message);
         	}else{
         		log.debug("Message broker not available");
-        	}
-        } catch (JAXBException e) {
-        	log.error("JAXBException");
-        	log.error(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
-        	log.error("ParseConfigurationException");
-        	log.error(e.getMessage(), e);        	
+        	}     	
         } catch (DSPException e) {
         	log.error("DSPException");
         	log.error(e.getMessage(), e);
@@ -90,33 +85,41 @@ public class SondeProducer {
 		private static final String SERIAL_PORT = "/dev/ttyS0";
 		private boolean running = true;
 		private SerialHandler serialHandler;
-		//private SondeDataContainer sondeDataContainer;
-		//private SondeTestData sondeTestData;
-		//private List<SondeDataType> sondeData;
+		private SondeDataContainer sondeDataContainer;
+		private SondeTestData sondeTestData;    // Testing for the producer side only.
+		private List<SondeDataType> sondeData;  // Testing for the producer side only.
 		
 		public SondeHandler () {
 			serialHandler = new SerialHandler();
-			//sondeTestData = new SondeTestData();  // Get producer test data.
-			//sondeDataContainer = sondeTestData.getSondeTestData();
+			sondeTestData = new SondeTestData();  // Get producer test data.
+			sondeDataContainer = sondeTestData.getSondeTestData();
 		};
 		
 		
 		public void run() {			
 			while (running) {
+				/*
 				try { 
 					log.debug("Serial connection established from bundle...");
 					serialHandler.connect(SERIAL_PORT);
 				} catch (Exception e) {
 					System.out.println("ERROR: " + e.getMessage());
 					e.printStackTrace();
-				}
+				}*/
 				// Communication with the consumer
-				/*
+				
+				
+				
 				try {
 					send(sondeDataContainer);
 				} catch (DSPException e) {
 					System.err.println("ERROR: " + e.getMessage());
-				}*/
+				}
+				try {
+				Thread.sleep(10000);
+				} catch (Exception e) {
+					System.out.println("Error: " + e.getMessage());
+				}
 			}
 		}
 		

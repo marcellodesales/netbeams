@@ -49,8 +49,7 @@ public class SondeTestData {
 	
 	private void setDataSet1() {
 		sdt = new SondeDataType();
-		//sdt.setDate(dateTime);
-		//sdt.setTime(dateTime);
+		sdt.setDateTime("2008/12/02", "22:48:53");
 		sdt.setTemp((float) 22.69);
 		sdt.setSpCond((float) 183.0);
 		sdt.setCond((float) 175.0);
@@ -69,8 +68,7 @@ public class SondeTestData {
 	
 	private void setDataSet2() {
 		sdt = new SondeDataType();
-		//sdt.setDate(dateTime);
-		//sdt.setTime(dateTime);
+		sdt.setDateTime("2008/12/02", "22:54:53");
 		sdt.setTemp((float) 22.69);
 		sdt.setSpCond((float) 183.0);
 		sdt.setCond((float) 175.0);
@@ -88,8 +86,7 @@ public class SondeTestData {
 	
 	private void setDataSet3() {
 		sdt = new SondeDataType();
-		//sdt.setDate(dateTime);
-		//sdt.setTime(dateTime);
+		sdt.setDateTime("2008/12/02", "23:00:53");
 		sdt.setTemp((float) 22.70);
 		sdt.setSpCond((float) 183.0);
 		sdt.setCond((float) 175.0);
@@ -144,7 +141,7 @@ public class SondeTestData {
 	}
 	
 	
-	/*
+	
 	public static void main(String[] args) {
 		SondeTestData testData = new SondeTestData();
 		SondeDataContainer container;
@@ -156,8 +153,8 @@ public class SondeTestData {
 		
 		// Verify that the data can be retrieved.
 		for (int i = 0; i < container.getSondeData().size(); i++) {
-			System.out.println("Date: " + testData.dateToString((GregorianCalendar) container.getSondeData().get(i).getDate()));
-			System.out.println("Time: " + testData.timeToString((GregorianCalendar) container.getSondeData().get(i).getTime()));
+			System.out.println("Date: " + container.getSondeData().get(i).getDateString());
+			System.out.println("Time: " + container.getSondeData().get(i).getTimeString());
 			System.out.println("Temp: " + container.getSondeData().get(i).getTemp());
 			System.out.println("SpCond: " + container.getSondeData().get(i).getSpCond());
 			System.out.println("Cond: " + container.getSondeData().get(i).getCond());
@@ -174,5 +171,5 @@ public class SondeTestData {
 			System.out.println();
 		}
 	}
-	*/		
+			
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <MessagesContainer uudi="24929c29-60ee-4d17-af08-64d9446277ef"
     creationTime="2009-03-06T15:17:18-0800" destinationHost="localhost">
-    <UpdateMessage ContentType="org.netbeams.dsp.data.property"
+    <UpdateMessage ContentType="org.netbeams.dsp.data.property.DSProperties"
         messageID="9f33232f-5574-412a-99c7-ca38a169baf6">
         <Header>
             <CreationTime>1236381438480</CreationTime>
@@ -25,7 +25,7 @@
         <Body>
             <DSProperties>
                 <Property name="WIRE_TRANSPORT_SERVER_IP">
-                    <Value>127.0.0.1</Value>
+                    <Value>67.169.177.195</Value>
                 </Property>
                 <Property name="WIRE_TRANSPORT_SERVER_PORT">
                     <Value>8080</Value>
@@ -37,7 +37,7 @@
                     <Value>dspMessagesContainer</Value>
                 </Property>
                 <Property name="WIRE_TRANSPORT_TRANSFER_DELAY">
-                    <Value>20</Value>
+                    <Value>60</Value>
                 </Property>
             </DSProperties>
         </Body>

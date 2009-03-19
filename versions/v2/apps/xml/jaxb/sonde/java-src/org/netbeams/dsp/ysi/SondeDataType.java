@@ -439,7 +439,7 @@ public class SondeDataType {
 
     public String toXml() {
         StringBuilder builder = new StringBuilder();
-        builder.append("<soundeData ");
+        builder.append("<sondeData ");
         if (this.samplingTimeStamp != null) {
             System.out.println(this.samplingTimeStamp);
             builder.append("samplingTimeStamp=\"" + dateTimeFormat.format (this.samplingTimeStamp.getTime()) + "\" ");
@@ -457,7 +457,7 @@ public class SondeDataType {
         builder.append("<ODOConc>" + this.odoConc + "</ODOConc>");
         builder.append("<Turbid>" + this.turbid + "</Turbid>");
         builder.append("<Battery>" + this.battery + "</Battery>");
-        builder.append("</soundeData>");
+        builder.append("</sondeData>");
         return builder.toString();
     }
 

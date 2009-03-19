@@ -141,12 +141,15 @@ public abstract class AbstractMessage {
     
     public String toXml() {
         StringBuilder builder = new StringBuilder();
-        builder.append("<" + this.getClass().getSimpleName() + " ");
+        String[] simpleName = this.getClass().getSimpleName().split("\\.");
+        builder.append("<" + simpleName[simpleName.length-1] + " ");
+        //builder.append("<" + this.getClass().getSimpleName() + " ");
         builder.append("ContentType=\"" + this.contentType + "\" ");
         builder.append("messageID=\"" + this.messageID + "\">");
         builder.append(this.header.toXml());
         builder.append(this.body.toXml());
-        builder.append("</" + this.getClass().getSimpleName() + ">");
+        //builder.append("</" + this.getClass().getSimpleName() + ">");
+        builder.append("</" + simpleName[simpleName.length-1] + ">");
         return builder.toString();
     }
 }

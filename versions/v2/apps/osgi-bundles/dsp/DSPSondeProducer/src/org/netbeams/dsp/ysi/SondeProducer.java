@@ -1,13 +1,13 @@
 package org.netbeams.dsp.ysi;
 
 import java.util.List;
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.MessageFactory;
+import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
@@ -55,17 +55,13 @@ public class SondeProducer {
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
                 "SondeProducer", localIPAddress, data.getContentContextForJAXB());
 		
-        //ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-        //		"DSPWireTransportClient", System.getProperty("WIRE_TRANSPORT_SERVER_IP"), "org.netbeams.dsp.wiretransport.client");
         ComponentIdentifier consumer = null;
         
-        //log.debug("Sonde Data to be sent to " + consumer.getComponentLocator().getNodeAddress().getValue());
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, consumer);
         
         
         try {
         	Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data);
-		
         	
         	// Always check if there is a broker available
         	MessageBrokerAccessor messageBroker = context.getDataBroker();
@@ -107,10 +103,7 @@ public class SondeProducer {
 					System.out.println("ERROR: " + e.getMessage());
 					e.printStackTrace();
 				}*/
-				// Communication with the consumer
-				
-				
-				
+				// Communication with the consumer				
 				try {
 					send(sondeDataContainer);
 				} catch (DSPException e) {

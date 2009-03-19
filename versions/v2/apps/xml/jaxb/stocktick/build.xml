@@ -3,32 +3,25 @@
 
     <import file="../../../../init-targets.xml"/>
     
-    <import file="../jaxb.setup.xml" />
-    
-    <property name="message-package" value="org.netbeams.dsp.demo.stock" />
-
-    <property name="java-src-dir" value="${XML.JAXB}/stocktick/java-src" />
-
-    <target name="xjc-compile">
-        <antcall target="jaxbsetup.xjc-compile">
-            <param name="java-src" value="${java-src-dir}"/>
-            <param name="schema.name" value="stocktick.xsd" />
-            <param name="package" value="${message-package}" />
-        </antcall>
-    </target>
-
-    <target name="java-compile" depends="xjc-compile">
-        <delete dir="${XML.JAXB}/stocktick/classes" />
-        <mkdir dir="${XML.JAXB}/stocktick/classes" />
-        <javac srcdir="${XML.JAXB}/stocktick/java-src" destdir="${XML.JAXB}/stocktick/classes" classpathref="jaxb.classpath" 
-        	source="1.5"
-		target="1.5"/>
-    </target>
+	<target name="java-compile">
+	        <delete dir="${XML.JAXB}/stocktick/classes" />
+	        <mkdir dir="${XML.JAXB}/stocktick/classes" />
+	        <path id="proj.classpath">
+	            <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+	        </path>
+	        <javac srcdir="${XML.JAXB}/stocktick/java-src"
+	               destdir="${XML.JAXB}/stocktick/classes"
+	               source="1.5"
+	               target="1.5">
+	            <classpath refid="proj.classpath" />
+	        </javac>
+	</target>
 
 
-    <target name="create-jar" depends="init, java-compile">
-        <mkdir dir="${XML.JAXB}/stocktick/dist" />
-        <jar destfile="${XML.JAXB}/stocktick/dist/stocktick.jar" basedir="${XML.JAXB}/stocktick/classes" />
-    </target>
+	    <target name="create-jar" depends="dsp-init.init, java-compile">
+	        <mkdir dir="${XML.JAXB}/stocktick/dist" />
+	        <jar destfile="${XML.JAXB}/stocktick/dist/stocktick.jar" basedir="${XML.JAXB}/stocktick/classes" />
+	    </target>
+
 
 </project>

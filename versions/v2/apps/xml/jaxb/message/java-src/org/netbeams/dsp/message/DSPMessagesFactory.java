@@ -102,7 +102,8 @@ public enum DSPMessagesFactory {
      * @return an instance of the Measure Message with the given Id, header and the body with the given contentType.
      */
     private Message makeDSPMessage(Message m1, Header header, MessageContent bodyPayload) {
-        m1.setContentType(bodyPayload.getContentContextForJAXB());
+        //m1.setContentType(bodyPayload.getContentContextForJAXB());
+    	m1.setContentType(bodyPayload.getContentType());
         m1.setMessageID(UUID.randomUUID().toString());
         m1.setHeader(header);
 

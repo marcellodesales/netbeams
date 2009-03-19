@@ -102,7 +102,7 @@ public class SondeDataType {
     }
     
     public String getDateString() {
-        return new SimpleDateFormat("MM/dd/yyyy").format(this.samplingTimeStamp.getTime());
+        return new SimpleDateFormat("yyyy/MM/dd").format(this.samplingTimeStamp.getTime());
     }
     
     public String getTimeString() {

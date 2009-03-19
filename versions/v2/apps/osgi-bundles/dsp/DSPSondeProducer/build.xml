@@ -12,6 +12,7 @@
 				
 			<path id="dsp.sonde.project.classpath">
 				<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+				<pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
 				<pathelement location="${XML.JAXB}/sonde/dist/sonde.jar" />
 				<path refid="project.class.path"/>
 			</path>
@@ -28,6 +29,7 @@
 			<mkdir dir="${dsp.sonde.base.dir}/classes/libs"/>
 				<copy todir="${dsp.sonde.base.dir}/classes/libs">
 					<fileset dir="${XML.JAXB}/sonde/dist" includes="*.jar"/>
+					<fileset dir="${XML.JAXB}/dsproperty/dist" includes="*.jar"/>
 					<fileset dir="${THIRDPARTY}/rxtx/2.1-7r2/jar" includes="*.jar" />
 				</copy>
 			

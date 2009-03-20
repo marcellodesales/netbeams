@@ -164,7 +164,9 @@ MDS Display/Logger or a serial cable connected to a PC, where the sampling
 frequency is usually set to a high frequency. In contrast, Unattended
 mode is performed when the Sonde is deployed offshore or in a
 remote body of water, where the sampling frequency is usually set for a
-longer period of time (i.e. 5 - 15 min). In order to be configured,
+longer period of time (i.e. 5 - 15 min). Assuming a 5 min sampling
+frequency, the Sonde produces 267 KB of data per day.
+In order to be configured,
 the Sonde offers a set of menus that can be accessed through a terminal session
 over RS232. In this way, the Sonde can be configured to
 start logging data to an internal file. In order to view the data as it's
@@ -508,14 +510,14 @@ accesses the cellular network using a data plan from AT\&T.
 The DSP is implemented in Java and serves as a container environment where 
 DSP Components execute. Due to its micro-kernel, modular and dynamic characteristics, 
 the current DSP implementation uses OSGi \cite{osgi} as a deployment and execution 
-infrastucture. One important DSP requirement is to impose on DSP components minimal 
+infrastucture. One important DSP requirement is to impose on DSP Components minimal 
 dependency on the DSP itself and no depency on OSGi. To this extent, all DSP resources
-accessible to DSP components are specified by \texttt{DSPContext} interface.
-The DSP also uses messages to communicate with DSP Components. It has a special "adapter"
-that acts like a DSPComponent. Therefore, configuring the DSP is no different from configuring
-a DSP component.
+accessible to DSP Components are specified by \texttt{DSPContext} interface.
+The DSP also uses messages to communicate with DSP Components. It has a special adapter
+that acts like a \texttt{DSPComponent}. Therefore, configuring the DSP is no different from configuring
+a DSP Component.
 
-DSP compoments are deployed as OSGi bundles. OSGi defines bundles life-cycle and
+DSP Compoments are deployed as OSGi bundles. OSGi defines bundles life-cycle and
 runtime upgrade mechanism. DSP uses these capabilities to allow remote deployment 
 (bundles with DSP Components are transmitted as message to the DSP Component Adaptor) 
 and activation/deactivation of DSP Components. 
@@ -655,7 +657,9 @@ from remote locations. Our end-to-end solution, furthermore, allows
 configuration and management of remotely deployed sensors. In this sense, the
 key to our infrastructure is the DSP, a micro-kernel plug-and-play
 architecture that can flexibly be configured to specific needs through
-special purpose components. 
+special purpose components. We plan to use the Gumstix's processing
+power to pre-process data intensive sensors such as the HF Radar to
+reduce the data volume.
 
 
 Furthermore, our work improves upon existing technologies in earlier sensor network implementations.

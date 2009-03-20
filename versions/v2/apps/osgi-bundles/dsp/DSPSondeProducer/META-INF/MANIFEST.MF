@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Name: DSP Sonde Producer
 Bundle-SymbolicName: DSP Sonde Producer
-Bundle-ClassPath: ., libs/sonde.jar, libs/RXTXcomm.jar, libs/dsproperty.jar
+Bundle-ClassPath: ., libs/sonde.jar, libs/RXTXcomm.jar
 Bundle-Version: 0.1
 Bundle-Description: DSP Sonde Producer
 Bundle-Vendor: NetBEAMS.org

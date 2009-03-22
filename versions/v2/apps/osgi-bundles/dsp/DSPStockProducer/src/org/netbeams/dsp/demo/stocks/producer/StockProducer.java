@@ -25,10 +25,14 @@ import org.netbeams.dsp.demo.stock.StockTick;
 import org.netbeams.dsp.demo.stock.StockTicks;
 import org.netbeams.dsp.message.AcknowledgementMessage;
 import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.message.DSPMessagesFactory;
+import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.Message;
+import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.message.QueryMessage;
 import org.netbeams.dsp.message.UpdateMessage;
+import org.netbeams.dsp.util.NetworkUtil;
 import org.w3c.dom.Node;
 
 
@@ -121,8 +125,8 @@ public class StockProducer implements DSPComponent{
 	 */
 	public void startComponent() {
 		log.info("Starting component");
-		engine = new Engine("[" + componentNodeId + "] " + COMPONENT_TYPE);
-		engine.start();
+//		engine = new Engine("[" + componentNodeId + "] " + COMPONENT_TYPE);
+//		engine.start();
 		
 	}
 	
@@ -200,7 +204,9 @@ public class StockProducer implements DSPComponent{
 		}
 	}
 	
-
+	/**
+	 * JAXBImplementation
+	 * 
 	private void processQuery(Message message) {
 		DSProperties dspProperties = null;
 		try{
@@ -215,56 +221,90 @@ public class StockProducer implements DSPComponent{
 			log.error("Error unmarhalling the message", e);
 			return;
 		}
-		log.debug("Got query configuration for " + dspProperties.getProperty().get(0).getName());
+		log.debug("Got query configuration");
 		
 		sendReply(message);		
 	}
+	*/
 
-	private void processUpdate(Message message) {
-		String contentType = message.getContentType();
+	private void processQuery(Message message) {
+		MessageContent content = message.getBody().getAny();
+		log.debug("Content class " + content.getClass().getName());
 		
-		log.debug("message content=" + contentType);
-		
-		if(DSProperties.class.getName().equals(contentType)){
-			Object content = message.getBody().getAny();
-			try{
-				JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.data.property",
-						StockTicks.class.getClassLoader());
-				Unmarshaller unmarshaller = jc.createUnmarshaller();
-				DSProperties dspProperties=(DSProperties)unmarshaller.unmarshal((Node)content);
-				for(DSProperty prop: dspProperties.getProperty()){
-					log.debug("Update property=" + prop.getName() + " valeu=" + prop.getValue());
-				}
-			}catch(JAXBException e){
-				log.error("Error unmarhalling the message", e);
-				return;
-			}
-			sendBackAcknowledge(message);
+		if(content instanceof DSProperties){
+			log.debug("Got query configuration");	
+			sendReply(message);					
 		}
 	}
 
-	private void sendBackAcknowledge(Message message) {
-		ComponentIdentifier ciProducer = message.getHeader().getProducer();
-		String originalMessageId = message.getMessageID();
+	
+	
+	private void processUpdate(Message message) {
+		Object content = message.getBody().getAny();
 		
-		Message replyMsg = null;
-		try {
-			// TODO: Dummy payload. Need to define it properly
-			DSProperties props = new DSProperties();
-			replyMsg = MessageFactory.newMessage2(AcknowledgementMessage.class, props, this, 
-					ciProducer.getComponentLocator().getComponentNodeId(), 
-					ciProducer.getComponentType(),
-					ciProducer.getComponentLocator().getNodeAddress().getValue());
-		} catch (DSPException e) {
-			log.warn("Cannot create acknowledge", e);
-		}		
-		// Set correlation
-		replyMsg.getHeader().setCorrelationID(originalMessageId);
+		log.debug("Content class " + content.getClass().getName());
 		
-		sendMessage(replyMsg);
+		try{
+			JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.data.property",
+					StockTicks.class.getClassLoader());
+			Unmarshaller unmarshaller = jc.createUnmarshaller();
+			DSProperties dspProperties=(DSProperties)unmarshaller.unmarshal((Node)content);
+			for(DSProperty prop: dspProperties.getProperty()){
+				log.debug("Update property=" + prop.getName() + " value=" + prop.getValue());
+			}
+		}catch(JAXBException e){
+			log.error("Error unmarhalling the message", e);
+			return;
+		}
+		sendBackAcknowledge(message);
 	}
 
-	private void sendMessage(Message message) {
+	private void sendBackAcknowledge(Message message) {
+		//TODO: Not sure whether we can send a message with no payload
+		DSProperties props = new DSProperties();
+		
+		// Obtain original producer
+		ComponentIdentifier origProducer = message.getHeader().getProducer();
+		String originalMessageId = message.getMessageID();
+		// Create reply  message
+		
+		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
+        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
+                getComponentNodeId(), localIPAddress, props.getContentContextForJAXB());
+		       
+        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
+    	header.setCorrelationID(originalMessageId);
+            
+    	Message replyMsg = DSPMessagesFactory.INSTANCE.makeDSPAcknowledgementMessage(header, props);
+    	sendMessage(replyMsg);	
+	}
+
+	private void sendReply(Message message)
+	{
+		DSProperties props = new DSProperties();
+		DSProperty freq = new DSProperty();
+		freq.setName("samplingFrequency");
+		freq.setValue("10");
+		props.getProperty().add(freq);
+		
+		// Obtain original producer
+		ComponentIdentifier origProducer = message.getHeader().getProducer();
+		String originalMessageId = message.getMessageID();
+		// Create reply  message
+		
+		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
+        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
+        		getComponentNodeId(), localIPAddress, props.getContentContextForJAXB());
+		       
+        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
+    	header.setCorrelationID(originalMessageId);
+            
+    	Message replyMsg = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, props);
+    	sendMessage(replyMsg);	
+	}
+
+	private void sendMessage(Message message) 
+	{
 		MessageBrokerAccessor messageBroker;
 		try {
 			messageBroker = context.getDataBroker();
@@ -278,43 +318,6 @@ public class StockProducer implements DSPComponent{
 			log.warn("Cannot send reply", e);
 		}
 	}
-
-	private void sendReply(Message message) {
-		
-		DSProperties props = new DSProperties();
-		DSProperty freq = new DSProperty();
-		freq.setName("sampling_frequency");
-		freq.setValue("10");
-		
-		ComponentIdentifier ciProducer = message.getHeader().getProducer();
-		String originalMessageId = message.getMessageID();
-		Message replyMsg = null;
-		try {
-			replyMsg = MessageFactory.newMessage2(MeasureMessage.class, props, this, 
-					ciProducer.getComponentLocator().getComponentNodeId(), 
-					ciProducer.getComponentType(),
-					ciProducer.getComponentLocator().getNodeAddress().getValue());
-		} catch (DSPException e) {
-			log.warn("Cannot create reply", e);
-		}
-		
-		// Set correlation
-		replyMsg.getHeader().setCorrelationID(originalMessageId);
-		
-		MessageBrokerAccessor messageBroker;
-		try {
-			messageBroker = context.getDataBroker();
-			if(messageBroker != null){
-				messageBroker.send(replyMsg);
-				log.debug("Reply mensage sent back");
-			}else{
-				log.debug("Message broker not available");
-			}
-		} catch (DSPException e) {
-			log.warn("Cannot send reply", e);
-		}		
-	}
-
 
 	/////////////////////////////////
 	////////// Inner Class //////////

@@ -24,8 +24,9 @@
 	</target>
 	
 	<target name="dsp-management.jar" depends="dsp-management.init">
+		<mkdir dir="${DSP.RUNTIME}" />
 		<copy todir="${dspmanagement.base.dir}/build/web/">
-			<fileset dir="${dspmanagement.base.dir}/web/"/>
+			<fileset dir="${dspmanagement.base.dir}/web/DSP Management/build/"/>
 		</copy>
 		<jar basedir="${dspmanagement.base.dir}/build" 
 			 jarfile="${DSP.DEPLOYMENT}/DSPManagement-${DSP.VERSION}.jar" 

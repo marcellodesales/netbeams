@@ -96,16 +96,13 @@ public class Matcher implements BaseComponent {
         
         Collection<MatchRule> matchedRules = new HashSet<MatchRule>();
 
-        ComponentLocator locator = new ComponentLocator();
-        locator.setComponentNodeId("local_id");
-        NodeAddress nodeAddr = new NodeAddress();
-        nodeAddr.setValue("LOCAL");
-        locator.setNodeAddress(nodeAddr);
         
-        if (consumer != null && consumer.getComponentType() != null) {
-	        MatchCriteria crit = new MatchCriteria(producer.getComponentType(), locator);
-	        MatchTarget targ = new MatchTarget(consumer.getComponentType(), locator, null);        
-	        MatchRule localRule = new MatchRule("defaultRule", true, crit, targ);
+        if (consumer != null && consumer.getComponentType() != null && 
+        		consumer.getComponentLocator() != null ) 
+        {   	       	
+	        MatchCriteria crit = new MatchCriteria(producer.getComponentType(), producer.getComponentLocator());
+	        MatchTarget targ = new MatchTarget(consumer.getComponentType(), consumer.getComponentLocator(), null);        
+	        MatchRule localRule = new MatchRule("def_consumer", true, crit, targ);
 	        matchedRules.add(localRule);
         }
         for (MatchRule mr : rules) {

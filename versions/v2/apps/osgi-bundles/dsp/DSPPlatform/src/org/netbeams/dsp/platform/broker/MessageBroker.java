@@ -243,15 +243,21 @@ public class MessageBroker implements MessageBrokerAccessor {
     private String messageSummary(Message message) {
         StringBuilder buff = new StringBuilder();
         buff.append("id=").append(message.getMessageID()).append("; ");
+        buff.append("prodCNI=").append(message.getHeader().getProducer().getComponentLocator().getComponentNodeId()).append("; ");;
         buff.append("prod=").append(message.getHeader().getProducer().getComponentType()).append("; ");
         buff.append("content_type=").append(message.getContentType()).append("; ");
         ComponentIdentifier consumer = message.getHeader().getConsumer();
         if (consumer != null) {
-            buff.append("consumer=");
-            buff.append(consumer.getComponentType()).append("; ");
-            buff.append("node=");
-            buff.append(consumer.getComponentLocator().getNodeAddress().getValue()).append("; ");
-
+            buff.append("cons=").append(consumer.getComponentType()).append("; ");
+        	if(message.getHeader().getConsumer().getComponentLocator() != null){
+        		buff.append("consCNI=").append(message.getHeader().getConsumer().getComponentLocator().getComponentNodeId()).append("; ");
+        	}
+        	if(message.getHeader().getConsumer().getComponentLocator() != null){
+        		buff.append("consCNI=").append(message.getHeader().getConsumer().getComponentLocator().getComponentNodeId());
+        	}
+        	if(message.getHeader().getConsumer().getComponentLocator().getNodeAddress() != null){
+        		buff.append("node=").append(message.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue());
+        	}
         }
         return buff.toString();
     }

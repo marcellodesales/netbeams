@@ -244,18 +244,10 @@ public class StockProducer implements DSPComponent{
 		
 		log.debug("Content class " + content.getClass().getName());
 		
-		try{
-			JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.data.property",
-					StockTicks.class.getClassLoader());
-			Unmarshaller unmarshaller = jc.createUnmarshaller();
-			DSProperties dspProperties=(DSProperties)unmarshaller.unmarshal((Node)content);
-			for(DSProperty prop: dspProperties.getProperty()){
-				log.debug("Update property=" + prop.getName() + " value=" + prop.getValue());
-			}
-		}catch(JAXBException e){
-			log.error("Error unmarhalling the message", e);
-			return;
-		}
+		DSProperties props = (DSProperties)content;
+		log.debug("name=" + props.getProperty().get(0).getName());
+		log.debug("value=" + props.getProperty().get(0).getValue());
+
 		sendBackAcknowledge(message);
 	}
 
@@ -270,7 +262,7 @@ public class StockProducer implements DSPComponent{
 		
 		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-                getComponentNodeId(), localIPAddress, props.getContentContextForJAXB());
+                getComponentNodeId(), localIPAddress, getComponentType());
 		       
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
     	header.setCorrelationID(originalMessageId);
@@ -294,7 +286,7 @@ public class StockProducer implements DSPComponent{
 		
 		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-        		getComponentNodeId(), localIPAddress, props.getContentContextForJAXB());
+        		getComponentNodeId(), localIPAddress, getComponentType());
 		       
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
     	header.setCorrelationID(originalMessageId);

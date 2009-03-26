@@ -7817,8 +7817,8 @@ function(H){M.buttonPressed(H);
 });
 }
 if(N.type==k)Q=new qx.ui.basic.Label(N.text);
-if(N.type==x)Q=new qx.ui.form.TextField();
-var R=M.grid.getLayout();
+if(N.type==x){Q=new qx.ui.form.TextField(N.text);
+}var R=M.grid.getLayout();
 var S=null;
 try{S=R.getCellWidget(O,
 P);

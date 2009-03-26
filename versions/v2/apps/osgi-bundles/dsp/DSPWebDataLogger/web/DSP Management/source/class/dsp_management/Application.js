@@ -68,8 +68,9 @@ function PropertyUI()
 		  }
 		  if (inst.type == "LABEL")
 			  widget = new qx.ui.basic.Label(inst.text);
-		  if (inst.type == "INPUT")
-			  widget = new qx.ui.form.TextField();
+		  if (inst.type == "INPUT"){
+			  widget = new qx.ui.form.TextField(inst.text);
+		  }
 		  var layout = PropertyUI.grid.getLayout();
 		  var old_widget = null;
 		  try {

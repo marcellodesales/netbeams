@@ -14,6 +14,7 @@
 		<path id="stock-consumer.project.classpath">
 			<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
 			<pathelement location="${XML.JAXB}/stocktick/dist/stocktick.jar"/>
+			<pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
 			<path refid="project.class.path"/>
 		</path>
 		

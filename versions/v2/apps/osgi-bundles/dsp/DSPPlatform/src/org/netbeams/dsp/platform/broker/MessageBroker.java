@@ -252,9 +252,6 @@ public class MessageBroker implements MessageBrokerAccessor {
         	if(message.getHeader().getConsumer().getComponentLocator() != null){
         		buff.append("consCNI=").append(message.getHeader().getConsumer().getComponentLocator().getComponentNodeId()).append("; ");
         	}
-        	if(message.getHeader().getConsumer().getComponentLocator() != null){
-        		buff.append("consCNI=").append(message.getHeader().getConsumer().getComponentLocator().getComponentNodeId());
-        	}
         	if(message.getHeader().getConsumer().getComponentLocator().getNodeAddress() != null){
         		buff.append("node=").append(message.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue());
         	}

@@ -35,6 +35,8 @@ public class PropertyUIServlet extends HttpServlet
     private Manager manager;
 
     private UIModel uiModel = new UIModel();
+    
+    boolean shouldStop = false;
 
     public PropertyUIServlet(Manager manager){
         isActive = false;
@@ -55,6 +57,14 @@ public class PropertyUIServlet extends HttpServlet
     /**
      * @Override 
      */    
+    public void destroy(){
+    	shouldStop = true;
+    }
+
+    
+    /**
+     * @Override 
+     */    
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
@@ -68,10 +78,15 @@ public class PropertyUIServlet extends HttpServlet
         }
         else {
         	// User pressed button on Property UI
-        	ActionUI action = createActionUI(request);
-        	String data = processAction(action);
-        	ServletOutputStream out = response.getOutputStream();
-        	out.println(data);
+        	try{
+	        	ActionUI action = createActionUI(request);
+	        	String data = processAction(action);
+	        	ServletOutputStream out = response.getOutputStream();
+	        	out.println(data);
+        	}catch(RuntimeException e){
+        		log.warn("Error processign the message", e);
+        		throw e;
+        	}
         }
     }
 
@@ -108,7 +123,7 @@ public class PropertyUIServlet extends HttpServlet
 		// Update UI with pending state
 		PropertyUI.createLabel(uiModel.properties.getProperty().size() + 3, 1, "Pending...");
 		
-		while(true){
+		while(!shouldStop){
 			MessageContent dom = manager.retrieveInteractionReply(interacionId);
 			// HACK:
 			if(dom != null){
@@ -137,6 +152,10 @@ public class PropertyUIServlet extends HttpServlet
 
 	private void processQuery(ActionUI action) {
 		
+		// Add pending label
+		PropertyUI.clear();
+		PropertyUI.createLabel(1, 1, "Pending...");
+		
 		String interacionId = null;
     	try {
     		DSProperties dummy = new DSProperties();
@@ -148,7 +167,7 @@ public class PropertyUIServlet extends HttpServlet
 		}
 		
 		MessageContent content = null;
-		while(true){
+		while(!shouldStop){
 			content = manager.retrieveInteractionReply(interacionId);
 			// HACK:
 			if(content != null){
@@ -169,12 +188,12 @@ public class PropertyUIServlet extends HttpServlet
 		uiModel.properties = props;
 		uiModel.selectedComponent = action.getInputValues().get(0);
 		// Create Layout
+		PropertyUI.clear();
 		List<DSProperty> pList = props.getProperty();
 		int x = 0;
 		for(;x < pList.size(); ++x){
 			PropertyUI.createLabel(x+1, 1, pList.get(x).getName());
-//			PropertyUI.createInput(x+1, 2, pList.get(x).getValue());
-			PropertyUI.createInput(x+1, 2, "10");
+			PropertyUI.createInput(x+1, 2, pList.get(x).getValue());
 		}
 		PropertyUI.createButton(x + 1, 1, "Update");
 		PropertyUI.createButton(x+1, 2, "Clear");

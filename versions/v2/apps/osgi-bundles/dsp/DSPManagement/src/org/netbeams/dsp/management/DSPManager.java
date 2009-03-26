@@ -321,11 +321,11 @@ public class DSPManager implements Manager, DSPComponent
     	// TODO: Simplify
 		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-                getComponentNodeId(), localIPAddress, content.getContentContextForJAXB());
+                getComponentNodeId(), localIPAddress, getComponentType());
         // Consumer
         String nodeAddStr = getNodeAddressAsString(nodeComponentId, componentType);
         ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-        		nodeComponentId, nodeAddStr, content.getContentContextForJAXB());     
+        		nodeComponentId, nodeAddStr, componentType);     
         
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, consumer);
             

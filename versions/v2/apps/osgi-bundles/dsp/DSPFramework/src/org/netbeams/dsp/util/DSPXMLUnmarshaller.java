@@ -3,8 +3,8 @@ package org.netbeams.dsp.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.StringReader;
-import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,6 +16,10 @@ import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
 import org.netbeams.dsp.data.property.Values;
+import org.netbeams.dsp.demo.mouseactions.ButtonName;
+import org.netbeams.dsp.demo.mouseactions.EventName;
+import org.netbeams.dsp.demo.mouseactions.MouseAction;
+import org.netbeams.dsp.demo.mouseactions.MouseActionsContainer;
 import org.netbeams.dsp.message.AbstractMessage;
 import org.netbeams.dsp.message.AbstractNodeAddress;
 import org.netbeams.dsp.message.Body;
@@ -157,13 +161,11 @@ public enum DSPXMLUnmarshaller {
 
         MessageContent content = (MessageContent) messageType.newInstance();
         if (content instanceof DSProperties) {
-            content = this.parseDSProperties(content, dspBodyElement);
+            content = this.parseDSProperties(dspBodyElement);
         } else if (content instanceof SondeDataContainer) {
-            try {
-                content = this.parseSondeDataContainer(content, dspBodyElement);
-            } catch (ParseException e) {
-                throw new DSPException(e);
-            }
+            content = this.parseSondeDataContainer(dspBodyElement);
+        } else if (content instanceof MouseActionsContainer) {
+            content = this.parseMouseActions(dspBodyElement);
         }
         dspBody.setAny(content);
         return dspBody;
@@ -240,94 +242,93 @@ public enum DSPXMLUnmarshaller {
         }
     }
 
-    private MessageContent parseSondeDataContainer(MessageContent content, Element sondeDataContainerElement)
-            throws ParseException {
-        SondeDataContainer sondeContainer = (SondeDataContainer) content;
+    private MessageContent parseSondeDataContainer(Element sondeDataContainerElement) {
+
+        SondeDataContainer sondeContainer = new SondeDataContainer();
         List<Element> sondeDataElements = sondeDataContainerElement.getChildren("soundeData");
-        
-            for (Element sondeDataElem : sondeDataElements) {
-                try {
-                    SondeDataType sondeData = new SondeDataType();
-        
-                    String dateTime = sondeDataElem.getAttributeValue("samplingTimeStamp");
-                    if (dateTime != null) {
-                        sondeData.setDateTime(dateTime.substring(0, dateTime.indexOf(" ")), dateTime.substring(dateTime
-                                .indexOf(" ") + 1, dateTime.length()));
-                    }
-        
-                    String SpCond = sondeDataElem.getChildText("SpCond");
-                    if (SpCond != null) {
-                        sondeData.setSpCond(Float.parseFloat(SpCond.trim()));
-                    }
-        
-                    String Cond = sondeDataElem.getChildText("Cond");
-                    if (Cond != null) {
-                        sondeData.setCond(Float.parseFloat(Cond.trim()));
-                    }
-        
-                    String Resist = sondeDataElem.getChildText("Resist");
-                    if (Resist != null) {
-                        sondeData.setResist(Float.parseFloat(Resist.trim()));
-                    }
-        
-                    String Sal = sondeDataElem.getChildText("Sal");
-                    if (Sal != null) {
-                        sondeData.setSal(Float.parseFloat(Sal.trim()));
-                    }
-        
-                    String Press = sondeDataElem.getChildText("Press");
-                    if (Press != null) {
-                        sondeData.setPress(Float.parseFloat(Press.trim()));
-                    }
-        
-                    String Depth = sondeDataElem.getChildText("Depth");
-                    if (Depth != null) {
-                        sondeData.setDepth(Float.parseFloat(Depth.trim()));
-                    }
-        
-                    String pH = sondeDataElem.getChildText("pH");
-                    if (pH != null) {
-                        sondeData.setPH(Float.parseFloat(pH.trim()));
-                    }
-        
-                    String phmV = sondeDataElem.getChildText("phmV");
-                    if (phmV != null) {
-                        sondeData.setPhmV(Float.parseFloat(phmV.trim()));
-                    }
-        
-                    String ODOSat = sondeDataElem.getChildText("ODOSat");
-                    if (ODOSat != null) {
-                        sondeData.setODOSat(Float.parseFloat(ODOSat.trim()));
-                    }
-        
-                    String ODOConc = sondeDataElem.getChildText("ODOConc");
-                    if (ODOConc != null) {
-                        sondeData.setODOConc(Float.parseFloat(ODOConc.trim()));
-                    }
-        
-                    String Turbid = sondeDataElem.getChildText("Turbid");
-                    if (Turbid != null) {
-                        sondeData.setTurbid(Float.parseFloat(Turbid.trim()));
-                    }
-        
-                    String Battery = sondeDataElem.getChildText("Battery");
-                    if (Battery != null) {
-                        sondeData.setBattery(Float.parseFloat(Battery.trim()));
-                    }
-                    sondeContainer.getSondeData().add(sondeData);
-            
-                } catch (NumberFormatException e){
-                    e.printStackTrace();
-                    continue;
+
+        for (Element sondeDataElem : sondeDataElements) {
+            try {
+                SondeDataType sondeData = new SondeDataType();
+
+                String dateTime = sondeDataElem.getAttributeValue("samplingTimeStamp");
+                if (dateTime != null) {
+                    sondeData.setDateTime(dateTime.substring(0, dateTime.indexOf(" ")), dateTime.substring(dateTime
+                            .indexOf(" ") + 1, dateTime.length()));
                 }
-                
+
+                String SpCond = sondeDataElem.getChildText("SpCond");
+                if (SpCond != null) {
+                    sondeData.setSpCond(Float.parseFloat(SpCond.trim()));
+                }
+
+                String Cond = sondeDataElem.getChildText("Cond");
+                if (Cond != null) {
+                    sondeData.setCond(Float.parseFloat(Cond.trim()));
+                }
+
+                String Resist = sondeDataElem.getChildText("Resist");
+                if (Resist != null) {
+                    sondeData.setResist(Float.parseFloat(Resist.trim()));
+                }
+
+                String Sal = sondeDataElem.getChildText("Sal");
+                if (Sal != null) {
+                    sondeData.setSal(Float.parseFloat(Sal.trim()));
+                }
+
+                String Press = sondeDataElem.getChildText("Press");
+                if (Press != null) {
+                    sondeData.setPress(Float.parseFloat(Press.trim()));
+                }
+
+                String Depth = sondeDataElem.getChildText("Depth");
+                if (Depth != null) {
+                    sondeData.setDepth(Float.parseFloat(Depth.trim()));
+                }
+
+                String pH = sondeDataElem.getChildText("pH");
+                if (pH != null) {
+                    sondeData.setPH(Float.parseFloat(pH.trim()));
+                }
+
+                String phmV = sondeDataElem.getChildText("phmV");
+                if (phmV != null) {
+                    sondeData.setPhmV(Float.parseFloat(phmV.trim()));
+                }
+
+                String ODOSat = sondeDataElem.getChildText("ODOSat");
+                if (ODOSat != null) {
+                    sondeData.setODOSat(Float.parseFloat(ODOSat.trim()));
+                }
+
+                String ODOConc = sondeDataElem.getChildText("ODOConc");
+                if (ODOConc != null) {
+                    sondeData.setODOConc(Float.parseFloat(ODOConc.trim()));
+                }
+
+                String Turbid = sondeDataElem.getChildText("Turbid");
+                if (Turbid != null) {
+                    sondeData.setTurbid(Float.parseFloat(Turbid.trim()));
+                }
+
+                String Battery = sondeDataElem.getChildText("Battery");
+                if (Battery != null) {
+                    sondeData.setBattery(Float.parseFloat(Battery.trim()));
+                }
+                sondeContainer.getSondeData().add(sondeData);
+
+            } catch (NumberFormatException e) {
+                log.error(e.getMessage(), e);
+                continue;
             }
+        }
         return sondeContainer;
     }
 
-    private MessageContent parseDSProperties(MessageContent content, Element dspPropertiesElement) {
-        DSProperties properties = (DSProperties) content;
-
+    private MessageContent parseDSProperties(Element dspPropertiesElement) {
+        DSProperties properties = new DSProperties();
+        
         List<Element> props = dspPropertiesElement.getChildren("Property");
         for (Element propElement : props) {
             DSProperty property = new DSProperty();
@@ -366,22 +367,43 @@ public enum DSPXMLUnmarshaller {
         return properties;
     }
 
-    // public static void main(String[] args) throws IOException {
-    //
-    // File a = new File("/media/disk/development/workspaces/sfsu/netBEAMS2 OSGi General/docs/messagesExample-dsp.xml");
-    //
-    // BufferedReader reader = new BufferedReader(new FileReader(a));
-    // String line = null, fileLines = "";
-    //
-    // while ((line = reader.readLine()) != null) {
-    // fileLines = fileLines + line;
-    // }
-    //
-    // try {
-    // MessagesContainer container = DSPXMLUnmarshaller.INSTANCE.unmarshallStream(fileLines);
-    // container.getMessage().size();
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // }
+    private MessageContent parseMouseActions(Element mouseActionsElement) {
+        MouseActionsContainer actionsContainer = new MouseActionsContainer();
+
+        List<Element> props = mouseActionsElement.getChildren("mouseAction");
+        for (Element mouseActionElement : props) {
+            MouseAction mouseAction = new MouseAction();
+            mouseAction.setButton(ButtonName.valueOf(mouseActionElement.getAttributeValue("button")));
+            mouseAction.setEvent(EventName.valueOf(mouseActionElement.getAttributeValue("event")));
+            mouseAction.setX(new Integer(mouseActionElement.getAttributeValue("x")));
+            mouseAction.setY(new Integer(mouseActionElement.getAttributeValue("y")));
+            actionsContainer.getMouseAction().add(mouseAction);
+        }
+        return actionsContainer;
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        File a = new File("/media/backups/development/workspaces/sfsu/netBEAMS2 OSGi General/messagesExample-dsp.xml");
+
+        BufferedReader reader = new BufferedReader(new FileReader(a));
+        String line = null, fileLines = "";
+
+        while ((line = reader.readLine()) != null) {
+            fileLines = fileLines + line;
+        }
+
+        try {
+            MessagesContainer container = DSPXMLUnmarshaller.INSTANCE.unmarshallStream(fileLines);
+            System.out.println(container.getMessage().size());
+            
+            for(AbstractMessage msg : container.getMessage()) {
+                System.out.println(msg.getContentType());
+                System.out.println(msg.getBody().getAny());
+            }
+                   
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -2,7 +2,6 @@ package org.netbeams.dsp.message;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Calendar;
 
 import junit.framework.TestCase;
 
@@ -21,11 +20,13 @@ import org.netbeams.dsp.ysi.SondeDataType;
 
 public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
 
+    public String a;
     private DSPMessagesFactory fac;
-    private File xmlObjectPersisted = new File("/media/disk/development/workspaces/sfsu/netBEAMS2 OSGi General/docs/messagesExample-dsp.xml");
+    private File xmlObjectPersisted = new File("messagesExample-dsp.xml");
 
     public JaxbMessagesMarshallUnmarshallTest() {
         this.fac = DSPMessagesFactory.INSTANCE;        
+        System.out.println(xmlObjectPersisted.getAbsolutePath());
     }
 
     /**
@@ -113,16 +114,16 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
         macontainer.getMouseAction().add(ma);
         macontainer.getMouseAction().add(ma1);
 
-        MeasureMessage mouseActions = null;
+        MeasureMessage mouseActionsMessage = null;
         
-          //Specifying the correct content type for the message as the package of the component
-            mouseActions = this.fac.makeDSPMeasureMessage(header2, macontainer);
+        //Specifying the correct content type for the message as the package of the component
+        mouseActionsMessage = this.fac.makeDSPMeasureMessage(header2, macontainer);
 
         String destIpAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
         
         SondeDataContainer sondeContainer = new SondeDataContainer();
         SondeDataType sData = new SondeDataType();
-        sData.setDateTime("12/10/2009", "14:23:44");
+        sData.setDateTime("2009/12/27", "14:23:44");
         sData.setCond(Float.parseFloat("35.4"));
         sData.setBattery(Float.parseFloat("377"));
         sData.setPH(Float.parseFloat("845"));
@@ -135,6 +136,7 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
 //        messages.getMessage().add(stocks);
         messages.getMessage().add(sondeMeasurements);
         messages.getMessage().add(updates);
+        messages.getMessage().add(mouseActionsMessage);
         try {
 
             // ------------------ Marshalling of the Messages Container (to be on the transport component)
@@ -151,67 +153,89 @@ public class JaxbMessagesMarshallUnmarshallTest extends TestCase {
         }
     }
     
-//    public void testUnmashallMessagesContainerWithDifferentMessages() {
-//        try {
-//            MessagesContainer container = DSPXMLUnmarshaller.INSTANCE.unmarshallStream(this.xmlObjectPersisted);
-//            
-//            assertNotNull("The messages container was not unmarshalled", container);
-//            assertNotNull("The messages container must not be null", container.getMessage());
-//            assertEquals("The messages container must have 2 messages", 2, container.getMessage().size()); 
-//            
-//            for(AbstractMessage dspMsg : container.getMessage()) {
-//                MessageContent obj = dspMsg.getBody().getAny();
-//                
-//                if (dspMsg.getContentType().equals("org.netbeams.dsp.ysi")) {
-//                    SondeDataContainer sondeData = (SondeDataContainer)obj;
-//                    assertNotNull("The payload was not unmashalled", sondeData);
-//                    assertNotNull("The list of stock ticks is null", sondeData.getSondeData());
-//                    assertEquals("The list of stock ticks must have one element", 1, sondeData.getSondeData().size());
-//                    for (SondeDataType sttk : sondeData.getSondeData()) {
-//                        assertEquals("The Battery level is incorrect", "full-Power", sttk.getBattery());
-//                        assertEquals("The Conditions is incorrect", "blue skies", sttk.getCond());
-//                        assertEquals("The Pressure is incorrect", "too-much", sttk.getPress());
-//                    }
-//                    
-//                } else 
-//                if (dspMsg.getContentType().equals("org.netbeams.dsp.data.property")) {
-//                    DSProperties propts = (DSProperties)obj;
-//                    assertNotNull("The payload was not unmashalled", propts);
-//                    assertNotNull("The list of properties is null", propts.getProperty());
-//                    assertEquals("The list properties must have one element", 4, propts.getProperty().size());
-//                    for (DSProperty dsProp: propts.getProperty()) {
-//                        assertNotNull("The DSP property is null", dsProp);
-//                        assertNotNull("The name of the property is null", dsProp.getName());
-//                        assertNotNull("The value of the property is null", dsProp.getValue());
-//                    }
-//                    
-//                } else
-//                if (dspMsg.getContentType().equals("org.netbeams.dsp.demo.stock")) {
-//                    StockTicks ticks = (StockTicks)obj;
-//                    assertNotNull("The payload was not unmashalled", ticks);
-//                    assertNotNull("The list of stock ticks is null", ticks.getStockTick());
-//                    assertEquals("The list of stock ticks must have one element", 1, ticks.getStockTick().size());
-//                    for (StockTick sttk : ticks.getStockTick()) {
-//                        assertEquals("The name of the stock is different", "Google, Inc.", sttk.getName());
-//                    }
-//                } else 
-//                if (dspMsg.getContentType().equals("org.netbeams.dsp.demo.mouseactions")) {
-//                    MouseActionsContainer mouseacts = (MouseActionsContainer)obj;
-//                    assertNotNull("The payload was not unmashalled", mouseacts);
-//                    assertNotNull("The list of stock ticks is null", mouseacts.getMouseAction());
-//                    assertEquals("The list of stock ticks must have one element", 2, mouseacts.getMouseAction().size());
-//                    for (MouseAction sttk : mouseacts.getMouseAction()) {
-//                        assertNotNull("The mouse action is null", sttk);
-//                    }
-//                }                
-//            }
-//            //Tearing down from the unmarshall method.
-//            if (this.xmlObjectPersisted.exists()) {
-//                this.xmlObjectPersisted.delete();
-//            }
-//            
-//        } catch (Exception e) {
-//            fail(e.getMessage());
-//        }
-//    }
+    public void testUnmashallMessagesContainerWithDifferentMessages() {
+        try {
+            MessagesContainer container = DSPXMLUnmarshaller.INSTANCE.unmarshallStream(this.xmlObjectPersisted);
+            
+            assertNotNull("The messages container was not unmarshalled", container);
+            assertNotNull("The messages container must not be null", container.getMessage());
+            assertEquals("The messages container must have 3 messages", 3, container.getMessage().size()); 
+            
+            for(AbstractMessage dspMsg : container.getMessage()) {
+                MessageContent obj = dspMsg.getBody().getAny();
+                
+                if (dspMsg.getContentType().equals("org.netbeams.dsp.ysi")) {
+                    SondeDataContainer sondeData = (SondeDataContainer)obj;
+                    assertNotNull("The payload was not unmashalled", sondeData);
+                    assertNotNull("The list of stock ticks is null", sondeData.getSondeData());
+                    assertEquals("The list of sonde data must have one element", 1, sondeData.getSondeData().size());
+                    for (SondeDataType sttk : sondeData.getSondeData()) {
+                        assertEquals("The Battery level is incorrect", "full-Power", sttk.getBattery());
+                        assertEquals("The Conditions is incorrect", "blue skies", sttk.getCond());
+                        assertEquals("The Pressure is incorrect", "too-much", sttk.getPress());
+                    }
+                    
+                } else 
+                if (dspMsg.getContentType().equals("org.netbeams.dsp.data.property")) {
+                    DSProperties propts = (DSProperties)obj;
+                    assertNotNull("The payload was not unmashalled", propts);
+                    assertNotNull("The list of properties is null", propts.getProperty());
+                    assertEquals("The list properties must have one element", 4, propts.getProperty().size());
+                    for (DSProperty dsProp: propts.getProperty()) {
+                        assertNotNull("The DSP property is null", dsProp);
+                        assertNotNull("The name of the property is null", dsProp.getName());
+                        assertNotNull("The value of the property is null", dsProp.getValue());
+                    }
+                    
+                } else
+                if (dspMsg.getContentType().equals("org.netbeams.dsp.demo.stock")) {
+                    StockTicks ticks = (StockTicks)obj;
+                    assertNotNull("The payload was not unmashalled", ticks);
+                    assertNotNull("The list of stock ticks is null", ticks.getStockTick());
+                    assertEquals("The list of stock ticks must have one element", 1, ticks.getStockTick().size());
+                    for (StockTick sttk : ticks.getStockTick()) {
+                        assertEquals("The name of the stock is different", "Google, Inc.", sttk.getName());
+                    }
+                } else 
+                if (dspMsg.getContentType().equals("org.netbeams.dsp.demo.mouseactions")) {
+                    MouseActionsContainer mouseacts = (MouseActionsContainer)obj;
+                    assertNotNull("The payload was not unmashalled", mouseacts);
+                    assertNotNull("The list of stock ticks is null", mouseacts.getMouseAction());
+                    assertEquals("The list of stock ticks must have one element", 2, mouseacts.getMouseAction().size());
+                    for (MouseAction sttk : mouseacts.getMouseAction()) {
+                        assertNotNull("The mouse action is null", sttk);
+                    }
+                }                
+            }
+            //Tearing down from the unmarshall method.
+            if (this.xmlObjectPersisted.exists()) {
+                this.xmlObjectPersisted.delete();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+    
+    
+    public static void changeMe(JaxbMessagesMarshallUnmarshallTest change) {
+        change = new JaxbMessagesMarshallUnmarshallTest();
+        JaxbMessagesMarshallUnmarshallTest b = new JaxbMessagesMarshallUnmarshallTest();
+        change = b;
+    }
+    
+    public static void changeMe(String a) {
+        a = "Changed";
+    }
+    
+    public static void main(String[] args) {
+        JaxbMessagesMarshallUnmarshallTest obj = new JaxbMessagesMarshallUnmarshallTest();
+        obj.a = "Ashwin";
+        String a = "Marcello";
+        changeMe(obj);
+        String ccc = "Ashwin";
+        changeMe(ccc);
+        System.out.println(obj.a);
+    }
 }

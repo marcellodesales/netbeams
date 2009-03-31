@@ -23,9 +23,13 @@ import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
 import org.netbeams.dsp.message.AbstractMessage;
+import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.message.DSPMessagesFactory;
+import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.message.MessagesContainer;
+import org.netbeams.dsp.message.QueryMessage;
 import org.netbeams.dsp.message.UpdateMessage;
 import org.netbeams.dsp.util.DSPXMLUnmarshaller;
 import org.netbeams.dsp.util.NetworkUtil;
@@ -272,21 +276,57 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      * communication.
      * 
      * @param updateMessage is an update message to configure the component.
+     * @throws DSPException if any problem happens during the update.
      */
-    private void updateComponentProperties(UpdateMessage updateMessage) {
+    private void updateComponentProperties(UpdateMessage updateMessage) throws DSPException {
 
         MessageContent propertiesNode = updateMessage.getBody().getAny();
 
         DSProperties properties = (DSProperties) propertiesNode;
+        boolean hasDelayChanged = false;
         for (DSProperty property : properties.getProperty()) {
             System.setProperty(property.getName(), property.getValue());
+            if (!hasDelayChanged && property.getName().equals("WIRE_TRANSPORT_TRANSFER_DELAY")) {
+                hasDelayChanged = true;
+            }
             log.debug("Update Property: " + property.getName() + "=" + property.getValue());
         }
 
-        long delay = this.getDelayForTransportSender();
+        if (scheduler.isShutdown()) {
+            long delay = this.getDelayForTransportSender();
+    
+            log.info("Starting scheduling the transport senders to wake up at every " + delay + " seconds...");
+            scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, delay, TimeUnit.SECONDS);
+        } else
+        if (hasDelayChanged) {
+            this.shutdownTransportWorkers();
+            
+            long delay = this.getDelayForTransportSender();
+            
+            log.info("Rescheduling the transport senders to wake up at every " + delay + " seconds...");
+            scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, delay, TimeUnit.SECONDS);
+        }
+        
+        this.sendBackAcknowledge(updateMessage);
+    }
 
-        log.info("Scheduling the transport senders to wake up at every " + delay + " seconds...");
-        scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, delay, TimeUnit.SECONDS);
+    private void sendBackAcknowledge(UpdateMessage message) throws DSPException {
+        DSProperties props = new DSProperties();
+        
+        // Obtain original producer
+        ComponentIdentifier origProducer = message.getHeader().getProducer();
+        String originalMessageId = message.getMessageID();
+        // Create reply  message
+        
+        String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
+        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
+                getComponentNodeId(), localIPAddress, getComponentType());
+                       
+        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
+        header.setCorrelationID(originalMessageId);
+            
+        Message replyMsg = DSPMessagesFactory.INSTANCE.makeDSPAcknowledgementMessage(header, props);
+        this.deliver(replyMsg);
     }
 
     /**
@@ -298,7 +338,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             delay = Long.valueOf(System.getProperty("WIRE_TRANSPORT_TRANSFER_DELAY")).longValue();
         } catch (NumberFormatException nfe) {
             log.error(nfe.getMessage(), nfe);
-            log.error("The bootstrap property WIRE_TRANSPORT_TRANSFER_DELAY must be set with an int value.");
+            log.error("The property WIRE_TRANSPORT_TRANSFER_DELAY must be set with an int value.");
             log.error("Using default value of 60 seconds for WIRE_TRANSPORT_TRANSFER_DELAY");
         }
         return delay;
@@ -312,6 +352,12 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             log.debug("Update messages delivered: configuring DSP Wire Transport Server with Properties");
             this.updateComponentProperties((UpdateMessage) message);
 
+        } else
+        if (message instanceof QueryMessage) {
+            
+            log.debug("Query message delivered: returning the properties that can be changed");
+            this.queryComponentProperties((QueryMessage) message);
+            
         } else {
 
             log.debug("Adding the DSP message to the Messages Outbound Queues...");
@@ -320,13 +366,61 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         }
     }
 
+    private void queryComponentProperties(QueryMessage queryMessage) throws DSPException {
+        MessageContent content = queryMessage.getBody().getAny();
+        log.debug("Content class " + content.getClass().getName());
+        
+        if(content instanceof DSProperties){
+            log.debug("Got query configuration");   
+            
+            DSProperties props = new DSProperties();
+            
+            DSProperty prp = new DSProperty();
+            prp.setName("HTTP_SERVER_REQUEST_VARIABLE");
+            prp.setValue(System.getProperty("HTTP_SERVER_REQUEST_VARIABLE"));
+            props.getProperty().add(prp);
+            
+            DSProperty prp2 = new DSProperty();
+            prp2.setName("HTTP_SERVER_BASE_URI");
+            prp2.setValue(System.getProperty("HTTP_SERVER_BASE_URI"));
+            props.getProperty().add(prp2);
+            
+            DSProperty prp3 = new DSProperty();
+            prp3.setName("WIRE_TRANSPORT_SERVER_PORT");
+            prp3.setValue(System.getProperty("WIRE_TRANSPORT_SERVER_PORT"));
+            props.getProperty().add(prp3);
+            
+            DSProperty prp4 = new DSProperty();
+            prp4.setName("WIRE_TRANSPORT_TRANSFER_DELAY");
+            prp4.setValue(System.getProperty("WIRE_TRANSPORT_TRANSFER_DELAY"));
+            props.getProperty().add(prp4);
+            
+            // Obtain original producer
+            ComponentIdentifier origProducer = queryMessage.getHeader().getProducer();
+            String originalMessageId = queryMessage.getMessageID();
+            // Create reply  message
+            
+            String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
+            ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
+                            getComponentNodeId(), localIPAddress, getComponentType());
+                           
+            Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
+            header.setCorrelationID(originalMessageId);
+                
+            Message replyMsg = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, props);
+            this.deliver(replyMsg);
+        } else {
+            log.debug("Query message dropped because it did not contain DSProperties: " + content.getClass().getName());   
+        }
+    }
+
     public Message deliverWithReply(Message message) throws DSPException {
-        log.debug("Delivering message with reply not implemented.");
+        log.error("Delivering message with reply not implemented.");
         return null;
     }
 
     public Message deliverWithReply(Message message, long waitTime) throws DSPException {
-        log.debug("Delivering message with reply with delay not implemented.");
+        log.error("Delivering message with reply with delay not implemented.");
         return null;
     }
 

@@ -161,7 +161,7 @@ public class Matcher implements BaseComponent {
 
             //setting up the criteria
             Element matchCriteriaElement = eMatchRule.getChild("matchCriteria");
-            String producerCompType = matchCriteriaElement.getChildText("componentType");
+            String producerCompType = matchCriteriaElement.getChildTextTrim("componentType");
             
             AbstractNodeAddress nodeAddr = obtainNodeAddress(matchCriteriaElement.getChild("nodeAddress"));
             ComponentLocator locatorCriteria = new ComponentLocator();
@@ -172,8 +172,8 @@ public class Matcher implements BaseComponent {
 
             // setting up the target
             Element matchTargetElement = eMatchRule.getChild("matchTarget");
-            String consumerCompType = matchTargetElement.getChildText("componentType");
-            String gatewayComponentTypeTarget = matchTargetElement.getChildText("gatewayComponentType");
+            String consumerCompType = matchTargetElement.getChildTextTrim("componentType");
+            String gatewayComponentTypeTarget = matchTargetElement.getChildTextTrim("gatewayComponentType");
 
             NodeAddress nodeTarget = obtainNodeAddress(matchTargetElement.getChild("nodeAddress"));
 

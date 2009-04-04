@@ -13,6 +13,7 @@
             <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
         	<pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
             <pathelement location="${XML.JAXB}/sonde/dist/sonde.jar"/>        	
+        	<pathelement location="${XML.JAXB}/mouseactions/dist/mouseactions.jar"/> 
             <path refid="project.class.path"/>
         </path>
 		

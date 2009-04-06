@@ -8,7 +8,8 @@ Bundle-ClassPath: ., libs/message.jar,
  libs/http_all-2.1.0.jar,
  libs/jdom.jar, 
  libs/xerces.jar, 
- libs/xml-apis.jar
+ libs/xml-apis.jar,
+ libs/mouseactions.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: DSP Framework
 Bundle-SymbolicName: DSPFramework

@@ -32,6 +32,7 @@
             <fileset dir="${XML.JAXB}/message/dist" includes="*.jar"/>
             <fileset dir="${XML.JAXB}/dsproperty/dist" includes="*.jar"/>
         	<fileset dir="${XML.JAXB}/sonde/dist" includes="*.jar"/>
+        	<fileset dir="${XML.JAXB}/mouseactions/dist" includes="*.jar"/>
         	<fileset dir="${THIRDPARTY}/apache/" includes="log4j-1.2.15.jar"/>
             <fileset dir="${THIRDPARTY}/pax" includes="*.jar"/>
             <fileset dir="${THIRDPARTY}/knopflerfish/2.1.1/" includes="http_all-2.1.0.jar" />

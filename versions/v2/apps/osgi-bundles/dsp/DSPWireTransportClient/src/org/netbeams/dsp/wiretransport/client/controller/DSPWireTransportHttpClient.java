@@ -44,7 +44,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
     /**
      * Executor responsible for the execution of the thread with a fixed delay to send the values.
      */
-    public static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    public ScheduledExecutorService scheduler;
     /**
      * Main component type descriptor
      */
@@ -68,6 +68,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      */
     public DSPWireTransportHttpClient() {
         log.info("Starting DSP Transport Client...");
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
     /**
@@ -265,9 +266,9 @@ public class DSPWireTransportHttpClient implements DSPComponent {
      * Shuts down all the threads started by the scheduler.
      */
     private void shutdownTransportWorkers() {
-        if (!scheduler.isShutdown()) {
+        if (!this.scheduler.isShutdown()) {
             log.debug("Shutting down all transport workers...");
-            scheduler.shutdown();
+            this.scheduler.shutdown();
         }
     }
 
@@ -292,19 +293,16 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             log.debug("Update Property: " + property.getName() + "=" + property.getValue());
         }
 
-        if (scheduler.isShutdown()) {
-            long delay = this.getDelayForTransportSender();
-    
+        long delay = this.getDelayForTransportSender();
+        if (this.scheduler.isShutdown()) {
             log.info("Starting scheduling the transport senders to wake up at every " + delay + " seconds...");
-            scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, delay, TimeUnit.SECONDS);
+            this.scheduler.scheduleWithFixedDelay(new DspTransportSender(), delay, delay, TimeUnit.SECONDS);
         } else
         if (hasDelayChanged) {
-            this.shutdownTransportWorkers();
-            
-            long delay = this.getDelayForTransportSender();
-            
+            this.shutdownTransportWorkers();        
             log.info("Rescheduling the transport senders to wake up at every " + delay + " seconds...");
-            scheduler.scheduleWithFixedDelay(new DspTransportSender(), 0, delay, TimeUnit.SECONDS);
+            this.scheduler = Executors.newSingleThreadScheduledExecutor();
+            this.scheduler.scheduleWithFixedDelay(new DspTransportSender(), delay, delay, TimeUnit.SECONDS);
         }
         
         this.sendBackAcknowledge(updateMessage);

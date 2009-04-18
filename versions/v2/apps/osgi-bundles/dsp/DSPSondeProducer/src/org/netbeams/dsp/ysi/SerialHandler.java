@@ -3,7 +3,7 @@ package org.netbeams.dsp.ysi;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
-
+import org.netbeams.dsp.DSPContext;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -15,14 +15,16 @@ import java.io.OutputStream;
 public class SerialHandler {
 
 	private static final int BAUD_RATE = 9600;
+	private DSPContext context;
 	private InputStream in;
 	private OutputStream out;
 	private SerialReader sr;
 	private SerialWriter sw;
 	
 	
-	public SerialHandler() {
+	public SerialHandler(DSPContext context) {
 		super();
+		this.context = context;
 	};
 	
 	public void connect (String portName) throws Exception {
@@ -40,7 +42,7 @@ public class SerialHandler {
 	            in  = serialPort.getInputStream();
 	            out = serialPort.getOutputStream();
 	    		
-	            sr = new SerialReader(in);
+	            sr = new SerialReader(in, context);
 	    		sw = new SerialWriter(out);
 	            
 	    		Thread srThread = new Thread(sr);

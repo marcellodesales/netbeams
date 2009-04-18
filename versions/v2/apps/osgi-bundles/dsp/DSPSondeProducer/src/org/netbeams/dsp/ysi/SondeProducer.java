@@ -32,7 +32,7 @@ public class SondeProducer {
 	
 	
 	public void startProducer() {
-		sondeHandler = new SondeHandler();
+		sondeHandler = new SondeHandler(context);
 		sondeHandler.start();
 	}
 	
@@ -44,81 +44,34 @@ public class SondeProducer {
 		}
 	}
 	
-	
-	private void send(SondeDataContainer data) throws DSPException{
-		
-		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
-		
-		log.debug("Sonde Data to be sent from " + localIPAddress);
-        log.debug("Number of Container Elements: " + data.getSondeData().size());
-		
-        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-                "SondeProducer", localIPAddress, data.getContentContextForJAXB());
-		
-        ComponentIdentifier consumer = null;
-        
-        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, consumer);
-        
-        
-        try {
-        	Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data);
-        	
-        	// Always check if there is a broker available
-        	MessageBrokerAccessor messageBroker = context.getDataBroker();
-        	if(messageBroker != null){
-        		messageBroker.send(message);
-        	}else{
-        		log.debug("Message broker not available");
-        	}     	
-        } catch (DSPException e) {
-        	log.error("DSPException");
-        	log.error(e.getMessage(), e);
-        }		
-	}
-
 
 	private class SondeHandler extends Thread {
 
 		private static final String SERIAL_PORT = "/dev/ttyS0";
-		private boolean running = true;
+		//private boolean running = true;
 		private SerialHandler serialHandler;
-		private SondeDataContainer sondeDataContainer;
-		private SondeTestData sondeTestData;    // Testing for the producer side only.
-		private List<SondeDataType> sondeData;  // Testing for the producer side only.
-		
-		public SondeHandler () {
-			serialHandler = new SerialHandler();
-			sondeTestData = new SondeTestData();  // Get producer test data.
-			sondeDataContainer = sondeTestData.getSondeTestData();
+		//private SondeDataContainer sondeDataContainer;
+		//private SondeTestData sondeTestData;    // Testing for the producer side only.
+				
+		public SondeHandler (DSPContext context) {
+			serialHandler = new SerialHandler(context);
+			//sondeTestData = new SondeTestData();  // Get producer test data.
+			//sondeDataContainer = sondeTestData.getSondeTestData();
 		};
 		
 		
 		public void run() {			
-			while (running) {
-				/*
-				try { 
-					log.debug("Serial connection established from bundle...");
-					serialHandler.connect(SERIAL_PORT);
-				} catch (Exception e) {
-					System.out.println("ERROR: " + e.getMessage());
-					e.printStackTrace();
-				}*/
-				// Communication with the consumer				
-				try {
-					send(sondeDataContainer);
-				} catch (DSPException e) {
-					System.err.println("ERROR: " + e.getMessage());
-				}
-				try {
-				Thread.sleep(10000);
-				} catch (Exception e) {
-					System.out.println("Error: " + e.getMessage());
-				}
+			try { 
+				log.debug("Serial connection established from bundle...");
+				serialHandler.connect(SERIAL_PORT);
+			} catch (Exception e) {
+				System.out.println("ERROR: " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		
 		public void stopHandler() {
-			this.running = false;
+			//this.running = false;
 		}	
 	
 	}

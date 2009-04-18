@@ -7,6 +7,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import org.apache.log4j.Logger;
+import org.netbeams.dsp.DSPContext;
+import org.netbeams.dsp.DSPException;
+import org.netbeams.dsp.MessageBrokerAccessor;
+import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.MessageFactory;
+import org.netbeams.dsp.message.MeasureMessage;
+import org.netbeams.dsp.message.DSPMessagesFactory;
+import org.netbeams.dsp.message.Header;
+import org.netbeams.dsp.message.Message;
+import org.netbeams.dsp.util.NetworkUtil;
 
 
 /**
@@ -17,26 +27,28 @@ import org.apache.log4j.Logger;
 public class SerialReader implements Runnable {
 	
 	private static final Logger log = Logger.getLogger(SerialReader.class);
+	private DSPContext context;
 	private ArrayList<String> dataList;
 	private ArrayList<SondeDataType> list;
 	private String bufferString;
+	private StringBuffer dataString;
 	private SondeDataContainer sdc;
-	SondeDataType sdt;
+	private SondeDataType sdt;
 	private InputStream in;
 	
 	
-	public SerialReader (InputStream in) {
+	public SerialReader (InputStream in, DSPContext context) {
 		sdc = new SondeDataContainer();
 		dataList = new ArrayList<String> ();
 		list = new ArrayList<SondeDataType> ();
 		sdc.sondeData = list;
-		bufferString = new String("");
 		this.in = in;
+		this.context = context;
 	}
 	
 	
-	private void parseDataStream(String dataStream) {
-		StringTokenizer st = new StringTokenizer(bufferString);
+	private void parseDataStream(StringBuffer dataStream) {
+		StringTokenizer st = new StringTokenizer(dataStream.toString());
         while (st.hasMoreTokens()) {
 			dataList.add(st.nextToken());
         }
@@ -59,20 +71,62 @@ public class SerialReader implements Runnable {
         } catch (NumberFormatException nfe) {
         	System.out.println("NumberFormatException: " + nfe.getMessage());
         }
-        list.add(sdt);        
+        list.add(sdt);
+        dataList.clear();
 	}
 
+	private void send(SondeDataContainer data) throws DSPException{
+		
+		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
+		
+		log.debug("Sonde Data to be sent from " + localIPAddress);
+        log.debug("Number of Container Elements: " + data.getSondeData().size());
+		
+        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
+                "SondeProducer", localIPAddress, data.getContentContextForJAXB());
+		
+        ComponentIdentifier consumer = null;
+        
+        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, consumer);
+        
+        
+        try {
+        	Message message = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, data);
+        	
+        	// Always check if there is a broker available
+        	MessageBrokerAccessor messageBroker = context.getDataBroker();
+        	if(messageBroker != null){
+        		messageBroker.send(message);
+        	}else{
+        		log.debug("Message broker not available");
+        	}     	
+        } catch (DSPException e) {
+        	log.error("DSPException");
+        	log.error(e.getMessage(), e);
+        }		
+	}
 
 	public void run() {
 		byte[] buffer = new byte[1024];
         int len = -1;
         try {
         	log.debug("Receiving data stream...");
-            while ((len = this.in.read(buffer)) > -1) {
-            	bufferString = new String(buffer,0,len);
-                System.out.print(bufferString);
-                parseDataStream(bufferString);
-            }
+        	while (true) {
+        		dataString = new StringBuffer("");
+        		while ((len = this.in.read(buffer)) > -1) {
+        			bufferString = new String(buffer,0,len);
+        			dataString.append(bufferString);
+        			if (bufferString.charAt(len-1) == '\n') {
+        				break;
+        			}        			
+        		}
+        		parseDataStream(dataString);
+        		try {
+        			send(sdc);
+        		} catch (DSPException e) {
+        			System.err.println("ERROR: " + e.getMessage());
+        		}
+        	}
         } catch (IOException e) {
             e.printStackTrace();
         }

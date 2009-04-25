@@ -124,6 +124,7 @@ public class ManagementServlet extends HttpServlet
 	    throws IOException
 	{
 	    final int READ_BUFFER = 4096;
+	    log.debug("Serving the file '" + fileName+"'");
 	
 	    ServletOutputStream out = resp.getOutputStream();
 	    InputStream is = this.getClass().getResourceAsStream(fileName);

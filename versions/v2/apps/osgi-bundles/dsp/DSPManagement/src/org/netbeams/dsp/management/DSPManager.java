@@ -49,14 +49,15 @@ public class DSPManager implements Manager, DSPComponent
     
     private Buffer buffer;
     
-    private Map<String, String> regDspComps;
+    // Component ID => {IP,Component Type}
+    private Map<String, String[]> regDspComps;
     
     public DSPManager(){
     	isActive = false;
     	pendingReply = new HashMap<String, Boolean>();
     	repliedMsgs = new HashMap<String, Message>();
     	buffer = new Buffer();
-    	regDspComps = new HashMap<String, String>();
+    	regDspComps = new HashMap<String, String[]>();
     }
 
     /////////////////////////////////////////////
@@ -211,11 +212,12 @@ public class DSPManager implements Manager, DSPComponent
      */	
 	public String[][] getRegisteredDspComponents()
 	{
-		String[][] result = new String[regDspComps.size()][2];
+		String[][] result = new String[regDspComps.size()][3];
 		int x = 0;
-		for(Map.Entry<String, String> entry: regDspComps.entrySet()){
+		for(Map.Entry<String, String[]> entry: regDspComps.entrySet()){
 			result[x][0] = entry.getKey();
-			result[x][1] = entry.getValue();
+			result[x][1] = entry.getValue()[0];
+			result[x][2] = entry.getValue()[1];
 			++x;
 		}
 		return result;
@@ -310,10 +312,16 @@ public class DSPManager implements Manager, DSPComponent
 		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
                 getComponentNodeId(), localIPAddress, getComponentType());
-        // Consumer
-        String nodeAddStr = getNodeAddressAsString(nodeComponentId, componentType);
+        // Create Consumer
+        
+        // IP and type
+        String[] compInfo = getNodeAddressAsString(nodeComponentId);
+        if(compInfo == null){
+        	log.error("No component information for " + nodeComponentId);
+        	return null;
+        }
         ComponentIdentifier consumer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-        		nodeComponentId, nodeAddStr, componentType);     
+        		nodeComponentId, compInfo[0], compInfo[1]);     
         
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, consumer);
             
@@ -321,24 +329,25 @@ public class DSPManager implements Manager, DSPComponent
     	return message;
 	}
 	
-	private String getNodeAddressAsString(String nodeComponentId, String componentType) 
+	private String[] getNodeAddressAsString(String nodeComponentId) 
 	{
-		String ip = regDspComps.get(nodeComponentId);
-		return (ip != null)? ip : "LOCAL";
+		return regDspComps.get(nodeComponentId);
 	}
 
 	private void processCreateMessage(Message message) {
 		DSProperties props = (DSProperties)message.getBody().getAny();
 		String dspComp = null;
-		String ip = null;
+		String[] compInfo = new String[2];
 		for(DSProperty prop: props.getProperty()){
 			if(prop.getName().equals("DSPCOMPONENT")){
 				dspComp = prop.getValue();
 			}else if(prop.getName().equals("IP")){
-				ip = prop.getValue();
+				compInfo[0] = prop.getValue();
+			}else if(prop.getName().equals("TYPE")){
+				compInfo[1] = prop.getValue();
 			}
 		}
-		regDspComps.put(dspComp, ip);
+		regDspComps.put(dspComp, compInfo);
 	}
 	
 }

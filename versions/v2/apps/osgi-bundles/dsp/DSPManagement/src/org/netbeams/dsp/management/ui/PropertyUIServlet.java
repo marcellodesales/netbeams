@@ -159,7 +159,7 @@ public class PropertyUIServlet extends HttpServlet
 		String interacionId = null;
     	try {
     		DSProperties dummy = new DSProperties();
-    		interacionId = manager.query(action.getInputValues().get(0), "org.netbeams.dsp.demo.stocks.producer", 
+    		interacionId = manager.query(action.getInputValues().get(0), "", 
     				NetworkUtil.getCurrentEnvironmentNetworkIp(), dummy);
 		} catch (DSPException e) {
 			// TODO Auto-generated catch block

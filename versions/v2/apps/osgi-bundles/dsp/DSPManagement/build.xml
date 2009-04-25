@@ -5,7 +5,7 @@
 		
 	<target name="dsp-management.all" depends="init, dsp-management.compile, dsp-management.jar" />
 	
-	<target name="dsp-management.init">
+	<target name="dsp-management.init" depends="init">
 		<property name="dspmanagement.base.dir" value="${DSP.BUNDLES}/DSPManagement"/>
 		<path id="dsp-management.classpath.id">
 			<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
@@ -23,10 +23,10 @@
 		</javac>
 	</target>
 	
-	<target name="dsp-management.jar" depends="dsp-management.init">
+	<target name="dsp-management.jar" depends="dsp-management.compile">
 		<mkdir dir="${DSP.RUNTIME}" />
 		<copy todir="${dspmanagement.base.dir}/build/web/">
-			<fileset dir="${dspmanagement.base.dir}/web/DSP Management/build/"/>
+			<fileset dir="${dspmanagement.base.dir}/web/"/>
 		</copy>
 		<jar basedir="${dspmanagement.base.dir}/build" 
 			 jarfile="${DSP.DEPLOYMENT}/DSPManagement-${DSP.VERSION}.jar" 
@@ -36,5 +36,6 @@
 	
 	<target name="dsp-management.clean" depends="dsp-management.init">
 		<delete dir="${dspmanagement.base.dir}/classes" />
+		<delete dir="${dspmanagement.base.dir}/build" />
 	</target>
 </project>

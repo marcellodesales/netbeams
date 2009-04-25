@@ -65,13 +65,17 @@ public class Values {
     }
 
     public String toXml() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<Values>");
-        for(String value : this.value) {
-            builder.append("<value>" + value + "</value>");
+        if (this.value.size() <= 0) {
+            return "<Values/>";
+        } else {
+            StringBuilder builder = new StringBuilder();
+            builder.append("<Values>");
+            for(String value : this.value) {
+                builder.append("<value>" + value + "</value>");
+            }
+            builder.append("</Values>");
+            return builder.toString();
         }
-        builder.append("</Values>");
-        return builder.toString();
     }
 
 }

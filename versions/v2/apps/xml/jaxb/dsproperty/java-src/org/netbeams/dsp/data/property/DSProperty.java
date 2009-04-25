@@ -240,9 +240,10 @@ public class DSProperty {
             builder.append("unit=\"" + this.unit + "\" ");
         }
         builder.append(">");
-        if (this.value != null) {
+        if (this.value != null && !this.value.equals("")) {
             builder.append("<Value>"+ this.value + "</Value>");
-        } else {
+        } else
+        if (this.values != null && this.values.getValue().size() > 0) {
             builder.append(this.values.toXml());
         }
         builder.append("</Property>");

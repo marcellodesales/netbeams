@@ -29,6 +29,9 @@
                 <Property name="IP">
                     <Value>LOCAL</Value>
                 </Property>
+                <Property name="TYPE">
+                    <Value>org.netbeams.dsp.demo.stocks.producer</Value>
+                </Property>
             </DSProperties>
         </Body>
     </CreateMessage>
@@ -60,6 +63,9 @@
                 </Property>
                 <Property name="IP">
                     <Value>LOCAL</Value>
+                </Property>
+                <Property name="TYPE">
+                    <Value>org.netbeams.dsp.demo.stocks.consumer</Value>
                 </Property>
             </DSProperties>
         </Body>

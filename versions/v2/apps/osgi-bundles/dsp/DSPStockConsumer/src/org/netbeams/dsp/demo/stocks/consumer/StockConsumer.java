@@ -224,7 +224,7 @@ public class StockConsumer implements DSPComponent{
 		
 		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-        		getComponentNodeId(), localIPAddress, props.getContentContextForJAXB());
+        		getComponentNodeId(), localIPAddress, getComponentType());
 		       
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
     	header.setCorrelationID(originalMessageId);

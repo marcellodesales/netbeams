@@ -287,10 +287,10 @@ public class StockProducer implements DSPComponent{
 		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
         ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
         		getComponentNodeId(), localIPAddress, getComponentType());
-		       
+ 		       
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
     	header.setCorrelationID(originalMessageId);
-            
+    	           
     	Message replyMsg = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, props);
     	sendMessage(replyMsg);	
 	}

@@ -8,46 +8,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.ComponentDescriptor;
-import org.netbeams.dsp.data.property.DSProperties;
-import org.netbeams.dsp.data.property.DSProperty;
-import org.netbeams.dsp.management.ui.Buffer;
-import org.netbeams.dsp.management.ui.PropertyUI;
-import org.netbeams.dsp.message.AbstractMessage;
-import org.netbeams.dsp.message.AcknowledgementMessage;
-import org.netbeams.dsp.message.Body;
-import org.netbeams.dsp.message.ComponentIdentifier;
-import org.netbeams.dsp.message.ComponentLocator;
-import org.netbeams.dsp.message.CreateMessage;
-import org.netbeams.dsp.message.DSPMessagesFactory;
-import org.netbeams.dsp.message.Header;
-import org.netbeams.dsp.message.MeasureMessage;
-import org.netbeams.dsp.message.MessageContent;
-import org.netbeams.dsp.message.MessagesContainer;
-import org.netbeams.dsp.message.NodeAddress;
-import org.netbeams.dsp.message.QueryMessage;
-import org.netbeams.dsp.message.UpdateMessage;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.MessageFactory;
+import org.netbeams.dsp.data.property.DSProperties;
+import org.netbeams.dsp.data.property.DSProperty;
+import org.netbeams.dsp.management.ui.Buffer;
+import org.netbeams.dsp.management.ui.PropertyUI;
+import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.message.CreateMessage;
+import org.netbeams.dsp.message.DSPMessagesFactory;
+import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
-import org.netbeams.dsp.util.DSPUtils;
+import org.netbeams.dsp.message.MessageContent;
+import org.netbeams.dsp.message.UpdateMessage;
 import org.netbeams.dsp.util.NetworkUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import com.sun.corba.se.pept.broker.Broker;
 
 
 public class DSPManager implements Manager, DSPComponent

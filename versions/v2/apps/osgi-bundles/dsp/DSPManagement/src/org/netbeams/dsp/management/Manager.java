@@ -3,7 +3,6 @@ package org.netbeams.dsp.management;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.management.ui.Buffer;
 import org.netbeams.dsp.message.MessageContent;
-import org.w3c.dom.Document;
 
 public interface Manager {
 

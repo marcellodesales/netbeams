@@ -1,13 +1,10 @@
 package org.netbeams.dsp.management;
 
-import javax.servlet.ServletException;
-import javax.servlet.Servlet;
-
 import org.apache.log4j.Logger;
+import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.management.test.TestManagement;
 import org.netbeams.dsp.management.ui.GetDataServlet;
 import org.netbeams.dsp.management.ui.PropertyUIServlet;
-import org.netbeams.dsp.platform.PlatformException;
 import org.netbeams.dsp.platform.osgi.ActivatorHelper;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -59,7 +56,7 @@ public class Activator implements BundleActivator {
 		mgrServlet = null;
 	}
 
-	private void registerServlet() throws PlatformException{
+	private void registerServlet() throws DSPException {
 		ServiceReference srvRef = null;
 		try{
 			srvRef = bundleContext.getServiceReference(HttpService.class.getName());
@@ -82,7 +79,8 @@ public class Activator implements BundleActivator {
 					
 				} catch (Exception e) {
 					log.warn("could not register management servlet", e);
-					throw new PlatformException("could not register management servlet", e);
+					throw new DSPException("could not register management servlet: " + 
+					                                                               e.getMessage());
 				}
 			}else{
 	            log.error("The Http Service reference could not be retrieved from the OSGi platform!!!");
@@ -95,7 +93,7 @@ public class Activator implements BundleActivator {
 		}
 	}
 	
-	private void unregisterServlet() throws PlatformException{
+	private void unregisterServlet() throws DSPException {
 		ServiceReference srvRef = null;
 		try{
 			srvRef = bundleContext.getServiceReference(HttpService.class.getName());
@@ -107,7 +105,8 @@ public class Activator implements BundleActivator {
 					httpService.unregister(GetDataServlet.BASE_URI);
 				} catch (Exception e) {
 					log.warn("could not unregister management servlet", e);
-					throw new PlatformException("could not unregister management servlet", e);
+					throw new DSPException("could not unregister management servlet: "
+					                                                            + e.getMessage());
 				}
 			}
 		}finally{

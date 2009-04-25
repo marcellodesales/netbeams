@@ -267,6 +267,16 @@ public class DSPManager implements Manager, DSPComponent
 		b.append(" data type=").append(message.getContentType());
 		return b.toString();
 	}
+	
+    private String messageSummaryToBuffer(Message message) {
+        StringBuilder buff = new StringBuilder();
+        buff.append("[Producer]\n");
+        buff.append("Address=").append(message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue()).append("; ");       
+        buff.append("Type=").append(message.getHeader().getProducer().getComponentType()).append("; ");
+        buff.append("[Content]\n");
+        buff.append("Type=").append(message.getContentType()).append("; ").append("\n");
+        return buff.toString();
+    }	
 
     private void processMessage(Message message) {
     	// Is it information about DSP Component
@@ -292,11 +302,10 @@ public class DSPManager implements Manager, DSPComponent
 	}
     
 	private void sendToBuffer(Message message){
-    	StringBuilder sb = new StringBuilder();
-    	sb.append("Producer=").append(message.getHeader().getProducer().getComponentType());
-    	sb.append(" Message Type=").append(message.getClass().getName());
-    	buffer.add(sb.toString());
+    	buffer.add(messageSummaryToBuffer(message));
     }
+	
+	
   
 	private void sendMessage(Message message) 
 	{

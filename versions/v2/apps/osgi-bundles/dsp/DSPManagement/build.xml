@@ -15,7 +15,7 @@
 		
 	</target>
 	
-	<target name="dsp-management.compile" depends="dsp-management.init">
+	<target name="dsp-management.compile" depends="dsp-management.clean">
 		<mkdir dir="${dspmanagement.base.dir}/build" />
 		<javac destdir="${dspmanagement.base.dir}/build" debug="on" srcdir="${dspmanagement.base.dir}/src"
 			source="1.5" target="1.5">
@@ -26,7 +26,7 @@
 	<target name="dsp-management.jar" depends="dsp-management.init">
 		<mkdir dir="${DSP.RUNTIME}" />
 		<copy todir="${dspmanagement.base.dir}/build/web/">
-			<fileset dir="${dspmanagement.base.dir}/web/DSP Management/build/"/>
+			<fileset dir="${dspmanagement.base.dir}/web/DSP Management/build/" includes="**/*.*"/>
 		</copy>
 		<jar basedir="${dspmanagement.base.dir}/build" 
 			 jarfile="${DSP.DEPLOYMENT}/DSPManagement-${DSP.VERSION}.jar" 
@@ -36,5 +36,6 @@
 	
 	<target name="dsp-management.clean" depends="dsp-management.init">
 		<delete dir="${dspmanagement.base.dir}/classes" />
+		<delete dir="${dspmanagement.base.dir}/build" />
 	</target>
 </project>

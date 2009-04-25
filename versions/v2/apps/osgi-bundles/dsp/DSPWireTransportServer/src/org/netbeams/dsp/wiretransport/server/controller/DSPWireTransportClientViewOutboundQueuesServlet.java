@@ -83,6 +83,7 @@ public class DSPWireTransportClientViewOutboundQueuesServlet extends HttpServlet
                     out.println("<tr><td>Consumer: " + messageData.getMessage().getHeader().getConsumer().getComponentType() + "</td>");
                     out.println("<tr><td>ID: " + messageData.getMessage().getMessageID() + "</td></tr>");
                     out.println("<tr><td>State: " + messageData.getState() + "</td></tr>");
+                    out.println("<tr><td><pre>"+ messageData.getMessage().getBody().getAny().toXml() +"</pre></td></tr>");
                 }
                 out.println("</table><BR>");                
             }

@@ -304,8 +304,10 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             this.scheduler = Executors.newSingleThreadScheduledExecutor();
             this.scheduler.scheduleWithFixedDelay(new DspTransportSender(), delay, delay, TimeUnit.SECONDS);
         }
-        
-        this.sendBackAcknowledge(updateMessage);
+        //Send the acknowledgment IFF the producer was the management.
+        if (updateMessage.getHeader().getProducer().getComponentType().equals("org.netbeams.dsp.management")) {
+            this.sendBackAcknowledge(updateMessage);
+        }
     }
 
     private void sendBackAcknowledge(UpdateMessage message) throws DSPException {

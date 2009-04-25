@@ -52,6 +52,7 @@ public class ManagementServlet extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
+        try {
         String uri = request.getRequestURI();
         log.debug("PropertyUIServlet Processing URI: " + uri);
         
@@ -64,6 +65,9 @@ public class ManagementServlet extends HttpServlet
 //    		outputNoActive(response);
 //    		return;
 //    	}
+        } catch (RuntimeException rte) {
+            log.error("Error while running the manangement servlet", rte);
+        }
         
       }
 

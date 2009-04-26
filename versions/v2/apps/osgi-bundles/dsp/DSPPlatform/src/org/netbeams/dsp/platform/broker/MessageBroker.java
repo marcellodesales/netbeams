@@ -127,7 +127,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                     localComponent = componentsByType.get(gatewayComponentType);
                     if (localComponent != null) {
                         log.error("Ready to deliver message to the local GATEWAY component "
-                                + localComponent.getComponentType() + " not attached!!!");
+                                + localComponent.getComponentType() + "!!!");
                     } else {
                         log.error("$$ Requered gateway dsp component " + gatewayComponentType + " not attached!!!");
                     }
@@ -243,9 +243,11 @@ public class MessageBroker implements MessageBrokerAccessor {
     private String messageSummary(Message message) {
         StringBuilder buff = new StringBuilder();
         buff.append("id=").append(message.getMessageID()).append("; ");
-        buff.append("prodCNI=").append(message.getHeader().getProducer().getComponentLocator().getComponentNodeId()).append("; ");;
+        buff.append("prodCNI=").append(message.getHeader().getProducer().getComponentLocator().getComponentNodeId()).append("; ");
         buff.append("prod=").append(message.getHeader().getProducer().getComponentType()).append("; ");
+        buff.append("prod_IP=").append(message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue()).append("; ");
         buff.append("content_type=").append(message.getContentType()).append("; ");
+        buff.append("correlation=").append(message.getHeader().getCorrelationID()).append("; ");
         ComponentIdentifier consumer = message.getHeader().getConsumer();
         if (consumer != null) {
             buff.append("cons=").append(consumer.getComponentType()).append("; ");
@@ -253,7 +255,7 @@ public class MessageBroker implements MessageBrokerAccessor {
         		buff.append("consCNI=").append(message.getHeader().getConsumer().getComponentLocator().getComponentNodeId()).append("; ");
         	}
         	if(message.getHeader().getConsumer().getComponentLocator().getNodeAddress() != null){
-        		buff.append("node=").append(message.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue());
+        		buff.append("cons_IP=").append(message.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue());
         	}
         }
         return buff.toString();

@@ -181,7 +181,8 @@ public enum DSPXMLUnmarshaller {
         }
         Element correlationIdElement = messageHeaderElement.getChild("correlationID");
         if (correlationIdElement != null) {
-            header.setCorrelationID(correlationIdElement != null ? correlationIdElement.getText().trim() : null);
+            String correlationId = correlationIdElement.getValue();
+            header.setCorrelationID(correlationId != null ? correlationId.trim() : null);
         }
 
         Element producerElement = messageHeaderElement.getChild("Producer");

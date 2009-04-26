@@ -161,11 +161,11 @@ public enum MessagesQueues {
      * @param maxMessageId is the highest message id from the acknowledgment frame that was received.
      */
     public synchronized void setMessagesToAcknowledged(String destinationIpAddress, int maxMessageId) {
-        log.debug("===> Acknowledging messages up to message ID " + maxMessageId);
+        log.debug("===> Acknowledging messages up window size value of " + maxMessageId);
         for (QueueMessageData data : this.outboundQueue.get(destinationIpAddress)) {
-            log.debug("Traying to acknowledge message ID =>" + data.getMessage().getMessageID());
-            if (data.getState().equals(QueueMessageState.QUEUED)
-                    && Integer.valueOf(data.getMessage().getMessageID()) <= maxMessageId) {
+            log.debug("Traying to acknowledge message ID " + data.getMessage().getMessageID());
+            log.debug("with sequence number of " + data.getSequenceNumber());
+            if (data.getState().equals(QueueMessageState.QUEUED) && data.getSequenceNumber() <= maxMessageId) {
                 data.changeStateToAcknowledged();
                 log.debug("Message Acknowledged =>" + data.getMessage().getMessageID());
             }

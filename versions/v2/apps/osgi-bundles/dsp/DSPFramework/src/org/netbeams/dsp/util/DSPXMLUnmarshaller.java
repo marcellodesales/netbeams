@@ -231,6 +231,9 @@ public enum DSPXMLUnmarshaller {
             String creationTime = messagesContainerNode.getAttributeValue("creationTime");
             container.setCreationTime(creationTime != null ? creationTime.trim() : null);
 
+            String window = messagesContainerNode.getAttributeValue("windowSize");
+            container.setWindowSize(window != null ? new Integer(window.trim()) : null);
+            
             String ack = messagesContainerNode.getAttributeValue("acknowledgeUntil");
             container.setAcknowledgeUntil(ack != null ? new Integer(ack.trim()) : null);
 

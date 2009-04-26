@@ -96,13 +96,15 @@ public class QueueMessageData {
     
     public boolean equals(Object obj) {
         if (obj instanceof QueueMessageData) {
-            return this.destinitionIpAddress.equals(((QueueMessageData) obj).destinitionIpAddress)
-                    && this.message.getMessageID().equals(((QueueMessageData) obj).message.getMessageID());
+            return this.destinitionIpAddress.equals(((QueueMessageData) obj).destinitionIpAddress) && 
+                   this.message.getMessageID().equals(((QueueMessageData) obj).message.getMessageID()) && 
+                   this.containerId.equals(((QueueMessageData) obj).containerId);
         }
         return super.equals(obj);
     }
 
     public int hashCode() {
-        return this.destinitionIpAddress.hashCode() + this.message.getMessageID().hashCode();
+        return this.destinitionIpAddress.hashCode() + this.containerId.hashCode() + 
+               this.message.getMessageID().hashCode();
     }
 }

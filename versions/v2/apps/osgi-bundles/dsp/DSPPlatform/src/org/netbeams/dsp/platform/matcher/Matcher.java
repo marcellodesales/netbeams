@@ -97,14 +97,14 @@ public class Matcher implements BaseComponent {
         Collection<MatchRule> matchedRules = new HashSet<MatchRule>();
 
         
-        if (consumer != null && consumer.getComponentType() != null && 
-        		consumer.getComponentLocator() != null ) 
-        {   	       	
-	        MatchCriteria crit = new MatchCriteria(producer.getComponentType(), producer.getComponentLocator());
-	        MatchTarget targ = new MatchTarget(consumer.getComponentType(), consumer.getComponentLocator(), null);        
-	        MatchRule localRule = new MatchRule("def_consumer", true, crit, targ);
-	        matchedRules.add(localRule);
-        }
+//        if (consumer != null && consumer.getComponentType() != null && 
+//        		consumer.getComponentLocator() != null ) 
+//        {   	       	
+//	        MatchCriteria crit = new MatchCriteria(producer.getComponentType(), producer.getComponentLocator());
+//	        MatchTarget targ = new MatchTarget(consumer.getComponentType(), consumer.getComponentLocator(), null);        
+//	        MatchRule localRule = new MatchRule("def_consumer", true, crit, targ);
+//	        matchedRules.add(localRule);
+//        }
         for (MatchRule mr : rules) {
             log.debug("Verifying matcher for rule: " + mr.getRuleID() + " Is Default? " + mr.isDefault());
             log.debug("Message's Producer: " + producer.getComponentType());

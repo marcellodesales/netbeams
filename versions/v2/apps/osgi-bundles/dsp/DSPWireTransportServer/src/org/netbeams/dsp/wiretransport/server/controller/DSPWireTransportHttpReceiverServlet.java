@@ -121,9 +121,8 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         MessagesContainer responseMessagesContainer = MessagesQueues.INSTANCE
                 .retrieveQueuedMessagesForTransmission(destIpAddress);
 
-        log.debug("Acknowledment will be sent to the destination IP " + destIpAddress);
-        Integer ackUntil = Integer.valueOf(requestMessagesContainer.getMessage().get(
-                requestMessagesContainer.getMessage().size() - 1).getMessageID());
+        log.debug("Acknowledment will be sent with window size of " + requestMessagesContainer.getWindowSize());
+        Integer ackUntil = Integer.valueOf(requestMessagesContainer.getWindowSize());
         log.debug("Last message ID received is " + ackUntil);
         responseMessagesContainer.setAcknowledgeUntil(ackUntil);
         return responseMessagesContainer;

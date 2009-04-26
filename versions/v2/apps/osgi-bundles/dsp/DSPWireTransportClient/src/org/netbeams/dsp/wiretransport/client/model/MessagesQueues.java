@@ -72,8 +72,7 @@ public enum MessagesQueues {
         }
         // Adding the message ID to be a sequential number for a given IP address. This will follow the
         // window slide protocol where a certain number of messages are acknowledged based by the highest number.
-        dspMessage.setMessageID(String.valueOf(outMsgs.size() + 1));
-        outMsgs.add(QueueMessageData.makeNewInstance(dspMessage));
+        outMsgs.add(QueueMessageData.makeNewInstance(outMsgs.size() + 1, dspMessage));
         this.outboundQueue.put(destinationIp, outMsgs);
     }
 
@@ -106,21 +105,25 @@ public enum MessagesQueues {
     public synchronized MessagesContainer retrieveAllMessagesByIpAndState(String destinationIp, QueueMessageState state) {
         MessagesContainer container = DSPMessagesFactory.INSTANCE.makeDSPMessagesContainer(destinationIp);
         Queue<QueueMessageData> outboutQueue = this.outboundQueue.get(destinationIp);
+        int largestSequenceNumber = 0;
         if (outboutQueue != null) {
             log.debug("The size of the messages in the outbound queue is " + outboutQueue.size());
             for (QueueMessageData data : outboutQueue) {
+                largestSequenceNumber = data.getSequenceNumber() > largestSequenceNumber ? data.getSequenceNumber() : 
+                                                                                           largestSequenceNumber;
                 if (state != null) {
                     //if the state is given, then it's restricted by it...
                     if (data.getState().equals(state)) {
-                    container.getMessage().add(data.getMessage());
-                    data.setMessagesContainerId(UUID.fromString(container.getUudi()));
+                        container.getMessage().add(data.getMessage());
                     }
                 } else { //if the state is null, just get anything...
                     container.getMessage().add(data.getMessage());
-                    data.setMessagesContainerId(UUID.fromString(container.getUudi()));
                 }
+                data.setMessagesContainerId(UUID.fromString(container.getUudi()));
             }
+            
         } else log.debug("There are no messages on the outbound queue for the client IP " + destinationIp);
+        container.setWindowSize(largestSequenceNumber);
         return container;   
     }
     

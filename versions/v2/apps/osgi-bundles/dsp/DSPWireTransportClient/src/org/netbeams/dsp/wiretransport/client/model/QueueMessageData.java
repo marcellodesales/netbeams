@@ -30,6 +30,10 @@ public class QueueMessageData {
      * ACKNOWLEDGED.
      */
     private UUID containerId;
+    /**
+     * The sequence number of the message.
+     */
+    private int sequenceNumber;
 
     /**
      * Creates a new Directory Data composed by the given component destination URL and the dsp Message, as well as in
@@ -38,25 +42,33 @@ public class QueueMessageData {
      * @param componentDestinition is the URL of the DSP component.
      * @param dspMessage is the DSP message to be sent.
      */
-    public QueueMessageData(Message dspMessage) {
+    public QueueMessageData(int sequenceNumber, Message dspMessage) {
         this.destinitionIpAddress = dspMessage.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
         this.message = dspMessage;
         this.state = QueueMessageState.QUEUED;
+        this.sequenceNumber = sequenceNumber;
     }
 
     /**
      * Factory method for the DirectoryData.
-     * 
+     * @param sequenceNumber is the sequence number for the message.
      * @param componentDestinition is the URL of the component.
      * @param dspMessage is the dspMessage.
      * @return a new instance of the DirectoryData.
      */
-    public static QueueMessageData makeNewInstance(Message dspMessage) {
-        return new QueueMessageData(dspMessage);
+    public static QueueMessageData makeNewInstance(int sequenceNumber, Message dspMessage) {
+        return new QueueMessageData(sequenceNumber, dspMessage);
     }
 
     public QueueMessageState getState() {
         return this.state;
+    }
+    
+    /**
+     * @return the sequence number of the message that is related to the window that it will be sent.
+     */
+    public int getSequenceNumber() {
+        return this.sequenceNumber;
     }
 
     /**

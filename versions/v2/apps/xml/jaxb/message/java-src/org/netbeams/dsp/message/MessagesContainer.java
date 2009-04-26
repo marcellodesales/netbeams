@@ -46,6 +46,8 @@ public class MessagesContainer {
     protected String destinationHost;
 //    @XmlAttribute
     protected Integer acknowledgeUntil;
+    
+    private Integer windowSize;
 
     /**
      * Gets the value of the message property.
@@ -172,6 +174,22 @@ public class MessagesContainer {
         this.acknowledgeUntil = value;
     }
     
+    /**
+     * @return The largest sequence number on the container. It's only used when transmitting messages
+     * from the client to the server. Use the acknowledge until value to indicate the size of the window.
+     */
+    public Integer getWindowSize() {
+        return this.windowSize;
+    }
+    
+    /**
+     * @param largestSequenceNumber is the biggest sequence number in a messages container. It sets the
+     * size of the window for flow control.
+     */
+    public void setWindowSize(Integer largestSequenceNumber) {
+        this.windowSize = largestSequenceNumber;
+    }
+    
     public String toXml() {
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
@@ -179,8 +197,11 @@ public class MessagesContainer {
         builder.append("uudi=\"" + this.uudi + "\" "); 
         builder.append("creationTime=\""+this.creationTime+"\" ");
         builder.append("destinationHost=\"" + this.destinationHost + "\" ");
+        if (this.windowSize != null) {
+             builder.append("windowSize=\"" + this.windowSize + "\" ");
+        }
         if (this.acknowledgeUntil != null) {
-             builder.append("acknowledgeUntil=\"" + this.acknowledgeUntil + "\"");
+            builder.append("acknowledgeUntil=\"" + this.acknowledgeUntil + "\"");
         }
         if (this.message != null) {
             builder.append(">");

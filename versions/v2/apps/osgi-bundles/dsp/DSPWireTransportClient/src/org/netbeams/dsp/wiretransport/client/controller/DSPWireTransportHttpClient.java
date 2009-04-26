@@ -342,17 +342,34 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         }
         return delay;
     }
+    
+    /**
+     * @param message a DSP message instance.
+     * @return if the message is for local delivery
+     */
+    public boolean isMessageForLocalDelivery(String nodeAddress) {
+        return nodeAddress.equals(NetworkUtil.getCurrentEnvironmentNetworkIp()) || 
+               nodeAddress.equalsIgnoreCase("LOCAL") || nodeAddress.equalsIgnoreCase("LOCALHOST") || 
+               nodeAddress.equals("127.0.0.1");
+    }
 
     public void deliver(Message message) throws DSPException {
+        log.debug("Delivering message, ID " + message.getMessageID());
+        String correlation = message.getHeader().getCorrelationID() + "";
+        log.debug("Message " + correlation == null ? "has correlation ID " + correlation : "without correlation ID");
+        String nodeAddress = message.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
+        log.debug("Message address " + nodeAddress);
+        final boolean messageIsLocal = this.isMessageForLocalDelivery(nodeAddress);
+        log.debug("Message is for local deliver? " + messageIsLocal);
 
         // Processing start-up or configuration messages
-        if (message instanceof UpdateMessage) {
+        if (message instanceof UpdateMessage && messageIsLocal) {
 
             log.debug("Update messages delivered: configuring DSP Wire Transport Server with Properties");
             this.updateComponentProperties((UpdateMessage) message);
 
         } else
-        if (message instanceof QueryMessage) {
+        if (message instanceof QueryMessage && messageIsLocal) {
             
             log.debug("Query message delivered: returning the properties that can be changed");
             this.queryComponentProperties((QueryMessage) message);

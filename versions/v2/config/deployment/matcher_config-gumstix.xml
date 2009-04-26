@@ -1,104 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<matchRule>
-		<ruleid>producer_consumer_local_01</ruleid>
-		<matchCriteria>
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.demo.stocks.producer
-			</componentType>
-			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
-		</matchCriteria>
-		<matchTarget>
+    <ruleid>all_messages_sent_to_weblogger</ruleid>
+                
+      <matchCriteria>
+          <nodeAddress>ANY</nodeAddress>
+          <componentType>ANY</componentType>
+      </matchCriteria>
+                
+      <matchTarget>
+           <nodeAddress>ANY</nodeAddress>
+           <componentType>org.netbeams.dsp.weblogger</componentType>
+      </matchTarget>
+  </matchRule>
 
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.demo.stocks.consumer
-			</componentType>
-		</matchTarget>
-	</matchRule>
-	<matchRule>
-		<ruleid>producer_consumer_local_02</ruleid>
-		<matchCriteria>
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.demo.stocks.producer
-			</componentType>
-			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
-		</matchCriteria>
-		<matchTarget>
-
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.weblogger
-			</componentType>
-		</matchTarget>
-	<matchRule>
-		<ruleid>producer_consumer_local_03</ruleid>
-		<matchCriteria>
-			<nodeAddress>LOCAL</nodeAddress>
-
-			<componentType>ALL</componentType>
-			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
-		</matchCriteria>
-		<matchTarget>
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.platform.channel
-			</componentType>
-		</matchTarget>
-	</matchRule>
-	</matchRule>
-	<matchRule>
-		<ruleid>mouse2weblogger</ruleid>
-		<matchCriteria>
-			<nodeAddress>LOCAL</nodeAddress>
-
-			<componentType>ALL</componentType>
-			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
-		</matchCriteria>
-		<matchTarget>
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.platform.channel
-			</componentType>
-		</matchTarget>
-	</matchRule>
-
-    <matchRule>
-        <ruleid>mouseActionsToMessagesQueue</ruleid>
+  <matchRule>
+      <ruleid>all_messages_sent_to_weblogger_other</ruleid>
+        
         <matchCriteria>
-            <nodeAddress>LOCAL</nodeAddress>
-            <componentType>org.netbeams.dsp.demo.mouseactions</componentType>
+            <nodeAddress>ANY</nodeAddress>
+            <componentType>ANY</componentType>
         </matchCriteria>
+        
         <matchTarget>
-            <nodeAddress>LOCAL</nodeAddress>
-            <componentType>org.netbeams.dsp.wiretransport.client
-            </componentType>
+           <nodeAddress>192.168.0.7</nodeAddress>
+           <componentType>org.netbeams.dsp.weblogger</componentType>
+           <gatewayComponentType>org.netbeams.dsp.wiretransport.client</gatewayComponentType>
         </matchTarget>
     </matchRule>
-
-
-	<matchRule>
-		<ruleid>producer_consumer_local_01</ruleid>
-		<matchCriteria>
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.demo.stocks.producer
-			</componentType>
-			<!-- <messageType>org.dsp.message.CreateMessage</messageType> -->
-		</matchCriteria>
-		<matchTarget>
-
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.wiretransport.client</componentType>
-		</matchTarget>
-	</matchRule>
-
-	<matchRule>
-		<ruleid>randomNum2Transportclientr</ruleid>
-		<matchCriteria>
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.test.randomnumber</componentType>	
-		</matchCriteria>
-		<matchTarget>
-			<nodeAddress>LOCAL</nodeAddress>
-			<componentType>org.netbeams.dsp.wiretransport.client
-			</componentType>
-		</matchTarget>
-	</matchRule>
-
 </config>

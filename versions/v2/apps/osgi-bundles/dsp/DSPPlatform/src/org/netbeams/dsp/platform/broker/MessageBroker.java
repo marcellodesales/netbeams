@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPComponent;
@@ -89,6 +90,7 @@ public class MessageBroker implements MessageBrokerAccessor {
         log.debug("message summary: " + messageSummary(message));
 
         Set<MatchRule> matchingRules = this.obtainMatchingRulesThroughCriteria(message);
+        Map<String, String> ipsToComponentsDelivered = new TreeMap<String, String>();
         // Deliver messages
         if (!matchingRules.isEmpty()) {
             for (MatchRule consumerRule : matchingRules) {
@@ -98,10 +100,21 @@ public class MessageBroker implements MessageBrokerAccessor {
                 ruleTargetIdent.setComponentLocator(consumerRule.getTarget().getLocator());
                 ruleTargetIdent.setComponentType(consumerRule.getTarget().getConsumerComponentType());
 
-                message.getHeader().setConsumer(ruleTargetIdent);
-                log.debug("Message Header updated with the rule's target section...");
-
-                log.debug("Does the matching rule have a gateway...");
+                String ruleTargetIp = ruleTargetIdent.getComponentLocator().getNodeAddress().getValue();
+                //if the IP has been used to send the current message to the same component, then discard the copy
+                if (ipsToComponentsDelivered.get(ruleTargetIp) != null &&
+                        ipsToComponentsDelivered.get(ruleTargetIp).equals(consumerRule.getTarget().getConsumerComponentType())) {
+                    log.debug("Not using this rule as per repeated messages delivery avoidance...");
+                    continue;
+                }                
+                //add the target IP from the rule into the map for the given content type.
+                ipsToComponentsDelivered.put(consumerRule.getTarget().getLocator().getNodeAddress().getValue(), 
+                                                                 consumerRule.getTarget().getConsumerComponentType());
+                //update the message to have the rule target...
+                if (ruleTargetIp != null) {
+                    message.getHeader().setConsumer(ruleTargetIdent);
+                    log.debug("Message Header updated with the rule's target info because their IP are different from eah other...");
+                }
                 String gatewayComponentType = consumerRule.getTarget().getGatewayComponentType();
                 log.debug("Does the matching rule have a gateway... " + (gatewayComponentType != null
                         && !gatewayComponentType.trim().equals("") ? gatewayComponentType : "Not Defined"));
@@ -123,7 +136,9 @@ public class MessageBroker implements MessageBrokerAccessor {
 
                 } else {
 
-                    log.debug("Delivery must go through the gateway component " + gatewayComponentType);
+                    log.debug("Delivery must go to node IP " + 
+                            ruleTargetIdent.getComponentLocator().getNodeAddress().getValue() + 
+                            " through the gateway component " + gatewayComponentType);
                     localComponent = componentsByType.get(gatewayComponentType);
                     if (localComponent != null) {
                         log.error("Ready to deliver message to the local GATEWAY component "

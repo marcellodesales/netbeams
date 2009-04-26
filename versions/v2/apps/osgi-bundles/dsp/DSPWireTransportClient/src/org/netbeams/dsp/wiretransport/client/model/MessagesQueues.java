@@ -73,6 +73,7 @@ public enum MessagesQueues {
         // Adding the message ID to be a sequential number for a given IP address. This will follow the
         // window slide protocol where a certain number of messages are acknowledged based by the highest number.
         outMsgs.add(QueueMessageData.makeNewInstance(outMsgs.size() + 1, dspMessage));
+        log.debug("Added message ID " + dspMessage + " to the outboud queue for IP " + destinationIp);
         this.outboundQueue.put(destinationIp, outMsgs);
     }
 

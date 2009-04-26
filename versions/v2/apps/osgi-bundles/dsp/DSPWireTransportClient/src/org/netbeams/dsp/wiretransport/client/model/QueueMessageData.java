@@ -103,7 +103,6 @@ public class QueueMessageData {
     }
 
     public int hashCode() {
-        return this.destinitionIpAddress.hashCode() + this.state.hashCode() + this.containerId.hashCode()
-                + this.message.hashCode();
+        return this.destinitionIpAddress.hashCode() + this.message.getMessageID().hashCode();
     }
 }

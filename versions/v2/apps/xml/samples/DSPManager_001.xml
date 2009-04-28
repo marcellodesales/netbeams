@@ -71,7 +71,7 @@
         </Body>
     </CreateMessage>
     
-    <CreateMessage ContentType="org.netbeams.dsp.property.DSProperties"
+    <CreateMessage ContentType="org.netbeams.dsp.data.property.DSProperties"
     	messageID="ba063d9e-62e6-4188-a6ba-e1260e1af335">
     	<Header>
     		<CreationTime>1236381438480</CreationTime>

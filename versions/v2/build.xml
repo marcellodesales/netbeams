@@ -31,7 +31,8 @@
 		
 		<mkdir dir="${DSP.DEPLOYMENT}/" />
 		<mkdir dir="${DSP.DEPLOYMENT}/logs" />
-		<echo file="${DSP.RUNTIME}/logs/dspplatform.log" message=" " />
+		<touch file="${DSP.DEPLOYMENT}/logs/dspplatform.log" />
+		<echo file="${DSP.DEPLOYMENT}/logs/dspplatform.log" message=" " />
 		<copy file="${DSP.HOME}/config/log4j.xml" tofile="${DSP.RUNTIME}/log4j.xml" />
 		<replace file="${DSP.RUNTIME}/log4j.xml" token="DSP_HOME" value="${DSP.HOME}"/>
         <copy file="${DSP.HOME}/config/matcher_config.xml" todir="${DSP.DEPLOYMENT}"  />

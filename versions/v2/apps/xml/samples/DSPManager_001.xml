@@ -69,5 +69,41 @@
                 </Property>
             </DSProperties>
         </Body>
-    </CreateMessage>    
+    </CreateMessage>
+    
+    <CreateMessage ContentType="org.netbeams.dsp.property.DSProperties"
+    	messageID="ba063d9e-62e6-4188-a6ba-e1260e1af335">
+    	<Header>
+    		<CreationTime>1236381438480</CreationTime>
+    		<Producer>
+                <ComponentType>
+                    org.netbeams.dsp.platform.management.component.ComponentManager
+                </ComponentType>
+                <ComponentLocator>
+                    <ComponentNodeId>DSP</ComponentNodeId>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Producer>
+            <Consumer>
+                <ComponentType>org.netbeams.dsp.management</ComponentType>
+                <ComponentLocator>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Consumer>
+        </Header>
+    	<Body>
+            <DSProperties>
+                <Property name="DSPCOMPONENT">
+                    <Value>DSPSondeProducer</Value>
+                </Property>
+                <Property name="IP">
+                    <Value>LOCAL</Value>
+                </Property>
+                <Property name="TYPE">
+                    <Value>org.netbeams.dsp.ysi.</Value>
+                </Property>
+            </DSProperties>
+        </Body>    	
+    </CreateMessage>
+      
 </MessagesContainer>

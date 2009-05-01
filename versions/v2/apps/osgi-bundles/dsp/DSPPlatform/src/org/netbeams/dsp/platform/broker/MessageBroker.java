@@ -106,7 +106,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                 ComponentIdentifier targetConsumer = new ComponentIdentifier();
                 // Apply consumer type target
                 String typeTarget = rule.getTarget().getConsumerType();
-                if("SAME".equals(typeTarget)){
+                if("KEEP".equals(typeTarget)){
                 	if(originalConsumer != null){
                 		targetConsumer.setComponentType(originalConsumer.getComponentType());
                	}else{
@@ -119,7 +119,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                 }
                 // Apply consumer address
                 String addressTarget = rule.getTarget().getConsumerType();
-                if("SAME".equals(addressTarget)){
+                if("KEEP".equals(addressTarget)){
                 	if(originalConsumer != null){
                 		targetConsumer.setComponentLocator(originalConsumer.getComponentLocator());
                 	}else{

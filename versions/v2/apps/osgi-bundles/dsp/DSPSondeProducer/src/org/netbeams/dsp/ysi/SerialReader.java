@@ -3,6 +3,8 @@ package org.netbeams.dsp.ysi;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.StringTokenizer;
+import java.util.Collections;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -28,8 +30,8 @@ public class SerialReader implements Runnable {
 	
 	private static final Logger log = Logger.getLogger(SerialReader.class);
 	private DSPContext context;
-	private ArrayList<String> dataList;
-	private ArrayList<SondeDataType> list;
+	private List<String> dataList;
+	private List<SondeDataType> list;
 	private String bufferString;
 	private StringBuffer dataString;
 	private SondeDataContainer sdc;
@@ -41,7 +43,7 @@ public class SerialReader implements Runnable {
 		sdc = new SondeDataContainer();
 		dataList = new ArrayList<String> ();
 		list = new ArrayList<SondeDataType> ();
-		sdc.sondeData = list;
+		sdc.sondeData = new ArrayList<SondeDataType> ();
 		this.in = in;
 		this.context = context;
 	}
@@ -75,6 +77,14 @@ public class SerialReader implements Runnable {
         dataList.clear();
 	}
 
+	
+	private void copyToOriginal() {
+		for (int i = 0; i < list.size(); i++) {
+			sdc.sondeData.add(list.get(i));
+		}
+	}
+	
+	
 	private void send(SondeDataContainer data) throws DSPException{
 		
 		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
@@ -122,7 +132,10 @@ public class SerialReader implements Runnable {
         		}
         		parseDataStream(dataString);
         		try {
+        			copyToOriginal();
         			send(sdc);
+        			sdc.sondeData.clear();
+        			list.clear();   // The next time we send data, we don't want the old data appended.
         		} catch (DSPException e) {
         			System.err.println("ERROR: " + e.getMessage());
         		}

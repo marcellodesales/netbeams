@@ -107,9 +107,9 @@
     </CreateMessage>
 
     <CreateMessage ContentType="org.netbeams.dsp.data.property.DSProperties"
-        messageID="ba063d9e-62e6-4188-a6ba-e1260e1af335">
+        messageID="c22ede42-dca4-45ba-9862-0f757584bed5">
         <Header>
-            <CreationTime>1236381438480</CreationTime>
+            <CreationTime>1241216451006</CreationTime>
             <Producer>
                 <ComponentType>
                     org.netbeams.dsp.platform.management.component.ComponentManager

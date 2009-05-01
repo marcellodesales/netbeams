@@ -2,6 +2,88 @@
 <config>
 
     <matchRule>
+        <ruleid>LocalRule</ruleid>
+        
+        <matchCriteria>
+            <producerType>ANY</producerType>
+            <producerAddress>ANY</producerAddress>
+            <consumerType>ANY</consumerType>
+            <consumerAddress>LOCAL</consumerAddress>
+        </matchCriteria>
+        
+        <matchTarget>
+            <consumerType>SAME</consumerType>
+            <consumerAddress>SAME</consumerAddress>
+            <gateway>NONE</gateway>
+        </matchTarget>
+    </matchRule>
+    
+    <matchRule>
+    	<ruleid>all_messages_no_consumer_sent_to_componentmanager</ruleid>
+        <matchCriteria>
+            <producerType>ANY</producerType>
+            <producerAddress>LOCAL</producerAddress>
+            <consumerType>NONE</consumerType>
+            <consumerAddress>NONE</consumerAddress>
+        </matchCriteria>
+        
+        <matchTarget>
+            <consumerType>org.netbeams.dsp.platform.management.component.ComponentManager</consumerType>
+            <consumerAddress>LOCAL</consumerAddress>
+        </matchTarget>
+    </matchRule>
+    
+    <matchRule>
+    	<ruleid>all_messages_with_consumer_sent_to_componentmanager</ruleid>
+        <matchCriteria>
+            <producerType>ANY</producerType>
+            <producerAddress>ANY</producerAddress>
+            <consumerType>ANY</consumerType>
+            <consumerAddress>LOCAL</consumerAddress>
+        </matchCriteria>
+        
+        <matchTarget>
+            <consumerType>org.netbeams.dsp.platform.management.component.ComponentManager</consumerType>
+            <consumerAddress>LOCAL</consumerAddress>
+        </matchTarget>
+    </matchRule>    
+
+
+    <matchRule>
+    	<ruleid>all_messages_no_consumer_sent_to_remote_componentmanager</ruleid>
+        <matchCriteria>
+            <producerType>ANY</producerType>
+            <producerAddress>ANY</producerAddress>
+            <consumerType>NONE</consumerType>
+            <consumerAddress>NONE</consumerAddress>
+        </matchCriteria>
+        
+        <matchTarget>
+            <consumerType>org.netbeams.dsp.platform.management.component.ComponentManager</consumerType>
+            <consumerAddress>192.168.0.121</consumerAddress>
+            <gateway>org.netbeams.dsp.wiretransport.client</gateway>
+        </matchTarget>
+    </matchRule>    
+    
+    <matchRule>
+    	<ruleid>all_messages_with_consumer_sent_to_remote_componentmanager</ruleid>
+        <matchCriteria>
+            <producerType>ANY</producerType>
+            <producerAddress>ANY</producerAddress>
+            <consumerType>ANY</consumerType>
+            <consumerAddress>REMOTE</consumerAddress>
+        </matchCriteria>
+        
+        <matchTarget>
+            <consumerType>org.netbeams.dsp.platform.management.component.ComponentManager</consumerType>
+            <consumerAddress>192.168.0.121</consumerAddress>
+            <gateway>org.netbeams.dsp.wiretransport.client</gateway>
+        </matchTarget>
+    </matchRule>   
+	
+
+<!--
+    <matchRule>
         <ruleid>all_messages_sent_to_weblogger</ruleid>
         
         <matchCriteria>
@@ -30,5 +112,7 @@
             </componentType>
         </matchTarget>
     </matchRule>
+    
+    -->
     
 </config>

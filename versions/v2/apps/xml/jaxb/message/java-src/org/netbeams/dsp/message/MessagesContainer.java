@@ -8,6 +8,7 @@
 
 package org.netbeams.dsp.message;
 
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class MessagesContainer {
      */
     public List<AbstractMessage> getMessage() {
         if (message == null) {
-            message = new ArrayList<AbstractMessage>();
+            message = Collections.synchronizedList(new ArrayList<AbstractMessage>());
         }
         return this.message;
     }

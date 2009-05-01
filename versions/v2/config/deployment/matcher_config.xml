@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 
-    <!--
-      -- ANY   Existing information 
-      -- LOCAL Any address represeing the local Network Interface: LOCAL, LOCALHOST, 127.0.0.0 and current IP
-      -- KEEP  Keep current information
-      -- NONE  NO information should exist
+    <!-- 
+      * ANY   Existing information 
+      * LOCAL Any address representing the local Network Interface: LOCAL, LOCALHOST, 127.0.0.0 and current IP
+      * KEEP  Keep current information
+      * NONE  NO information should exist
       -->
     
     <matchRule>
@@ -114,9 +114,9 @@
         </matchCriteria>
         
         <matchTarget>
-            <nodeAddress>192.168.0.121</nodeAddress>
-            <componentType>org.netbeams.dsp.weblogger
-            </componentType>
+            <nodeAddress>130.212.215.72</nodeAddress>
+            <componentType>org.netbeams.dsp.weblogger</componentType>
+            <gatewayComponentType>org.netbeams.dsp.wiretransport.client</gatewayComponentType>
         </matchTarget>
     </matchRule>
     

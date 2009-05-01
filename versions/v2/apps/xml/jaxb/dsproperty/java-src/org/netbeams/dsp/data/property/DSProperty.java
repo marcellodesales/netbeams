@@ -225,19 +225,19 @@ public class DSProperty {
 
     public String toXml() {
         StringBuilder builder = new StringBuilder();
-        builder.append("<Property ");
-        builder.append("name=\"" + this.name + "\" ");
+        builder.append("<Property");
+        builder.append(" name=\"" + this.name + "\"");
         if (this.format != null && !this.format.equals("")) {
-            builder.append("format=\"" + this.format + "\" ");
+            builder.append(" format=\"" + this.format + "\"");
         }
         if (this.instruction != null && !this.instruction.equals("")) {
-            builder.append("instruction=\"" + this.instruction + "\" ");
+            builder.append(" instruction=\"" + this.instruction + "\"");
         }
         if (this.type!= null && !this.type.equals("")) {
-            builder.append("type=\"" + this.type + "\" ");
+            builder.append(" type=\"" + this.type + "\"");
         }
         if (this.unit!= null && !this.unit.equals("")) {
-            builder.append("unit=\"" + this.unit + "\" ");
+            builder.append(" unit=\"" + this.unit + "\"");
         }
         builder.append(">");
         if (this.value != null && !this.value.equals("")) {

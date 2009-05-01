@@ -81,8 +81,8 @@
         </matchCriteria>
         
         <matchTarget>
-            <consumerType>org.netbeams.dsp.management</consumerType>
-            <consumerAddress>192.168.0.121</consumerAddress>
+            <consumerType>KEEP</consumerType>
+            <consumerAddress>KEEP</consumerAddress>
             <gateway>org.netbeams.dsp.wiretransport.client</gateway>
         </matchTarget>
     </matchRule>   

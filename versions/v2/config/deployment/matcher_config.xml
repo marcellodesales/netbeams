@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 
+    <!--
+      -- ANY   Existing information 
+      -- LOCAL Any address represeing the local Network Interface: LOCAL, LOCALHOST, 127.0.0.0 and current IP
+      -- KEEP  Keep current information
+      -- NONE  NO information should exist
+      -->
+    
     <matchRule>
         <ruleid>LocalRule</ruleid>
         
@@ -12,8 +19,8 @@
         </matchCriteria>
         
         <matchTarget>
-            <consumerType>SAME</consumerType>
-            <consumerAddress>SAME</consumerAddress>
+            <consumerType>KEEP</consumerType>
+            <consumerAddress>KEEP</consumerAddress>
             <gateway>NONE</gateway>
         </matchTarget>
     </matchRule>

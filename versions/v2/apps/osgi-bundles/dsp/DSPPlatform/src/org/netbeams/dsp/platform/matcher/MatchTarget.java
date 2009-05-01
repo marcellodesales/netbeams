@@ -11,9 +11,9 @@ import org.netbeams.dsp.message.ComponentLocator;
  */
 public class MatchTarget {
 
-    private String consumerComponentType;
+    private String consumerType;
     private ComponentLocator locator;
-    private String gatewayComponentType;
+    private String gatewayType;
 
     /**
      * Creates a new MatchTarget with the component type target, component locator and the gateway component type.
@@ -24,41 +24,41 @@ public class MatchTarget {
      * @param gatewayComponentType is the default gateway component that will transfer the message to an external DSP.
      *        This gateway component might use any sort of DSP message serialization mechanism.
      */
-    public MatchTarget(String consumerComponentType, ComponentLocator locator, String gatewayComponentType) {
+    public MatchTarget(String consumerType, ComponentLocator locator, String gatewayType) {
         super();
-        this.consumerComponentType = consumerComponentType;
+        this.consumerType = consumerType;
         this.locator = locator;
-        this.gatewayComponentType = gatewayComponentType;
+        this.gatewayType = gatewayType;
     }
 
     public boolean equals(Object obj) {
         if (!(obj instanceof MatchTarget)) {
             return false;
         }
-        if (this.gatewayComponentType != null)
-            return this.consumerComponentType.equals(((MatchTarget) obj).consumerComponentType)
+        if (this.gatewayType != null)
+            return this.consumerType.equals(((MatchTarget) obj).consumerType)
                     && this.locator.getNodeAddress().getValue().equals(
                             ((MatchTarget) obj).locator.getNodeAddress().getValue())
-                    && this.gatewayComponentType.equals(((MatchTarget) obj).gatewayComponentType);
+                    && this.gatewayType.equals(((MatchTarget) obj).gatewayType);
         else
-            return this.consumerComponentType.equals(((MatchTarget) obj).consumerComponentType)
+            return this.consumerType.equals(((MatchTarget) obj).consumerType)
                     && this.locator.getNodeAddress().getValue().equals(
                             ((MatchTarget) obj).locator.getNodeAddress().getValue());
     }
 
     public int hashCode() {
-    	int value = (this.gatewayComponentType != null) ? 10 * this.consumerComponentType.hashCode() : 0;
-    	value += this.gatewayComponentType != null ? 30 * this.gatewayComponentType.hashCode() : 0;
+    	int value = (this.gatewayType != null) ? 10 * this.consumerType.hashCode() : 0;
+    	value += this.gatewayType != null ? 30 * this.gatewayType.hashCode() : 0;
     	value += this.locator != null ? 20 * this.locator.getNodeAddress().getValue().hashCode() : 0;
         return value;
     }
 
-    public String getConsumerComponentType() {
-        return this.consumerComponentType;
+    public String getConsumerType() {
+        return this.consumerType;
     }
 
-    public void setConsumerComponentType(String consumerComponentType) {
-        this.consumerComponentType = consumerComponentType;
+    public void setConsumerType(String consumerComponentType) {
+        this.consumerType = consumerComponentType;
     }
 
     public ComponentLocator getLocator() {
@@ -69,11 +69,11 @@ public class MatchTarget {
         this.locator = locator;
     }
 
-    public void setGatewayComponentType(String componentType) {
-        this.gatewayComponentType = componentType;
+    public void setGatewayType(String componentType) {
+        this.gatewayType = componentType;
     }
 
-    public String getGatewayComponentType() {
-        return this.gatewayComponentType;
+    public String getGatewayType() {
+        return this.gatewayType;
     }
 }

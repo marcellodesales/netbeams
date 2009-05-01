@@ -4,48 +4,64 @@ import org.netbeams.dsp.message.ComponentLocator;
 
 public class MatchCriteria {
 
-    private String producerComponentType;
-    private ComponentLocator locator;
+    private String producerType;
+    private ComponentLocator producerLocator;
+    private String consumerType;
+    private ComponentLocator consumerLocator;
 
-    /**
-     * Creates a new Match Criteria with the producer, consumer and the locator of the DSP component.
-     * 
-     * @param producerComponentType is the component type of the consumer.s
-     * @param locator identifies the location of the component.
-     */
-    public MatchCriteria(String producerComponentType, ComponentLocator locator) {
-        super();
-        this.producerComponentType = producerComponentType;
-        this.locator = locator;
-    }
-
-    public boolean equals(Object obj) {
+    public MatchCriteria(String producerType, ComponentLocator producerLocator,
+			String consumerType, ComponentLocator consumerLocator) {
+		super();
+		this.producerType = producerType;
+		this.producerLocator = producerLocator;
+		this.consumerType = consumerType;
+		this.consumerLocator = consumerLocator;
+	}
+ 
+	public boolean equals(Object obj) {
         if (!(obj instanceof MatchCriteria)) {
             return false;
         }
-        return this.producerComponentType.equals(((MatchCriteria) obj).producerComponentType)
-                && this.locator.getNodeAddress().getValue().equals(
-                        ((MatchCriteria) obj).locator.getNodeAddress().getValue());
+        return this.producerType.equals(((MatchCriteria) obj).producerType)
+                && this.producerLocator.getNodeAddress().getValue().equals(
+                        ((MatchCriteria) obj).producerLocator.getNodeAddress().getValue());
     }
 
     public int hashCode() {
-        return 10 * this.producerComponentType.hashCode() + 20 *
-               this.locator.getNodeAddress().getValue().hashCode();
+        return 10 * this.producerType.hashCode() + 20 *
+               this.producerLocator.getNodeAddress().getValue().hashCode();
     }
 
-    public String getProducerComponentType() {
-        return this.producerComponentType;
+    public String getProducerType() {
+        return this.producerType;
     }
 
-    public void setProducerComponentType(String prodcomponentType) {
-        this.producerComponentType = prodcomponentType;
+    public void setProducerType(String producerType) {
+        this.producerType = producerType;
     }
 
-    public ComponentLocator getLocator() {
-        return locator;
+	public ComponentLocator getProducerLocator() {
+        return producerLocator;
     }
 
-    public void setLocator(ComponentLocator locator) {
-        this.locator = locator;
+    public void setProducerLocator(ComponentLocator producerLocator) {
+        this.producerLocator = producerLocator;
     }
+    
+    public String getConsumerType() {
+		return consumerType;
+	}
+
+	public void setConsumerType(String consumerType) {
+		this.consumerType = consumerType;
+	}
+
+	public ComponentLocator getConsumerLocator() {
+		return consumerLocator;
+	}
+
+	public void setConsumerLocator(ComponentLocator consumerLocator) {
+		this.consumerLocator = consumerLocator;
+	}
+    
 }

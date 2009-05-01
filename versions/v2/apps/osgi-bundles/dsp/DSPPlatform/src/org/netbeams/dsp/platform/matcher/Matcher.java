@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -38,12 +37,15 @@ import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.NodeAddress;
+import org.netbeams.dsp.util.NetworkUtil;
 
 public class Matcher implements BaseComponent {
 
     private static final Logger log = Logger.getLogger(Matcher.class);
 
     private static final String CONFIG_FILE_NAME = "matcher_config.xml";
+    
+    private static final String LOCAL_IP = NetworkUtil.getCurrentEnvironmentNetworkIp();
 
     private String componentNodeId;
     private DSPContext context;
@@ -85,65 +87,151 @@ public class Matcher implements BaseComponent {
     }
 
     public Collection<MatchRule> match(Message message) {
-
-        log.debug("Finding a matcher for Message Content Type " + message.getContentType());
-        log.debug("message ID: " + message.getMessageID()); 
+        log.debug("Find match for Message ID " + message.getMessageID());
+        
         ComponentIdentifier producer = message.getHeader().getProducer();
         ComponentIdentifier consumer = message.getHeader().getConsumer();
-        log.debug("Message's producer: " + producer.getComponentType());
-        String messageConsumerName = (consumer != null && consumer.getComponentType() != null ? consumer.getComponentType() : "Not Defined");
-        log.debug("Message's consumer: " + messageConsumerName);
         
         Collection<MatchRule> matchedRules = new HashSet<MatchRule>();
-
         
-        if (consumer != null && consumer.getComponentType() != null && 
-        		consumer.getComponentLocator() != null) 
-        {   	       	
-	        MatchCriteria crit = new MatchCriteria(producer.getComponentType(), producer.getComponentLocator());
-	        MatchTarget targ = new MatchTarget(consumer.getComponentType(), consumer.getComponentLocator(), null);        
-	        MatchRule localRule = new MatchRule("def_consumer", true, crit, targ);
-	        matchedRules.add(localRule);
-        }
         for (MatchRule mr : rules) {
-            log.debug("Verifying matcher for rule: " + mr.getRuleID() + " Is Default? " + mr.isDefault());
-            log.debug("Message's Producer: " + producer.getComponentType());
-            log.debug("Message's Consumer: " + messageConsumerName);
-            log.debug("Component type matches rule criteria?");
-            log.debug("Rule Criteria: Producer=" + mr.getCriteria().getProducerComponentType());
-            if (isMatchForComponentType(producer, mr)) {
-                log.debug("Component type matches for producer and consumer types...");
-                matchedRules.add(mr);
-            } else {
-                log.debug("Message doesn't match on Component Type");
+            log.debug("Rule: " + mr.getRuleID());
+            
+            boolean isMatch = false;
+            
+            if  (isMatchForProducerType(producer, mr)) {
+            	if (isMatchForProducerAddress(producer, mr)){
+            		if (isMatchForConsumerType(consumer, mr)){
+            			if (isMatchForConsumerAddress(consumer, mr)){
+            				 isMatch = true;
+            			}
+            		}
+            	}
+            } 
+            if (isMatch){
+            	matchedRules.add(mr);
+            }else {
+                log.debug("NO Match found for rule...");
             }
-        }
+        }       
         return matchedRules;
     }
 
-    // ///////////////////////////////////
-    // //////// Private Section //////////
-    // ///////////////////////////////////
+    /////////////////////////////////////
+    ////////// Private Section //////////
+    /////////////////////////////////////
 
-    private boolean isMatchForComponentType(ComponentIdentifier producer, MatchRule mr) {
-        String prodCriteriaType = mr.getCriteria().getProducerComponentType();
+    private boolean isMatchForProducerType(ComponentIdentifier producer, MatchRule mr) {
+        String prodType = mr.getCriteria().getProducerType();
         // Test for ALL
-        boolean producerValidation = false;
-        if ("ALL".equals(prodCriteriaType) || "ANY".equals(prodCriteriaType)) {
-            log.debug("Producer Criteria is ALL/ANY, so matches criteria!");
-            producerValidation = true;
+        boolean isMatch = false;
+        if ("ALL".equals(prodType) || "ANY".equals(prodType)) {
+            isMatch = true;
+        } 
+        if (!isMatch){
+	        // replace . by \\.
+        	prodType = prodType.replace(".", "\\.");        
+	        java.util.regex.Matcher prodMatcher = Pattern.compile(prodType).matcher(producer.getComponentType());
+	
+	        isMatch = isMatch || prodMatcher.matches();
         }
-        
-        // replace . by \\.
-        prodCriteriaType = prodCriteriaType.replace(".", "\\.");        
-        java.util.regex.Matcher prodMatcher = Pattern.compile(prodCriteriaType).matcher(producer.getComponentType());
-
-        return producerValidation || prodMatcher.matches();
+        if(isMatch){
+        	log.debug("Producer type matches!");
+        }else{
+        	log.debug("Producer type does not match!");
+        }
+        return isMatch;
     }
 
-    private void readConfiguration() throws JDOMException, IOException {
+    // TODO: Fix add proper logic or delete it
+    private boolean isMatchForProducerAddress(ComponentIdentifier producer, MatchRule mr) {
+        String prodAddress = mr.getCriteria().getProducerLocator().getNodeAddress().getValue();
+        // Test for ALL
+        boolean isMatch = false;
+        if ("ALL".equals(prodAddress) || "ANY".equals(prodAddress)) {
+            isMatch = true;
+            log.debug("Producer address matches!");
+        }else{
+        	log.debug("Producer address does not match!");
+        }
+        return isMatch;
+    }  
+  
+    private boolean isMatchForConsumerType(ComponentIdentifier consumer, MatchRule mr) {
+        String consType = mr.getCriteria().getConsumerType();
+        // Test for ALL
+        boolean isMatch = false;
+        if ("ANY".equals(consType) && consumer != null) {
+            isMatch = true;
+        } 
+        
+        if(!isMatch){
+	        if ("NONE".equals(consType) && consumer == null) {
+	            isMatch = true;
+	        }  
+        }
+        
+        if(!isMatch){
+        	if(consumer != null){
+    	        // replace . by \\.
+        		consType = consType.replace(".", "\\.");        
+    	        java.util.regex.Matcher regMatcher = Pattern.compile(consType).matcher(consumer.getComponentType());
+    	
+    	        isMatch = isMatch || regMatcher.matches();       		
+        	}
+        }
+        
+        if(isMatch){
+        	log.debug("Consumer type matches!");
+        }else{
+        	log.debug("Consumer type does not match!");
+        }
+        return isMatch;
+    }    
 
-        log.debug("Reading matcher_config.xml to register matching rules...");
+    
+    private boolean isMatchForConsumerAddress(ComponentIdentifier consumer, MatchRule mr) {
+    	String consAddress = mr.getCriteria().getConsumerLocator().getNodeAddress().getValue();
+        // Test for ALL
+        boolean isMatch = false;
+        if ("NONE".equals(consAddress) && consumer == null) {
+            isMatch = true;
+        } 
+        
+        if(!isMatch){
+        	// LOCAL
+	        if ("LOCAL".equals(consAddress) &&consumer != null && 
+	        		isLocal(consumer.getComponentLocator().getNodeAddress().getValue())) 
+	        {
+	            isMatch = true;
+	        }  
+        }
+ 
+        if(!isMatch){
+        	// REMOTE
+	        if ("REMOTE".equals(consAddress) && consumer != null && !isLocal(consumer.getComponentLocator().getNodeAddress().getValue())) {
+	            isMatch = true;
+	        }  
+        }
+        if(!isMatch){
+        	if(consumer != null){
+    	        // replace . by \\.
+        		consAddress = consAddress.replace(".", "\\.");        
+    	        java.util.regex.Matcher regMatcher = Pattern.compile(consAddress).matcher(consumer.getComponentType());
+    	
+    	        isMatch = isMatch || regMatcher.matches();       		
+        	}
+        }
+        
+        if(isMatch){
+        	log.debug("Consumer address matches!");
+        }else{
+        	log.debug("Consumer address does not match!");
+        }
+        return isMatch;
+    }       
+
+	private void readConfiguration() throws JDOMException, IOException {
 
         Document doc = readConfigurationFile();
         Element eConfig = doc.getRootElement();
@@ -151,40 +239,44 @@ public class Matcher implements BaseComponent {
         List rulesConfig = eConfig.getChildren("matchRule");
         for (Object o : rulesConfig) {
             Element eMatchRule = (Element) o;
-            Attribute isDefaultAttr = eMatchRule.getAttribute("default");
-            boolean isDefaultRule = false;
-            if (isDefaultAttr != null) {
-                isDefaultRule = isDefaultAttr.getBooleanValue();
-            }
             // Rule ID
             String ruleID = eMatchRule.getChildTextTrim("ruleid");
 
-            //setting up the criteria
+            // Setting up the criteria
             Element matchCriteriaElement = eMatchRule.getChild("matchCriteria");
-            String producerCompType = matchCriteriaElement.getChildTextTrim("componentType");
             
-            AbstractNodeAddress nodeAddr = obtainNodeAddress(matchCriteriaElement.getChild("nodeAddress"));
-            ComponentLocator locatorCriteria = new ComponentLocator();
-            locatorCriteria.setComponentNodeId(null);
-            locatorCriteria.setNodeAddress(nodeAddr);
+            String producerType = matchCriteriaElement.getChildTextTrim("producerType");          
+            AbstractNodeAddress producerAddress = obtainNodeAddress(matchCriteriaElement.getChild("producerAddress"));
+            
+            ComponentLocator producerLocator = new ComponentLocator();
+            producerLocator.setComponentNodeId(null);
+            producerLocator.setNodeAddress(producerAddress);
+            
+            String consumerType = matchCriteriaElement.getChildTextTrim("consumerType");          
+            AbstractNodeAddress consumerTypeAddress = obtainNodeAddress(matchCriteriaElement.getChild("consumerAddress"));
+            
+            ComponentLocator consumerLocator = new ComponentLocator();
+            consumerLocator.setComponentNodeId(null);
+            consumerLocator.setNodeAddress(consumerTypeAddress);
+           
 
-            MatchCriteria criteria = new MatchCriteria(producerCompType, locatorCriteria);
+            MatchCriteria criteria = new MatchCriteria(producerType, producerLocator, consumerType, consumerLocator);
 
-            // setting up the target
+            // Setting up the target
             Element matchTargetElement = eMatchRule.getChild("matchTarget");
-            String consumerCompType = matchTargetElement.getChildTextTrim("componentType");
-            String gatewayComponentTypeTarget = matchTargetElement.getChildTextTrim("gatewayComponentType");
+            String consumerTypeTarget = matchTargetElement.getChildTextTrim("consumerType");
+            NodeAddress consumerAddressTarget = obtainNodeAddress(matchTargetElement.getChild("consumerAddress"));
 
-            NodeAddress nodeTarget = obtainNodeAddress(matchTargetElement.getChild("nodeAddress"));
+            ComponentLocator consumerLocatorTarget = new ComponentLocator();
+            consumerLocatorTarget.setComponentNodeId(null);
+            consumerLocatorTarget.setNodeAddress(consumerAddressTarget);
+            
+            String gateway = matchTargetElement.getChildTextTrim("gateway");
 
-            ComponentLocator locatorTarget = new ComponentLocator();
-            locatorTarget.setComponentNodeId(null);
-            locatorTarget.setNodeAddress(nodeTarget);
-
-            MatchTarget target = new MatchTarget(consumerCompType, locatorTarget, gatewayComponentTypeTarget);
+            MatchTarget target = new MatchTarget(consumerTypeTarget, consumerLocatorTarget, gateway);
 
             // Create Rule
-            MatchRule rule = new MatchRule(ruleID, isDefaultRule, criteria, target);
+            MatchRule rule = new MatchRule(ruleID, criteria, target);
             rules.add(rule);
         }
         log.debug(rulesConfig.size() + " rules successfully parsed from match_config.xml... ");
@@ -195,8 +287,10 @@ public class Matcher implements BaseComponent {
         String nodeStr = nodeAddress.getTextTrim();
         if (nodeStr.equals("LOCAL")) {
             return NodeAddressHelper.LOCAL_NODEADDRESS;
-        } else if (nodeStr.equals("*")) {
-            return NodeAddressHelper.NO_ADDRESS;
+        } else if (nodeStr.equals("ANY")) {
+            return NodeAddressHelper.ANY_ADDRESS;
+        } else if (nodeStr.equals("NONE")) {
+            return NodeAddressHelper.NONE_ADDRESS;
         } else {
             NodeAddress nodeAddressDsp = new NodeAddress();
             nodeAddressDsp.setValue(nodeStr);
@@ -204,10 +298,16 @@ public class Matcher implements BaseComponent {
         }
     }
 
+    private boolean isLocal(String address) {
+		
+		return "LOCAL".equalsIgnoreCase(address) || "LOCALHOST".equalsIgnoreCase(address) ||
+        	"127.0.0.1".equals(address) || address.equalsIgnoreCase(LOCAL_IP);
+	}
+
     private Document readConfigurationFile() throws JDOMException, IOException {
         String configFilePath = obtainConfigFilePath();
 
-        log.info("Reading configuration file: " + configFilePath);
+        log.info("Reading rules configuration file: " + configFilePath);
 
         File configFile = new File(configFilePath);
         FileInputStream fis = null;
@@ -231,9 +331,7 @@ public class Matcher implements BaseComponent {
             if (fis != null) {
                 try {
                     fis.close();
-                } catch (IOException e) {
-                }
-                ;
+                } catch (IOException e) {}
             }
         }
         return config;
@@ -249,4 +347,6 @@ public class Matcher implements BaseComponent {
         return context.getHomePlatformDirectoryPath() + File.separator + deploymentDir + File.separator
                 + CONFIG_FILE_NAME;
     }
+    
+    
 }

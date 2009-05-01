@@ -6,6 +6,7 @@ package org.netbeams.dsp.platform.broker;
  * TODO: Handle concurrency.
  */
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,13 +17,16 @@ import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
+import org.netbeams.dsp.NodeAddressHelper;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.ComponentLocator;
 import org.netbeams.dsp.message.Message;
+import org.netbeams.dsp.message.NodeAddress;
 import org.netbeams.dsp.platform.matcher.MatchRule;
 import org.netbeams.dsp.platform.matcher.MatchTarget;
 import org.netbeams.dsp.platform.matcher.Matcher;
 import org.netbeams.dsp.util.ErrorCode;
+import org.netbeams.dsp.util.NetworkUtil;
 
 public class MessageBroker implements MessageBrokerAccessor {
 
@@ -86,75 +90,93 @@ public class MessageBroker implements MessageBrokerAccessor {
      */
     public void send(Message message) throws DSPException {
 
-        log.info("send() message id : " + message.getMessageID());
-        log.debug("message summary: " + messageSummary(message));
+        log.info("send invoked. Summary: " + messageSummary(message));
 
-        Set<MatchRule> matchingRules = this.obtainMatchingRulesThroughCriteria(message);
-        Map<String, String> ipsToComponentsDelivered = new TreeMap<String, String>();
+        Map<Target, Boolean> targets = new HashMap<Target, Boolean>();
+        ComponentIdentifier originalConsumer = message.getHeader().getConsumer();
+        
+        Collection<MatchRule> matchingRules = matcher.match(message);
+        
         // Deliver messages
         if (!matchingRules.isEmpty()) {
-            for (MatchRule consumerRule : matchingRules) {
+            for (MatchRule rule : matchingRules) {
                 // We can deliberately ignore the message
-                log.debug("Applying rule: " + consumerRule.getRuleID());
-                ComponentIdentifier ruleTargetIdent = new ComponentIdentifier();
-                ruleTargetIdent.setComponentLocator(consumerRule.getTarget().getLocator());
-                ruleTargetIdent.setComponentType(consumerRule.getTarget().getConsumerComponentType());
-
-                String ruleTargetIp = ruleTargetIdent.getComponentLocator().getNodeAddress().getValue();
-                //if the IP has been used to send the current message to the same component, then discard the copy
-                if (ipsToComponentsDelivered.get(ruleTargetIp) != null &&
-                        ipsToComponentsDelivered.get(ruleTargetIp).equals(consumerRule.getTarget().getConsumerComponentType())) {
-                    log.debug("Not using this rule as per repeated messages delivery avoidance...");
-                    continue;
-                }                
-                //add the target IP from the rule into the map for the given content type.
-                ipsToComponentsDelivered.put(consumerRule.getTarget().getLocator().getNodeAddress().getValue(), 
-                                                                 consumerRule.getTarget().getConsumerComponentType());
-                //update the message to have the rule target...
-                if (ruleTargetIp != null) {
-                    message.getHeader().setConsumer(ruleTargetIdent);
-                    log.debug("Message Header updated with the rule's target info because their IP are different from eah other...");
+                log.debug("Applying rule: " + rule.getRuleID());
+                
+                ComponentIdentifier targetConsumer = new ComponentIdentifier();
+                // Apply consumer type target
+                String typeTarget = rule.getTarget().getConsumerType();
+                if("SAME".equals(typeTarget)){
+                	if(originalConsumer != null){
+                		targetConsumer.setComponentType(originalConsumer.getComponentType());
+               	}else{
+                		log.debug("SAME type target is incompatible with NO consumer");
+                		continue;
+                	}
+                }else {
+                	// The rule dictates the target type
+                	targetConsumer.setComponentType(rule.getTarget().getConsumerType());
                 }
-                String gatewayComponentType = consumerRule.getTarget().getGatewayComponentType();
-                log.debug("Does the matching rule have a gateway... " + (gatewayComponentType != null
-                        && !gatewayComponentType.trim().equals("") ? gatewayComponentType : "Not Defined"));
-
+                // Apply consumer address
+                String addressTarget = rule.getTarget().getConsumerType();
+                if("SAME".equals(addressTarget)){
+                	if(originalConsumer != null){
+                		targetConsumer.setComponentLocator(originalConsumer.getComponentLocator());
+                	}else{
+                		log.debug("SAME address target is incompatible with NO consumer");
+                		continue;
+                	}
+                }else {
+                	// The rule dictates the target type
+                	targetConsumer.setComponentLocator(rule.getTarget().getLocator());
+                }    
+                
+                // Deliver the message to the local component
+                
+                // Was the message delivered to the same target before?
+                String tt = targetConsumer.getComponentType();
+                String ta = (NodeAddressHelper.isLocal(targetConsumer.getComponentLocator().getNodeAddress().getValue()))?
+                				"LOCAL" : targetConsumer.getComponentLocator().getNodeAddress().getValue();
+                Target target = new Target(tt, ta);
+                if(targets.containsKey(target)){
+                	log.debug("Message already delivered to this consumer");
+                	continue;
+                }
+                
                 DSPComponent localComponent = null;
-                if (gatewayComponentType == null) {
-
-                    log.debug("Delivery must go directly to the target component: "
-                            + ruleTargetIdent.getComponentType());
-                    localComponent = this.obtainDSPComponent(ruleTargetIdent);
-
-                    if (localComponent != null) {
-                        log.debug("Ready to deliver message to the local component "
-                                + localComponent.getComponentType());
-                    } else {
-                        log.error("$$ Requered dsp component " + consumerRule.getTarget().getConsumerComponentType()
-                                + " not attached!!!");
-                    }
-
-                } else {
-
-                    log.debug("Delivery must go to node IP " + 
-                            ruleTargetIdent.getComponentLocator().getNodeAddress().getValue() + 
-                            " through the gateway component " + gatewayComponentType);
-                    localComponent = componentsByType.get(gatewayComponentType);
-                    if (localComponent != null) {
-                        log.error("Ready to deliver message to the local GATEWAY component "
-                                + localComponent.getComponentType() + "!!!");
-                    } else {
-                        log.error("$$ Requered gateway dsp component " + gatewayComponentType + " not attached!!!");
-                    }
+                if(rule.getTarget().getGatewayType() != null){
+                	// Deliver through the gate way
+                	log.debug("Delivering through gateway " + rule.getTarget().getGatewayType());
+                	
+                	localComponent = this.obtainDSPComponent(rule.getTarget().getGatewayType());
+                	if(localComponent == null){
+                		log.debug("Gateway not found...");
+                		continue;
+                	}
+                }else{
+                	// If no get way it MUST be local
+                	String address  = targetConsumer.getComponentLocator().getNodeAddress().getValue();
+                	if(!NodeAddressHelper.isLocal(address)){
+                		log.warn("Node Address is neither local nor delivered through gateway: " +  address);
+                		continue;
+                	}
+                	log.debug("Delivering localy to " + targetConsumer.getComponentType());
+                	localComponent = this.obtainDSPComponent(targetConsumer.getComponentType());
+                	if(localComponent == null){
+                		log.debug("DSP component not found...");
+                		continue;
+                	}
                 }
-
-                if (localComponent != null) {
-                    log.debug("About to deliver message to " + localComponent.getComponentType());
-                    localComponent.deliver(message);
-                }
+                               
+                // Set the new consumer
+                log.debug("Delivering ...");
+                message.getHeader().setConsumer(targetConsumer);
+                localComponent.deliver(message);
+                targets.put(target, Boolean.TRUE);
             }
+
         } else {
-            log.warn("No consumers found for message");
+            log.warn("No rules matches this message");
         }
     }
 
@@ -255,24 +277,56 @@ public class MessageBroker implements MessageBrokerAccessor {
         return null;
     }
 
+    private DSPComponent obtainDSPComponent(String componentType) {
+       if (componentType != null) {
+    	   return componentsByType.get(componentType);
+        }
+        return null;
+    }
     private String messageSummary(Message message) {
         StringBuilder buff = new StringBuilder();
-        buff.append("id=").append(message.getMessageID()).append("; ");
-        buff.append("prodCNI=").append(message.getHeader().getProducer().getComponentLocator().getComponentNodeId()).append("; ");
-        buff.append("prod=").append(message.getHeader().getProducer().getComponentType()).append("; ");
-        buff.append("prod_IP=").append(message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue()).append("; ");
-        buff.append("content_type=").append(message.getContentType()).append("; ");
-        buff.append("correlation=").append(message.getHeader().getCorrelationID()).append("; ");
+        buff.append("ID=").append(message.getMessageID()).append("; ");
+        buff.append("prodID=").append(message.getHeader().getProducer().getComponentLocator().getComponentNodeId()).append("; ");
+        buff.append("prodType=").append(message.getHeader().getProducer().getComponentType()).append("; ");
+        buff.append("prodIP=").append(message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue()).append("; ");
+        buff.append("CT=").append(message.getContentType()).append("; ");
+        buff.append("CORR=").append(message.getHeader().getCorrelationID()).append("; ");
         ComponentIdentifier consumer = message.getHeader().getConsumer();
         if (consumer != null) {
-            buff.append("cons=").append(consumer.getComponentType()).append("; ");
+            buff.append("consType=").append(consumer.getComponentType()).append("; ");
         	if(message.getHeader().getConsumer().getComponentLocator() != null){
-        		buff.append("consCNI=").append(message.getHeader().getConsumer().getComponentLocator().getComponentNodeId()).append("; ");
+        		buff.append("consID=").append(message.getHeader().getConsumer().getComponentLocator().getComponentNodeId()).append("; ");
         	}
         	if(message.getHeader().getConsumer().getComponentLocator().getNodeAddress() != null){
-        		buff.append("cons_IP=").append(message.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue());
+        		buff.append("consIP=").append(message.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue());
         	}
+        }else{
+        	buff.append("NO Consumer");
         }
         return buff.toString();
+    }
+    
+    private static class Target{
+ 
+		private String type;
+    	private String address;
+    	
+    	private int hashCode;
+       	
+    	public Target(String type, String address) {
+			super();
+			this.type = type;
+			this.address = address;
+			hashCode = (type + address).hashCode();
+		}
+    	
+    	public int hashCode(){
+    		return hashCode;
+    	}
+    	
+    	public boolean equals(Object obj){
+    		Target t = (Target)obj;
+    		return type.endsWith(t.type) && address.endsWith(t.address);
+    	}
     }
 }

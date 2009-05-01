@@ -199,6 +199,13 @@ public class Matcher implements BaseComponent {
         } 
         
         if(!isMatch){
+        	// ANY
+	        if ("ANY".equals(consAddress) && consumer != null) {
+	            isMatch = true;
+	        }  
+        }
+        
+        if(!isMatch){
         	// LOCAL
 	        if ("LOCAL".equals(consAddress) &&consumer != null && 
 	        		isLocal(consumer.getComponentLocator().getNodeAddress().getValue())) 

@@ -21,7 +21,6 @@
         <matchTarget>
             <consumerType>KEEP</consumerType>
             <consumerAddress>KEEP</consumerAddress>
-            <gateway>NONE</gateway>
         </matchTarget>
     </matchRule>
     

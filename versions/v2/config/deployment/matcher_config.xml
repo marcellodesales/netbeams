@@ -87,38 +87,5 @@
         </matchTarget>
     </matchRule>   
 	
-
-<!--
-    <matchRule>
-        <ruleid>all_messages_sent_to_weblogger</ruleid>
-        
-        <matchCriteria>
-            <nodeAddress>LOCAL</nodeAddress>
-            <componentType>ANY</componentType>
-        </matchCriteria>
-        
-        <matchTarget>
-            <nodeAddress>LOCAL</nodeAddress>
-            <componentType>org.netbeams.dsp.weblogger
-            </componentType>
-        </matchTarget>
-    </matchRule>
-
-    <matchRule>
-        <ruleid>all_messages_sent_to_remote_weblogger</ruleid>
-        
-        <matchCriteria>
-            <nodeAddress>LOCAL</nodeAddress>
-            <componentType>ANY</componentType>
-        </matchCriteria>
-        
-        <matchTarget>
-            <nodeAddress>130.212.215.72</nodeAddress>
-            <componentType>org.netbeams.dsp.weblogger</componentType>
-            <gatewayComponentType>org.netbeams.dsp.wiretransport.client</gatewayComponentType>
-        </matchTarget>
-    </matchRule>
-    
-    -->
     
 </config>

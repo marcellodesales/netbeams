@@ -71,6 +71,9 @@ public class DSProperties
 
     public String toXml() {
         StringBuilder builder = new StringBuilder();
+        if (this.property == null) {
+            return "<DSProperties/>";
+        }
         builder.append("<DSProperties>");
         for(DSProperty property : this.property) {
             builder.append(property.toXml());

@@ -9,7 +9,7 @@
         <path id="proj.classpath">
             <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
 		</path>
-        <javac srcdir="${XML.JAXB}/dsproperty/java-src"  
+        <javac debug="on" srcdir="${XML.JAXB}/dsproperty/java-src"  
         	   destdir="${XML.JAXB}/dsproperty/classes" source="1.5" target="1.5">
         	<classpath refid="proj.classpath" />
         </javac>

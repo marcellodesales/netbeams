@@ -8,6 +8,7 @@
 
 package org.netbeams.dsp.ysi;
 
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 import org.netbeams.dsp.message.MessageContent;
@@ -38,7 +39,8 @@ public class SondeDataContainer
 
 //    @XmlElement(required = true)
     protected List<SondeDataType> sondeData;
-
+    
+    
     /**
      * Gets the value of the sondeData property.
      * 
@@ -63,12 +65,12 @@ public class SondeDataContainer
      */
     public List<SondeDataType> getSondeData() {
         if (sondeData == null) {
-            sondeData = new ArrayList<SondeDataType>();
+            sondeData = Collections.synchronizedList(new ArrayList<SondeDataType>());
         }
         return this.sondeData;
     }
 
-    public String toXml() {
+    public synchronized String toXml() {
         StringBuilder builder = new StringBuilder();
         builder.append("<SondeDataContainer>");
         for(SondeDataType data : this.sondeData) {

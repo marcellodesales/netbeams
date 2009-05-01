@@ -28,7 +28,7 @@
         </matchCriteria>
         
         <matchTarget>
-            <consumerType>org.netbeams.dsp.platform.management.component.ComponentManager</consumerType>
+            <consumerType>org.netbeams.dsp.management</consumerType>
             <consumerAddress>LOCAL</consumerAddress>
         </matchTarget>
     </matchRule>
@@ -43,7 +43,7 @@
         </matchCriteria>
         
         <matchTarget>
-            <consumerType>org.netbeams.dsp.platform.management.component.ComponentManager</consumerType>
+            <consumerType>org.netbeams.dsp.management</consumerType>
             <consumerAddress>LOCAL</consumerAddress>
         </matchTarget>
     </matchRule>    
@@ -59,7 +59,7 @@
         </matchCriteria>
         
         <matchTarget>
-            <consumerType>org.netbeams.dsp.platform.management.component.ComponentManager</consumerType>
+            <consumerType>org.netbeams.dsp.management</consumerType>
             <consumerAddress>192.168.0.121</consumerAddress>
             <gateway>org.netbeams.dsp.wiretransport.client</gateway>
         </matchTarget>
@@ -75,7 +75,7 @@
         </matchCriteria>
         
         <matchTarget>
-            <consumerType>org.netbeams.dsp.platform.management.component.ComponentManager</consumerType>
+            <consumerType>org.netbeams.dsp.management</consumerType>
             <consumerAddress>192.168.0.121</consumerAddress>
             <gateway>org.netbeams.dsp.wiretransport.client</gateway>
         </matchTarget>

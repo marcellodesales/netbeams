@@ -163,11 +163,11 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             } catch (IOException e) {
                 thLog.error("It seems that there's no HTTP server running at " + destinationURL);
                 thLog.error("Verification 1: Is the destination IP address correct?");
-                thLog.error("Verification 2: Is the destination IP address reachable? Can you ping it from this " +
-                		"machine?");
+                thLog.error("Verification 2: Is the destination IP address reachable? Can you ping it from this "
+                        + "machine?");
                 thLog.error("Verification 3: Is there a DSPWireTransportServer up and running at the destination?");
                 thLog.error("All messages in the outbound queues hasn't been transmitted due to this failure... "
-                        + "a new attempt will be made after "+ getDelayForTransportSender() + " seconds ");
+                        + "a new attempt will be made after " + getDelayForTransportSender() + " seconds ");
 
             } catch (DSPException e) {
                 thLog.error(e.getMessage(), e);
@@ -184,8 +184,8 @@ public class DSPWireTransportHttpClient implements DSPComponent {
          * @param messagesFromResponseInXml is the response
          * @throws DSPException if the data broker from the DSP Context is missing
          */
-        private void processResponseMessagesContainer(String destIp, String messagesFromResponseInXml) 
-               throws DSPException {
+        private void processResponseMessagesContainer(String destIp, String messagesFromResponseInXml)
+                throws DSPException {
 
             MessagesContainer messagesFromResponse = deserializeMessagesContainer(messagesFromResponseInXml);
             for (AbstractMessage abstrMessage : messagesFromResponse.getMessage()) {
@@ -253,7 +253,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                         + ") the one where the HTTP server receives the service '"
                         + System.getProperty("HTTP_SERVER_BASE_URI") + "'?");
                 thLog.error("All messages in the outbound queue for this destination haven't been transmitted due "
-                        + "to this failure... A new attempt will be made after " + getDelayForTransportSender() 
+                        + "to this failure... A new attempt will be made after " + getDelayForTransportSender()
                         + " seconds ...");
             }
             postMethod.releaseConnection();
@@ -286,8 +286,8 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         boolean hasDelayChanged = false;
         for (DSProperty property : properties.getProperty()) {
             System.setProperty(property.getName(), property.getValue());
-            if (property.getName().equals("WIRE_TRANSPORT_TRANSFER_DELAY") && !hasDelayChanged && 
-                    !System.getProperty(property.getName()).equals(property.getValue())) {
+            if (property.getName().equals("WIRE_TRANSPORT_TRANSFER_DELAY") && !hasDelayChanged
+                    && !System.getProperty(property.getName()).equals(property.getValue())) {
                 hasDelayChanged = true;
             }
             log.debug("Update Property: " + property.getName() + "=" + property.getValue());
@@ -297,14 +297,13 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         if (this.scheduler.isShutdown()) {
             log.info("Starting scheduling the transport senders to wake up at every " + delay + " seconds...");
             this.scheduler.scheduleWithFixedDelay(new DspTransportSender(), delay, delay, TimeUnit.SECONDS);
-        } else
-        if (hasDelayChanged) {
-            this.shutdownTransportWorkers();        
+        } else if (hasDelayChanged) {
+            this.shutdownTransportWorkers();
             log.info("Rescheduling the transport senders to wake up at every " + delay + " seconds...");
             this.scheduler = Executors.newSingleThreadScheduledExecutor();
             this.scheduler.scheduleWithFixedDelay(new DspTransportSender(), delay, delay, TimeUnit.SECONDS);
         }
-        //Send the acknowledgment IFF the producer was the management.
+        // Send the acknowledgment IFF the producer was the management.
         if (updateMessage.getHeader().getProducer().getComponentType().equals("org.netbeams.dsp.management")) {
             this.sendBackAcknowledge(updateMessage);
         }
@@ -312,19 +311,19 @@ public class DSPWireTransportHttpClient implements DSPComponent {
 
     private void sendBackAcknowledge(UpdateMessage message) throws DSPException {
         DSProperties props = new DSProperties();
-        
+
         // Obtain original producer
         ComponentIdentifier origProducer = message.getHeader().getProducer();
         String originalMessageId = message.getMessageID();
-        // Create reply  message
-        
+        // Create reply message
+
         String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
-        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-                getComponentNodeId(), localIPAddress, getComponentType());
-                       
+        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(getComponentNodeId(),
+                localIPAddress, getComponentType());
+
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
         header.setCorrelationID(originalMessageId);
-            
+
         Message replyMsg = DSPMessagesFactory.INSTANCE.makeDSPAcknowledgementMessage(header, props);
         this.deliver(replyMsg);
     }
@@ -343,15 +342,15 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         }
         return delay;
     }
-    
+
     /**
      * @param message a DSP message instance.
      * @return if the message is for local delivery
      */
     public boolean isMessageForLocalDelivery(String nodeAddress) {
-        return nodeAddress.equals(NetworkUtil.getCurrentEnvironmentNetworkIp()) || 
-               nodeAddress.equalsIgnoreCase("LOCAL") || nodeAddress.equalsIgnoreCase("LOCALHOST") || 
-               nodeAddress.equals("127.0.0.1");
+        return nodeAddress.equals(NetworkUtil.getCurrentEnvironmentNetworkIp())
+                || nodeAddress.equalsIgnoreCase("LOCAL") || nodeAddress.equalsIgnoreCase("LOCALHOST")
+                || nodeAddress.equals("127.0.0.1");
     }
 
     public void deliver(Message message) throws DSPException {
@@ -359,20 +358,23 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         String correlation = message.getHeader().getCorrelationID() + "";
         log.debug("Message " + correlation == null ? "has correlation ID " + correlation : "without correlation ID");
         String nodeAddress = message.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
-        log.debug("Message address " + nodeAddress);
+        log.debug("Message address is " + nodeAddress + ", current host ip is "
+                + NetworkUtil.getCurrentEnvironmentNetworkIp());
+
+        final boolean messageIsLocal = this.isMessageForLocalDelivery(nodeAddress);
+        log.debug("is Message for local delivery? " + messageIsLocal);
 
         // Processing start-up or configuration messages
-        if (message instanceof UpdateMessage) {
+        if (message instanceof UpdateMessage && messageIsLocal) {
 
             log.debug("Update messages delivered: configuring DSP Wire Transport Server with Properties");
             this.updateComponentProperties((UpdateMessage) message);
 
-        } else
-        if (message instanceof QueryMessage) {
-            
+        } else if (message instanceof QueryMessage && messageIsLocal) {
+
             log.debug("Query message delivered to this component... must produce a response...");
             this.queryComponentProperties((QueryMessage) message);
-            
+
         } else {
 
             log.debug("Adding the DSP message to the Messages Outbound Queues...");
@@ -384,48 +386,48 @@ public class DSPWireTransportHttpClient implements DSPComponent {
     private void queryComponentProperties(QueryMessage queryMessage) throws DSPException {
         MessageContent content = queryMessage.getBody().getAny();
         log.debug("Content class " + content.getClass().getName());
-        
-        if(content instanceof DSProperties){
-            log.debug("Got query configuration");   
-            
+
+        if (content instanceof DSProperties) {
+            log.debug("Got query configuration");
+
             DSProperties props = new DSProperties();
-            
+
             DSProperty prp = new DSProperty();
             prp.setName("HTTP_SERVER_REQUEST_VARIABLE");
             prp.setValue(System.getProperty("HTTP_SERVER_REQUEST_VARIABLE"));
             props.getProperty().add(prp);
-            
+
             DSProperty prp2 = new DSProperty();
             prp2.setName("HTTP_SERVER_BASE_URI");
             prp2.setValue(System.getProperty("HTTP_SERVER_BASE_URI"));
             props.getProperty().add(prp2);
-            
+
             DSProperty prp3 = new DSProperty();
             prp3.setName("WIRE_TRANSPORT_SERVER_PORT");
             prp3.setValue(System.getProperty("WIRE_TRANSPORT_SERVER_PORT"));
             props.getProperty().add(prp3);
-            
+
             DSProperty prp4 = new DSProperty();
             prp4.setName("WIRE_TRANSPORT_TRANSFER_DELAY");
             prp4.setValue(System.getProperty("WIRE_TRANSPORT_TRANSFER_DELAY"));
             props.getProperty().add(prp4);
-            
+
             // Obtain original producer
             ComponentIdentifier origProducer = queryMessage.getHeader().getProducer();
             String originalMessageId = queryMessage.getMessageID();
-            // Create reply  message
-            
+            // Create reply message
+
             String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
-            ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(
-                            getComponentNodeId(), localIPAddress, getComponentType());
-                           
+            ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(getComponentNodeId(),
+                    localIPAddress, getComponentType());
+
             Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
             header.setCorrelationID(originalMessageId);
-                
+
             Message replyMsg = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, props);
             this.deliver(replyMsg);
         } else {
-            log.debug("Query message dropped because it did not contain DSProperties: " + content.getClass().getName());   
+            log.debug("Query message dropped because it did not contain DSProperties: " + content.getClass().getName());
         }
     }
 

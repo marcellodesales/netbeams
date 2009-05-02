@@ -60,7 +60,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
 
         if (messagesContainerXml != null && !"".equals(messagesContainerXml)) {
             try {
-                responseMessagesContainer = this.deliverMessagesToLocalDSP(messagesContainerXml);
+                responseMessagesContainer = this.deliverMessagesToLocalDSP(req.getRemoteAddr(), messagesContainerXml);
                 log.debug("Messages Container for the response is ready to be serialized..."
                         + responseMessagesContainer);
                 
@@ -100,7 +100,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
      * @throws JAXBException if any unmarshalling error occurs.
      * @throws DSPException if any problem occur with the delivery of messages to the DSP Broker via the Broker.
      */
-    private MessagesContainer deliverMessagesToLocalDSP(String messagesContainerRequestXML) throws 
+    private MessagesContainer deliverMessagesToLocalDSP(String destIpAddress, String messagesContainerRequestXML) throws 
             DSPException {
 
         log.debug("Retrieved messages container from the HTTP request... Deserializing the XML from the client...");
@@ -116,7 +116,6 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
         // Send all the messages to the local DSP broker.
         this.send(requestMessagesContainer.getMessage());
 
-        String destIpAddress = requestMessagesContainer.getDestinationHost();
         log.debug("Retrieving the messages container for the given client IP: " + destIpAddress);
         MessagesContainer responseMessagesContainer = MessagesQueues.INSTANCE
                 .retrieveQueuedMessagesForTransmission(destIpAddress);

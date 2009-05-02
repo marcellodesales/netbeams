@@ -286,7 +286,8 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         boolean hasDelayChanged = false;
         for (DSProperty property : properties.getProperty()) {
             System.setProperty(property.getName(), property.getValue());
-            if (!hasDelayChanged && property.getName().equals("WIRE_TRANSPORT_TRANSFER_DELAY")) {
+            if (property.getName().equals("WIRE_TRANSPORT_TRANSFER_DELAY") && !hasDelayChanged && 
+                    !System.getProperty(property.getName()).equals(property.getValue())) {
                 hasDelayChanged = true;
             }
             log.debug("Update Property: " + property.getName() + "=" + property.getValue());
@@ -369,7 +370,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         } else
         if (message instanceof QueryMessage) {
             
-            log.debug("Query message delivered: returning the properties that can be changed");
+            log.debug("Query message delivered to this component... must produce a response...");
             this.queryComponentProperties((QueryMessage) message);
             
         } else {

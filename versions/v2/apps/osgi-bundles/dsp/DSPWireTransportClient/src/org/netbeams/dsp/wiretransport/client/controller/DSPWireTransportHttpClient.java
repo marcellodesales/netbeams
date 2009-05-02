@@ -359,17 +359,15 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         log.debug("Message " + correlation == null ? "has correlation ID " + correlation : "without correlation ID");
         String nodeAddress = message.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
         log.debug("Message address " + nodeAddress);
-        final boolean messageIsLocal = this.isMessageForLocalDelivery(nodeAddress);
-        log.debug("Message is for local deliver? " + messageIsLocal);
 
         // Processing start-up or configuration messages
-        if (message instanceof UpdateMessage && messageIsLocal) {
+        if (message instanceof UpdateMessage) {
 
             log.debug("Update messages delivered: configuring DSP Wire Transport Server with Properties");
             this.updateComponentProperties((UpdateMessage) message);
 
         } else
-        if (message instanceof QueryMessage && messageIsLocal) {
+        if (message instanceof QueryMessage) {
             
             log.debug("Query message delivered: returning the properties that can be changed");
             this.queryComponentProperties((QueryMessage) message);

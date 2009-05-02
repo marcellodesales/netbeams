@@ -294,7 +294,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
         }
 
         long delay = this.getDelayForTransportSender();
-        if (this.scheduler.isShutdown()) {
+        if (!this.scheduler.isShutdown()) {
             log.info("Starting scheduling the transport senders to wake up at every " + delay + " seconds...");
             this.scheduler.scheduleWithFixedDelay(new DspTransportSender(), delay, delay, TimeUnit.SECONDS);
         } else if (hasDelayChanged) {

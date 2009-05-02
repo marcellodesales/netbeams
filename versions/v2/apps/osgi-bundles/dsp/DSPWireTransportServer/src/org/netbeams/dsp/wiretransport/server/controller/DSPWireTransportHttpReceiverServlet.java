@@ -122,7 +122,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
 
         log.debug("Acknowledment will be sent with window size of " + requestMessagesContainer.getWindowSize());
         Integer ackUntil = Integer.valueOf(requestMessagesContainer.getWindowSize());
-        log.debug("Last message ID received is " + ackUntil);
+        //log.debug("Last message ID received is " + ackUntil);
         responseMessagesContainer.setAcknowledgeUntil(ackUntil);
         return responseMessagesContainer;
     }

@@ -179,7 +179,7 @@ public enum DSPXMLUnmarshaller {
             String creationTime = creationTimeElement.getValue();
             header.setCreationTime(new Long(creationTime != null ? creationTime.trim() : "-1"));
         }
-        Element correlationIdElement = messageHeaderElement.getChild("correlationID");
+        Element correlationIdElement = messageHeaderElement.getChild("CorrelationID");
         if (correlationIdElement != null) {
             String correlationId = correlationIdElement.getValue();
             header.setCorrelationID(correlationId != null ? correlationId.trim() : null);

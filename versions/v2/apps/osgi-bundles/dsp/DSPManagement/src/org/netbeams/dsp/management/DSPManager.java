@@ -25,6 +25,7 @@ import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessageContent;
+import org.netbeams.dsp.message.QueryMessage;
 import org.netbeams.dsp.message.UpdateMessage;
 import org.netbeams.dsp.util.NetworkUtil;
 
@@ -160,10 +161,8 @@ public class DSPManager implements Manager, DSPComponent
 	{
 		log.debug("Query message for component=" + nodeComponentId + " type=" + componentType + " node=" + nodeAddress + " content type= " + content.getContentType());
 
-//		Message msg = MessageFactory.newMessage2(QueryMessage.class, content, this, nodeComponentId, componentType, nodeAddress);
+		Message msg = createMessage(nodeComponentId, componentType, nodeAddress, content, QueryMessage.class);
 
-		Message msg = createMessage(nodeComponentId, componentType, nodeAddress, content);
-		
 		registerPendingMessage(msg.getMessageID());
 		sendMessage(msg);
 
@@ -180,7 +179,7 @@ public class DSPManager implements Manager, DSPComponent
 	{
 		log.debug("Update message for component=" + nodeComponentId + " type=" + componentType + " node=" + nodeAddress + " content type= " + content.getContentType());
 
-		Message msg = MessageFactory.newMessage2(UpdateMessage.class, content, this, nodeComponentId, componentType, nodeAddress);
+		Message msg = createMessage(nodeComponentId, componentType, nodeAddress, content, UpdateMessage.class);
 		
 		registerPendingMessage(msg.getMessageID());
 		sendMessage(msg);
@@ -229,9 +228,9 @@ public class DSPManager implements Manager, DSPComponent
 	
      private void startUI() {
     	// Create component list
-    	List<String> compNodeIds = new ArrayList<String>();
-    	compNodeIds.add("DSPStockProducer");
-		PropertyUI.setComponents(compNodeIds);
+//    	List<String> compNodeIds = new ArrayList<String>();
+//    	compNodeIds.add("DSPStockProducer");
+//		PropertyUI.setComponents(compNodeIds);
 	}
     
 	
@@ -305,7 +304,7 @@ public class DSPManager implements Manager, DSPComponent
 	}
 	
     private Message  createMessage(String nodeComponentId, String componentType,
-			String nodeAddress, MessageContent content) 
+			String nodeAddress, MessageContent content, Class<?> messageClass) 
     {
     	// Create Producer
     	// TODO: Simplify
@@ -325,7 +324,14 @@ public class DSPManager implements Manager, DSPComponent
         
         Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, consumer);
             
-    	Message message = DSPMessagesFactory.INSTANCE.makeDSPQueryMessage(header, content);
+    	Message message = null;
+    	if(QueryMessage.class.equals(messageClass)){
+    		message = DSPMessagesFactory.INSTANCE.makeDSPQueryMessage(header, content);
+    	}else if (UpdateMessage.class.equals(messageClass)){
+    		message = DSPMessagesFactory.INSTANCE.makeDSPUpdateMessage(header, content);
+    	}else{
+    		log.warn("Message type unknown: " + messageClass.getName());
+    	}
     	return message;
 	}
 	

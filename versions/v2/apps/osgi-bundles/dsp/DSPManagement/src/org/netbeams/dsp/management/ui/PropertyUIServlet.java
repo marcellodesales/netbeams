@@ -105,8 +105,7 @@ public class PropertyUIServlet extends HttpServlet {
         }
 
         try {
-            interacionId = manager.update(uiModel.selectedComponent, "", NetworkUtil.getCurrentEnvironmentNetworkIp(),
-                    props);
+            interacionId = manager.update(uiModel.selectedComponent, "", "", props);
         } catch (DSPException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

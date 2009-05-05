@@ -24,6 +24,7 @@ import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.message.QueryMessage;
 import org.netbeams.dsp.message.UpdateMessage;
 import org.netbeams.dsp.util.NetworkUtil;
+import org.netbeams.dsp.ysi.SondeDataContainer;
 
 
 public class DSPManager implements Manager, DSPComponent
@@ -247,11 +248,23 @@ public class DSPManager implements Manager, DSPComponent
 	
     private String messageSummaryToBuffer(Message message) {
         StringBuilder buff = new StringBuilder();
-        buff.append("[Producer]\n");
-        buff.append("Address=").append(message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue()).append("; ");       
-        buff.append("Type=").append(message.getHeader().getProducer().getComponentType()).append("; ");
-        buff.append("[Content]\n");
-        buff.append("Type=").append(message.getContentType()).append("; ").append("\n");
+        buff.append("[Producer]");
+        buff.append("Addr=").append(message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue()).append("; ");       
+        buff.append("Type=").append(message.getHeader().getProducer().getComponentType()).append("; $");
+        buff.append("[Content]");
+        buff.append("Type=").append(message.getContentType()).append("; $");
+        MessageContent content = message.getBody().getAny();
+        if(content instanceof DSProperties){
+        	DSProperties props = (DSProperties)content;
+        	for(DSProperty p: props.getProperty()){
+        		buff.append(p.getName()).append('=').append(p.getValue()).append(";");
+        	}
+        	buff.append("$");
+        }else if(content instanceof SondeDataContainer){
+        	SondeDataContainer sdc = (SondeDataContainer)content;
+  	
+        }
+        
         return buff.toString();
     }	
 

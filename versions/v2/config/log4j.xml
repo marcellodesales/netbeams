@@ -20,6 +20,19 @@
     </layout>
   </appender> 
   
+  <logger name="org.netbeams.dsp.platform.matcher.Matcher" additivity="true">
+    <level class="org.apache.log4j.Level" value="info" />
+    <appender-ref ref="console" />
+    <appender-ref ref="R" />
+   </logger>
+
+
+  <logger name="org.netbeams.dsp.management.ui.PropertyUIServlet" additivity="true">
+    <level class="org.apache.log4j.Level" value="info" />
+    <appender-ref ref="console" />
+    <appender-ref ref="R" />
+  </logger>
+   
   <root>
     <priority value="debug" />
     <appender-ref ref="console" />

@@ -18,7 +18,6 @@ import org.netbeams.dsp.data.property.DSProperty;
 import org.netbeams.dsp.management.Manager;
 import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.util.NetworkUtil;
-import org.w3c.dom.Document;
 
 public class PropertyUIServlet extends HttpServlet {
     private static final long serialVersionUID = ("urn:" + PropertyUIServlet.class.getName()).hashCode();
@@ -61,7 +60,7 @@ public class PropertyUIServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uri = request.getRequestURI();
-        log.debug("PropertyUIServlet Processing URI Query: " + uri);
+        log.info("PropertyUIServlet Processing URI Query: " + uri);
         if (uri.indexOf("/PULL") != -1) {
             response.setContentType("text/plain");
             ServletOutputStream out = response.getOutputStream();
@@ -115,11 +114,15 @@ public class PropertyUIServlet extends HttpServlet {
         PropertyUI.createLabel(uiModel.properties.getProperty().size() + 3, 1, "Pending...");
 
         while (!shouldStop) {
-            MessageContent dom = manager.retrieveInteractionReply(interacionId);
+            MessageContent content = manager.retrieveInteractionReply(interacionId);
             // HACK:
-            if (dom != null) {
+            if (content != null) {
+                log.info("Found message for " + interacionId);
                 break;
-            }
+            } else {
+                log.debug("No message for " + interacionId);
+            }            
+            
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -127,7 +130,8 @@ public class PropertyUIServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        // Create Layout
+        // Reset Layout with the properties sent to the DSPComponent.
+        // This is step is required to remove the pending label.
         PropertyUI.clear();
         List<DSProperty> pList = props.getProperty();
         int x = 0;
@@ -162,7 +166,7 @@ public class PropertyUIServlet extends HttpServlet {
             content = manager.retrieveInteractionReply(interacionId);
             // HACK:
             if (content != null) {
-                log.debug("Found message for " + interacionId);
+                log.info("Found message for " + interacionId);
                 break;
             } else {
                 log.debug("No message for " + interacionId);

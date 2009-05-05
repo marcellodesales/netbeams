@@ -3,9 +3,7 @@ package org.netbeams.dsp.management;
 
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -14,11 +12,9 @@ import org.netbeams.dsp.DSPComponent;
 import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
-import org.netbeams.dsp.MessageFactory;
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
 import org.netbeams.dsp.management.ui.Buffer;
-import org.netbeams.dsp.management.ui.PropertyUI;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.CreateMessage;
 import org.netbeams.dsp.message.DSPMessagesFactory;
@@ -159,7 +155,7 @@ public class DSPManager implements Manager, DSPComponent
 	public String query(String nodeComponentId, String componentType, String nodeAddress, MessageContent content) 
 		throws DSPException 
 	{
-		log.debug("Query message for component=" + nodeComponentId + " type=" + componentType + " node=" + nodeAddress + " content type= " + content.getContentType());
+		log.info("Query message for component=" + nodeComponentId + " type=" + componentType + " node=" + nodeAddress + " content type= " + content.getContentType());
 
 		Message msg = createMessage(nodeComponentId, componentType, nodeAddress, content, QueryMessage.class);
 
@@ -177,7 +173,7 @@ public class DSPManager implements Manager, DSPComponent
 	public String update(String nodeComponentId, String componentType, String nodeAddress, MessageContent content) 
 		throws DSPException 
 	{
-		log.debug("Update message for component=" + nodeComponentId + " type=" + componentType + " node=" + nodeAddress + " content type= " + content.getContentType());
+		log.info("Update message for component=" + nodeComponentId + " type=" + componentType + " node=" + nodeAddress + " content type= " + content.getContentType());
 
 		Message msg = createMessage(nodeComponentId, componentType, nodeAddress, content, UpdateMessage.class);
 		
@@ -235,6 +231,7 @@ public class DSPManager implements Manager, DSPComponent
     
 	
     private void registerPendingMessage(String messageId) {
+    	log.info("Registering pending message " + messageId);
     	pendingReply.put(messageId, Boolean.TRUE);
     }
 	

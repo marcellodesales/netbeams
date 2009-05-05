@@ -136,9 +136,9 @@ public class Matcher implements BaseComponent {
 	        isMatch = isMatch || prodMatcher.matches();
         }
         if(isMatch){
-        	log.debug("Producer type matches!");
+        	log.debug("Producer type matches " + prodType);
         }else{
-        	log.debug("Producer type does not match!");
+        	log.debug("Producer type does not match " + prodType);
         }
         return isMatch;
     }
@@ -150,9 +150,9 @@ public class Matcher implements BaseComponent {
         boolean isMatch = false;
         if ("ALL".equals(prodAddress) || "ANY".equals(prodAddress)) {
             isMatch = true;
-            log.debug("Producer address matches!");
+            log.debug("Producer address matches " + prodAddress);
         }else{
-        	log.debug("Producer address does not match!");
+        	log.debug("Producer address does not match " + prodAddress);
         }
         return isMatch;
     }  
@@ -182,9 +182,9 @@ public class Matcher implements BaseComponent {
         }
         
         if(isMatch){
-        	log.debug("Consumer type matches!");
+        	log.debug("Consumer type matches " + consType);
         }else{
-        	log.debug("Consumer type does not match!");
+        	log.debug("Consumer type does not match " + consType);
         }
         return isMatch;
     }    
@@ -231,9 +231,9 @@ public class Matcher implements BaseComponent {
         }
         
         if(isMatch){
-        	log.debug("Consumer address matches!");
+        	log.debug("Consumer address matches " + consAddress);
         }else{
-        	log.debug("Consumer address does not match!");
+        	log.debug("Consumer address does not match " + consAddress);
         }
         return isMatch;
     }       

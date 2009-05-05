@@ -110,7 +110,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                 	if(originalConsumer != null){
                 		targetConsumer.setComponentType(originalConsumer.getComponentType());
                	}else{
-                		log.debug("SAME type target is incompatible with NO consumer");
+                		log.debug("KEEP type target is incompatible with NO consumer");
                 		continue;
                 	}
                 }else {
@@ -123,7 +123,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                 	if(originalConsumer != null){
                 		targetConsumer.setComponentLocator(originalConsumer.getComponentLocator());
                 	}else{
-                		log.debug("SAME address target is incompatible with NO consumer");
+                		log.debug("KEEP address target is incompatible with NO consumer");
                 		continue;
                 	}
                 }else {
@@ -142,7 +142,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                 	log.debug("Message already delivered to this consumer");
                 	continue;
                 }
-                
+                                
                 DSPComponent localComponent = null;
                 if(rule.getTarget().getGatewayType() != null){
                 	// Deliver through the gate way
@@ -150,7 +150,7 @@ public class MessageBroker implements MessageBrokerAccessor {
                 	
                 	localComponent = this.obtainDSPComponent(rule.getTarget().getGatewayType());
                 	if(localComponent == null){
-                		log.debug("Gateway not found...");
+                		log.warn("Gateway not found: " + rule.getTarget().getGatewayType());
                 		continue;
                 	}
                 }else{
@@ -160,16 +160,15 @@ public class MessageBroker implements MessageBrokerAccessor {
                 		log.warn("Node Address is neither local nor delivered through gateway: " +  address);
                 		continue;
                 	}
-                	log.debug("Delivering localy to " + targetConsumer.getComponentType());
                 	localComponent = this.obtainDSPComponent(targetConsumer.getComponentType());
                 	if(localComponent == null){
-                		log.debug("DSP component not found...");
+                		log.warn("DSP component not found" + targetConsumer.getComponentType());
                 		continue;
                 	}
                 }
                                
                 // Set the new consumer
-                log.debug("Delivering ...");
+                log.info("Delivering to " + targetConsumer.getComponentType());
                 message.getHeader().setConsumer(targetConsumer);
                 localComponent.deliver(message);
                 targets.put(target, Boolean.TRUE);

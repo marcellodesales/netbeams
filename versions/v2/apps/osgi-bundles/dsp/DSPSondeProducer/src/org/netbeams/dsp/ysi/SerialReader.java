@@ -50,8 +50,9 @@ public class SerialReader implements Runnable {
 	
 	
 	private void parseDataStream(StringBuffer dataStream) {
+		log.debug("Raw data stream is: " + dataStream.toString());
 		StringTokenizer st = new StringTokenizer(dataStream.toString());
-        while (st.hasMoreTokens()) {
+		while (st.hasMoreTokens()) {
 			dataList.add(st.nextToken());
         }
         try {
@@ -79,9 +80,24 @@ public class SerialReader implements Runnable {
 
 	
 	private void copyToOriginal() {
-		for (int i = 0; i < list.size(); i++) {
-			sdc.sondeData.add(list.get(i));
-		}
+		sdc.sondeData.add(list.get(0));
+		log.debug("SONDE DATA");
+		log.debug("==========");
+		log.debug(sdc.sondeData.get(0).getDateString());
+		log.debug(sdc.sondeData.get(0).getTimeString());
+		log.debug(sdc.sondeData.get(0).getTemp());
+		log.debug(sdc.sondeData.get(0).getSpCond());
+		log.debug(sdc.sondeData.get(0).getCond());
+		log.debug(sdc.sondeData.get(0).getResist());
+		log.debug(sdc.sondeData.get(0).getSal());
+		log.debug(sdc.sondeData.get(0).getPress());
+		log.debug(sdc.sondeData.get(0).getDepth());
+		log.debug(sdc.sondeData.get(0).getPH());
+		log.debug(sdc.sondeData.get(0).getPhmV());
+		log.debug(sdc.sondeData.get(0).getODOSat());
+		log.debug(sdc.sondeData.get(0).getODOConc());
+		log.debug(sdc.sondeData.get(0).getTurbid());
+		log.debug(sdc.sondeData.get(0).getBattery());
 	}
 	
 	
@@ -134,7 +150,7 @@ public class SerialReader implements Runnable {
         		try {
         			copyToOriginal();
         			send(sdc);
-        			sdc.sondeData.clear();
+        			//sdc.sondeData.clear();
         			list.clear();   // The next time we send data, we don't want the old data appended.
         		} catch (DSPException e) {
         			System.err.println("ERROR: " + e.getMessage());

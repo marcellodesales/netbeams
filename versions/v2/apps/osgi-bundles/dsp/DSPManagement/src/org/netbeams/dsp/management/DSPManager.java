@@ -25,6 +25,7 @@ import org.netbeams.dsp.message.QueryMessage;
 import org.netbeams.dsp.message.UpdateMessage;
 import org.netbeams.dsp.util.NetworkUtil;
 import org.netbeams.dsp.ysi.SondeDataContainer;
+import org.netbeams.dsp.ysi.SondeDataType;
 
 
 public class DSPManager implements Manager, DSPComponent
@@ -262,8 +263,11 @@ public class DSPManager implements Manager, DSPComponent
         	buff.append("$");
         }else if(content instanceof SondeDataContainer){
         	SondeDataContainer sdc = (SondeDataContainer)content;
-  	
-        }
+        	for (SondeDataType sdt: sdc.getSondeData()){
+        		buff.append(sdt.getDateString()).append("    ").append(sdt.getTimeString()).append("    ").append(sdt.getTemp()).append("    ").append(sdt.getSpCond()).append("    ").append(sdt.getCond()).append("    ").append(sdt.getResist()).append("    ").append(sdt.getSal()).append("    ").append(sdt.getPress()).append("    ").append(sdt.getDepth()).append("    ").append(sdt.getPH()).append("    ").append(sdt.getPhmV()).append("    ").append(sdt.getODOSat()).append("    ").append(sdt.getODOConc()).append("    ").append(sdt.getTurbid()).append("    ").append(sdt.getBattery());
+        	}
+        	buff.append("$");
+  	    }
         
         return buff.toString();
     }	

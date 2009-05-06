@@ -445,6 +445,7 @@ public class SondeDataType {
             builder.append("samplingTimeStamp=\"" + dateTimeFormat.format (this.samplingTimeStamp.getTime()) + "\" ");
         }
         builder.append(">");
+        builder.append("<Temp>" + this.temp + "</Temp>");
         builder.append("<SpCond>" + this.spCond + "</SpCond>");
         builder.append("<Cond>" + this.cond + "</Cond>");
         builder.append("<Resist>" + this.resist + "</Resist>");

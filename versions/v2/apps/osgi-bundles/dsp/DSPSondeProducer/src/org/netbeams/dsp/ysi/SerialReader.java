@@ -80,7 +80,12 @@ public class SerialReader implements Runnable {
 
 	
 	private void copyToOriginal() {
+		log.debug("Size of sondeData: " + sdc.sondeData.size());
+		if (sdc.sondeData.size() > 0) {
+			sdc.sondeData.remove(0);
+		}
 		sdc.sondeData.add(list.get(0));
+		/*
 		log.debug("SONDE DATA");
 		log.debug("==========");
 		log.debug(sdc.sondeData.get(0).getDateString());
@@ -98,6 +103,7 @@ public class SerialReader implements Runnable {
 		log.debug(sdc.sondeData.get(0).getODOConc());
 		log.debug(sdc.sondeData.get(0).getTurbid());
 		log.debug(sdc.sondeData.get(0).getBattery());
+		*/
 	}
 	
 	

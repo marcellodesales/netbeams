@@ -25,7 +25,7 @@
         <Body>
             <DSProperties>
                 <Property name="WIRE_TRANSPORT_SERVER_IP">
-                    <Value>67.169.177.195</Value>
+                    <Value>192.168.0.197</Value>
                 </Property>
                 <Property name="WIRE_TRANSPORT_SERVER_PORT">
                     <Value>8080</Value>

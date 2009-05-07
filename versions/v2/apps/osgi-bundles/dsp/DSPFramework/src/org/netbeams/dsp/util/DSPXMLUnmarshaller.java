@@ -322,6 +322,12 @@ public enum DSPXMLUnmarshaller {
                 if (Battery != null) {
                     sondeData.setBattery(Float.parseFloat(Battery.trim()));
                 }
+                
+                String temp = sondeDataElem.getChildText("Temp");
+                if (Battery != null) {
+                    sondeData.setTemp(Float.parseFloat(temp.trim()));
+                }
+                
                 sondeContainer.getSondeData().add(sondeData);
 
             } catch (NumberFormatException e) {

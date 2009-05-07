@@ -251,7 +251,7 @@ public enum DSPXMLUnmarshaller {
     private MessageContent parseSondeDataContainer(Element sondeDataContainerElement) {
 
         SondeDataContainer sondeContainer = new SondeDataContainer();
-        List<Element> sondeDataElements = sondeDataContainerElement.getChildren("soundeData");
+        List<Element> sondeDataElements = sondeDataContainerElement.getChildren("sondeData");
 
         for (Element sondeDataElem : sondeDataElements) {
             try {

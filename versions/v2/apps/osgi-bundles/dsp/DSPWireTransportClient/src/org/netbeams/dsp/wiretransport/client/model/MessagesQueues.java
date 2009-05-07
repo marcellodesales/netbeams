@@ -137,7 +137,8 @@ public enum MessagesQueues {
      */
     public synchronized void setMessagesToTransmitted(MessagesContainer messagesContainer) {
         for (QueueMessageData data : this.outboundQueue.get(messagesContainer.getDestinationHost())) {
-            if (data.getState().equals(QueueMessageState.QUEUED)
+            //when a query message is queued of an IP, its container id is still null
+            if (data.getState().equals(QueueMessageState.QUEUED) && data.getContainerId() != null 
                     && data.getContainerId().equals(messagesContainer.getUudi())) {
                 data.changeStateToTransmitted();
             }
@@ -201,5 +202,21 @@ public enum MessagesQueues {
             }
         }
         return messages;
+    }
+
+    /**
+     * Acknowledges a specific message by a given correlation ID
+     * @param destinationIpAddress is the destination address of the Message
+     * @param correlationID is the ID of the message that was sent as a correlation ID.
+     */
+    public void acknowledgeMessageFromCorrelationId(String destinationIpAddress, String messageId) {
+        if (messageId != null) {
+            for (QueueMessageData data : this.outboundQueue.get(destinationIpAddress)) {
+                if (data.getMessage().getMessageID().equals(messageId)) {
+                    data.changeStateToAcknowledged();
+                    break;
+                }
+            }
+        }
     }
 }

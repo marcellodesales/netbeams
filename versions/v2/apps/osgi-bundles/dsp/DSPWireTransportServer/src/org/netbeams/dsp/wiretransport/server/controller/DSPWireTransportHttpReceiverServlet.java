@@ -7,7 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.DSPContext;
@@ -82,6 +81,9 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
             resp.setContentType("text/xml");
             out.println(DSPWireTransportHttpClient.serializeMessagesContainer(responseMessagesContainer));
             out.close();
+            //change the state of the just transmitted messages to queued.
+            MessagesQueues.INSTANCE.setMessagesToTransmitted(responseMessagesContainer);
+            
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -97,7 +99,6 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
      * @return the MessagesContainer instance from the outbound messages registered in the local DSP Messages Queue.
      *         Also, the messages returned can include EventMessages that are acknowledgment of the reception of the
      *         messages.
-     * @throws JAXBException if any unmarshalling error occurs.
      * @throws DSPException if any problem occur with the delivery of messages to the DSP Broker via the Broker.
      */
     private MessagesContainer deliverMessagesToLocalDSP(String destIpAddress, String messagesContainerRequestXML) throws 
@@ -114,7 +115,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
 
         log.debug("Delivering messages to the DSP Broker...");
         // Send all the messages to the local DSP broker.
-        this.send(requestMessagesContainer.getMessage());
+        this.send(destIpAddress, requestMessagesContainer.getMessage());
 
         log.debug("Retrieving the messages container for the given client IP: " + destIpAddress);
         MessagesContainer responseMessagesContainer = MessagesQueues.INSTANCE
@@ -131,9 +132,10 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
      * Sends the DSP messages collected from the Servlet to the local DSP broker
      * 
      * @param dspMessages is a list of Messages wrapped into a list of AbstractMessages
+     * @param destIpAddress is the address of the destination of the message used on the queues.
      * @throws DSPException if any problem with the DSP occurs
      */
-    private void send(List<AbstractMessage> dspMessages) throws DSPException {
+    private void send(String destIpAddress, List<AbstractMessage> dspMessages) throws DSPException {
 
         // Always check if there is a broker available
         MessageBrokerAccessor messageBroker = this.dspContext.getDataBroker();
@@ -142,6 +144,9 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
             log.debug("Sending " + dspMessages.size() + " messages to the broker...");
             for (AbstractMessage msg : dspMessages) {
                 messageBroker.send((Message) msg);
+                if (msg.getHeader().getCorrelationID() != null) {
+                    MessagesQueues.INSTANCE.acknowledgeMessageFromCorrelationId(destIpAddress, String.valueOf(msg.getHeader().getCorrelationID()));
+                }
             }
 
         } else {

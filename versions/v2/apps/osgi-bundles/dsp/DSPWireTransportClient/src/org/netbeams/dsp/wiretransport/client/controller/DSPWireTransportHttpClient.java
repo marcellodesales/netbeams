@@ -218,8 +218,8 @@ public class DSPWireTransportHttpClient implements DSPComponent {
          * @throws HttpException if any http problem occurs
          * @throws IOException if any problem with the socket connection occurs (the server is not available), etc.
          */
-        private String transmitMessagesReceiveResponse(String messagesContainerXml,
-                MessagesContainer messagesForRequest, URL dest) throws HttpException, IOException, ConnectException {
+        private String transmitMessagesReceiveResponse(String messagesContainerXml, MessagesContainer messagesForRequest, URL dest)
+                throws HttpException, IOException, ConnectException {
 
             UUID messagesContainerId = UUID.fromString(messagesForRequest.getUudi());
             HttpClient client = new HttpClient();
@@ -232,8 +232,14 @@ public class DSPWireTransportHttpClient implements DSPComponent {
 
             thLog.debug("Trying send the container " + messagesContainerId
                     + " to the DSP Wire Transport Server located" + "at " + dest.toString());
-            int statusCode = client.executeMethod(postMethod);
-
+            
+            int statusCode = -1;
+            try {
+                statusCode = client.executeMethod(postMethod);
+            } catch (ConnectException e) {
+                thLog.debug("Connection to the DSP server did not go through: " + e.getMessage());
+                throw new IOException(e);
+            }
             // // Change the messages to the Transmitted state
             MessagesQueues.INSTANCE.setMessagesToTransmitted(messagesForRequest);
 

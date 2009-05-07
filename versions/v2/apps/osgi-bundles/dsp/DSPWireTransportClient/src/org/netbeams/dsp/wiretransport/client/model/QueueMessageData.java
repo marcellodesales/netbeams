@@ -78,6 +78,10 @@ public class QueueMessageData {
         this.state = QueueMessageState.ACKNOWLEDGED;
     }
 
+    public void changeStateToTransmitted() {
+        this.state = QueueMessageState.TRANSMITTED;
+    }
+    
     public UUID getContainerId() {
         return this.containerId;
     }

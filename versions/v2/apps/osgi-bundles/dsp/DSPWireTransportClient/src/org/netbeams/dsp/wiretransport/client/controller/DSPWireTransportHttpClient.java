@@ -1,6 +1,7 @@
 package org.netbeams.dsp.wiretransport.client.controller;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -145,7 +146,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
                                 + " to the 'transmitted' state...");
 
                         String messagesFromResponseInXml = this.transmitMessagesReceiveResponse(
-                                messagesForRequestInXml, UUID.fromString(messagesForRequest.getUudi()), destinationURL);
+                                messagesForRequestInXml, messagesForRequest, destinationURL);
                         thLog.debug("HTTP Response BODY: " + messagesFromResponseInXml);
 
                         if (messagesFromResponseInXml != null) {
@@ -217,9 +218,10 @@ public class DSPWireTransportHttpClient implements DSPComponent {
          * @throws HttpException if any http problem occurs
          * @throws IOException if any problem with the socket connection occurs (the server is not available), etc.
          */
-        private String transmitMessagesReceiveResponse(String messagesContainerXml, UUID messagesContainerId, URL dest)
-                throws HttpException, IOException {
+        private String transmitMessagesReceiveResponse(String messagesContainerXml,
+                MessagesContainer messagesForRequest, URL dest) throws HttpException, IOException, ConnectException {
 
+            UUID messagesContainerId = UUID.fromString(messagesForRequest.getUudi());
             HttpClient client = new HttpClient();
             PostMethod postMethod = new PostMethod(dest.toString());
 
@@ -233,7 +235,7 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             int statusCode = client.executeMethod(postMethod);
 
             // // Change the messages to the Transmitted state
-            // this.messagesDir.setMessagesToTransmitted(url, messagesContainerId);
+            MessagesQueues.INSTANCE.setMessagesToTransmitted(messagesForRequest);
 
             String responseXmlMessagesContainter = null;
             thLog.debug("The HTTP server replied with the status code " + statusCode);

@@ -136,12 +136,15 @@ public enum MessagesQueues {
      * @param containerId is the identification of the MessagesContainer created during before the transmission
      */
     public synchronized void setMessagesToTransmitted(MessagesContainer messagesContainer) {
-        for (QueueMessageData data : this.outboundQueue.get(messagesContainer.getDestinationHost())) {
-            //when a query message is queued of an IP, its container id is still null
-            if (data.getState().equals(QueueMessageState.QUEUED) && data.getContainerId() != null 
-                    && data.getContainerId().toString().equals(messagesContainer.getUudi())) {
-                data.changeStateToTransmitted();
-            }
+        if (messagesContainer != null ) {
+            Queue<QueueMessageData> queued = this.outboundQueue.get(messagesContainer.getDestinationHost());
+            for (QueueMessageData data : queued) {
+                //when a query message is queued of an IP, its container id is still null
+                if (data.getState().equals(QueueMessageState.QUEUED) && data.getContainerId() != null 
+                        && data.getContainerId().toString().equals(messagesContainer.getUudi())) {
+                    data.changeStateToTransmitted();
+                }
+            }   
         }
     }
 

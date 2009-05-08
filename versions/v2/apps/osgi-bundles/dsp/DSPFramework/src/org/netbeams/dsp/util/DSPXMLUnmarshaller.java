@@ -382,7 +382,7 @@ public enum DSPXMLUnmarshaller {
     private MessageContent parseMouseActions(Element mouseActionsElement) {
         MouseActionsContainer actionsContainer = new MouseActionsContainer();
 
-        List<Element> props = mouseActionsElement.getChildren("mouseActionsContainer");
+        List<Element> props = mouseActionsElement.getChildren("mouseAction");
         for (Element mouseActionElement : props) {
             MouseAction mouseAction = new MouseAction();
             mouseAction.setButton(ButtonName.valueOf(mouseActionElement.getAttributeValue("button")));

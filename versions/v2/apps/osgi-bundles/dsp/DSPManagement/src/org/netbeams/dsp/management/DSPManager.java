@@ -14,7 +14,6 @@ import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
-import org.netbeams.dsp.demo.mouseactions.MouseActionsContainer;
 import org.netbeams.dsp.management.ui.Buffer;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.CreateMessage;
@@ -269,11 +268,7 @@ public class DSPManager implements Manager, DSPComponent
                 buff.append(sdt.getDateString()).append("    ").append(sdt.getTimeString()).append("    ").append(sdt.getTemp()).append("    ").append(sdt.getSpCond()).append("    ").append(sdt.getCond()).append("    ").append(sdt.getResist()).append("    ").append(sdt.getSal()).append("    ").append(sdt.getPress()).append("    ").append(sdt.getDepth()).append("    ").append(sdt.getPH()).append("    ").append(sdt.getPhmV()).append("    ").append(sdt.getODOSat()).append("    ").append(sdt.getODOConc()).append("    ").append(sdt.getTurbid()).append("    ").append(sdt.getBattery());
             }
             buff.append("$");
-        } else
-        if (content instanceof MouseActionsContainer) {
-            MouseActionsContainer mac = (MouseActionsContainer)content;
-            buff.append("Size: "+mac.getMouseAction().size()).append("    ").append("Action 5" + mac.getMouseAction().get(5).getEvent() + " " + mac.getMouseAction().get(5).getButton() + " at " + "["+mac.getMouseAction().get(5).getX()+","+mac.getMouseAction().get(5).getX()+"]");
-        }        
+        }  
         return buff.toString();
     }	
 

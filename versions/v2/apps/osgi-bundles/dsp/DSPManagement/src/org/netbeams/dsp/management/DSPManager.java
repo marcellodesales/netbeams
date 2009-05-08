@@ -14,6 +14,7 @@ import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.data.property.DSProperties;
 import org.netbeams.dsp.data.property.DSProperty;
+import org.netbeams.dsp.demo.mouseactions.MouseActionsContainer;
 import org.netbeams.dsp.management.ui.Buffer;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.CreateMessage;
@@ -255,38 +256,24 @@ public class DSPManager implements Manager, DSPComponent
         buff.append("[Content]");
         buff.append("Type=").append(message.getContentType()).append("; $");
         MessageContent content = message.getBody().getAny();
-        if (content instanceof MessageContent) {
-        	log.debug("Content is an instance of MessageContent!");
-        	log.debug("Content Type is: " + content.getContentType());
-        	if (content.getContentType().endsWith("SondeDataContainer")) {
-        		log.debug("Content Type ends with: SondeDataContainer");
-        		SondeDataContainer sdc = (SondeDataContainer) content;
-        		log.debug("Content is instantiated!!");
-        		log.debug("Sonde Data: Temp - " + sdc.getSondeData().get(0).getTemp());
-        		log.debug("Sonde Data: Battery - " + sdc.getSondeData().get(0).getBattery());
-        		log.debug("Printed content parameters!!");
-        		/*for (SondeDataType sdt: sdc.getSondeData()){
-            		buff.append(sdt.getDateString()).append("  ").append(sdt.getTimeString()).append("  ").append(sdt.getTemp()).append("  ").append(sdt.getSpCond()).append("  ").append(sdt.getCond()).append("  ").append(sdt.getResist()).append("  ").append(sdt.getSal()).append("  ").append(sdt.getPress()).append("  ").append(sdt.getDepth()).append("  ").append(sdt.getPH()).append("  ").append(sdt.getPhmV()).append("  ").append(sdt.getODOSat()).append("  ").append(sdt.getODOConc()).append("  ").append(sdt.getTurbid()).append("  ").append(sdt.getBattery());
-            	}
-            	*/
-            	buff.append("$");
-        	}
-        }
         if(content instanceof DSProperties){
-        	DSProperties props = (DSProperties)content;
-        	for(DSProperty p: props.getProperty()){
-        		buff.append(p.getName()).append('=').append(p.getValue()).append(";");
-        	}
-        	buff.append("$");
-        }else if(content instanceof SondeDataContainer){
-        	SondeDataContainer sdc = (SondeDataContainer)content;
-        	/*for (SondeDataType sdt: sdc.getSondeData()){
-        		buff.append(sdt.getDateString()).append("    ").append(sdt.getTimeString()).append("    ").append(sdt.getTemp()).append("    ").append(sdt.getSpCond()).append("    ").append(sdt.getCond()).append("    ").append(sdt.getResist()).append("    ").append(sdt.getSal()).append("    ").append(sdt.getPress()).append("    ").append(sdt.getDepth()).append("    ").append(sdt.getPH()).append("    ").append(sdt.getPhmV()).append("    ").append(sdt.getODOSat()).append("    ").append(sdt.getODOConc()).append("    ").append(sdt.getTurbid()).append("    ").append(sdt.getBattery());
-        	}
-        	buff.append("$");
-        	*/
-  	    }
-        
+            DSProperties props = (DSProperties)content;
+            for(DSProperty p: props.getProperty()){
+                buff.append(p.getName()).append('=').append(p.getValue()).append(";");
+            }
+            buff.append("$");
+        }else 
+        if(content instanceof SondeDataContainer){
+            SondeDataContainer sdc = (SondeDataContainer)content;
+            for (SondeDataType sdt: sdc.getSondeData()){
+                buff.append(sdt.getDateString()).append("    ").append(sdt.getTimeString()).append("    ").append(sdt.getTemp()).append("    ").append(sdt.getSpCond()).append("    ").append(sdt.getCond()).append("    ").append(sdt.getResist()).append("    ").append(sdt.getSal()).append("    ").append(sdt.getPress()).append("    ").append(sdt.getDepth()).append("    ").append(sdt.getPH()).append("    ").append(sdt.getPhmV()).append("    ").append(sdt.getODOSat()).append("    ").append(sdt.getODOConc()).append("    ").append(sdt.getTurbid()).append("    ").append(sdt.getBattery());
+            }
+            buff.append("$");
+        } else
+        if (content instanceof MouseActionsContainer) {
+            MouseActionsContainer mac = (MouseActionsContainer)content;
+            buff.append("Size: "+mac.getMouseAction().size()).append("    ").append("Action 5" + mac.getMouseAction().get(5).getEvent() + " " + mac.getMouseAction().get(5).getButton() + " at " + "["+mac.getMouseAction().get(5).getX()+","+mac.getMouseAction().get(5).getX()+"]");
+        }        
         return buff.toString();
     }	
 

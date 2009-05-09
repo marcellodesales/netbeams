@@ -439,10 +439,9 @@ public class SondeDataType {
 
     public String toXml() {
         StringBuilder builder = new StringBuilder();
-        builder.append("<sondeData ");
+        builder.append("<sondeData");
         if (this.samplingTimeStamp != null) {
-            System.out.println(this.samplingTimeStamp);
-            builder.append("samplingTimeStamp=\"" + dateTimeFormat.format (this.samplingTimeStamp.getTime()) + "\" ");
+            builder.append(" samplingTimeStamp=\"" + dateTimeFormat.format (this.samplingTimeStamp.getTime()) + "\"");
         }
         builder.append(">");
         builder.append("<Temp>" + this.temp + "</Temp>");

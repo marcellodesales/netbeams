@@ -15,13 +15,17 @@ import org.netbeams.dsp.DSPContext;
 import org.netbeams.dsp.DSPException;
 import org.netbeams.dsp.MessageBrokerAccessor;
 import org.netbeams.dsp.MessageCategory;
+import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.MessageFactory;
+import org.netbeams.dsp.message.Header;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.AcknowledgementMessage;
 import org.netbeams.dsp.message.ComponentIdentifier;
+import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.QueryMessage;
 import org.netbeams.dsp.message.UpdateMessage;
+import org.netbeams.dsp.util.NetworkUtil;
 import org.w3c.dom.Node;
 
 
@@ -66,8 +70,12 @@ public class SondeDSPComponent implements DSPComponent {
 		
 		if(message instanceof UpdateMessage){		
 			processUpdate(message);
-		}else if(message instanceof QueryMessage){	
-			processQuery(message);			
+		}else if(message instanceof QueryMessage){
+			try {
+				processQuery(message);
+			} catch (DSPException e) {
+				log.error(e.getMessage(), e);
+			}
 		}
 	}
     
@@ -118,22 +126,24 @@ public class SondeDSPComponent implements DSPComponent {
     
     
     
-    private void processQuery(Message message) {
+    private void processQuery(Message message)throws DSPException {
+    	log.debug("Query message delivered to this component. Begin sending a response...");
 		DSProperties dspProperties = null;
-		try{
-			Object content = message.getBody().getAny();
-			log.debug("Content class " + content.getClass().getName());
-			
-			JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.data.property", org.netbeams.dsp.ysi.SondeDataContainer.class.getClassLoader());
-			Unmarshaller unmarshaller = jc.createUnmarshaller();
-			dspProperties = (DSProperties)unmarshaller.unmarshal((Node)content);
-		}catch(JAXBException e){
-			log.error("Error unmarshalling the message", e);
-			return;
-		}
-		log.debug("Got query configuration for " + dspProperties.getProperty().get(0).getName());
+		QueryMessage queryMessage = (QueryMessage) message;
+		MessageContent content = queryMessage.getBody().getAny();
 		
-		sendReply(message);		
+        log.debug("Content class " + content.getClass().getName());
+    	
+        if (content instanceof DSProperties) {
+            log.debug("Got query configuration");
+            dspProperties = new DSProperties();
+            
+            DSProperty freq = new DSProperty();
+            freq.setName("SAMPLING_FREQUENCY");
+            freq.setValue("5");
+            dspProperties.getProperty().add(freq);
+        }
+        sendReply(queryMessage, dspProperties);		
 	}
     
     
@@ -152,17 +162,23 @@ public class SondeDSPComponent implements DSPComponent {
 		}
 	}
 
-    private void sendReply(Message message) {
+    private void sendReply(QueryMessage queryMessage, DSProperties dspProperties) {
+    	// Obtain original producer
+		ComponentIdentifier origProducer = queryMessage.getHeader().getProducer();
+		String originalMessageId = queryMessage.getMessageID();
 		
-		DSProperties props = new DSProperties();
-		DSProperty freq = new DSProperty();
-		freq.setName("sampling_frequency");
-		freq.setValue("10");
-		
-		ComponentIdentifier ciProducer = message.getHeader().getProducer();
-		String originalMessageId = message.getMessageID();
+		// Create reply message
 		Message replyMsg = null;
-		try {
+		String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
+        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(getComponentNodeId(), 
+        		                       localIPAddress, getComponentType());
+
+        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
+        header.setCorrelationID(originalMessageId);
+
+        replyMsg = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, dspProperties);
+		/*
+        try {
 			replyMsg = MessageFactory.newMessage2(MeasureMessage.class, props, this, 
 					ciProducer.getComponentLocator().getComponentNodeId(), 
 					ciProducer.getComponentType(),
@@ -170,10 +186,8 @@ public class SondeDSPComponent implements DSPComponent {
 		} catch (DSPException e) {
 			log.warn("Cannot create reply", e);
 		}
-		
-		// Set correlation
-		replyMsg.getHeader().setCorrelationID(originalMessageId);
-		
+		*/
+				
 		MessageBrokerAccessor messageBroker;
 		try {
 			messageBroker = context.getDataBroker();

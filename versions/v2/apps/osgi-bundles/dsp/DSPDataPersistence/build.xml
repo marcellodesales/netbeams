@@ -1,20 +1,33 @@
 <?xml version="1.0"?>
 <project name="dsp-data-persistence" default="dsp-data-persistence.all">
 	
-	<import file="../../../../init-targets.xml"/>
+    <import file="../../../../init-targets.xml"/>
 	
 	<target name="dsp-data-persistence.all" depends="init,dsp-data-persistence.compile,dsp-data-persistence.jar" />
 	
-    <target name="dsp-data-persistence.compile">
+    <target name="dsp-data-persistence.compile" depends="dsp-data-persistence.clean">
+        <property name="dspmanagement.base.dir" value="${DSP.BUNDLES}/DSPManagement"/>
+        <path id="dsp-data-persistence.classpath.id">
+        	<pathelement location="${THIRDPARTY}/json/jettison-1.1.jar"/>
+        	<pathelement location="${THIRDPARTY}/json/xstream-1.3.1.jar"/>
+            <pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
+        	<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+            <path refid="project.class.path"/>
+        </path>
     	<mkdir dir="${DSP.PERSISTENCE}/classes" />
         <javac destdir="${DSP.PERSISTENCE}/classes" debug="on" srcdir="${DSP.PERSISTENCE}/src">
-        	<classpath refid="project.class.path"/>
+        	<classpath refid="dsp-data-persistence.classpath.id"/>
         </javac>
     </target>
 	
     <target name="dsp-data-persistence.jar">
+        <mkdir dir="${DSP.PERSISTENCE}/classes/libs"/>
+        <copy todir="${DSP.PERSISTENCE}/classes/libs">
+        	<fileset dir="${THIRDPARTY}/json/" includes="jettison-1.1.jar"/>
+        	<fileset dir="${THIRDPARTY}/json/" includes="xstream-1.3.1.jar"/>
+        </copy>
         <jar basedir="${DSP.PERSISTENCE}/classes" 
-             jarfile="${DSP.RUNTIME}/DSPDataPersistence-${DSP.VERSION}.jar" 
+             jarfile="${DSP.DEPLOYMENT}/DSPDataPersistence-${DSP.VERSION}.jar" 
              compress="true" 
         	 includes="**/*" 
              manifest="${DSP.PERSISTENCE}/META-INF/MANIFEST.MF"/>

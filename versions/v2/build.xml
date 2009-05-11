@@ -1,43 +1,44 @@
 <project name="DSP General Builder" default="all" basedir=".">
 
 	<import file="init-targets.xml" />
-	
-    <!-- Core DSP components -->
+
+	<!-- Core DSP components -->
 	<import file="apps/osgi-bundles/dsp/DSPFramework/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPPlatform/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPWireTransportClient/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPWireTransportServer/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPWebDataLogger/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPManagement/build.xml" />
-    <!-- Demo DSP components -->
+	<!-- Demo DSP components -->
 	<import file="apps/osgi-bundles/dsp/DSPTestRandomNumGen/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPSondeProducer/build.xml" />
-    <import file="apps/osgi-bundles/dsp/DSPStockConsumer/build.xml" />
-    <import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml" />
-    <import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
+	<import file="apps/osgi-bundles/dsp/DSPStockConsumer/build.xml" />
+	<import file="apps/osgi-bundles/dsp/DSPStockProducer/build.xml" />
+	<import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
+	<import file="apps/osgi-bundles/dsp/DSPDataPersistence/build.xml" />
 
-    <target name="all" depends="setup, message.all, dsproperty.all, sonde.all,
+	<target name="all" depends="setup, message.all, dsproperty.all, sonde.all,
         dsp-framework.all, dsp-platform.all, dsp-wire-transport-client.all, dsp-wire-transport-server.all, 
         dsp-weblogger.all, dsp.sonde.all, dsp-stock-consumer.all, dsp-stock-producer.all, 
     	dsp-mouse-producer-jswing.all, dsp.rng.all, management.all" />
-	
+
 	<target name="setup" depends="init, print-properties">
 		<!-- Setting up runtime directory -->
 		<mkdir dir="${DSP.RUNTIME}" />
-		
+
 		<mkdir dir="${DSP.RUNTIME}/demos/stocks/" />
 		<copy file="${DSP.HOME}/config/deployment/config.xml" tofile="${DSP.RUNTIME}/demos/stocks/config.xml" />
 		<copy file="${DSP.RUNTIME}/demos/stocks/config.xml" todir="${DSP.DEPLOYMENT}/" />
-		
+
 		<mkdir dir="${DSP.DEPLOYMENT}/" />
 		<mkdir dir="${DSP.DEPLOYMENT}/logs" />
 		<touch file="${DSP.DEPLOYMENT}/logs/dspplatform.log" />
 		<echo file="${DSP.DEPLOYMENT}/logs/dspplatform.log" message=" " />
 		<copy file="${DSP.HOME}/config/log4j.xml" tofile="${DSP.RUNTIME}/log4j.xml" />
-		<replace file="${DSP.RUNTIME}/log4j.xml" token="DSP_HOME" value="${DSP.HOME}"/>
+		<replace file="${DSP.RUNTIME}/log4j.xml" token="DSP_HOME" value="${DSP.HOME}" />
 		<delete file="${DSP.DEPLOYMENT}/matcher_config.xml" />
-        <copy file="${DSP.HOME}/config/deployment/matcher_config.xml" todir="${DSP.DEPLOYMENT}"  />
-		
+		<copy file="${DSP.HOME}/config/deployment/matcher_config.xml" todir="${DSP.DEPLOYMENT}" />
+
 		<antcall target="bootstrap-setup-messages" />
 	</target>
 
@@ -56,10 +57,10 @@
 			<env key="DSP_HOME" value="${DSP.RUNTIME}" />
 		</exec>
 	</target>
-	
+
 	<target name="prepare-osgi-env" depends="init">
-		
-	    <mkdir dir="${DSP.RUNTIME}/osgi-env"/>
+
+		<mkdir dir="${DSP.RUNTIME}/osgi-env" />
 		<unjar src="${THIRDPARTY}/knopflerfish/2.2/knopflerfish_osgi_2.2.0.jar" dest="${DSP.RUNTIME}/osgi-env" />
 	</target>
 
@@ -77,34 +78,38 @@
 			<env key="DSP_HOME" value="${DSP.RUNTIME}" />
 		</exec>
 	</target>
-	
+
 
 	<target name="clean" depends="init, dsp-framework.clean, dsp-platform.clean, dsp-stock-consumer.clean, dsp-stock-producer.clean, dsp-wire-transport-client.clean, dsp-wire-transport-server.clean, dsp.rng.clean">
 		<delete dir="${DSP.RUNTIME}/" />
 	</target>
-	
+
 	<target name="message.all">
-		<ant antfile="apps/xml/jaxb/message/build.xml" inheritAll="true"/> 		
+		<ant antfile="apps/xml/jaxb/message/build.xml" inheritAll="true" />
 	</target>
-	
+
 	<target name="dsproperty.all" depends="message.all">
-		<ant antfile="apps/xml/jaxb/dsproperty/build.xml" inheritAll="true"/> 		
+		<ant antfile="apps/xml/jaxb/dsproperty/build.xml" inheritAll="true" />
 	</target>
 
 	<target name="stocktick.all">
-		<ant antfile="apps/xml/jaxb/stocktick/build.xml" inheritAll="true"/> 		
+		<ant antfile="apps/xml/jaxb/stocktick/build.xml" inheritAll="true" />
 	</target>
 
-   <target name="mouseactions.all">
-        <ant antfile="apps/xml/jaxb/mouseactions/build.xml" inheritAll="true"/>      
-   </target>
-	
-   <target name="sonde.all" depends="message.all">
-        <ant antfile="apps/xml/jaxb/sonde/build.xml" inheritAll="true"/>        
-    </target>
-	
-	<target name="management.all">
-		<ant antfile="apps/osgi-bundles/dsp/DSPManagement/build.xml" inheritAll="true"/>	
+	<target name="mouseactions.all">
+		<ant antfile="apps/xml/jaxb/mouseactions/build.xml" inheritAll="true" />
 	</target>
-	
+
+	<target name="sonde.all" depends="message.all">
+		<ant antfile="apps/xml/jaxb/sonde/build.xml" inheritAll="true" />
+	</target>
+
+	<target name="management.all">
+		<ant antfile="apps/osgi-bundles/dsp/DSPManagement/build.xml" inheritAll="true" />
+	</target>
+
+	<target name="persistence.all">
+		<ant antfile="apps/osgi-bundles/dsp/DSPDataPersistence/build.xml" inheritAll="true" />
+	</target>
+
 </project>

@@ -15,7 +15,7 @@ import java.util.UUID;
  * The data is indexed to each producer, and the data is organized in a FIFO structure (linked list)
  * @author marcello
  */
-public enum DSPInMemoryDataPersistence implements DSPDataPersistence {
+public enum DSPInMemoryDataPersistence {
 
     /**
      * Singleton instance of the Memory

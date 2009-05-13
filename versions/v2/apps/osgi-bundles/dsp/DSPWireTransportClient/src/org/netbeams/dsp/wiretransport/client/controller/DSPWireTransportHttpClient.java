@@ -236,9 +236,9 @@ public class DSPWireTransportHttpClient implements DSPComponent {
             int statusCode = -1;
             try {
                 statusCode = client.executeMethod(postMethod);
-            } catch (ConnectException e) {
+            } catch (Exception e) {
                 thLog.debug("Connection to the DSP server did not go through: " + e.getMessage());
-                //throw new IOException(e);
+                throw new IOException(e.getMessage());
             }
             // // Change the messages to the Transmitted state
             MessagesQueues.INSTANCE.setMessagesToTransmitted(messagesForRequest);

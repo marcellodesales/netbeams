@@ -11,19 +11,22 @@ import java.io.IOException;
 public class SerialWriter implements Runnable {
 
 	private OutputStream out;
+	private StringBuffer strBuffer;
 	
 	public SerialWriter(OutputStream out) {
 		this.out = out;
+		strBuffer = new StringBuffer ("");
 	}
 	
 	public void run() {
-		try {
-			int ch = 0;
-			while ((ch = System.in.read()) > -1) {
-				this.out.write(ch);
+		if (SondeDSPComponent.hasSamplingFrequencyChanged) {
+			strBuffer.append(SondeDSPComponent.samplingFrequency);					
+			try {
+				this.out.write((byte) strBuffer.charAt(0));
+				this.out.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}		
 	

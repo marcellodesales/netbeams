@@ -40,6 +40,8 @@ public class SondeDSPComponent implements DSPComponent {
 	private static final ComponentDescriptor componentDescriptor;
 	public static final String COMPONENT_TYPE = "org.netbeams.dsp.ysi";
 	public static final String MSG_CONTENT_TYPE_SONDE_DATA = "sonde.data";
+	public static boolean hasSamplingFrequencyChanged = false;
+	public static String samplingFrequency = "5";
     
 	private DSPContext context;
     private String componentNodeId;
@@ -68,8 +70,12 @@ public class SondeDSPComponent implements DSPComponent {
     private void processMessage(Message message) {
 		log.debug("message class = " + message.getClass().getName());
 		
-		if(message instanceof UpdateMessage){		
-			processUpdate(message);
+		if(message instanceof UpdateMessage){
+			try {
+				processUpdate(message);
+			} catch (DSPException e) {
+				log.error(e.getMessage(), e);
+			}
 		}else if(message instanceof QueryMessage){
 			try {
 				processQuery(message);
@@ -80,48 +86,43 @@ public class SondeDSPComponent implements DSPComponent {
 	}
     
     
-    private void processUpdate(Message message) {
-		String contentType = message.getContentType();
+    private void processUpdate(Message message) throws DSPException {    	
+    	log.debug("Update message received: configuring DSP Sonde Producer with new sampling frequency.");
+    	DSProperties dspProperties = null;
+		UpdateMessage updateMessage = (UpdateMessage) message;
+    	MessageContent propertiesNode = updateMessage.getBody().getAny();
+    	dspProperties = (DSProperties) propertiesNode;
 		
-		log.debug("message content = " + contentType);
-		
-		if(SondeDataContainer.class.getName().equals(contentType)){
-			Object content = message.getBody().getAny();
-			try{
-				JAXBContext jc = JAXBContext.newInstance("org.netbeams.dsp.data.property", SondeDataContainer.class.getClassLoader());
-				Unmarshaller unmarshaller = jc.createUnmarshaller();
-				DSProperties dspProperties = (DSProperties)unmarshaller.unmarshal((Node)content);
-				for(DSProperty prop: dspProperties.getProperty()){
-					log.debug("Update property = " + prop.getName() + " value = " + prop.getValue());
-				}
-			}catch(JAXBException e){
-				log.error("Error unmarshalling the message", e);
-				return;
-			}
-			sendBackAcknowledge(message);
-		}
+    	ArrayList<DSProperty> propertyList = (ArrayList<DSProperty>) dspProperties.getProperty();
+    	DSProperty property = propertyList.get(0);
+    	String oldSamplingFrequency = samplingFrequency;
+    	samplingFrequency = property.getValue();
+    	if (!oldSamplingFrequency.equals(samplingFrequency) && !hasSamplingFrequencyChanged) {
+    		hasSamplingFrequencyChanged = true;
+    	}
+    	log.debug("Updated Property: " + property.getName() + "=" + property.getValue());
+    	sendBackAcknowledgement(updateMessage);    	
 	}
     
     
-    private void sendBackAcknowledge(Message message) {
-		ComponentIdentifier ciProducer = message.getHeader().getProducer();
-		String originalMessageId = message.getMessageID();
-		
-		Message replyMsg = null;
-		try {
-			// TODO: Dummy payload. Need to define it properly
-			DSProperties props = new DSProperties();
-			replyMsg = MessageFactory.newMessage2(AcknowledgementMessage.class, props, this, 
-					ciProducer.getComponentLocator().getComponentNodeId(), 
-					ciProducer.getComponentType(),
-					ciProducer.getComponentLocator().getNodeAddress().getValue());
-		} catch (DSPException e) {
-			log.warn("Cannot create acknowledgement.", e);
-		}		
-		// Set correlation
-		replyMsg.getHeader().setCorrelationID(originalMessageId);
-		
-		sendMessage(replyMsg);
+    private void sendBackAcknowledgement(UpdateMessage updateMessage) {    	
+    	DSProperties props = new DSProperties();
+
+        // Obtain original producer
+        ComponentIdentifier origProducer = updateMessage.getHeader().getProducer();
+        String originalMessageId = updateMessage.getMessageID();
+        
+        // Create reply message
+        String localIPAddress = NetworkUtil.getCurrentEnvironmentNetworkIp();
+        ComponentIdentifier producer = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier(getComponentNodeId(),
+                					   localIPAddress, getComponentType());
+
+        Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producer, origProducer);
+        header.setCorrelationID(originalMessageId);
+
+        Message replyMsg = DSPMessagesFactory.INSTANCE.makeDSPAcknowledgementMessage(header, props);
+        
+    	sendMessage(replyMsg);
 	}
     
     
@@ -140,7 +141,7 @@ public class SondeDSPComponent implements DSPComponent {
             
             DSProperty freq = new DSProperty();
             freq.setName("SAMPLING_FREQUENCY");
-            freq.setValue("5");
+            freq.setValue(samplingFrequency);
             dspProperties.getProperty().add(freq);
         }
         sendReply(queryMessage, dspProperties);		
@@ -177,17 +178,7 @@ public class SondeDSPComponent implements DSPComponent {
         header.setCorrelationID(originalMessageId);
 
         replyMsg = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, dspProperties);
-		/*
-        try {
-			replyMsg = MessageFactory.newMessage2(MeasureMessage.class, props, this, 
-					ciProducer.getComponentLocator().getComponentNodeId(), 
-					ciProducer.getComponentType(),
-					ciProducer.getComponentLocator().getNodeAddress().getValue());
-		} catch (DSPException e) {
-			log.warn("Cannot create reply", e);
-		}
-		*/
-				
+						
 		MessageBrokerAccessor messageBroker;
 		try {
 			messageBroker = context.getDataBroker();

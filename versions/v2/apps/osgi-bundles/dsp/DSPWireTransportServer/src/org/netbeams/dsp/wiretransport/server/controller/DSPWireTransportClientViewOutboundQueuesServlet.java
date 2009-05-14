@@ -5,8 +5,8 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
@@ -63,7 +63,7 @@ public class DSPWireTransportClientViewOutboundQueuesServlet extends HttpServlet
             PrintWriter out = resp.getWriter();
             resp.setContentType("text/html");
 
-            Map<String, Queue<QueueMessageData>> outboundQueues = MessagesQueues.INSTANCE.getOutboundQueues();
+            Map<String, List<QueueMessageData>> outboundQueues = MessagesQueues.INSTANCE.getOutboundQueues();
 
             out.println("<html><title>DSP Wire Transport Client Outbound Queues Monitor</title>");
             out.println("<head><meta http-equiv='refresh' content='5'></head><body>");
@@ -84,29 +84,31 @@ public class DSPWireTransportClientViewOutboundQueuesServlet extends HttpServlet
      * @param outboundQueues
      * @throws TransformerException if there's any error with the XML transformation for the output
      */
-    private void printBody(PrintWriter out, Map<String, Queue<QueueMessageData>> outboundQueues)
+    private void printBody(PrintWriter out, Map<String, List<QueueMessageData>> outboundQueues)
             throws TransformerException {
         Set<String> destinationIps = outboundQueues.keySet();
         if (destinationIps != null) {
-            for (String destinationIp : destinationIps) {
-                out.println("<table border=1><th colspan='4'><td>Dest: " + destinationIp + "</td></th>");
-                for (QueueMessageData messageData : outboundQueues.get(destinationIp)) {
-                    String[] simpleName = messageData.getMessage().getClass().getSimpleName().split("\\.");
-                    out.println("<tr><td><font color='red'><b>" + simpleName[simpleName.length-1] + "</td></tr>");
-                    out.println("<tr><td>ID: " + messageData.getMessage().getMessageID() + "</td></tr>");
-                    out.println("<tr><td>Creation Time: " + messageData.getMessage().getHeader().getCreationTime()
-                            + "</td></tr>");
-                    out.println("<tr><td>Content Type: " + messageData.getMessage().getContentType() + "</td>");
-                    out.println("<tr><td>Producer: "
-                            + messageData.getMessage().getHeader().getProducer().getComponentType() + "</td>");
-                    out.println("<tr><td>Consumer: "
-                            + messageData.getMessage().getHeader().getConsumer().getComponentType() + "</td>");
-                    out.println("<tr><td><b>State: " + messageData.getState() + "</b></td></tr>");
-                    out.println("<tr><td>");
-                    formatXml(messageData.getMessage().getBody().getAny().toXml(), out);
-                    out.println("</td></tr>");
+            synchronized (outboundQueues) {
+                for (String destinationIp : destinationIps) {
+                    out.println("<table border=1><th colspan='4'><td>Dest: " + destinationIp + "</td></th>");
+                    for (QueueMessageData messageData : outboundQueues.get(destinationIp)) {
+                        String[] simpleName = messageData.getMessage().getClass().getSimpleName().split("\\.");
+                        out.println("<tr><td><font color='red'><b>" + simpleName[simpleName.length-1] + "</td></tr>");
+                        out.println("<tr><td>ID: " + messageData.getMessage().getMessageID() + "</td></tr>");
+                        out.println("<tr><td>Creation Time: " + messageData.getMessage().getHeader().getCreationTime()
+                                + "</td></tr>");
+                        out.println("<tr><td>Content Type: " + messageData.getMessage().getContentType() + "</td>");
+                        out.println("<tr><td>Producer: "
+                                + messageData.getMessage().getHeader().getProducer().getComponentType() + "</td>");
+                        out.println("<tr><td>Consumer: "
+                                + messageData.getMessage().getHeader().getConsumer().getComponentType() + "</td>");
+                        out.println("<tr><td><b>State: " + messageData.getState() + "</b></td></tr>");
+                        out.println("<tr><td>");
+                        formatXml(messageData.getMessage().getBody().getAny().toXml(), out);
+                        out.println("</td></tr>");
+                    }
+                    out.println("</table><BR>");
                 }
-                out.println("</table><BR>");
             }
         }
     }

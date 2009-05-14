@@ -1,11 +1,11 @@
 package org.netbeams.dsp.wiretransport.client.model;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,24 +37,27 @@ public enum MessagesQueues {
      * This is the hash of the IP address of the destination and the Queue of the DirectoryData of the outbound
      * messages.
      */
-    private Map<String, Queue<QueueMessageData>> outboundQueue;
+    private Map<String, List<QueueMessageData>> outboundQueue;
+
+    private Map<String, Integer> numberMessagesQueuedIndex;
 
     /**
      * Constructs a new MessagesQueues.
      */
     private MessagesQueues() {
-        this.outboundQueue = new LinkedHashMap<String, Queue<QueueMessageData>>();
+        this.outboundQueue = Collections.synchronizedMap(new LinkedHashMap<String, List<QueueMessageData>>());
+        this.numberMessagesQueuedIndex = Collections.synchronizedMap(new LinkedHashMap<String, Integer>());
     }
 
-    public Map<String, Queue<QueueMessageData>> getOutboundQueues() {
+    public synchronized Map<String, List<QueueMessageData>> getOutboundQueues() {
         return this.outboundQueue;
     }
 
     /**
      * @return the default implementation of the queue
      */
-    private Queue<QueueMessageData> makeMessageQueue() {
-        return new LinkedList<QueueMessageData>();
+    private List<QueueMessageData> makeMessageQueue() {
+        return Collections.synchronizedList(new LinkedList<QueueMessageData>());
     }
 
     /**
@@ -66,13 +69,19 @@ public enum MessagesQueues {
     public synchronized void addMessageToOutboundQueue(Message dspMessage) {
         String destinationIp = dspMessage.getHeader().getConsumer().getComponentLocator().getNodeAddress().getValue();
 
-        Queue<QueueMessageData> outMsgs = this.outboundQueue.get(destinationIp);
+        List<QueueMessageData> outMsgs = this.outboundQueue.get(destinationIp);
         if (outMsgs == null) {
             outMsgs = this.makeMessageQueue();
+            this.numberMessagesQueuedIndex.put(destinationIp, 0);
         }
+
+        int numberMsgQueuedForIp = this.numberMessagesQueuedIndex.get(destinationIp).intValue();
+        this.numberMessagesQueuedIndex.put(destinationIp, new Integer(++numberMsgQueuedForIp));
+
         // Adding the message ID to be a sequential number for a given IP address. This will follow the
         // window slide protocol where a certain number of messages are acknowledged based by the highest number.
-        outMsgs.add(QueueMessageData.makeNewInstance(outMsgs.size() + 1, dspMessage));
+        outMsgs.add(QueueMessageData.makeNewInstance(numberMsgQueuedForIp, dspMessage));
+
         log.debug("Added message ID " + dspMessage.getMessageID() + " to the outboud queue for IP " + destinationIp);
         this.outboundQueue.put(destinationIp, outMsgs);
     }
@@ -88,17 +97,6 @@ public enum MessagesQueues {
     }
 
     /**
-     * Retrieves all messages for a given IP address no matter what state it is.
-     * 
-     * @param destinationIp the given IP address.
-     * @return a new instance of Messages container of the current messages for a given IP no matter which state.
-     */
-    private synchronized MessagesContainer retrieveAllMessagesOnClientForIp(String destinationIp) {
-        log.debug("Retrieving all messages registed on the running client for the destination IP " + destinationIp);
-        return this.retrieveAllMessagesByIpAndState(destinationIp, null);
-    }
-
-    /**
      * Retrieves all the messages for a given destination IP and state
      * 
      * @param destinationIp is required for the lookup search.
@@ -107,23 +105,29 @@ public enum MessagesQueues {
      */
     public synchronized MessagesContainer retrieveAllMessagesByIpAndState(String destinationIp, QueueMessageState state) {
         MessagesContainer container = DSPMessagesFactory.INSTANCE.makeDSPMessagesContainer(destinationIp);
-        Queue<QueueMessageData> outboutQueue = this.outboundQueue.get(destinationIp);
+        List<QueueMessageData> outboutQueue = this.outboundQueue.get(destinationIp);
         int largestSequenceNumber = 0;
         if (outboutQueue != null) {
-            log.debug("The size of the messages in the outbound queue is " + outboutQueue.size());
-            for (QueueMessageData data : outboutQueue) {
-                largestSequenceNumber = data.getSequenceNumber() > largestSequenceNumber ? data.getSequenceNumber()
-                        : largestSequenceNumber;
-                if (state != null) {
-                    // if the state is given, then it's restricted by it...
-                    if (data.getState().equals(state)) {
+            int counter = 0;
+            synchronized (outboutQueue) {
+                for (QueueMessageData data : outboutQueue) {
+                    largestSequenceNumber = data.getSequenceNumber() > largestSequenceNumber ? data.getSequenceNumber()
+                            : largestSequenceNumber;
+                    if (state != null) {
+                        // if the state is given, then it's restricted by it...
+                        if (data.getState().equals(state)) {
+                            container.getMessage().add(data.getMessage());
+                            ++counter;
+                        }
+                    } else { // if the state is null, just get anything...
                         container.getMessage().add(data.getMessage());
+                        ++counter;
                     }
-                } else { // if the state is null, just get anything...
-                    container.getMessage().add(data.getMessage());
+                    data.setMessagesContainerId(UUID.fromString(container.getUudi()));
                 }
-                data.setMessagesContainerId(UUID.fromString(container.getUudi()));
             }
+            log.debug("The size of the messages in the outbound queue for the client IP " + destinationIp + " is "
+                    + counter);
 
         } else
             log.debug("There are no messages on the outbound queue for the client IP " + destinationIp);
@@ -132,92 +136,95 @@ public enum MessagesQueues {
     }
 
     /**
-     * @param componentDestinition is the address of the component
-     * @param containerId is the identification of the MessagesContainer created during before the transmission
-     */
-    public synchronized void setMessagesToTransmitted(MessagesContainer messagesContainer) {
-        if (messagesContainer != null ) {
-            Queue<QueueMessageData> queued = this.outboundQueue.get(messagesContainer.getDestinationHost());
-            for (QueueMessageData data : queued) {
-                //when a query message is queued of an IP, its container id is still null
-                if (data.getState().equals(QueueMessageState.QUEUED) && data.getContainerId() != null 
-                        && data.getContainerId().toString().equals(messagesContainer.getUudi())) {
-                    data.changeStateToTransmitted();
-                }
-            }   
-        }
-    }
-
-    /**
-     * @return an array of MessagesContainer for each IP address for different DSP components.
-     */
-    public synchronized MessagesContainer[] retrieveAllMessagesOnClient() {
-        log.debug("Retrieving all messages registered on this client, no matter the state of the messages...");
-        Set<String> ipAddresses = this.outboundQueue.keySet();
-        MessagesContainer[] msgContainers = new MessagesContainer[ipAddresses.size()];
-        int i = -1;
-        for (String ipAddr : ipAddresses) {
-            log.debug("The Messages queue is being queried for the ip address " + ipAddr);
-            msgContainers[++i] = this.retrieveAllMessagesOnClientForIp(ipAddr);
-        }
-        return msgContainers;
-    }
-
-    /**
      * @return an array of MessagesContainer for each IP address for different DSP components.
      */
     public synchronized MessagesContainer[] retrieveAllQueuedMessagesForTransmission() {
         Set<String> ipAddresses = this.outboundQueue.keySet();
-        MessagesContainer[] msgContainers = new MessagesContainer[ipAddresses.size()];
-        int i = -1;
+        List<MessagesContainer> mConts = new LinkedList<MessagesContainer>();
         for (String ipAddr : ipAddresses) {
-            log.debug("The Messages queue is being queried for the ip address " + ipAddr);
-            msgContainers[++i] = this.retrieveQueuedMessagesForTransmission(ipAddr);
+            MessagesContainer mContForIp = this.retrieveQueuedMessagesForTransmission(ipAddr);
+            if (mContForIp.getMessage().size() > 0) {
+                log.debug("There are " + mContForIp.getMessage().size() + " messages queued for ip address " + ipAddr);
+                mConts.add(mContForIp);
+            } else {
+                log.debug("There are no messages queued for ip address " + ipAddr);
+            }
         }
-        return msgContainers;
+        if (mConts.size() > 0) {
+            MessagesContainer[] msgContainers = new MessagesContainer[mConts.size()];
+            for (int j = 0; j < mConts.size(); j++) {
+                msgContainers[j] = mConts.get(j);
+            }
+            return msgContainers;
+        }
+        return new MessagesContainer[0];
+    }
+    
+    /**
+     * @param componentDestinition is the address of the component
+     * @param containerId is the identification of the MessagesContainer created during before the transmission
+     */
+    public synchronized void setMessagesToTransmitted(MessagesContainer messagesContainer) {
+        if (messagesContainer != null) {
+            List<QueueMessageData> queued = this.outboundQueue.get(messagesContainer.getDestinationHost());
+            if (queued != null) {
+                for (QueueMessageData data : queued) {
+                    // when a query message is queued of an IP, its container id is still null
+                    if (data.getState().equals(QueueMessageState.QUEUED) && data.getContainerId() != null
+                            && data.getContainerId().toString().equals(messagesContainer.getUudi())) {
+                        data.changeStateToTransmitted();
+                    }
+                }
+            }
+        }
     }
 
     /**
      * @param componentDestinition is the component destination.
-     * @param maxMessageId is the highest message id from the acknowledgment frame that was received.
+     * @param maxWindowSize is the highest window size value to be acknowledged.
      */
-    public synchronized void setMessagesToAcknowledged(String destinationIpAddress, int maxMessageId) {
-        log.debug("===> Acknowledging messages up window size value of " + maxMessageId);
-        for (QueueMessageData data : this.outboundQueue.get(destinationIpAddress)) {
-            log.debug("Traying to acknowledge message ID " + data.getMessage().getMessageID());
-            log.debug("with sequence number of " + data.getSequenceNumber());
-            if (data.getState().equals(QueueMessageState.TRANSMITTED) && data.getSequenceNumber() <= maxMessageId) {
-                data.changeStateToAcknowledged();
-                log.debug("Message Acknowledged =>" + data.getMessage().getMessageID());
+    public synchronized void setMessagesToAcknowledged(String destinationIpAddress, int maxWindowSize) {
+        log.debug("===> Acknowledging messages up window size value of " + maxWindowSize);
+        
+        List<QueueMessageData> ipMessages = this.outboundQueue.get(destinationIpAddress);
+        if (ipMessages != null) {
+            synchronized (ipMessages) {
+                for (Iterator<QueueMessageData> it = ipMessages.iterator(); it.hasNext();) {
+                    QueueMessageData data = it.next();
+                    if (data.getState().equals(QueueMessageState.TRANSMITTED) && data.getSequenceNumber() <= maxWindowSize) {
+                        data.changeStateToAcknowledged();
+                        log.debug("Message Acknowledged =>" + data.getMessage().getMessageID());
+                        log.debug("sequence number of " + data.getSequenceNumber());
+                        log.debug("Removing message ID " + data.getMessage().getMessageID() + " from queue");
+                        it.remove();
+                    }
+                }
             }
-        }
-    }
-
-    /**
-     * @param componentDestinition is the component URL for the messages.
-     * @return the current list of the messages on the state ACKNOWLEDGED.
-     */
-    public synchronized List<Message> retrieveAcknowledgedMessages(String destinationIpAddress) {
-        List<Message> messages = new ArrayList<Message>();
-        for (QueueMessageData data : this.outboundQueue.get(destinationIpAddress)) {
-            if (data.getState().equals(QueueMessageState.ACKNOWLEDGED)) {
-                messages.add(data.getMessage());
-            }
-        }
-        return messages;
+        }   
     }
 
     /**
      * Acknowledges a specific message by a given correlation ID
+     * 
      * @param destinationIpAddress is the destination address of the Message
      * @param correlationID is the ID of the message that was sent as a correlation ID.
      */
     public void acknowledgeMessageFromCorrelationId(String destinationIpAddress, String messageId) {
         if (messageId != null) {
-            for (QueueMessageData data : this.outboundQueue.get(destinationIpAddress)) {
-                if (data.getMessage().getMessageID().equals(messageId)) {
-                    data.changeStateToAcknowledged();
-                    break;
+            List<QueueMessageData> messages = this.outboundQueue.get(destinationIpAddress);
+            if (messages != null) {
+                synchronized (messages) {
+                    for (Iterator<QueueMessageData> it = messages.iterator(); it.hasNext();) {
+                        QueueMessageData data = it.next();
+                        if (data.getMessage().getMessageID().equals(messageId)) {
+                            data.changeStateToAcknowledged();
+                            log.debug("Message Correlated Acknowledged =>" + data.getMessage().getMessageID());
+                            log.debug("Sequence number of " + data.getSequenceNumber());
+                            log.debug("Removing message ID " + data.getMessage().getMessageID() + " from queue");
+                            it.remove();
+                            break;
+                        }
+                    }
                 }
             }
         }

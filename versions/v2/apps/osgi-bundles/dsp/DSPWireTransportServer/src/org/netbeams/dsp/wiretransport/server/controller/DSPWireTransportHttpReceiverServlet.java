@@ -145,6 +145,7 @@ public class DSPWireTransportHttpReceiverServlet extends HttpServlet {
             for (AbstractMessage msg : dspMessages) {
                 messageBroker.send((Message) msg);
                 if (msg.getHeader().getCorrelationID() != null) {
+                    log.debug("Acknowledging message with correlation ID " + msg.getHeader().getCorrelationID());
                     MessagesQueues.INSTANCE.acknowledgeMessageFromCorrelationId(destIpAddress, String.valueOf(msg.getHeader().getCorrelationID()));
                 }
             }

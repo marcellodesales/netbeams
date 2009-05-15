@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MessagesContainer uudi="24929c29-60ee-4d17-af08-64d9446277ef"
+    creationTime="2009-03-06T15:17:18-0800" destinationHost="localhost">
+    <CreateMessage ContentType="org.netbeams.dsp.data.property.DSProperties"
+        messageID="9f33232f-5574-412a-99c7-ca38a169baf6">
+        <Header>
+            <CreationTime>1236381438480</CreationTime>
+            <Producer>
+                <ComponentType>
+                    org.netbeams.dsp.platform.management.component.ComponentManager
+                </ComponentType>
+                <ComponentLocator>
+                    <ComponentNodeId>DSP</ComponentNodeId>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Producer>
+            <Consumer>
+                <ComponentType>org.netbeams.dsp.management</ComponentType>
+                <ComponentLocator>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Consumer>
+        </Header>
+        <Body>
+            <DSProperties>
+                <Property name="DSPCOMPONENT">
+                    <Value>DSPStockProducer</Value>
+                </Property>
+                <Property name="IP">
+                    <Value>LOCAL</Value>
+                </Property>
+                <Property name="TYPE">
+                    <Value>org.netbeams.dsp.demo.stocks.producer</Value>
+                </Property>
+            </DSProperties>
+        </Body>
+    </CreateMessage>
+    
+    <CreateMessage ContentType="org.netbeams.dsp.data.property.DSProperties"
+        messageID="9f33232f-5574-412a-99c7-ca38a169baf2">
+        <Header>
+            <CreationTime>1236381438480</CreationTime>
+            <Producer>
+                <ComponentType>
+                    org.netbeams.dsp.platform.management.component.ComponentManager
+                </ComponentType>
+                <ComponentLocator>
+                    <ComponentNodeId>DSP</ComponentNodeId>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Producer>
+            <Consumer>
+                <ComponentType>org.netbeams.dsp.management</ComponentType>
+                <ComponentLocator>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Consumer>
+        </Header>
+        <Body>
+            <DSProperties>
+                <Property name="DSPCOMPONENT">
+                    <Value>DSPStockConsumer</Value>
+                </Property>
+                <Property name="IP">
+                    <Value>LOCAL</Value>
+                </Property>
+                <Property name="TYPE">
+                    <Value>org.netbeams.dsp.demo.stocks.consumer</Value>
+                </Property>
+            </DSProperties>
+        </Body>
+    </CreateMessage>
+    
+    <CreateMessage ContentType="org.netbeams.dsp.data.property.DSProperties"
+    	messageID="ba063d9e-62e6-4188-a6ba-e1260e1af335">
+    	<Header>
+    		<CreationTime>1236381438480</CreationTime>
+    		<Producer>
+                <ComponentType>
+                    org.netbeams.dsp.platform.management.component.ComponentManager
+                </ComponentType>
+                <ComponentLocator>
+                    <ComponentNodeId>DSP</ComponentNodeId>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Producer>
+            <Consumer>
+                <ComponentType>org.netbeams.dsp.management</ComponentType>
+                <ComponentLocator>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Consumer>
+        </Header>
+    	<Body>
+            <DSProperties>
+                <Property name="DSPCOMPONENT">
+                    <Value>DSPSondeProducer</Value>
+                </Property>
+                <Property name="IP">
+                    <Value>LOCAL</Value>
+                </Property>
+                <Property name="TYPE">
+                    <Value>org.netbeams.dsp.ysi</Value>
+                </Property>
+            </DSProperties>
+        </Body>    	
+    </CreateMessage>
+
+    <CreateMessage ContentType="org.netbeams.dsp.data.property.DSProperties"
+        messageID="c22ede42-dca4-45ba-9862-0f757584bed5">
+        <Header>
+            <CreationTime>1241216451006</CreationTime>
+            <Producer>
+                <ComponentType>
+                    org.netbeams.dsp.platform.management.component.ComponentManager
+                </ComponentType>
+                <ComponentLocator>
+                    <ComponentNodeId>DSP</ComponentNodeId>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Producer>
+            <Consumer>
+                <ComponentType>org.netbeams.dsp.management</ComponentType>
+                <ComponentLocator>
+                    <NodeAddress>LOCAL</NodeAddress>
+                </ComponentLocator>
+            </Consumer>
+        </Header>
+        <Body>
+            <DSProperties>
+                <Property name="DSPCOMPONENT">
+                    <Value>DSPWireTransportClient</Value>
+                </Property>
+                <Property name="IP">
+                    <Value>LOCAL</Value>
+                </Property>
+                <Property name="TYPE">
+                    <Value>org.netbeams.dsp.wiretransport.client</Value>
+                </Property>
+            </DSProperties>
+        </Body>     
+    </CreateMessage>
+      
+</MessagesContainer>

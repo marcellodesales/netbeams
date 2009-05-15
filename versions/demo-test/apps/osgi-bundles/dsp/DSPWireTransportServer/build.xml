@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project name="dsp-wire-transport-server" default="dsp-wire-transport-server.all">
+
+	<import file="../../../../init-targets.xml" />
+
+	<target name="dsp-wire-transport-server.all" depends="init,dsp-wire-transport-server.compile,dsp-wire-transport-server.jar" />
+
+	<target name="dsp-wire-transport-server.compile">
+
+		<path id="wire-transport.classpath">
+			<pathelement location="${XML.JAXB}/message/dist/message.jar" />
+			<path refid="project.class.path" />
+		</path>
+
+		<mkdir dir="${DSP.WIRE.TRANSPORT}Server/classes" />
+		<javac destdir="${DSP.WIRE.TRANSPORT}Server/classes" debug="on" srcdir="${DSP.WIRE.TRANSPORT}Server/src">
+			<classpath refid="wire-transport.classpath" />
+		</javac>
+	</target>
+
+	<target name="dsp-wire-transport-server.jar">
+
+		<jar basedir="${DSP.WIRE.TRANSPORT}Server/classes" 
+			 jarfile="${DSP.RUNTIME}/deployment/DSPWireTransportServer-${DSP.VERSION}.jar" 
+			 compress="true" 
+			 includes="**/*" 
+			 manifest="${DSP.WIRE.TRANSPORT}Server/META-INF/MANIFEST.MF" />
+
+	</target>
+
+	<target name="dsp-wire-transport-server.clean">
+		<delete dir="${DSP.WIRE.TRANSPORT}Server/classes" />
+		<delete dir="${DSP.WIRE.TRANSPORT}Server/build" />
+	</target>
+</project>

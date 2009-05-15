@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<project name="dsp-mouse-producer-jswing" default="dsp-mouse-producer-jswing.all">
+    
+    <import file="../../../../init-targets.xml"/>
+        
+    <target name="dsp-mouse-producer-jswing.all" depends="init, dsp-mouse-producer-jswing.compile, dsp-mouse-producer-jswing.jar"/>
+    
+    <target name="dsp-mouse-producer-jswing.init">
+        <property name="THIS.DEMO.BUNDLE.NAME" value="DSPJSwingMouseClient" />
+        <property name="THIS.DEMO.BASE.DIR" value="${DSP.BUNDLES}/${THIS.DEMO.BUNDLE.NAME}"/>
+        <property name="THIS.DEMO.RUNTIME.DIR" value="${DSP.RUNTIME}/demos/mouseview" />
+    </target>
+    
+    <target name="dsp-mouse-producer-jswing.compile" depends="dsp-mouse-producer-jswing.init">
+        
+        <path id="dsp-mouse-producer.classpath">
+            <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+            <pathelement location="${XML.JAXB}/mouseactions/dist/mouseactions.jar"/>
+            <path refid="project.class.path"/>
+        </path>
+            
+        <mkdir dir="${THIS.DEMO.BASE.DIR}/classes" />
+        <javac destdir="${THIS.DEMO.BASE.DIR}/classes" debug="on" srcdir="${THIS.DEMO.BASE.DIR}/src">
+            <classpath refid="dsp-mouse-producer.classpath"/>
+        </javac>
+    </target>
+    
+    <target name="dsp-mouse-producer-jswing.jar" depends="dsp-mouse-producer-jswing.compile">
+        <mkdir dir="${THIS.DEMO.RUNTIME.DIR}" />
+        <mkdir dir="${THIS.DEMO.BASE.DIR}/tmp/"/>
+        <mkdir dir="${THIS.DEMO.BASE.DIR}/classes/libs"/>
+        
+         <copy todir="${THIS.DEMO.BASE.DIR}/tmp/">
+            <fileset dir="${THIRDPARTY}/apache/" includes="commons-httpclient-3.1.jar"/>
+         	<fileset dir="${THIRDPARTY}/apache/" includes="commons-logging-1.1.1.jar"/>
+         	<fileset dir="${THIRDPARTY}/apache/" includes="commons-codec-1.3.jar"/>
+         	<fileset dir="${XML.JAXB}/mouseactions/dist/" includes="mouseactions.jar"/>
+         </copy>
+         
+         <jar basedir="${THIS.DEMO.BASE.DIR}/classes" 
+             jarfile="${THIS.DEMO.RUNTIME.DIR}/${THIS.DEMO.BUNDLE.NAME}-${DSP.VERSION}.jar" 
+             compress="true" includes="**/*" 
+             manifest="${THIS.DEMO.BASE.DIR}/META-INF/MANIFEST.MF">
+   
+            <zipfileset dir="${THIS.DEMO.BASE.DIR}/tmp/" includes="*.jar" prefix="libs"/>
+         </jar>
+    	
+    	<copy todir="${DSP.DEPLOYMENT}/" file="${THIS.DEMO.RUNTIME.DIR}/${THIS.DEMO.BUNDLE.NAME}-${DSP.VERSION}.jar"/>
+        <delete dir="${THIS.DEMO.BASE.DIR}/tmp/"/>
+    </target>
+    
+    <target name="dsp-mouse-producer-jswing.clean" depends="dsp-mouse-producer-jswing.init">
+        <delete dir="${THIS.DEMO.BASE.DIR}/classes" />
+    </target>
+    
+</project>

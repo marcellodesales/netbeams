@@ -1,0 +1,51 @@
+<!-- Imported by every ant build file. -->
+<project name="dsp-init" default="init" basedir=".">
+	
+    	<property environment="env"/>
+    		
+	<dirname property="init-targets.dir" file="${ant.file.dsp-init}"/>
+    
+	<target name="init" depends="read-userprops">
+		<echo message="Reading properties from build.properties" />
+		<property file="${init-targets.dir}/build.properties" />
+		
+		<path id="project.class.path">
+			<pathelement location="./lib/"/>
+	    	<fileset dir="${DSP.RUNTIME}">
+	    		<include name="**/*.jar"/>
+	    	</fileset>
+	    	<fileset dir="${THIRDPARTY}">
+	    		<include name="**/*.jar"/>
+	    	</fileset>
+		</path>
+	</target>
+	
+	<target name="get-user-unix" if="env.USER">
+		<property name="USER" value="${env.USER}"/>
+	</target>
+
+	<target name="get-user-windows" if="env.USERNAME">
+		<property name="USER" value="${env.USERNAME}"/>
+	</target>
+
+	<target name="get-user" depends="get-user-unix,get-user-windows">
+	</target>
+
+
+	<target name="read-userprops" depends="get-user">
+		<echo message="Reading properties from build.properties.${USER}" />
+		<property file="${init-targets.dir}/build.properties.${USER}" />
+	</target>
+
+	<target name="print-properties">
+    	<echo message="CORE.DIR=${CORE.DIR}"/>
+    	<echo message="DSP.BUNDLES=${DSP.BUNDLES}"/>
+		<echo message="DSP.FRAMEWORK=${DSP.FRAMEWORK}"/>
+		<echo message="DSP.PLATFORM=${DSP.PLATFORM}"/>
+		<echo message="THIRDPARTY=${THIRDPARTY}"/>
+		<echo message="DSP.RUNTIME=${DSP.RUNTIME}"/>
+		<echo message="DSP.VERSION=${DSP.VERSION}"/>
+		<echo message="XML.JAXB=${XML.JAXB}"/>
+	</target>
+	
+</project>

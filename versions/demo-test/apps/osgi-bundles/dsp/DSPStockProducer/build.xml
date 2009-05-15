@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<project name="dsp-stock-producer" default="dsp-stock-producer.all">
+	
+	<import file="../../../../init-targets.xml"/>
+		
+	<target name="dsp-stock-producer.all" depends="init, dsp-stock-producer.compile, dsp-stock-producer.jar" />
+	
+	<target name="dsp-stock-producer.init">
+		<property name="stock.producer.base.dir" value="${DSP.BUNDLES}/DSPStockProducer"/>
+	</target>
+	
+	<target name="dsp-stock-producer.compile" depends="dsp-stock-producer.init">
+	
+		<path id="stock-producer.project.classpath">
+			<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+			<pathelement location="${XML.JAXB}/stocktick/dist/stocktick.jar"/>
+			<pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
+			<path refid="project.class.path"/>
+		</path>
+	
+	
+		<mkdir dir="${stock.producer.base.dir}/classes" />
+		<javac destdir="${stock.producer.base.dir}/classes" debug="on" srcdir="${stock.producer.base.dir}/src"
+			source="1.5" target="1.5">
+			<classpath refid="stock-producer.project.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="dsp-stock-producer.jar" depends="dsp-stock-producer.init">
+		<property name="THIS.DEMO" value="demos/stocks" />
+		<mkdir dir="${DSP.RUNTIME}/${THIS.DEMO}" />
+		
+		<mkdir dir="${stock.producer.base.dir}/classes/libs"/>
+	        <copy todir="${stock.producer.base.dir}/classes/libs">
+	            <fileset dir="${XML.JAXB}/stocktick/dist" includes="*.jar"/>
+	        </copy>
+		
+		
+		<jar basedir="${stock.producer.base.dir}/classes" 
+			 jarfile="${DSP.RUNTIME}/${THIS.DEMO}/DSPStockProducer-${DSP.VERSION}.jar" 
+			 compress="true" includes="**/*" 
+			 manifest="${stock.producer.base.dir}/META-INF/MANIFEST.MF" />
+		
+		<copy todir="${DSP.DEPLOYMENT}/" file="${DSP.RUNTIME}/${THIS.DEMO}/DSPStockProducer-${DSP.VERSION}.jar"/>
+		
+	</target>
+	
+	<target name="dsp-stock-producer.clean" depends="dsp-stock-producer.init">
+		<delete dir="${stock.producer.base.dir}/classes" />
+	</target>
+</project>

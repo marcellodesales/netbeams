@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.weblogger.Activator
+Bundle-Category: DSP Core
+Bundle-Description: DSP Data Web Logger
+Bundle-ManifestVersion: 2
+Bundle-Name: Web Logger
+Bundle-SymbolicName: DSPWebLogger
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Import-Package: org.netbeams.dsp, 
+ org.netbeams.dsp.message,  
+ org.netbeams.dsp.platform.osgi, 
+ org.osgi.service.http, 
+ org.apache.log4j,
+ javax.servlet, 
+ javax.servlet.http

@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.netbeams.dsp.demo.mouseactions.osgi.MouseActionsActivator
+Bundle-Category: DSP DEMO
+Bundle-ClassPath: ., libs/mouseactions.jar
+Bundle-Description: DSP Mouse Actions Demo Producer on Desktop - JFrame 
+Bundle-ManifestVersion: 2
+Bundle-Name: Mouse Action
+Bundle-SymbolicName: DSPMouseActionsDemo
+Bundle-Vendor: NetBEAMS.org
+Bundle-Version: 0.1
+Export-Package: org.netbeams.dsp.demo.mouseactions
+Import-Package: org.netbeams.dsp, 
+ org.netbeams.dsp.message, 
+ org.netbeams.dsp.util, 
+ org.netbeams.dsp.platform.osgi, 
+ org.osgi.framework, 
+ org.apache.log4j 

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<project name="stock" default="create-jar" basedir=".">
+
+    <import file="../../../../init-targets.xml"/>
+    
+	<target name="java-compile">
+	        <delete dir="${XML.JAXB}/stocktick/classes" />
+	        <mkdir dir="${XML.JAXB}/stocktick/classes" />
+	        <path id="proj.classpath">
+	            <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+	        </path>
+	        <javac srcdir="${XML.JAXB}/stocktick/java-src"
+	               destdir="${XML.JAXB}/stocktick/classes"
+	               source="1.5"
+	               target="1.5">
+	            <classpath refid="proj.classpath" />
+	        </javac>
+	</target>
+
+
+	    <target name="create-jar" depends="dsp-init.init, java-compile">
+	        <mkdir dir="${XML.JAXB}/stocktick/dist" />
+	        <jar destfile="${XML.JAXB}/stocktick/dist/stocktick.jar" basedir="${XML.JAXB}/stocktick/classes" />
+	    </target>
+
+
+</project>

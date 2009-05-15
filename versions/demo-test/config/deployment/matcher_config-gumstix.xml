@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<matchRule>
+    <ruleid>all_messages_sent_to_dsp_manager</ruleid>
+                
+      <matchCriteria>
+          <nodeAddress>ANY</nodeAddress>
+          <componentType>ANY</componentType>
+      </matchCriteria>
+                
+      <matchTarget>
+           <nodeAddress>ANY</nodeAddress>
+           <componentType>org.netbeams.dsp.management</componentType>
+      </matchTarget>
+  </matchRule>
+
+  <matchRule>
+      <ruleid>all_messages_sent_to_dsp_manager_other</ruleid>
+        
+        <matchCriteria>
+            <nodeAddress>ANY</nodeAddress>
+            <componentType>ANY</componentType>
+        </matchCriteria>
+        
+        <matchTarget>
+           <nodeAddress>192.168.0.7</nodeAddress>
+           <componentType>org.netbeams.dsp.management</componentType>
+           <gatewayComponentType>org.netbeams.dsp.wiretransport.client</gatewayComponentType>
+        </matchTarget>
+    </matchRule>
+</config>

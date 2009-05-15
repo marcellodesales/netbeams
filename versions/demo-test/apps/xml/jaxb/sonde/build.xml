@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project name="sonde" default="create-jar" basedir=".">
+
+    <import file="../../../../init-targets.xml"/>
+    
+    <target name="java-compile">
+        <delete dir="${XML.JAXB}/sonde/classes" />
+        <mkdir dir="${XML.JAXB}/sonde/classes" />
+        <path id="proj.classpath">
+            <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+        </path>
+    	<javac srcdir="${XML.JAXB}/sonde/java-src" 
+        	   destdir="${XML.JAXB}/sonde/classes" source="1.5" target="1.5">
+            <classpath refid="proj.classpath" />
+        </javac>
+    </target>
+
+
+    <target name="create-jar" depends="dsp-init.init, java-compile">
+        <mkdir dir="${XML.JAXB}/sonde/dist" />
+        <jar destfile="${XML.JAXB}/sonde/dist/sonde.jar" basedir="${XML.JAXB}/sonde/classes" />
+    </target>
+
+</project>

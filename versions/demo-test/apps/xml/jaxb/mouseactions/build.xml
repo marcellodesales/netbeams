@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project name="mouseactions" default="create-jar" basedir=".">
+    
+    <import file="../../../../init-targets.xml"/>
+	
+	<target name="java-compile">
+	        <delete dir="${XML.JAXB}/mouseactions/classes" />
+	        <mkdir dir="${XML.JAXB}/mouseactions/classes" />
+	        <path id="proj.classpath">
+	            <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+	        </path>
+	        <javac srcdir="${XML.JAXB}/mouseactions/java-src" 
+	               destdir="${XML.JAXB}/mouseactions/classes" 
+	               source="1.5" 
+	               target="1.5">
+	            <classpath refid="proj.classpath" />
+	        </javac>
+	</target>
+	    
+	<target name="create-jar" depends="dsp-init.init, java-compile">
+	        <mkdir dir="${XML.JAXB}/mouseactions/dist" />
+	        <jar destfile="${XML.JAXB}/mouseactions/dist/mouseactions.jar" basedir="${XML.JAXB}/mouseactions/classes" />
+	</target>
+	
+</project>

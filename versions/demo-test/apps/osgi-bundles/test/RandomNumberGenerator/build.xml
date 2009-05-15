@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+
+	
+<project name="test-random-number-generator" default="all">
+   
+   <target name="all" depends="init,compile,jar"/>
+   
+   <target name="init">
+      <mkdir dir="./classes"/>
+      <mkdir dir="./build"/>
+   </target>
+
+   <target name="compile">
+
+      <javac destdir     = "./classes"
+             debug       = "on"
+             srcdir      = "./src"
+      >
+      </javac>
+   </target>
+
+   <target name="jar">
+      <jar basedir = "./classes"
+           jarfile = "./build/randomnumbergenerator.jar"
+           compress = "true"
+           includes = "**/*"
+           manifest = "./META-INF/MANIFEST.MF"
+       />
+   </target>
+
+   <target name="clean">
+      <delete dir = "./classes"/>
+      <delete dir = "./build"/>
+   </target>
+
+</project>

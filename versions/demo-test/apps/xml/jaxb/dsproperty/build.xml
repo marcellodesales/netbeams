@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<project name="dspropery" default="create-jar" basedir=".">
+   
+    <import file="../../../../init-targets.xml" />
+	
+	<target name="java-compile">
+        <delete dir="${XML.JAXB}/dsproperty/classes" />
+        <mkdir dir="${XML.JAXB}/dsproperty/classes" />
+        <path id="proj.classpath">
+            <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+		</path>
+        <javac debug="on" srcdir="${XML.JAXB}/dsproperty/java-src"  
+        	   destdir="${XML.JAXB}/dsproperty/classes" source="1.5" target="1.5">
+        	<classpath refid="proj.classpath" />
+        </javac>
+    </target>
+
+    <target name="create-jar" depends="dsp-init.init, java-compile">
+        <mkdir dir="${XML.JAXB}/dsproperty/dist" />
+        <jar destfile="${XML.JAXB}/dsproperty/dist/dsproperty.jar" basedir="${XML.JAXB}/dsproperty/classes" />
+    </target>
+
+</project>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project name="dsp-platform" default="dsp-platform.all">
+	
+    <import file="../../../../init-targets.xml"/>    
+    
+    <target name="dsp-platform.all" depends="init, dsp-platform.compile, dsp-platform.jar" />
+
+    <target name="dsp-platform.compile">
+        <path id="platform.project.classpath">
+        	    <path refid="project.class.path"/>
+    		<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+    	</path>
+    
+    	<mkdir dir="${DSP.PLATFORM}/classes" />
+    	<javac destdir="${DSP.PLATFORM}/classes" debug="on" srcdir="${DSP.PLATFORM}/src" source="1.5" target="1.5">
+    		<classpath refid="platform.project.classpath"/>
+    	</javac>
+    </target>
+
+    <target name="dsp-platform.jar">
+
+    	<jar basedir="${DSP.PLATFORM}/classes"
+    		 jarfile="${DSP.RUNTIME}/DSPPlatform-${DSP.VERSION}.jar" 
+    		 compress="true"
+    		 includes="**/*" 
+    		 manifest="${DSP.PLATFORM}/META-INF/MANIFEST.MF"/>
+    </target>
+
+    <target name="dsp-platform.clean">
+    	<delete dir="${DSP.PLATFORM}/classes" />
+    </target>
+
+</project>

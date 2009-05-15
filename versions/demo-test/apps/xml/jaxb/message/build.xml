@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<project name="message" default="create-jar" basedir=".">
+
+	<import file="../../../../init-targets.xml" />
+
+	<target name="java-compile">
+		<delete dir="${XML.JAXB}/message/classes" />
+		<mkdir dir="${XML.JAXB}/message/classes" />
+		<javac debug="on" srcdir="${XML.JAXB}/message/java-src" 
+			   destdir="${XML.JAXB}/message/classes" source="1.5" target="1.5" />
+	</target>
+
+	<target name="create-jar" depends="dsp-init.init, java-compile">
+		<mkdir dir="${XML.JAXB}/message/dist" />
+		<jar destfile="${XML.JAXB}/message/dist/message.jar" basedir="${XML.JAXB}/message/classes"/>
+	</target>
+
+</project>

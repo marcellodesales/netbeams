@@ -37,7 +37,7 @@
                     <Value>dspMessagesContainer</Value>
                 </Property>
                 <Property name="WIRE_TRANSPORT_TRANSFER_DELAY">
-                    <Value>60</Value>
+                    <Value>60000</Value>
                 </Property>
             </DSProperties>
         </Body>

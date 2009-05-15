@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-Name: randomnumber
-Bundle-SymbolicName: randomnumber
-Bundle-Version: 1.0.0
-Bundle-Description: Demo Bundle
-Bundle-Vendor: Vodafone Pilotentwicklung GmbH
-Bundle-Activator: org.netbeams.test.randomnumber.Activator
-Bundle-Category: example
-Import-Package: org.osgi.framework

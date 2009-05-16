@@ -50,6 +50,8 @@ public class DSPManager implements Manager, DSPComponent
     
     // Component ID => {IP,Component Type}
     private Map<String, String[]> regDspComps;
+
+    private int numberOfMessagesReceived;
     
     public DSPManager(){
     	isActive = false;
@@ -116,7 +118,7 @@ public class DSPManager implements Manager, DSPComponent
      * @Override 
      */
     public void deliver(Message message) throws DSPException {
-        log.debug("Message delivered " + messageSummary(message));
+        log.debug(++this.numberOfMessagesReceived + "º Message delivered " + messageSummary(message));
         sendToBuffer(message);
         processMessage(message);
     }
@@ -249,11 +251,9 @@ public class DSPManager implements Manager, DSPComponent
 	
     private String messageSummaryToBuffer(Message message) {
         StringBuilder buff = new StringBuilder();
-        buff.append("[Producer]");
+        buff.append(this.numberOfMessagesReceived).append("º] ").append("[Producer]");
         buff.append("Addr=").append(message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue()).append("; ");       
         buff.append("Type=").append(message.getHeader().getProducer().getComponentType()).append("; $");
-        buff.append("[Content]");
-        buff.append("Type=").append(message.getContentType()).append("; $");
         MessageContent content = message.getBody().getAny();
         if(content instanceof DSProperties){
             DSProperties props = (DSProperties)content;

@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public class SondeSerialWriter implements Runnable {
 
-	public static long interval = 5000;
+	public static long interval = 6000;
 	private OutputStream out;
 	private SondeTestData sdt;
 	private StringBuffer strBuffer;
@@ -18,8 +18,8 @@ public class SondeSerialWriter implements Runnable {
 	
 	public SondeSerialWriter(OutputStream out) {
 		sdt = new SondeTestData();
-		strBuffer = new StringBuffer (sdt.getDataStream());
-	    strBuffer.append("\n");
+		//strBuffer = new StringBuffer (sdt.getDataStream());
+	    //strBuffer.append("\n");
 		this.out = out;
 	}
 	
@@ -27,6 +27,8 @@ public class SondeSerialWriter implements Runnable {
 		System.err.println("Writing data to output stream...");
 		try {
 			while (true) {
+				strBuffer = new StringBuffer (sdt.getDataStream());
+				strBuffer.append("\n");
 				for (int i = 0; i < strBuffer.length(); i++) {
 					this.out.write((byte) strBuffer.charAt(i));
 				}

@@ -38,8 +38,17 @@ public class SondeSerialReader implements Runnable {
             			System.out.print(option);
             			SondeSerialWriter.interval = 2000;
             			break;
-            		default :
+            		case '3':
+            			// set interval to 3s
+            			System.out.print(option);
+            			SondeSerialWriter.interval = 3000;
             			break;
+            		case '4':
+            			// set interval to 4s
+            			System.out.print(option);
+            			SondeSerialWriter.interval = 4000;
+            			break;
+            		default:
             	};
             }
         } catch (IOException e) {

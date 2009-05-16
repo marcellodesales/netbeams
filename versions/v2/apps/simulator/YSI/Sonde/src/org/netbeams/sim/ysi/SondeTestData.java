@@ -2,10 +2,15 @@ package org.netbeams.sim.ysi;
 
 import java.util.StringTokenizer;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
+
 
 public class SondeTestData {
 
-	private String dataStream = "2008/12/02 22:48:53 21.20    193    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5   8.83     0.4     8.7";
+	private static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+	//private String dataStream = "2008/12/02 22:48:53 21.20    193    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5   8.83     0.4     8.7";
+	private String dataStream = "  21.20    193    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5   8.83     0.4     8.7";
 	private ArrayList<String> dataList;
 	
 	private String date;		// YYYY/MM/DD
@@ -33,10 +38,18 @@ public class SondeTestData {
 		// TODO: Create a new data stream after receiving a configuration change request.
 	}
 	
+	public static String now() {
+	    Calendar cal = Calendar.getInstance();
+	    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+	    return sdf.format(cal.getTime());
+
+	 }
+
 	
 	private void initializeData() {
-		
-		StringTokenizer st = new StringTokenizer(dataStream);
+		String dataStream2 = this.now() + dataStream;
+		//StringTokenizer st = new StringTokenizer(dataStream);
+		StringTokenizer st = new StringTokenizer(dataStream2);
 		while (st.hasMoreTokens()) {
 			dataList.add(st.nextToken());
 		}
@@ -120,7 +133,8 @@ public class SondeTestData {
 	}
 	
 	public String getDataStream() {
-		return this.dataStream;
+		String dataStream2 = this.now() + dataStream;
+		return dataStream2;
 	}
 	
 

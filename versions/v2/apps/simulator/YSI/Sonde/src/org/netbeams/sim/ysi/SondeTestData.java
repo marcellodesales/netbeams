@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 
 public class SondeTestData {
 
-	private static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+	private static final String DATE_FORMAT_NOW = "yyyy/MM/dd HH:mm:ss";
 	//private String dataStream = "2008/12/02 22:48:53 21.20    193    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5   8.83     0.4     8.7";
 	private String dataStream = "  21.20    193    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5   8.83     0.4     8.7";
 	private ArrayList<String> dataList;

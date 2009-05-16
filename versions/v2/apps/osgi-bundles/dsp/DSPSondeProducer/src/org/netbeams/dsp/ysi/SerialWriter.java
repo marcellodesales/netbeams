@@ -2,6 +2,7 @@ package org.netbeams.dsp.ysi;
 
 import java.io.OutputStream;
 import java.io.IOException;
+import org.apache.log4j.Logger;
 
 /**
  * 
@@ -10,6 +11,7 @@ import java.io.IOException;
  */
 public class SerialWriter implements Runnable {
 
+	private static final Logger log = Logger.getLogger(SerialWriter.class);
 	private OutputStream out;
 	private StringBuffer strBuffer;
 	
@@ -19,13 +21,17 @@ public class SerialWriter implements Runnable {
 	}
 	
 	public void run() {
-		if (SondeDSPComponent.hasSamplingFrequencyChanged) {
-			strBuffer.append(SondeDSPComponent.samplingFrequency);					
-			try {
-				this.out.write((byte) strBuffer.charAt(0));
-				this.out.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
+		while(true) {
+			if (SondeDSPComponent.hasSamplingFrequencyChanged) {
+				strBuffer.append(SondeDSPComponent.samplingFrequency);
+				log.debug("New Frequency change: " + strBuffer.charAt(0) + " has been sent");
+				try {
+					this.out.write((byte) strBuffer.charAt(0));
+					this.out.flush();
+					SondeDSPComponent.hasSamplingFrequencyChanged = false;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}		

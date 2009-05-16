@@ -97,10 +97,11 @@ public class SondeDSPComponent implements DSPComponent {
     	DSProperty property = propertyList.get(0);
     	String oldSamplingFrequency = samplingFrequency;
     	samplingFrequency = property.getValue();
-    	if (!oldSamplingFrequency.equals(samplingFrequency) && !hasSamplingFrequencyChanged) {
+    	log.debug("Sampling Frequency is: " + samplingFrequency);
+    	if (!oldSamplingFrequency.equals(samplingFrequency)) {
     		hasSamplingFrequencyChanged = true;
+    		log.debug("Updated Property: " + property.getName() + "=" + property.getValue());
     	}
-    	log.debug("Updated Property: " + property.getName() + "=" + property.getValue());
     	sendBackAcknowledgement(updateMessage);    	
 	}
     

@@ -41,7 +41,7 @@ public class SondeDSPComponent implements DSPComponent {
 	public static final String COMPONENT_TYPE = "org.netbeams.dsp.ysi";
 	public static final String MSG_CONTENT_TYPE_SONDE_DATA = "sonde.data";
 	public static boolean hasSamplingFrequencyChanged = false;
-	public static String samplingFrequency = "5";
+	public static String samplingFrequency = "6";
     
 	private DSPContext context;
     private String componentNodeId;

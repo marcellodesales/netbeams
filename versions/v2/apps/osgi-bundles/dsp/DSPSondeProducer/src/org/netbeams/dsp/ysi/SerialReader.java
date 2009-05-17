@@ -40,10 +40,10 @@ public class SerialReader implements Runnable {
 	
 	
 	public SerialReader (InputStream in, DSPContext context) {
-		sdc = new SondeDataContainer();
+		//sdc = new SondeDataContainer();
 		dataList = new ArrayList<String> ();
 		list = new ArrayList<SondeDataType> ();
-		sdc.sondeData = new ArrayList<SondeDataType> ();
+		//sdc.sondeData = new ArrayList<SondeDataType> ();
 		this.in = in;
 		this.context = context;
 	}
@@ -80,30 +80,14 @@ public class SerialReader implements Runnable {
 
 	
 	private void copyToOriginal() {
-		log.debug("Size of sondeData: " + sdc.sondeData.size());
-		if (sdc.sondeData.size() > 0) {
-			sdc.sondeData.remove(0);
-		}
-		sdc.sondeData.add(list.get(0));
-		/*
-		log.debug("SONDE DATA");
-		log.debug("==========");
-		log.debug(sdc.sondeData.get(0).getDateString());
-		log.debug(sdc.sondeData.get(0).getTimeString());
-		log.debug(sdc.sondeData.get(0).getTemp());
-		log.debug(sdc.sondeData.get(0).getSpCond());
-		log.debug(sdc.sondeData.get(0).getCond());
-		log.debug(sdc.sondeData.get(0).getResist());
-		log.debug(sdc.sondeData.get(0).getSal());
-		log.debug(sdc.sondeData.get(0).getPress());
-		log.debug(sdc.sondeData.get(0).getDepth());
-		log.debug(sdc.sondeData.get(0).getPH());
-		log.debug(sdc.sondeData.get(0).getPhmV());
-		log.debug(sdc.sondeData.get(0).getODOSat());
-		log.debug(sdc.sondeData.get(0).getODOConc());
-		log.debug(sdc.sondeData.get(0).getTurbid());
-		log.debug(sdc.sondeData.get(0).getBattery());
-		*/
+		//log.debug("Size of sondeData: " + sdc.sondeData.size());
+		//if (sdc.sondeData.size() > 0) {
+		//	sdc.sondeData.remove(0);
+		//}
+		//sdc.sondeData.add(list.get(0));
+		sdc = new SondeDataContainer();
+		log.debug("copyToOriginal list: " + list.get(0).toXml());
+		sdc.getSondeData().add(list.get(0));		
 	}
 	
 	
@@ -128,6 +112,8 @@ public class SerialReader implements Runnable {
         	// Always check if there is a broker available
         	MessageBrokerAccessor messageBroker = context.getDataBroker();
         	if(messageBroker != null){
+        		log.debug("Sonde Message: " + message.getBody().toXml());
+        		
         		messageBroker.send(message);
         	}else{
         		log.debug("Message broker not available");

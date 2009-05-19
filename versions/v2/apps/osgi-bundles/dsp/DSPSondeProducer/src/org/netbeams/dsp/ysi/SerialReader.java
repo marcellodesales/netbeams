@@ -40,10 +40,8 @@ public class SerialReader implements Runnable {
 	
 	
 	public SerialReader (InputStream in, DSPContext context) {
-		//sdc = new SondeDataContainer();
 		dataList = new ArrayList<String> ();
 		list = new ArrayList<SondeDataType> ();
-		//sdc.sondeData = new ArrayList<SondeDataType> ();
 		this.in = in;
 		this.context = context;
 	}
@@ -80,11 +78,6 @@ public class SerialReader implements Runnable {
 
 	
 	private void copyToOriginal() {
-		//log.debug("Size of sondeData: " + sdc.sondeData.size());
-		//if (sdc.sondeData.size() > 0) {
-		//	sdc.sondeData.remove(0);
-		//}
-		//sdc.sondeData.add(list.get(0));
 		sdc = new SondeDataContainer();
 		log.debug("copyToOriginal list: " + list.get(0).toXml());
 		sdc.getSondeData().add(list.get(0));		
@@ -142,7 +135,6 @@ public class SerialReader implements Runnable {
         		try {
         			copyToOriginal();
         			send(sdc);
-        			//sdc.sondeData.clear();
         			list.clear();   // The next time we send data, we don't want the old data appended.
         		} catch (DSPException e) {
         			System.err.println("ERROR: " + e.getMessage());

@@ -50,7 +50,7 @@ public class SondeTestData {
 	 }
 
 	private void initializeData() {
-		String dataStream2 = now() + dataStream;
+		String dataStream2 = this.now() + dataStream;
 		StringTokenizer st = new StringTokenizer(dataStream2);
 		while (st.hasMoreTokens()) {
 			dataList.add(st.nextToken());
@@ -135,7 +135,7 @@ public class SondeTestData {
 	}
 	
 	public String getDataStream() {
-		String dataStream2 = now() + "   " + getTemp() +  "   " + getSpCond() + "   " + getCond() + "   " + getResist() + "   " + getSal() + "   " + getPress() + "   " + getDepth() + "   " + getPh() + "   " + getpHmV() + "   " + getOdoSat() + "   " + getOdoConc() + "   " + getTurbid() + "   " + getBattery(); 
+		String dataStream2 = this.now() + "   " + getTemp() +  "   " + getSpCond() + "   " + getCond() + "   " + getResist() + "   " + getSal() + "   " + getPress() + "   " + getDepth() + "   " + getPh() + "   " + getpHmV() + "   " + getOdoSat() + "   " + getOdoConc() + "   " + getTurbid() + "   " + getBattery(); 
 		return dataStream2;
 	}
 	

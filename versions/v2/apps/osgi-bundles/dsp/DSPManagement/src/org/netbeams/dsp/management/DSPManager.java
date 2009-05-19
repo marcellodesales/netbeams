@@ -251,7 +251,7 @@ public class DSPManager implements Manager, DSPComponent
 	
     private String messageSummaryToBuffer(Message message) {
         StringBuilder buff = new StringBuilder();
-        buff.append(this.numberOfMessagesReceived).append("º] ").append("[Producer]");
+        buff.append(this.numberOfMessagesReceived).append("] ").append("[Producer]");
         buff.append("Addr=").append(message.getHeader().getProducer().getComponentLocator().getNodeAddress().getValue()).append("; ");       
         buff.append("Type=").append(message.getHeader().getProducer().getComponentType()).append("; $");
         MessageContent content = message.getBody().getAny();

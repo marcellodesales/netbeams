@@ -1,17 +1,22 @@
 package org.netbeams.sim.ysi;
 
-import java.util.StringTokenizer;
+import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.text.SimpleDateFormat;
+import java.util.StringTokenizer;
 
 
 public class SondeTestData {
 
+	byte bytes[] = new byte[20];
 	private static final String DATE_FORMAT_NOW = "yyyy/MM/dd HH:mm:ss";
-	//private String dataStream = "2008/12/02 22:48:53 21.20    193    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5   8.83     0.4     8.7";
 	private String dataStream = "  21.20    193    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5   8.83     0.4     8.7";
 	private ArrayList<String> dataList;
+	private DecimalFormat oneDecimal;
+	private DecimalFormat twoDecimals;
+	private DecimalFormat threeDecimals;
+
 	
 	private String date;		// YYYY/MM/DD
 	private String time;		// hh:mm:ss 
@@ -30,13 +35,12 @@ public class SondeTestData {
 	private String battery;		// Volts
 		
 	public SondeTestData() {
+		oneDecimal = new DecimalFormat("###0.0");
+		twoDecimals = new DecimalFormat("###0.00");
+		threeDecimals = new DecimalFormat("###0.000");
 		dataList = new ArrayList<String> ();
 		initializeData();
 	};
-	
-	public void createNewDataStream(String dataParameter) {
-		// TODO: Create a new data stream after receiving a configuration change request.
-	}
 	
 	public static String now() {
 	    Calendar cal = Calendar.getInstance();
@@ -45,10 +49,8 @@ public class SondeTestData {
 
 	 }
 
-	
 	private void initializeData() {
-		String dataStream2 = this.now() + dataStream;
-		//StringTokenizer st = new StringTokenizer(dataStream);
+		String dataStream2 = now() + dataStream;
 		StringTokenizer st = new StringTokenizer(dataStream2);
 		while (st.hasMoreTokens()) {
 			dataList.add(st.nextToken());
@@ -81,51 +83,51 @@ public class SondeTestData {
 	}
 	
 	public String getTemp() {
-		return this.temp;
+		return twoDecimals.format(Double.valueOf(this.temp) + Math.random());
 	}
 	
 	public String getSpCond() {
-		return this.spCond;
+		return oneDecimal.format(Double.valueOf(this.spCond) + Math.random());
 	}
 	
 	public String getCond() {
-		return this.cond;
+		return oneDecimal.format(Double.valueOf(this.cond) + Math.random());
 	}
 	
 	public String getResist() {
-		return this.resist;
+		return twoDecimals.format(Double.valueOf(this.resist) + Math.random());
 	}
 		
 	public String getSal() {
-		return this.sal;
+		return twoDecimals.format(Double.valueOf(this.sal) + Math.random());
 	}
 	
 	public String getPress() {
-		return this.press;
+		return threeDecimals.format(Double.valueOf(this.press) + Math.random());
 	}
 	
 	public String getDepth() {
-		return this.depth;
+		return threeDecimals.format(Double.valueOf(this.depth) + Math.random());
 	}
 	
 	public String getPh() {
-		return this.pH;
+		return twoDecimals.format(Double.valueOf(this.pH) + Math.random());
 	}
 	
 	public String getpHmV() {
-		return this.pHmV;
+		return oneDecimal.format(Double.valueOf(this.pHmV) + Math.random());
 	}
 	
 	public String getOdoSat() {
-		return this.odoSat;
+		return oneDecimal.format(Double.valueOf(this.odoSat) + Math.random());
 	}
 	
 	public String getOdoConc() {
-		return this.odoConc;
+		return twoDecimals.format(Double.valueOf(this.odoConc) + Math.random());
 	}
 	
 	public String getTurbid() {
-		return this.turbid;
+		return oneDecimal.format(Double.valueOf(this.turbid) + Math.random());
 	}
 	
 	public String getBattery() {
@@ -133,19 +135,29 @@ public class SondeTestData {
 	}
 	
 	public String getDataStream() {
-		String dataStream2 = this.now() + dataStream;
+		String dataStream2 = now() + "   " + getTemp() +  "   " + getSpCond() + "   " + getCond() + "   " + getResist() + "   " + getSal() + "   " + getPress() + "   " + getDepth() + "   " + getPh() + "   " + getpHmV() + "   " + getOdoSat() + "   " + getOdoConc() + "   " + getTurbid() + "   " + getBattery(); 
 		return dataStream2;
 	}
 	
+	public String getOldDataStream() {
+		String dataStream2 = now() + dataStream;
+		return dataStream2;
+	}
 
 	/*
 	public static void main(String[] args) {		
 		SondeTestData std = new SondeTestData();
-		
-		System.out.println("Date: " + std.getDate());
-		System.out.println("Time: " + std.getTime());
-		System.out.println("Battery: " + std.getBattery());
-		
+		System.out.println(std.getOldDataStream());
+		System.out.println();
+		for (int i = 0; i < 5; i++) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println(std.getDataStream());			
+		}
 	}
 	*/
+	
 }

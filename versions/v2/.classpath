@@ -3,8 +3,6 @@
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPFramework/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPManagement/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPJSwingMouseClient/src"/>
-	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPStockProducer/src"/>
-	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPStockConsumer/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPPlatform/src"/>
 	<classpathentry kind="src" path="apps/osgi-bundles/dsp/DSPWebDataLogger/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
@@ -25,5 +23,7 @@
 	<classpathentry kind="lib" path="apps/xml/jaxb/message/dist/message.jar"/>
 	<classpathentry kind="lib" path="apps/xml/jaxb/stocktick/dist/stocktick.jar"/>
 	<classpathentry kind="lib" path="apps/xml/jaxb/dsproperty/dist/dsproperty.jar"/>
+	<classpathentry kind="lib" path="apps/xml/jaxb/mouseactions/dist/mouseactions.jar"/>
+	<classpathentry kind="lib" path="apps/xml/jaxb/sonde/dist/sonde.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

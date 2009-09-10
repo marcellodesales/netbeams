@@ -19,6 +19,7 @@
       <javac destdir     = "./classes"
              debug       = "on"
              srcdir      = "./src"
+	     classpathref="compile.classpath"
       >
       </javac>
    </target>
@@ -32,11 +33,48 @@
 	 	<fileset dir="./lib"/>
    	 </jar>
    </target>
-	
-	
+		
    <target name="clean">
       <delete dir = "./classes"/>
       <delete dir = "./build"/>
    </target>
-
+	
+	<target name="run">
+		  <!-- In order to successfully run the simulator, setup the RXTXcomm according to your system.
+		       Follow the instructions from /thirdparty/rxtx/.
+		       
+		       Copy the RXTXcomm.jar to the jvm's jre's lib/ext dir. 
+		       In linux: /usr/lib/jvm/java-6-sun-1.6.0.13/jre/lib/ext
+		       
+		       Copy the librxtxSerial.so (THE ONE FOR YOUR MACHINE ARCHITECTURE), to the jvm's jre's lib dir
+		       In linux: /usr/lib/jvm/java-6-sun-1.6.0.13/jre/lib/
+		       
+		       Trobleshooting: 
+		       * PROBLEM: java.lang.NoClassDefFoundError: gnu/io/CommPortIdentifier
+		         SOLUTION: The RXTXcomm.jar is not on the correct place.
+		         http://www.sump.org/projects/analyzer/faq/
+		         
+		       * PROBLEM: gnu.io.NoSuchPortException
+		         SOLUTION: Check if your OS has the serial COM1 enabled.
+		         http://techtooltip.wordpress.com/2008/09/12/using-host-serial-port-from-guest-in-virtual-box/
+		         
+		       * PROBLEM: lib/librxtxSerial.so: wrong ELF class: ELFCLASS64 (Possible cause: architecture word width mismatch)
+		            or    lib/librxtxSerial.so: wrong ELF class: ELFCLASS32 (Possible cause: architecture word width mismatch)
+		         SOLUTION: if any of these occurs, then the .so specified is in a different architecture than your machine.
+		                   Choose the correct library from the file thirdparty/rxtx/rxtx-2.1-7-bins-r2.zip
+		        
+		         If everything is ok, you should see:
+     
+                 [java] Stable Library
+                 [java] =========================================
+                 [java] Native lib Version = RXTX-2.1-7
+                 [java] Java lib Version   = RXTX-2.1-7
+                 [java] RXTX Warning:  Removing stale lock file. /var/lock/LCK..ttyS0
+                 [java] Writing data to output stream...
+                 [java] Success: Connection established
+                 [java] Connection Successful!
+		  -->
+	    <java jar="./build/SondeSimulator.jar" fork="true" />
+	</target>
+	
 </project>

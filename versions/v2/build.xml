@@ -17,7 +17,7 @@
 	<import file="apps/osgi-bundles/dsp/DSPJSwingMouseClient/build.xml" />
 	<import file="apps/osgi-bundles/dsp/DSPDataPersistence/build.xml" />
 
-	<target name="all" depends="setup, message.all, dsproperty.all, sonde.all,
+	<target name="all" depends="setup, message.all, dsproperty.all, sonde.all, mouseactions.all, stocktick.all,
         dsp-framework.all, dsp-platform.all, dsp-wire-transport-client.all, dsp-wire-transport-server.all, 
         dsp-weblogger.all, dsp.sonde.all, dsp-stock-consumer.all, dsp-stock-producer.all, 
     	dsp-mouse-producer-jswing.all, dsp.rng.all, management.all" />

@@ -19,7 +19,7 @@ public class SondeServer extends Thread {
 	public void run() {		
 		try {
 				serialHandler.connect(SERIAL_PORT);
-				System.err.println("Connection Successful!");				
+				System.out.println("Connection Successful!");				
 			} catch (Exception e) {
 				System.err.println("Error: " + e.getMessage());
 				e.printStackTrace();

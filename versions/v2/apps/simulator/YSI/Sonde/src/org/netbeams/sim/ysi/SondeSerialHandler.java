@@ -20,11 +20,9 @@ public class SondeSerialHandler {
 	private OutputStream out;
 	private SondeSerialReader ssr;
 	private SondeSerialWriter ssw;
-	private byte[] buffer;
 	
 	public SondeSerialHandler() {
 		super();
-		buffer = new byte[1024];
 	};
 	
 	public void connect (String portName) throws Exception {
@@ -53,7 +51,7 @@ public class SondeSerialHandler {
 	            
 	            System.out.println("Success: Connection established");
 	        } else {
-	            System.out.println("Error: Only serial ports are handled.");
+	            System.err.println("Error: Only serial ports are handled.");
 	        }
 		}		        
 	}

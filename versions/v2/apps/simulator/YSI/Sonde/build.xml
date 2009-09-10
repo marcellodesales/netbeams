@@ -15,7 +15,7 @@
 		<mkdir dir="./build"/>
 	</target>
 
-   <target name="compile">
+   <target name="compile" depends="init">
       <javac destdir     = "./classes"
              debug       = "on"
              srcdir      = "./src"
@@ -24,7 +24,7 @@
       </javac>
    </target>
 
-   <target name="jar">
+   <target name="jar" depends="compile">
 	 <jar basedir = "./classes"
 	 	jarfile = "./build/SondeSimulator.jar"
 	    compress = "true"
@@ -39,7 +39,7 @@
       <delete dir = "./build"/>
    </target>
 	
-	<target name="run">
+	<target name="run" depends="jar">
 		  <!-- In order to successfully run the simulator, setup the RXTXcomm according to your system.
 		       Follow the instructions from /thirdparty/rxtx/.
 		       

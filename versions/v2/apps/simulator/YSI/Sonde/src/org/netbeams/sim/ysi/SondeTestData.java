@@ -1,7 +1,7 @@
 package org.netbeams.sim.ysi;
 
-import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.StringTokenizer;
@@ -83,23 +83,23 @@ public class SondeTestData {
 	}
 	
 	public String getTemp() {
-		return twoDecimals.format(Double.valueOf(this.temp) + Math.random());
+		return twoDecimals.format(Double.valueOf(this.temp) * Math.random());
 	}
 	
 	public String getSpCond() {
-		return oneDecimal.format(Double.valueOf(this.spCond) + Math.random());
+		return oneDecimal.format(Double.valueOf(this.spCond) * Math.random());
 	}
 	
 	public String getCond() {
-		return oneDecimal.format(Double.valueOf(this.cond) + Math.random());
+		return oneDecimal.format(Double.valueOf(this.cond) * Math.random());
 	}
 	
 	public String getResist() {
-		return twoDecimals.format(Double.valueOf(this.resist) + Math.random());
+		return twoDecimals.format(Double.valueOf(this.resist) * Math.random());
 	}
 		
 	public String getSal() {
-		return twoDecimals.format(Double.valueOf(this.sal) + Math.random());
+		return twoDecimals.format(Double.valueOf(this.sal) * Math.random());
 	}
 	
 	public String getPress() {
@@ -107,27 +107,27 @@ public class SondeTestData {
 	}
 	
 	public String getDepth() {
-		return threeDecimals.format(Double.valueOf(this.depth) + Math.random());
+		return threeDecimals.format(Double.valueOf(this.depth) * Math.random());
 	}
 	
 	public String getPh() {
-		return twoDecimals.format(Double.valueOf(this.pH) + Math.random());
+		return twoDecimals.format(Double.valueOf(this.pH) * Math.random());
 	}
 	
 	public String getpHmV() {
-		return oneDecimal.format(Double.valueOf(this.pHmV) + Math.random());
+		return oneDecimal.format(Double.valueOf(this.pHmV) * Math.random());
 	}
 	
 	public String getOdoSat() {
-		return oneDecimal.format(Double.valueOf(this.odoSat) + Math.random());
+		return oneDecimal.format(Double.valueOf(this.odoSat) * Math.random());
 	}
 	
 	public String getOdoConc() {
-		return twoDecimals.format(Double.valueOf(this.odoConc) + Math.random());
+		return twoDecimals.format(Double.valueOf(this.odoConc) * Math.random());
 	}
 	
 	public String getTurbid() {
-		return oneDecimal.format(Double.valueOf(this.turbid) + Math.random());
+		return oneDecimal.format(Double.valueOf(this.turbid) * Math.random());
 	}
 	
 	public String getBattery() {
@@ -144,7 +144,7 @@ public class SondeTestData {
 		return dataStream2;
 	}
 
-	/*
+	
 	public static void main(String[] args) {		
 		SondeTestData std = new SondeTestData();
 		System.out.println(std.getOldDataStream());
@@ -158,6 +158,6 @@ public class SondeTestData {
 			System.out.println(std.getDataStream());			
 		}
 	}
-	*/
+	
 	
 }

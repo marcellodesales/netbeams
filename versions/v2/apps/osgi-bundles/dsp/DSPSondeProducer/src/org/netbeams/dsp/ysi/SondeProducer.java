@@ -65,8 +65,7 @@ public class SondeProducer {
 				log.debug("Serial connection established from bundle...");
 				serialHandler.connect(SERIAL_PORT);
 			} catch (Exception e) {
-				System.out.println("ERROR: " + e.getMessage());
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 		

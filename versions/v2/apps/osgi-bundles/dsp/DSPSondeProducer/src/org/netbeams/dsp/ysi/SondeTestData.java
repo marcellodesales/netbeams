@@ -1,175 +1,128 @@
 package org.netbeams.dsp.ysi;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
+import java.util.List;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.DatatypeConfigurationException;
 
 /**
+ * Generates random test data. The number of data must be specified during the creation of an instance of this
+ * class.
  * 
- * @author Teresa L. Johnson <gamma.particle@gmail.com>
- *
+ * @author Teresa L. Johnson <gamma.particle@gmail.com> (Until revision 444)
+ * @author Marcello de Sales <marcello.sales@gmail.com> (From revision 444)
+ * 
  */
 public class SondeTestData {
 
-	private SondeDataContainer sdc;
-	private ArrayList<SondeDataType> list;
-	private SondeDataType sdt;
-	private static GregorianCalendar dateTime;
-	private Month m;
-		
-	public SondeTestData() {
-		m = new Month();
-		sdc = new SondeDataContainer();
-		list = new ArrayList<SondeDataType> ();
-		initDateTime();
-		initTestData();
-		sdc.sondeData = list;
-	};
-	
-	public SondeDataContainer getSondeTestData() {
-		return sdc;
-	}
-		
-	private void initDateTime() {
-		dateTime = new GregorianCalendar();
-		dateTime.clear();
-		dateTime.set(2008, Calendar.DECEMBER, 2, 22, 48, 53);
+	private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy/MM/dd");
+	private static final SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("HH:mm:ss");
+
+	private static final DecimalFormat ONE_DECIMAL_FORMATTER = new DecimalFormat("###0.0");
+	private static final DecimalFormat TWO_DECIMALS_FORMATTER = new DecimalFormat("###0.00");
+	private static final DecimalFormat THREE_DECIMALS_FORMATTER = new DecimalFormat("###0.000");
+
+	/**
+	 * Creates a new test data with the given number of sonde data to be in the container.
+	 * @param numberOfSondeData is the number of data to be in the container.
+	 */
+	private SondeTestData() {
+
 	}
 	
-	private void initTestData() {;
-		setDataSet1();
-		setDataSet2();
-		setDataSet3();
+	/**
+	 * @param numberOfRandomSondeDataTypes is the number of Sonde Data to be in the container.
+	 * @return a SondeDataContainer with a random list of SondeDataTypes containing the given number of random
+	 * Sonde Data Types.
+	 */
+	public static SondeDataContainer generateRandomSondeDataContainer(int numberOfRandomSondeDataTypes) {
+		SondeDataContainer container = new SondeDataContainer();
+		container.sondeData = new ArrayList<SondeDataType>(numberOfRandomSondeDataTypes);
+		container.sondeData.addAll(generateRandomSondeData(numberOfRandomSondeDataTypes));
+		return container;
 	}
 	
-	private void setDataSet1() {
-		sdt = new SondeDataType();
-		sdt.setDateTime("2008/12/02", "22:48:53");
-		sdt.setTemp((float) 22.69);
-		sdt.setSpCond((float) 183.0);
-		sdt.setCond((float) 175.0);
-		sdt.setResist((float) 5704.66);
-		sdt.setSal((float) 0.09);
-		sdt.setPress((float) 0.00);
-		sdt.setDepth((float) 0.00);
-		sdt.setPH((float) 8.22);
-		sdt.setPhmV((float) -94.00);
-		sdt.setODOSat((float) 111.70);
-		sdt.setODOConc((float) 9.63);
-		sdt.setTurbid((float) 0.30);
-		sdt.setBattery((float) 10.10);
-		list.add(sdt);
-	}
-	
-	private void setDataSet2() {
-		sdt = new SondeDataType();
-		sdt.setDateTime("2008/12/02", "22:54:53");
-		sdt.setTemp((float) 22.69);
-		sdt.setSpCond((float) 183.0);
-		sdt.setCond((float) 175.0);
-		sdt.setResist((float) 5710.39);
-		sdt.setSal((float) 0.09);
-		sdt.setPress((float) 0.00);
-		sdt.setDepth((float) 0.00);
-		sdt.setPH((float) 8.22);
-		sdt.setPhmV((float) -94.10);
-		sdt.setODOSat((float) 111.60);
-		sdt.setTurbid((float) 0.40);
-		sdt.setBattery((float) 10.00);
-		list.add(sdt);
-	}
-	
-	private void setDataSet3() {
-		sdt = new SondeDataType();
-		sdt.setDateTime("2008/12/02", "23:00:53");
-		sdt.setTemp((float) 22.70);
-		sdt.setSpCond((float) 183.0);
-		sdt.setCond((float) 175.0);
-		sdt.setResist((float) 5710.49);
-		sdt.setSal((float) 0.09);
-		sdt.setPress((float) 0.00);
-		sdt.setDepth((float) 0.00);
-		sdt.setPH((float) 8.22);
-		sdt.setPhmV((float) -94.00);
-		sdt.setODOSat((float) 111.70);
-		sdt.setTurbid((float) 0.40);
-		sdt.setBattery((float) 10.10);
-		list.add(sdt);
-	}
-	
-	
-	
-	public String dateToString(GregorianCalendar cal) {
-		String result = "", temp = "", year = "", day = "";
-		Integer month = 0;
-		int i = 0;
-		
-		StringTokenizer st = new StringTokenizer(cal.getTime().toString());
-		while (st.hasMoreTokens()) {
-			i++;
-			temp = st.nextToken();
-			if (i == 2) {
-				month = (Integer) m.getMonth(temp);
-			}
-			if (i == 3) day = temp;
-			if (i == 6) year = temp;			
+	/**
+	 * @param numberOfRandomSondeData is the number of random sonde data types to be generated.
+	 * @return a random list of SondeDataType with the current date and time information.
+	 */
+	public static List<SondeDataType> generateRandomSondeData(int numberOfRandomSondeData) {
+		List<SondeDataType> randomSondeData = new ArrayList<SondeDataType>(numberOfRandomSondeData);
+		for (int i = 0; i < numberOfRandomSondeData; i++) {
+			randomSondeData.add(getRandomSondeData());
 		}
-		result = year + "/" + month + "/" + day;
-		return result;
+		return randomSondeData;
 	}
 	
-	
-	
-	public String timeToString(GregorianCalendar cal) {
-		String result = "";
-		int i = 0;
-		
-		StringTokenizer st = new StringTokenizer(cal.getTime().toString());
-		while (st.hasMoreTokens()) {
-			i++;
-		    result = st.nextToken();
-		    if (i == 4 && result.charAt(2) == ':') {
-		        break;
-		    }
-		}
-		return result;
+	/**
+	 * @return a random SondeDataType with the current date and time.
+	 */
+	public static SondeDataType getRandomSondeData() {
+		SondeDataType sdt = new SondeDataType();
+	    Calendar cal = Calendar.getInstance();
+		sdt.setDateTime(DATE_FORMATTER.format(cal.getTime()), TIME_FORMATTER.format(cal.getTime()));
+		sdt.setTemp(Float.valueOf(TWO_DECIMALS_FORMATTER.format(100.69 * Math.random())));
+		sdt.setSpCond(Float.valueOf(ONE_DECIMAL_FORMATTER.format(183.0 * Math.random())));
+		sdt.setCond(Float.valueOf(ONE_DECIMAL_FORMATTER.format(175.0 * Math.random())));
+		sdt.setResist(Float.valueOf(TWO_DECIMALS_FORMATTER.format(5704.66 * Math.random())));
+		sdt.setSal(Float.valueOf(TWO_DECIMALS_FORMATTER.format(0.09 * Math.random())));
+		sdt.setPress(Float.valueOf(THREE_DECIMALS_FORMATTER.format(1.999 * Math.random())));
+		sdt.setDepth(Float.valueOf(THREE_DECIMALS_FORMATTER.format(2.999 * Math.random())));
+		sdt.setPH(Float.valueOf(TWO_DECIMALS_FORMATTER.format(8.22 * Math.random())));
+		sdt.setPhmV(Float.valueOf(ONE_DECIMAL_FORMATTER.format(-94.00 * Math.random())));
+		sdt.setODOSat(Float.valueOf(ONE_DECIMAL_FORMATTER.format(111.70 * Math.random())));
+		sdt.setODOConc(Float.valueOf(TWO_DECIMALS_FORMATTER.format(66.63 * Math.random())));
+		sdt.setTurbid(Float.valueOf(ONE_DECIMAL_FORMATTER.format(0.30 * Math.random())));
+		sdt.setBattery(Float.valueOf(ONE_DECIMAL_FORMATTER.format(10.10 * Math.random())));
+		return sdt;
 	}
-	
-	
-	
+
 	public static void main(String[] args) {
-		SondeTestData testData = new SondeTestData();
-		SondeDataContainer container;
+		long start = System.currentTimeMillis();
+		SondeDataContainer container = SondeTestData.generateRandomSondeDataContainer(10000);
+		long end = System.currentTimeMillis();
 		
-		container = testData.getSondeTestData();
-		
-		System.out.println("size: " + container.getSondeData().size()); 
+		System.out.println("generated in " + (end - start) + " millis of size: " + container.getSondeData().size()); 
 		System.out.println();
 		
-		// Verify that the data can be retrieved.
-		for (int i = 0; i < container.getSondeData().size(); i++) {
-			System.out.println("Date: " + container.getSondeData().get(i).getDateString());
-			System.out.println("Time: " + container.getSondeData().get(i).getTimeString());
-			System.out.println("Temp: " + container.getSondeData().get(i).getTemp());
-			System.out.println("SpCond: " + container.getSondeData().get(i).getSpCond());
-			System.out.println("Cond: " + container.getSondeData().get(i).getCond());
-			System.out.println("Resist: " + container.getSondeData().get(i).getResist());
-			System.out.println("Sal: " + container.getSondeData().get(i).getSal());
-			System.out.println("Press: " + container.getSondeData().get(i).getPress());
-			System.out.println("Depth: " + container.getSondeData().get(i).getDepth());
-			System.out.println("pH: " + container.getSondeData().get(i).getPH());
-			System.out.println("pH mV: " + container.getSondeData().get(i).getPhmV());
-			System.out.println("ODO Sat: " + container.getSondeData().get(i).getODOSat());
-			System.out.println("Turbidity: " + container.getSondeData().get(i).getTurbid());
-			System.out.println("Battery: " + container.getSondeData().get(i).getBattery());
+		// Verify that the data can be retrieved (first 3).
+		for (int i = 0; i < 3; i++) {
+			System.out.print("Date: " + container.getSondeData().get(i).getDateString());
+			System.out.print(" Time: " + container.getSondeData().get(i).getTimeString());
+			System.out.print(" Temp: " + container.getSondeData().get(i).getTemp());
+			System.out.print(" SpCond: " + container.getSondeData().get(i).getSpCond());
+			System.out.print(" Cond: " + container.getSondeData().get(i).getCond());
+			System.out.print(" Resist: " + container.getSondeData().get(i).getResist());
+			System.out.print(" Sal: " + container.getSondeData().get(i).getSal());
+			System.out.print(" Press: " + container.getSondeData().get(i).getPress());
+			System.out.print(" Depth: " + container.getSondeData().get(i).getDepth());
+			System.out.print(" pH: " + container.getSondeData().get(i).getPH());
+			System.out.print(" pH mV: " + container.getSondeData().get(i).getPhmV());
+			System.out.print(" ODO Sat: " + container.getSondeData().get(i).getODOSat());
+			System.out.print(" ODO Cond: " + container.getSondeData().get(i).getODOConc());
+			System.out.print(" Turbidity: " + container.getSondeData().get(i).getTurbid());
+			System.out.println(" Battery: " + container.getSondeData().get(i).getBattery());
 			System.out.println();
+		}
+		//print the last 3
+		for (int i = container.getSondeData().size() - 3; i < container.getSondeData().size(); i++) {
+			System.out.print("Date: " + container.getSondeData().get(i).getDateString());
+			System.out.print(" Time: " + container.getSondeData().get(i).getTimeString());
+			System.out.print(" Temp: " + container.getSondeData().get(i).getTemp());
+			System.out.print(" SpCond: " + container.getSondeData().get(i).getSpCond());
+			System.out.print(" Cond: " + container.getSondeData().get(i).getCond());
+			System.out.print(" Resist: " + container.getSondeData().get(i).getResist());
+			System.out.print(" Sal: " + container.getSondeData().get(i).getSal());
+			System.out.print(" Press: " + container.getSondeData().get(i).getPress());
+			System.out.print(" Depth: " + container.getSondeData().get(i).getDepth());
+			System.out.print(" pH: " + container.getSondeData().get(i).getPH());
+			System.out.print(" pH mV: " + container.getSondeData().get(i).getPhmV());
+			System.out.print(" ODO Sat: " + container.getSondeData().get(i).getODOSat());
+			System.out.print(" ODO Cond: " + container.getSondeData().get(i).getODOConc());
+			System.out.print(" Turbidity: " + container.getSondeData().get(i).getTurbid());
+			System.out.println(" Battery: " + container.getSondeData().get(i).getBattery());
 			System.out.println();
 		}
 	}
-			
 }

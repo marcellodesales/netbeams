@@ -103,7 +103,7 @@ public class SondeTestData {
 	}
 	
 	public String getPress() {
-		return threeDecimals.format(Double.valueOf(this.press) + Math.random());
+		return threeDecimals.format(Double.valueOf(this.press) * Math.random());
 	}
 	
 	public String getDepth() {

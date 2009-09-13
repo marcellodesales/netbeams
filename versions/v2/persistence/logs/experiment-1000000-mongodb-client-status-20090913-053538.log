@@ -1,0 +1,20 @@
+MongoDB shell version: 1.1.0-
+url: netbeams
+connecting to: netbeams
+type "help" for help
+> ys[K[Kdb.Son[K[K[K[K[K[K
+> db.[K[K[Kshow collections
+SondeDataContainer
+system.indexes
+> 
+> db.SondeDataContainer.find[K[K[K[Kcount8[K()
+1000000
+> db.SondeDataContainer.findOne()
+{"_id" :  ObjectId( "d36f4007b7e7ac4a03c60000")  , "sensor_ip_address" : "192.168.0.136" , "message_id" : "7b6624d6-0ca1-4cba-a343-f166e88da73b" , "transaction_time" : 1252845473412 , "fact_time" : 1252845346000 , "data" : {"temperature" : "45.01" , "sp_condition" : "37.6" , "condition" : "145.8" , "resistence" : "159.77" , "salinitude" : "0.0" , "pressure" : "0.391" , "depth" : "0.46" , "ph" : "5.64" , "pH_mv" : "-62.1" , "odo_sat" : "89.7" , "odo_condition" : "59.34" , "turbidity" : "0.0" , "battery" : "9.4"}}
+> db.SondeDataCt[Kontainer.find("data.ph":"5.64")}){"data.ph":"5.64"})[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C.v[Kcount()
+1226
+> db.SondeDataContainer.find[K[K[K[Kfind("[K{"data.ph":"5.64"}).count()[K[K[K[K[K[K[Klimit(3)
+{"_id" :  ObjectId( "d36f4007b7e7ac4a03c60000")  , "sensor_ip_address" : "192.168.0.136" , "message_id" : "7b6624d6-0ca1-4cba-a343-f166e88da73b" , "transaction_time" : 1252845473412 , "fact_time" : 1252845346000 , "data" : {"temperature" : "45.01" , "sp_condition" : "37.6" , "condition" : "145.8" , "resistence" : "159.77" , "salinitude" : "0.0" , "pressure" : "0.391" , "depth" : "0.46" , "ph" : "5.64" , "pH_mv" : "-62.1" , "odo_sat" : "89.7" , "odo_condition" : "59.34" , "turbidity" : "0.0" , "battery" : "9.4"}}
+{"_id" :  ObjectId( "d36f4007b7e7ac4a1fc80000")  , "sensor_ip_address" : "192.168.0.136" , "message_id" : "7b6624d6-0ca1-4cba-a343-f166e88da73b" , "transaction_time" : 1252845473412 , "fact_time" : 1252845346000 , "data" : {"temperature" : "46.71" , "sp_condition" : "60.8" , "condition" : "160.6" , "resistence" : "1399.4" , "salinitude" : "0.01" , "pressure" : "1.057" , "depth" : "2.485" , "ph" : "5.64" , "pH_mv" : "-16.3" , "odo_sat" : "58.8" , "odo_condition" : "19.29" , "turbidity" : "0.2" , "battery" : "9.2"}}
+{"_id" :  ObjectId( "d36f4007b8e7ac4a1ec90000")  , "sensor_ip_address" : "192.168.0.136" , "message_id" : "7b6624d6-0ca1-4cba-a343-f166e88da73b" , "transaction_time" : 1252845473412 , "fact_time" : 1252845346000 , "data" : {"temperature" : "69.99" , "sp_condition" : "39.0" , "condition" : "115.7" , "resistence" : "3490.92" , "salinitude" : "0.05" , "pressure" : "0.537" , "depth" : "0.544" , "ph" : "5.64" , "pH_mv" : "-73.8" , "odo_sat" : "81.4" , "odo_condition" : "2.44" , "turbidity" : "0.0" , "battery" : "3.1"}}
+> 

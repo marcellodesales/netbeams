@@ -32,10 +32,6 @@ public class DSPMongoCRUDService {
      */
     private static final String NETBEAMS_DATASTORE_NAME = "netbeams";
     /**
-     * The default mongoDB collection name for the datastore.
-     */
-    private static final String NETBEAMS_DATASTORE_COLLECTION_NAME = "ysi";
-    /**
      * Sleep interval for garbage collection
      */
     private static long fSLEEP_INTERVAL = 100;
@@ -45,13 +41,15 @@ public class DSPMongoCRUDService {
     private static Map<String, DBCollection> netBeamscollectionsCache = new HashMap<String, DBCollection>();
 
     /**
-     * @param persistentMessage is the DSP Message that was persisted after transmission.
+     * @param persistentMessage
+     *            is the DSP Message that was persisted after transmission.
      * @return the DBCollection instance based on the Message Content Type from the DSP Message that transmitted from
-     * the PersistentMessageUnit instance.
+     *         the PersistentMessageUnit instance.
      * @throws UnknownHostException
      * @throws MongoException
      */
-    public static DBCollection getPersistenceStorage(PersistentMessageUnit persistentMessage) throws UnknownHostException, MongoException {
+    public static DBCollection getPersistenceStorage(PersistentMessageUnit persistentMessage)
+            throws UnknownHostException, MongoException {
         DBCollection dbCollection = netBeamscollectionsCache.get(persistentMessage.getMessageContentType());
         if (dbCollection == null) {
             Mongo netbeamsDb = getNetbeamMongoDb();
@@ -72,27 +70,31 @@ public class DSPMongoCRUDService {
 
     /**
      * Inserts the Message Content's instance into the mongoDB.
-     * @param tranMsg is a persistent message unit from a DSP message transmitted by a sensor.
+     * 
+     * @param tranMsg
+     *            is a persistent message unit from a DSP message transmitted by a sensor.
      * @throws UnknownHostException
      * @throws MongoException
      */
     public static void insertMessageUnit(PersistentMessageUnit tranMsg) throws UnknownHostException, MongoException {
         long start = System.currentTimeMillis();
         long startMemoryUse = getMemoryUse();
-        System.out.println("Started saving netbeams samples as mongodb objects at " + DATE_FORMATTER.format(new Date(start)));
+        System.out.println("Started saving netbeams samples as mongodb objects at "
+                + DATE_FORMATTER.format(new Date(start)));
         insertPersistentUnitMessageContents(tranMsg);
         long end = System.currentTimeMillis();
         float endMemoryUse = getMemoryUse();
         float approximateSize = (endMemoryUse - startMemoryUse) / 100f;
         float result = Math.round(approximateSize / 1024);
-        System.out.println("Finished saving netbeams samples to mongodb objects in "
+        System.out.println("Finished tranaction and saving netbeams samples to mongodb objects in "
                 + getTimeDifference(start, end) + " consuming ~" + result + "Kb");
     }
 
     /**
-     * @param tranMsg is the persistent message unit holding an instance of a transmitted DSP message.
-     * @return the Key Segment for the given Persistent Message Unit's DSP Message instance. It extracts the sensor's
-     * IP address, the Message ID and the Transaction time from the Unit, which constitutes the Key.
+     * @param tranMsg
+     *            is the persistent message unit holding an instance of a transmitted DSP message.
+     * @return the Key Segment for the given Persistent Message Unit's DSP Message instance. It extracts the sensor's IP
+     *         address, the Message ID and the Transaction time from the Unit, which constitutes the Key.
      */
     public static BasicDBObject buildKeySegment(PersistentMessageUnit tranMsg) {
         BasicDBObject doc = new BasicDBObject();
@@ -102,7 +104,15 @@ public class DSPMongoCRUDService {
         return doc;
     }
 
-    public static void insertPersistentUnitMessageContents(PersistentMessageUnit tranMsg) throws UnknownHostException, MongoException {
+    /**
+     * Inserts the DSP Message Content into the mongoDB as it is extracted and converted from the given 
+     * PersistentMessageUnit.
+     * @param tranMsg is the PersistentMessageUnit containing information about the sensor location and the message.
+     * @throws UnknownHostException
+     * @throws MongoException
+     */
+    public static void insertPersistentUnitMessageContents(PersistentMessageUnit tranMsg) throws UnknownHostException,
+            MongoException {
         DBCollection netbeamsDbCollection = getPersistenceStorage(tranMsg);
         MessageContent messageContent = tranMsg.getDspMessage().getBody().getAny();
         System.out.println("Starting mongodb transaction at " + DATE_FORMATTER.format(new Date()));

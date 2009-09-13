@@ -22,8 +22,9 @@ echo "\n* 3. Ready to run Java experiment with $NUMBER_SAMPLES samples\n"
 java -Xms200m -Xmx1900m -classpath ../classes/:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:../thirdparty/mongodb/mongo-0.9.1.jar org.netbeams.dsp.persistence.controller.DSPMongoCRUDService $NUMBER_SAMPLES | tee $NETBEAMS_2_MONGO_LOG
 
 echo "\n* 4. Experiments Results on the following logs:"
-echo "- Mongo DB Server Output: $MONGO_SERVER_LOG"
-echo "- NetBEAMS to MongoDB data transfer output: $NETBEAMS_2_MONGO_LOG" 
+echo "- Mongo DB Server log output: $MONGO_SERVER_LOG"
+echo "- Mongo DB Client log output: $MONGO_CLIENT_LOG"
+echo "- NetBEAMS to MongoDB data transfer log output: $NETBEAMS_2_MONGO_LOG (after running the client)"
 
 echo "\n* 5. MongoDB data dir '$DATA_DIR' size after experiments...\n" 
 du -h $DATA_DIR
@@ -31,6 +32,7 @@ ls -lah $DATA_DIR
 
 echo "\n* 6. Running the MongDB after the experiments...\n"
 echo " - The database name is 'netbeams'. The collection name is 'ysi'"
+echo " - Type 'show collections' to show all the collections in the current database"
 echo " - Type 'use netbeams' to change to that database."
 echo " - Type 'db.ysi.*' to issue a command to the collection 'ysi'"
 echo " - Ex: 'db.ysi.count()' = returns the number of elements on the collection 'ysi'"
@@ -39,4 +41,4 @@ echo " -     'db.ysi.find().limit(3)' = returns the first 3 elements of the coll
 echo " -     'db.ysi.find( {sensor_ip_address:"192.168.0.79"} ).count())' = returns the number of elements of the collection ysi with the given sensor's ip address."
 echo " -     'db.ysi.find({"data.ph":"1.45"})' = returns all the elements that has the property 'data.ph' equals to '1.45'"
 
-mongo netbeams & | tee $MONGO_CLIENT_LOG
+mongo netbeams | tee $MONGO_CLIENT_LOG

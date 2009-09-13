@@ -1,0 +1,24 @@
+MongoDB shell version: 1.0.0
+url: netbeams
+connecting to: netbeams
+type "help" for help
+> sow  how collections
+SondeDataContainer
+system.indexes
+> 
+> db.SondeDataContainer.f count()
+1000000
+> 
+> db.SondeF DataContainer.find( One()
+{"_id" :  ObjectId( "e46f40079365ac4a3f063400")  , "sensor_ip_address" : "192.168.0.151" , "message_id" : "d8a7e831-ddd0-4c8e-a152-5bcd9c18ef05" , "transaction_time" : 1252812168025 , "fact_time" : 1252812057000 , "data" : {"temperature" : "28.62" , "sp_condition" : "179.6" , "condition" : "76.8" , "resistence" : "378.41" , "salinitude" : "0.09" , "pressure" : "0.86" , "depth" : "1.125" , "ph" : "2.67" , "pH_mv" : "-50.2" , "odo_sat" : "2.8" , "odo_condition" : "65.37" , "turbidity" : "0.2" , "battery" : "7.0"}}
+> 
+> db.SondeDataContainer( .find("s data.ph":"2.67")}){"data.ph":"2.67"})> db.SondeDataContainer.find({"> db.SondeDataContainer.find({"d> db.SondeDataContainer.find({"da> db.SondeDataContainer.find({"dat> db.SondeDataContainer.find({"data> db.SondeDataContainer.find({"data.> db.SondeDataContainer.find({"data.p> db.SondeDataContainer.find({"data.ph> db.SondeDataContainer.find({"data.ph"> db.SondeDataContainer.find({"data.ph":> db.SondeDataContainer.find({"data.ph":"> db.SondeDataContainer.find({"data.ph":"2> db.SondeDataContainer.find({"data.ph":"2.> db.SondeDataContainer.find({"data.ph":"2.6> db.SondeDataContainer.find({"data.ph":"2.67> db.SondeDataContainer.find({"data.ph":"2.67"> db.SondeDataContainer.find({"data.ph":"2.67"}> db.SondeDataContainer.find({"data.ph":"2.67"}).count()
+1197
+> 
+> db.SondeDataContainer.find({}"}"}d"}a"}t"}a"}."}p"}h"}> db.SondeDataContainer.find({"data.ph".}} :}2}.}6}7}> db.SondeDataContainer.find({"data.ph":2.67}).limit(3)
+> db.SondeDataContainer.find({"data.ph":2.67}).limit(3)> db.SondeDataContainer.find({"data.ph":"2.67}).limit(3)> db.SondeDataContainer.find({"data.ph":"2> db.SondeDataContainer.find({"data.ph":"2.> db.SondeDataContainer.find({"data.ph":"2.6> db.SondeDataContainer.find({"data.ph":"2.67> db.SondeDataContainer.find({"data.ph":"2.67}"}).limit(3)
+{"_id" :  ObjectId( "e46f40079365ac4a3f063400")  , "sensor_ip_address" : "192.168.0.151" , "message_id" : "d8a7e831-ddd0-4c8e-a152-5bcd9c18ef05" , "transaction_time" : 1252812168025 , "fact_time" : 1252812057000 , "data" : {"temperature" : "28.62" , "sp_condition" : "179.6" , "condition" : "76.8" , "resistence" : "378.41" , "salinitude" : "0.09" , "pressure" : "0.86" , "depth" : "1.125" , "ph" : "2.67" , "pH_mv" : "-50.2" , "odo_sat" : "2.8" , "odo_condition" : "65.37" , "turbidity" : "0.2" , "battery" : "7.0"}}
+{"_id" :  ObjectId( "e46f40079365ac4a14073400")  , "sensor_ip_address" : "192.168.0.151" , "message_id" : "d8a7e831-ddd0-4c8e-a152-5bcd9c18ef05" , "transaction_time" : 1252812168025 , "fact_time" : 1252812057000 , "data" : {"temperature" : "10.96" , "sp_condition" : "29.3" , "condition" : "113.3" , "resistence" : "1296.57" , "salinitude" : "0.01" , "pressure" : "1.341" , "depth" : "0.997" , "ph" : "2.67" , "pH_mv" : "-66.6" , "odo_sat" : "56.3" , "odo_condition" : "48.45" , "turbidity" : "0.1" , "battery" : "8.2"}}
+{"_id" :  ObjectId( "e46f40079365ac4ab9073400")  , "sensor_ip_address" : "192.168.0.151" , "message_id" : "d8a7e831-ddd0-4c8e-a152-5bcd9c18ef05" , "transaction_time" : 1252812168025 , "fact_time" : 1252812057000 , "data" : {"temperature" : "48.06" , "sp_condition" : "107.0" , "condition" : "142.9" , "resistence" : "4586.51" , "salinitude" : "0.06" , "pressure" : "0.16" , "depth" : "2.689" , "ph" : "2.67" , "pH_mv" : "-90.0" , "odo_sat" : "82.6" , "odo_condition" : "49.01" , "turbidity" : "0.2" , "battery" : "1.8"}}
+> 
+> 

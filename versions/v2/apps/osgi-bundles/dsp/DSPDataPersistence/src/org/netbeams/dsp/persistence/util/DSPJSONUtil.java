@@ -3,6 +3,9 @@ package org.netbeams.dsp.persistence.util;
 import java.io.Writer;
 
 import org.netbeams.dsp.message.MessageContent;
+import org.netbeams.dsp.ysi.SondeDataContainer;
+import org.netbeams.dsp.ysi.SondeDataType;
+import org.netbeams.dsp.ysi.SondeTestData;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
@@ -151,5 +154,11 @@ public enum DSPJSONUtil {
         System.out.println(jsonStr);
         System.out.println("-------------------------------------------");
 //        System.out.println(DSPJSONUtil.STREAM.unmarshallMessageContent(Product.class, jsonStr));
+        
+        SondeDataContainer container = SondeTestData.generateRandomSondeDataContainer(2);
+        String jsonStrCont = DSPJSONUtil.STREAM.marshallMessageContent(container);
+        System.out.println(jsonStrCont);
+        System.out.println("-------------------------------------------");
+//      
     }
 }

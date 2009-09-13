@@ -33,6 +33,30 @@
              manifest="${DSP.PERSISTENCE}/META-INF/MANIFEST.MF"/>
     </target>
     
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: setup-mongodb                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="setup-mongodb" depends="init">
+        <delete dir="${DSP.PERSISTENCE.DB}"/>
+        <mkdir dir="${DSP.PERSISTENCE.DB}"/>
+        <mkdir dir="${DSP.PERSISTENCE.DB}/data"/>
+        <chmod perm="777" dir="${DSP.PERSISTENCE.DB}"/>
+        <unzip src="${THIRDPARTY}/mongodb/mongodb-linux-i686-1.0.0.zip" dest="${DSP.PERSISTENCE.DB}/" />
+        <move file="${DSP.PERSISTENCE.DB}/mongodb-linux-i686-1.0.0" tofile="${DSP.PERSISTENCE.DB}/mongodb"/>
+    </target>
+
+    <target name="run-mongodb" depends="init">
+        <exec command="${DSP.PERSISTENCE.DB}/mongodb/bin/mongod">
+            <arg value="--dbpath ${DSP.PERSISTENCE.DB}/data"/>
+        </exec>
+    </target>
+
+    <target name="run-experiment" depends="init">
+        <exec command="${DSP.PERSISTENCE.DB}/run-persistence-experiment">
+            <arg value="50"/>
+        </exec>
+    </target>
+
     <target name="dsp-data-persistence.clean">
         <delete dir="${DSP.PERSISTENCE}/classes" />
         <delete dir="${DSP.PERSISTENCE}/build" />

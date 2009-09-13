@@ -1,5 +1,6 @@
 package org.netbeams.dsp.persistence.controller;
 
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,6 +25,11 @@ import org.netbeams.dsp.persistence.model.component.data.PersistentMessageUnit;
 import org.netbeams.dsp.persistence.model.component.data.PropertyKey;
 import org.netbeams.dsp.persistence.util.DSPJSONUtil;
 import org.netbeams.dsp.util.NetworkUtil;
+
+import com.mongodb.DBCollection;
+import com.mongodb.Mongo;
+import com.mongodb.MongoAdmin;
+import com.mongodb.MongoException;
 
 public class DSPDataPersistence implements DSPComponent {
 
@@ -89,95 +95,31 @@ public class DSPDataPersistence implements DSPComponent {
 
                     for (PersistentMessageUnit tranMsg : tranMsgs) {
 
-                        thLog.debug("Sensor location: " + tranMsg.getSensorLocation());
-                        thLog.debug("Message ID: " + tranMsg.getDspMessage().getMessageID());
-                        thLog.debug("Message Type: " + tranMsg.getMessageType());
-                        thLog.debug("Message Content Type: " + tranMsg.getMessageContentType());
-                        thLog.debug("Stored at " + tranMsg.getCollectionDateTime());
-                        
-                        PropertyKey pkey = new PropertyKey(tranMsg);
-                        MessageContent mCont = tranMsg.getDspMessage().getBody().getAny();
-                        thLog.debug("Key: " + pkey);
-                        thLog.debug("value: " + DSPJSONUtil.HIERARCHICAL.marshallMessageContent(mCont));
-                        
+                        DSPMongoCRUDService.insertMessageUnit(tranMsg);
+
                         tranMsg.setStateToFlushed();
-                        
-                        //TODO: save the key_value pair into the persistent data store.
-                        //TODO: SEPARATE ALL THE PROPERTIES FROM EACH COLLECTION OF ITEMS
-                        /* Imagine from JSON values... Write a parser or the driver that returns all the properties
-                         * to the application. 
-                         * 
-                         * {
-                              "sondeData": [
-                                {
-                                  "samplingTimeStamp": {
-                                    "time": 1242009066438,
-                                    "timezone": "America/Los_Angeles"
-                                  },
-                                  "temp": 87.0,
-                                  "cond": 35.0,
-                                  "resist": 45.0,
-                                  "sal": 67.0,
-                                  "press": 443.0,
-                                  "depth": 565.0,
-                                  "ph": 12.0,
-                                  "phmV": 65.0,
-                                  "odoSat": 39.0,
-                                  "odoConc": 88.0,
-                                  "turbid": 40.0,
-                                  "battery": 5.0
-                                },
-                                {
-                                  "temp": 87.0,
-                                  "cond": 35.0,
-                                  "resist": 45.0,
-                                  "sal": 67.0,
-                                  "press": 443.0,
-                                  "depth": 565.0,
-                                  "ph": 12.0,
-                                  "phmV": 65.0,
-                                  "odoSat": 39.0,
-                                  "odoConc": 88.0,
-                                  "turbid": 40.0,
-                                  "battery": 5.0
-                                }
-                              ]
-                            }
-                         
-                         Since the values are going to be related to a given sensor, 2 pending
-                         * strategies will be evaluated: a sampling per message; each value of a given sampling per
-                         * message. All properties needs to be uniquely identified, and the samplings are related with
-                         * the time stamp. 
-                         
-                         %%%%%%%%%%%%% Key-Value Data Store %%%%%%%%%%%
-                           ** KEY
-                                192.168.0.2:SondeDataType
-                           ** VALUE
-                                {
-                                  "temp": 87.0,
-                                  "cond": 35.0,
-                                  "resist": 45.0,
-                                  "sal": 67.0,
-                                  "press": 443.0,
-                                  "depth": 565.0,
-                                  "ph": 12.0,
-                                  "phmV": 65.0,
-                                  "odoSat": 39.0,
-                                  "odoConc": 88.0,
-                                  "turbid": 40.0,
-                                  "battery": 5.0
-                                }
-                                
-                         %%%%%%%%%%%%% Relational Database %%%%%%%%%%%
-                         sensor_id = 192.168.0.2
-                         message_content = SondeDataType
-                         samplingTime = 04/29/2009 10:23:34 PST
-                         key = temp
-                         Value = 87.0
-                         ... ... ... ... ... 
+
+                        // TODO: save the key_value pair into the persistent data store.
+                        // TODO: SEPARATE ALL THE PROPERTIES FROM EACH COLLECTION OF ITEMS
+                        /*
+                         * Imagine from JSON values... Write a parser or the driver that returns all the properties to
+                         * the application. { "sondeData": [ { "samplingTimeStamp": { "time": 1242009066438, "timezone":
+                         * "America/Los_Angeles" }, "temp": 87.0, "cond": 35.0, "resist": 45.0, "sal": 67.0, "press":
+                         * 443.0, "depth": 565.0, "ph": 12.0, "phmV": 65.0, "odoSat": 39.0, "odoConc": 88.0, "turbid":
+                         * 40.0, "battery": 5.0 }, { "temp": 87.0, "cond": 35.0, "resist": 45.0, "sal": 67.0, "press":
+                         * 443.0, "depth": 565.0, "ph": 12.0, "phmV": 65.0, "odoSat": 39.0, "odoConc": 88.0, "turbid":
+                         * 40.0, "battery": 5.0 } ] } Since the values are going to be related to a given sensor, 2
+                         * pending strategies will be evaluated: a sampling per message; each value of a given sampling
+                         * per message. All properties needs to be uniquely identified, and the samplings are related
+                         * with the time stamp. %%%%%%%%%%%%% Key-Value Data Store %%%%%%%%%%% KEY
+                         * 192.168.0.2:SondeDataType VALUE { "temp": 87.0, "cond": 35.0, "resist": 45.0, "sal": 67.0,
+                         * "press": 443.0, "depth": 565.0, "ph": 12.0, "phmV": 65.0, "odoSat": 39.0, "odoConc": 88.0,
+                         * "turbid": 40.0, "battery": 5.0 } %%%%%%%%%%%%% Relational Database %%%%%%%%%%% sensor_id =
+                         * 192.168.0.2 message_content = SondeDataType samplingTime = 04/29/2009 10:23:34 PST key = temp
+                         * Value = 87.0 ... ... ... ... ...
                          */
                     }
-                
+
                 } else {
                     thLog.debug("There are no transient messages in the transient persistent layer...");
                     thLog.debug(transientLayer.retrieveAllPersistentMessages().size()
@@ -189,6 +131,7 @@ public class DSPDataPersistence implements DSPComponent {
             }
         }
     }
+    
 
     /**
      * Shuts down all the threads started by the scheduler.
@@ -203,8 +146,10 @@ public class DSPDataPersistence implements DSPComponent {
     /**
      * Updates the internal Data Persistence properties.
      * 
-     * @param updateMessage is an update message to configure the component.
-     * @throws DSPException if any problem happens during the update.
+     * @param updateMessage
+     *            is an update message to configure the component.
+     * @throws DSPException
+     *             if any problem happens during the update.
      */
     private void updateComponentProperties(UpdateMessage updateMessage) throws DSPException {
 

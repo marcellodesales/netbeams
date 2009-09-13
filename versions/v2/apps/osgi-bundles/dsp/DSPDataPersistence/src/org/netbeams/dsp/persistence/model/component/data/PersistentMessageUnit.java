@@ -16,12 +16,13 @@ import org.netbeams.dsp.persistence.model.location.SensorLocation;
  */
 public class PersistentMessageUnit {
 
+    public static final String DEFAULT_DATETIME_FORMAT = "MM/dd/yyyy HH:mm:ss";
     private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
     private static final String DEFAULT_DATE_FORMAT = "MM/dd/yyyy";
     /**
      * The default date/time formatter
      */
-    public static final DateFormat dateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    public static final DateFormat dateTimeFormat = new SimpleDateFormat(DEFAULT_DATETIME_FORMAT);
     /**
      * It's the instance of the DSP Message
      */
@@ -129,5 +130,12 @@ public class PersistentMessageUnit {
             this.messageContentType = simpleNames[simpleNames.length - 1];
         }
         return this.messageContentType;
+    }
+
+    /**
+     * @return the milliconds values of the collection time (transaction time) when the message was stored.
+     */
+    public long getCollectionTimeMilliseconds() {
+        return this.collectionDateTime.getTimeInMillis();
     }
 }

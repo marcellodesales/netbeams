@@ -1,0 +1,8 @@
+Experiment started at 09/12/2009 16:28:00:909. Memory (485144)
+Starting to generate 500000 sonde samples at 09/12/2009 16:28:00:910
+Finished Generating 500000 sonde samples on 98.853 seconds (98853 millis) at 09/12/2009 16:29:39:763 consuming 3423 kb
+Started converting samples at 09/12/2009 16:30:14:239
+Finished converting 500000 netbeams samples to mongodb objects on 147.046 seconds (147046 millis) at 09/12/2009 16:32:41:285 consuming 6587.0 kb
+Starting mongodb transaction at 09/12/2009 16:33:08:112
+Finished transaction and inserted 500000 mongodb objects on 101.118 seconds (101118 millis) at 09/12/2009 16:34:49:230 consuming -419.0 Kb
+Experiment finished saving 500000 sonde samples on MongoDB on 451.509 seconds (451509 millis) at 09/12/2009 16:35:32:419 consuming 8533 kb

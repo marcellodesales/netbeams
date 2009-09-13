@@ -1,0 +1,18 @@
+MongoDB shell version: 1.0.0
+url: test
+connecting to: test
+type "help" for help
+> mongo     use   show    use netbeams
+switched to db netbeams
+> show collections
+system.indexes
+ysi
+> db.ysi.count()
+500000
+> s db.ysi.find( ONe()    ne()
+{"_id" :  ObjectId( "a06f4007ca2fac4a82019600")  , "sensor_ip_address" : "192.168.0.143" , "message_id" : "71ab8969-ad10-4766-9424-079751f61667" , "transaction_time" : 1252798213867 , "fact_time" : "1252798081000" , "data" : {"temperature" : "66.03" , "sp_condition" : "48.7" , "condition" : "24.7" , "resistence" : "1059.98" , "salinitude" : "0.05" , "pressure" : "1.495" , "depth" : "1.72" , "ph" : "6.57" , "pH_mv" : "-82.1" , "odo_sat" : "19.3" , "odo_condition" : "4.36" , "turbidity" : "0.1" , "battery" : "2.1"}}
+> db.ysi.find().limit(3)
+{"_id" :  ObjectId( "a06f4007ca2fac4a82019600")  , "sensor_ip_address" : "192.168.0.143" , "message_id" : "71ab8969-ad10-4766-9424-079751f61667" , "transaction_time" : 1252798213867 , "fact_time" : "1252798081000" , "data" : {"temperature" : "66.03" , "sp_condition" : "48.7" , "condition" : "24.7" , "resistence" : "1059.98" , "salinitude" : "0.05" , "pressure" : "1.495" , "depth" : "1.72" , "ph" : "6.57" , "pH_mv" : "-82.1" , "odo_sat" : "19.3" , "odo_condition" : "4.36" , "turbidity" : "0.1" , "battery" : "2.1"}}
+{"_id" :  ObjectId( "a06f4007ca2fac4a83019600")  , "sensor_ip_address" : "192.168.0.143" , "message_id" : "71ab8969-ad10-4766-9424-079751f61667" , "transaction_time" : 1252798213867 , "fact_time" : "1252798081000" , "data" : {"temperature" : "73.03" , "sp_condition" : "107.9" , "condition" : "148.9" , "resistence" : "1818.92" , "salinitude" : "0.08" , "pressure" : "0.54" , "depth" : "0.715" , "ph" : "7.58" , "pH_mv" : "-51.9" , "odo_sat" : "84.0" , "odo_condition" : "2.98" , "turbidity" : "0.1" , "battery" : "6.0"}}
+{"_id" :  ObjectId( "a06f4007ca2fac4a84019600")  , "sensor_ip_address" : "192.168.0.143" , "message_id" : "71ab8969-ad10-4766-9424-079751f61667" , "transaction_time" : 1252798213867 , "fact_time" : "1252798081000" , "data" : {"temperature" : "3.53" , "sp_condition" : "36.1" , "condition" : "72.9" , "resistence" : "5633.97" , "salinitude" : "0.07" , "pressure" : "0.943" , "depth" : "2.128" , "ph" : "3.26" , "pH_mv" : "-28.4" , "odo_sat" : "36.7" , "odo_condition" : "61.03" , "turbidity" : "0.3" , "battery" : "3.9"}}
+> 

@@ -1,0 +1,14 @@
+Sat Sep 12 19:01:20 Mongo DB : starting : pid = 4979 port = 27017 dbpath = data master = 0 slave = 0  32-bit 
+
+** NOTE: when using MongoDB 32 bit, you are limited to about 2 gigabytes of data
+**       see http://blog.mongodb.org/post/137788967/32-bit-limitations for more
+
+Sat Sep 12 19:01:21 db version v1.0.0, pdfile version 4.4
+Sat Sep 12 19:01:21 git version: afe21e02c11f9a923ab1c95edf6fdd95b9a4a51e
+Sat Sep 12 19:01:21 sys info: Linux domU-12-31-39-01-70-B4 2.6.21.7-2.fc8xen #1 SMP Fri Feb 15 12:39:36 EST 2008 i686
+Sat Sep 12 19:01:21 waiting for connections on port 27017
+Sat Sep 12 19:01:21 MiniWebServer: bind() failed port:28017 errno:98
+Sat Sep 12 19:01:21 98 == addr already in use
+Sat Sep 12 19:01:21 warning: web admin interface failed to initialize on port 28017
+Sat Sep 12 19:01:21 listen(): bind() failed errno:98
+Sat Sep 12 19:01:21 98 == addr already in use

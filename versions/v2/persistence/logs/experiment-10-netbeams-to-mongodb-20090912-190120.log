@@ -1,0 +1,7 @@
+Experiment started at 09/12/2009 19:01:22:780
+Starting to generate 10 sonde samples at 09/12/2009 19:01:22:782
+Finished Generating 10 sonde samples on 0.017 seconds (17 millis) at 09/12/2009 19:01:22:799 consuming ~0Kb
+Started converting samples at 09/12/2009 19:01:24:535
+Starting mongodb transaction at 09/12/2009 19:01:25:410
+Finished converting netbeams samples to mongodb objects on 1.527 seconds (1527 millis) at 09/12/2009 19:01:26:62 consuming 11.0 kb
+Experiment finished saving 10 sonde samples on MongoDB on 4.346 seconds (4346 millis) at 09/12/2009 19:01:27:128 consuming 11 kb

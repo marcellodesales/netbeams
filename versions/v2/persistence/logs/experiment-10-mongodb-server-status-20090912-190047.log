@@ -1,0 +1,18 @@
+Sat Sep 12 19:00:47 Mongo DB : starting : pid = 4887 port = 27017 dbpath = data master = 0 slave = 0  32-bit 
+
+** NOTE: when using MongoDB 32 bit, you are limited to about 2 gigabytes of data
+**       see http://blog.mongodb.org/post/137788967/32-bit-limitations for more
+
+Sat Sep 12 19:00:47 db version v1.0.0, pdfile version 4.4
+Sat Sep 12 19:00:47 git version: afe21e02c11f9a923ab1c95edf6fdd95b9a4a51e
+Sat Sep 12 19:00:47 sys info: Linux domU-12-31-39-01-70-B4 2.6.21.7-2.fc8xen #1 SMP Fri Feb 15 12:39:36 EST 2008 i686
+Sat Sep 12 19:00:47 waiting for connections on port 27017
+Sat Sep 12 19:00:47 web admin interface listening on port 28017
+Sat Sep 12 19:01:25 connection accepted from 127.0.0.1:26807 #1
+Sat Sep 12 19:01:26 allocating new datafile data/netbeams.ns, filling with zeroes...
+Sat Sep 12 19:01:26 done allocating datafile data/netbeams.ns, size: 16777216, took 0.297 secs
+Sat Sep 12 19:01:26 allocating new datafile data/netbeams.0, filling with zeroes...
+Sat Sep 12 19:01:28 done allocating datafile data/netbeams.0, size: 67108864, took 2.25 secs
+Sat Sep 12 19:01:28 building new index on { _id: ObjId(000000000000000000000000) } for netbeams.ysi...done for 0 records
+Sat Sep 12 19:01:26 insert netbeams.ysi 2576ms
+Sat Sep 12 19:01:28 end connection 127.0.0.1:26807

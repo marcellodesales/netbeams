@@ -1,0 +1,42 @@
+#!/bin/sh
+
+DATA_DIR=data
+LOG_SUFIX=$(date +%Y%m%d-%H%M%S).log
+NUMBER_SAMPLES=$1
+
+MONGO_SERVER_LOG=logs/experiment-$NUMBER_SAMPLES-mongodb-server-status-$LOG_SUFIX
+MONGO_CLIENT_LOG=logs/experiment-$NUMBER_SAMPLES-mongodb-client-status-$LOG_SUFIX
+NETBEAMS_2_MONGO_LOG=logs/experiment-$NUMBER_SAMPLES-netbeams-to-mongodb-$LOG_SUFIX
+
+echo "########### Netbeams to MongoDB Experiment $LOG_SUFIX ############# "
+echo "\n* 1. Cleaning any existing MongoDB data at '$DATA_DIR'\n"
+rm -rf $DATA_DIR/*
+ls -lah $DATA_DIR
+
+echo "\n* 2. Starting MongoDB Server... NetBEAMS data will be saved at dir '$DATA_DIR'\n"
+
+mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG & 
+
+echo "\n* 3. Ready to run Java experiment with $NUMBER_SAMPLES samples\n"
+
+java -Xms200m -Xmx1900m -classpath ../classes/:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:../thirdparty/mongodb/mongo-0.9.1.jar org.netbeams.dsp.persistence.controller.DSPMongoCRUDService $NUMBER_SAMPLES | tee $NETBEAMS_2_MONGO_LOG
+
+echo "\n* 4. Experiments Results on the following logs:"
+echo "- Mongo DB Server Output: $MONGO_SERVER_LOG"
+echo "- NetBEAMS to MongoDB data transfer output: $NETBEAMS_2_MONGO_LOG" 
+
+echo "\n* 5. MongoDB data dir '$DATA_DIR' size after experiments...\n" 
+du -h $DATA_DIR
+ls -lah $DATA_DIR
+
+echo "\n* 6. Running the MongDB after the experiments...\n"
+echo " - The database name is 'netbeams'. The collection name is 'ysi'"
+echo " - Type 'use netbeams' to change to that database."
+echo " - Type 'db.ysi.*' to issue a command to the collection 'ysi'"
+echo " - Ex: 'db.ysi.count()' = returns the number of elements on the collection 'ysi'"
+echo " -     'db.ysi.findOne()' = returns the first element of the collection 'ysi'"
+echo " -     'db.ysi.find().limit(3)' = returns the first 3 elements of the collection 'ysi'"
+echo " -     'db.ysi.find( {sensor_ip_address:"192.168.0.79"} ).count())' = returns the number of elements of the collection ysi with the given sensor's ip address."
+echo " -     'db.ysi.find({"data.ph":"1.45"})' = returns all the elements that has the property 'data.ph' equals to '1.45'"
+
+mongo netbeams & | tee $MONGO_CLIENT_LOG

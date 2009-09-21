@@ -2,9 +2,16 @@
 
 DATA_DIR=data
 LOG_SUFIX_DATE=$(date +%Y%m%d-%H%M%S)
-NUMBER_SAMPLES=$1
+NUMBER_SAMPLES_PARAM=$1
 DATABASE_NAME=netbeams
 COLLECTION_NAME=SondeDataContainer
+
+JAVA_MEM_MIN=-Xms200m
+JAVA_MEM_MAX=-Xmx2500m
+MONGO_JAVA=../thirdparty/mongodb/mongo-0.9.1.jar
+MONGO_SERVER_IP=127.0.0.1
+JAVA_EXPERIMENT_CLASSPATH=../classes/:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:$MONGO_JAVA:../thirdparty/stopwatch/stopwatch-0.4-with-deps.jar
+JAVA_EXPERIMENT_CLASS=org.netbeams.dsp.persistence.controller.DSPMessageToMongoDBExperiment
 
 MONGO_SERVER_LOG=logs/experiment-$NUMBER_SAMPLES-mongodb-server-status-$LOG_SUFIX_DATE.log
 MONGO_CLIENT_LOG=logs/experiment-$NUMBER_SAMPLES-mongodb-client-status-$LOG_SUFIX_DATE.log
@@ -22,9 +29,11 @@ mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG &
 
 echo "\n* 3. Ready to run Java experiment with $NUMBER_SAMPLES samples\n"
 
-java -Xms200m -Xmx1900m -classpath ../classes/:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:../thirdparty/mongodb/mongo-0.9.1.jar org.netbeams.dsp.persistence.controller.DSPMongoCRUDService $NUMBER_SAMPLES | tee $NETBEAMS_2_MONGO_LOG
+java $JAVA_MEM_MIN $JAVA_MEM_MAX -classpath $JAVA_EXPERIMENT_CLASSPATH $JAVA_EXPERIMENT_CLASS $NUMBER_SAMPLES_PARAM | tee $NETBEAMS_2_MONGO_LOG
 
 echo "\n* 4. Exporting the generated mongoDB data in CSV file format\n"
+echo "Executing the export command \nmongoexport -d $DATABASE_NAME -c $COLLECTION_NAME --dbpath $DATA_DIR --csv -f \"_id,sensor_ip_address,transaction_time,fact_time,data.temperature,data.sp_condition,data.condition,data.resistence,data.salinitude,data.pressure,data.depth,data.ph,data.pH_mv,data.odo_sat,data.odo_condition,data.turbidity,data.battery\" -o $MONGO_DATA_EXPORT_CSV\n"
+
 mongoexport -d $DATABASE_NAME -c $COLLECTION_NAME --dbpath $DATA_DIR --csv -f "_id,sensor_ip_address,transaction_time,fact_time,data.temperature,data.sp_condition,data.condition,data.resistence,data.salinitude,data.pressure,data.depth,data.ph,data.pH_mv,data.odo_sat,data.odo_condition,data.turbidity,data.battery" -o $MONGO_DATA_EXPORT_CSV
 
 echo "\n* 5. Experiments Results on the following logs:"
@@ -37,6 +46,10 @@ echo "\n* 6. mongoDB data dir '$DATA_DIR' size after experiments...\n"
 du -h $DATA_DIR
 ls -lah $DATA_DIR
 
+echo "\n* 7. Accessing the persisted sensor data after the experiments...\n"
+echo " - You can use the mongoDB Client using the command \"mongo $DATABASE_NAME\""
+echo " - You can use the mongoDB REST Web Services using HTTP GET Requests http://$MONGO_SERVER_IP:28017/$DATABASE_NAME/$COLLECTION_NAME/?limit=-5"
+
 echo "\n* 7. Running the mongDB client after the experiments...\n"
 echo " - The database name is '$DATABASE_NAME'. The collection name is '$COLLECTION_NAME'"
 echo " - Type 'show collections' to show all the collections in the current database"
@@ -48,4 +61,4 @@ echo " -     'db.$COLLECTION_NAME.find().limit(3)' = returns the first 3 element
 echo " -     'db.$COLLECTION_NAME.find( {sensor_ip_address:"192.168.0.79"} ).count())' = returns the number of elements of the collection '$COLLECTION_NAME' with the given sensor's ip address."
 echo " -     'db.$COLLECTION_NAME.find({"data.ph":"1.45"})' = returns all the elements that has the property 'data.ph' equals to '1.45'"
 echo " -   More details on how to use the mongo client shell at http://www.mongodb.org/display/DOCS/dbshell+Reference"
-mongo netbeams | tee $MONGO_CLIENT_LOG
+mongo $DATABASE_NAME | tee $MONGO_CLIENT_LOG

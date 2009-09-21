@@ -8,10 +8,11 @@
     <target name="dsp-data-persistence.compile" depends="dsp-data-persistence.clean">
         <property name="dspmanagement.base.dir" value="${DSP.BUNDLES}/DSPManagement"/>
         <path id="dsp-data-persistence.classpath.id">
-        	<pathelement location="${THIRDPARTY}/json/jettison-1.1.jar"/>
-        	<pathelement location="${THIRDPARTY}/json/xstream-1.3.1.jar"/>
+        	<pathelement location="${THIRDPARTY}/mongodb/mongo-0.9.1.jar"/>
+        	<pathelement location="${THIRDPARTY}/stopwatch/stopwatch-0.4-with-deps.jar"/>
             <pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
         	<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
+        	<pathelement location="${XML.JAXB}/sonde/dist/sonde.jar"/>
             <path refid="project.class.path"/>
         </path>
     	<mkdir dir="${DSP.PERSISTENCE}/classes" />
@@ -23,8 +24,8 @@
     <target name="dsp-data-persistence.jar">
         <mkdir dir="${DSP.PERSISTENCE}/classes/libs"/>
         <copy todir="${DSP.PERSISTENCE}/classes/libs">
-        	<fileset dir="${THIRDPARTY}/json/" includes="jettison-1.1.jar"/>
-        	<fileset dir="${THIRDPARTY}/json/" includes="xstream-1.3.1.jar"/>
+            <fileset dir="${THIRDPARTY}/mongodb/" includes="mongo-0.9.1.jar"/>
+            <fileset dir="${THIRDPARTY}/stopwatch/" includes="stopwatch-0.4-with-deps.jar"/>
         </copy>
         <jar basedir="${DSP.PERSISTENCE}/classes" 
              jarfile="${DSP.DEPLOYMENT}/DSPDataPersistence-${DSP.VERSION}.jar" 

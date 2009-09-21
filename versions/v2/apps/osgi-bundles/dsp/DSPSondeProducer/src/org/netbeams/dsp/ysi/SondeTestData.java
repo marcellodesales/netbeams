@@ -1,10 +1,10 @@
 package org.netbeams.dsp.ysi;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 
 /**
  * Generates random test data. The number of data must be specified during the creation of an instance of this class.

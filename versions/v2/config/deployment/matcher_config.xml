@@ -86,5 +86,20 @@
             <gateway>org.netbeams.dsp.wiretransport.client</gateway>
         </matchTarget>
     </matchRule>   
-	
+
+    <matchRule>
+        <ruleid>all_messages_with_consumer_sent_server_persist</ruleid>
+        <matchCriteria>
+            <producerType>ANY</producerType>
+            <producerAddress>REMOTE</producerAddress>
+            <consumerType>ANY</consumerType>
+            <consumerAddress>LOCAL</consumerAddress>
+        </matchCriteria>
+        
+        <matchTarget>
+            <consumerType>org.netbeams.dsp.persistence</consumerType>
+            <consumerAddress>LOCAL</consumerAddress>
+        </matchTarget>
+    </matchRule>
+
 </config>

@@ -2,7 +2,7 @@
 
 DATA_DIR=data
 LOG_SUFIX_DATE=$(date +%Y%m%d-%H%M%S)
-NUMBER_SAMPLES_PARAM=$1
+NUMBER_SAMPLES=$1
 DATABASE_NAME=netbeams
 COLLECTION_NAME=SondeDataContainer
 
@@ -10,7 +10,7 @@ JAVA_MEM_MIN=-Xms200m
 JAVA_MEM_MAX=-Xmx2500m
 MONGO_JAVA=../thirdparty/mongodb/mongo-0.11.jar
 MONGO_SERVER_IP=127.0.0.1
-JAVA_EXPERIMENT_CLASSPATH=../classes/:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:$MONGO_JAVA:../thirdparty/stopwatch/stopwatch-0.4-with-deps.jar
+JAVA_EXPERIMENT_CLASSPATH=../runtime/deployment/DSPDataPersistence-0.1.jar:../runtime/deployment/DSPSondeProducer-0.1.jar:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:$MONGO_JAVA:../thirdparty/stopwatch/stopwatch-0.4-with-deps.jar
 JAVA_EXPERIMENT_CLASS=org.netbeams.dsp.persistence.controller.DSPMessageToMongoDBExperiment
 
 MONGO_SERVER_LOG=logs/experiment-$NUMBER_SAMPLES-mongodb-server-status-$LOG_SUFIX_DATE.log
@@ -29,7 +29,7 @@ mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG &
 
 echo "\n* 3. Ready to run Java experiment with $NUMBER_SAMPLES samples\n"
 
-java $JAVA_MEM_MIN $JAVA_MEM_MAX -classpath $JAVA_EXPERIMENT_CLASSPATH $JAVA_EXPERIMENT_CLASS $NUMBER_SAMPLES_PARAM | tee $NETBEAMS_2_MONGO_LOG
+java $JAVA_MEM_MIN $JAVA_MEM_MAX -classpath $JAVA_EXPERIMENT_CLASSPATH $JAVA_EXPERIMENT_CLASS $NUMBER_SAMPLES | tee $NETBEAMS_2_MONGO_LOG
 
 echo "\n* 4. Exporting the generated mongoDB data in CSV file format\n"
 echo "Executing the export command \nmongoexport -d $DATABASE_NAME -c $COLLECTION_NAME --dbpath $DATA_DIR --csv -f \"_id,sensor_ip_address,transaction_time,fact_time,data.temperature,data.sp_condition,data.condition,data.resistence,data.salinitude,data.pressure,data.depth,data.ph,data.pH_mv,data.odo_sat,data.odo_condition,data.turbidity,data.battery\" -o $MONGO_DATA_EXPORT_CSV\n"

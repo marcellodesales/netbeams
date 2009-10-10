@@ -8,7 +8,7 @@
     <target name="dsp-data-persistence.compile" depends="dsp-data-persistence.clean">
         <property name="dspmanagement.base.dir" value="${DSP.BUNDLES}/DSPManagement"/>
         <path id="dsp-data-persistence.classpath.id">
-        	<pathelement location="${THIRDPARTY}/mongodb/mongo-0.9.1.jar"/>
+        	<pathelement location="${THIRDPARTY}/mongodb/mongo-0.11.jar"/>
         	<pathelement location="${THIRDPARTY}/stopwatch/stopwatch-0.4-with-deps.jar"/>
             <pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
         	<pathelement location="${XML.JAXB}/message/dist/message.jar"/>
@@ -38,12 +38,13 @@
           target: setup-mongodb                      
          - - - - - - - - - - - - - - - - - -->
     <target name="setup-mongodb" depends="init">
-        <delete dir="${DSP.PERSISTENCE.DB}"/>
-        <mkdir dir="${DSP.PERSISTENCE.DB}"/>
+        <chmod perm="777" dir="${DSP.PERSISTENCE.DB}"/>
+        <delete dir="${DSP.PERSISTENCE.DB}/mongodb/**/*"/>
+        <delete dir="${DSP.PERSISTENCE.DB}/data/*.*"/>
         <mkdir dir="${DSP.PERSISTENCE.DB}/data"/>
         <chmod perm="777" dir="${DSP.PERSISTENCE.DB}"/>
-        <unzip src="${THIRDPARTY}/mongodb/mongodb-linux-i686-1.0.0.zip" dest="${DSP.PERSISTENCE.DB}/" />
-        <move file="${DSP.PERSISTENCE.DB}/mongodb-linux-i686-1.0.0" tofile="${DSP.PERSISTENCE.DB}/mongodb"/>
+        <unzip src="${THIRDPARTY}/mongodb/mongodb-linux-i686-1.1.1.zip" dest="${DSP.PERSISTENCE.DB}/" />
+        <move file="${DSP.PERSISTENCE.DB}/mongodb-linux-i686-1.1.1" tofile="${DSP.PERSISTENCE.DB}/mongodb"/>
     </target>
 
     <target name="run-mongodb" depends="init">

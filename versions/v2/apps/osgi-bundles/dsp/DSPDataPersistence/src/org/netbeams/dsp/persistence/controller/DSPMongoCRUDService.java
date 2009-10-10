@@ -10,9 +10,9 @@ import org.netbeams.dsp.ysi.SondeDataContainer;
 import org.netbeams.dsp.ysi.SondeDataType;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
-import com.mongodb.MongoAdmin;
 import com.mongodb.MongoException;
 
 /**
@@ -52,7 +52,7 @@ public class DSPMongoCRUDService {
             throws UnknownHostException, MongoException {
         DBCollection dbCollection = netBeamscollectionsCache.get(persistentMessage.getMessageContentType());
         if (dbCollection == null) {
-            Mongo netbeamsDb = getNetbeamMongoDb();
+            DB netbeamsDb = getNetbeamMongoDb();
             dbCollection = netbeamsDb.getCollection(persistentMessage.getMessageContentType());
         }
         return dbCollection;
@@ -63,9 +63,9 @@ public class DSPMongoCRUDService {
      * @throws UnknownHostException
      * @throws MongoException
      */
-    public static Mongo getNetbeamMongoDb() throws UnknownHostException, MongoException {
-        MongoAdmin admin = new MongoAdmin("127.0.0.1");
-        return admin.getDatabase(NETBEAMS_DATASTORE_NAME);
+    public static DB getNetbeamMongoDb() throws UnknownHostException, MongoException {
+        Mongo admin = new Mongo("127.0.0.1");
+        return admin.getDB(NETBEAMS_DATASTORE_NAME);
     }
 
     /**

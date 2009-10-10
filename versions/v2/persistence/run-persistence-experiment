@@ -8,7 +8,7 @@ COLLECTION_NAME=SondeDataContainer
 
 JAVA_MEM_MIN=-Xms200m
 JAVA_MEM_MAX=-Xmx2500m
-MONGO_JAVA=../thirdparty/mongodb/mongo-0.9.1.jar
+MONGO_JAVA=../thirdparty/mongodb/mongo-0.11.jar
 MONGO_SERVER_IP=127.0.0.1
 JAVA_EXPERIMENT_CLASSPATH=../classes/:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:$MONGO_JAVA:../thirdparty/stopwatch/stopwatch-0.4-with-deps.jar
 JAVA_EXPERIMENT_CLASS=org.netbeams.dsp.persistence.controller.DSPMessageToMongoDBExperiment

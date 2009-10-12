@@ -1,0 +1,2 @@
+mongod --dbpath data/shard-a/ --port 10001 | tee logs/shard-a.log &
+mongod --dbpath data/shards-config/ --port 20000 | tee logs/shard-config.log &

@@ -1,0 +1,21 @@
+MongoDB shell version: 1.1.1
+url: netbeams
+connecting to: netbeams
+type "help" for help
+> db.Sone deDataContainer.find()      count()
+1000000
+> db  config = conf    db.get   getSisterDB("config")
+config
+> config.cu un  hunks.find()
+{"lastmod" : "Tue Jan -2147483647 170858830 12:40:56 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : { $minKey : 1 }} , "max" : {"latitude" : -180.995} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad33b2b199103b406fafd7f") }
+{"lastmod" : "Tue Jan -2147483647 170858901 06:56:25 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : -180.995} , "max" : {"latitude" : -135.542} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad33e1e2fb0cd13a4f4e53c") }
+{"lastmod" : "Tue Jan -2147483647 170858830 12:40:56 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : 180.999} , "max" : {"latitude" : { $maxKey : 1 }} , "shard" : "192.168.1.10:10000" , "_id" :  ObjectId( "4ad33e3f2fb0cd13a4f4e53d") }
+{"lastmod" : {"t" : 1255358562000 , "i" : 2} , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : 1.768} , "max" : {"latitude" : 46.693} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad33e672fb0cd13a4f4e53e") }
+{"lastmod" : "Tue Jan -2147483647 170858901 17:01:59 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : -90.291} , "max" : {"latitude" : -45.221} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad33ee32fb0cd13a4f4e53f") }
+{"lastmod" : "Tue Jan -2147483647 170858901 03:07:34 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : 91.405} , "max" : {"latitude" : 136.423} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad33ee52fb0cd13a4f4e540") }
+{"lastmod" : "Tue Jan -2147483647 170858901 06:56:25 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : -135.542} , "max" : {"latitude" : -90.291} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad3405c2fb0cd13a4f4e541") }
+{"lastmod" : "Tue Jan -2147483647 170858901 17:01:59 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : -45.221} , "max" : {"latitude" : 1.768} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad3405e2fb0cd13a4f4e542") }
+{"lastmod" : "Tue Jan -2147483647 170858901 03:07:34 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : 136.423} , "max" : {"latitude" : 180.999} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad340602fb0cd13a4f4e543") }
+{"lastmod" : {"t" : 1255358562000 , "i" : 3} , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : 46.693} , "max" : {"latitude" : 91.405} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad340622fb0cd13a4f4e544") }
+> exit
+bye

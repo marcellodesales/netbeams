@@ -1,0 +1,64 @@
+Mon Oct 12 07:21:15 mongos v0.3- (alpha 3) starting (--help for usage)
+Mon Oct 12 07:21:15 git version: eca1e97b76dca3cb995ee2e806ae1b1071c3c837
+Mon Oct 12 07:21:15 sys info: Linux domU-12-31-39-01-70-B4 2.6.21.7-2.fc8xen #1 SMP Fri Feb 15 12:39:36 EST 2008 i686
+Mon Oct 12 07:21:15 connecting to griddb localhost:20000...Mon Oct 12 07:21:15 waiting for connections on port 27017
+Mon Oct 12 07:30:23 connection accepted from 127.0.0.1:28804 #1
+creating WriteBackListener for: 192.168.1.11:10001
+Mon Oct 12 07:30:23 reloading shard info for: netbeams.SondeDataContainer
+Mon Oct 12 07:33:02 autosplitting netbeams.SondeDataContainer size: 61645626 shard: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: MinKey } max: { latitude: MaxKey }
+before: { _id: ObjId(4ad33b2b199103b406fafd7f) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: MinKey } max: { latitude: -180.995 }
+after : { _id: ObjId(4ad33b2b199103b406fafd7f) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: MinKey } max: { latitude: -180.995 }
+before: { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: MaxKey }
+after : { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: MaxKey }
+Mon Oct 12 07:33:35 autosplitting netbeams.SondeDataContainer size: 73974663 shard: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: MaxKey }
+before: { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: 180.999 }
+after : { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: 180.999 }
+before: { _id: ObjId(4ad33e3f2fb0cd13a4f4e53d) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 180.999 } max: { latitude: MaxKey }
+after : { _id: ObjId(4ad33e3f2fb0cd13a4f4e53d) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 180.999 } max: { latitude: MaxKey }
+Mon Oct 12 07:33:35 moving chunk (auto): shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 180.999 } max: { latitude: MaxKey } to: 192.168.1.10:10000 #objcets: 1
+Mon Oct 12 07:33:35 moving chunk ns: netbeams.SondeDataContainer moving chunk: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 180.999 } max: { latitude: MaxKey } 192.168.1.11:10001 -> 192.168.1.10:10000
+before: { _id: ObjId(4ad33b2b199103b406fafd7f) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: MinKey } max: { latitude: -180.995 }
+after : { _id: ObjId(4ad33b2b199103b406fafd7f) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: MinKey } max: { latitude: -180.995 }
+before: { _id: ObjId(4ad33e3f2fb0cd13a4f4e53d) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.10:10000 min: { latitude: 180.999 } max: { latitude: MaxKey }
+after : { _id: ObjId(4ad33e3f2fb0cd13a4f4e53d) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.10:10000 min: { latitude: 180.999 } max: { latitude: MaxKey }
+Mon Oct 12 07:34:14 autosplitting netbeams.SondeDataContainer size: 86303259 shard: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: 180.999 }
+before: { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: 1.768 }
+after : { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: 1.768 }
+before: { _id: ObjId(4ad33e672fb0cd13a4f4e53e) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 1.768 } max: { latitude: 180.999 }
+after : { _id: ObjId(4ad33e672fb0cd13a4f4e53e) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 1.768 } max: { latitude: 180.999 }
+Mon Oct 12 07:36:18 autosplitting netbeams.SondeDataContainer size: 67808601 shard: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: 1.768 }
+before: { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: -90.291 }
+after : { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: -90.291 }
+before: { _id: ObjId(4ad33ee32fb0cd13a4f4e53f) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -90.291 } max: { latitude: 1.768 }
+after : { _id: ObjId(4ad33ee32fb0cd13a4f4e53f) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -90.291 } max: { latitude: 1.768 }
+Mon Oct 12 07:36:21 autosplitting netbeams.SondeDataContainer size: 67810806 shard: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 1.768 } max: { latitude: 180.999 }
+before: { _id: ObjId(4ad33e672fb0cd13a4f4e53e) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 1.768 } max: { latitude: 91.405 }
+after : { _id: ObjId(4ad33e672fb0cd13a4f4e53e) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 1.768 } max: { latitude: 91.405 }
+before: { _id: ObjId(4ad33ee52fb0cd13a4f4e540) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 91.405 } max: { latitude: 180.999 }
+after : { _id: ObjId(4ad33ee52fb0cd13a4f4e540) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 91.405 } max: { latitude: 180.999 }
+Mon Oct 12 07:42:36 autosplitting netbeams.SondeDataContainer size: 70891191 shard: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: -90.291 }
+before: { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: -135.542 }
+after : { _id: ObjId(4ad33e1e2fb0cd13a4f4e53c) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -180.995 } max: { latitude: -135.542 }
+before: { _id: ObjId(4ad3405c2fb0cd13a4f4e541) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -135.542 } max: { latitude: -90.291 }
+after : { _id: ObjId(4ad3405c2fb0cd13a4f4e541) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -135.542 } max: { latitude: -90.291 }
+Mon Oct 12 07:42:37 autosplitting netbeams.SondeDataContainer size: 70891632 shard: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -90.291 } max: { latitude: 1.768 }
+before: { _id: ObjId(4ad33ee32fb0cd13a4f4e53f) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -90.291 } max: { latitude: -45.221 }
+after : { _id: ObjId(4ad33ee32fb0cd13a4f4e53f) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -90.291 } max: { latitude: -45.221 }
+before: { _id: ObjId(4ad3405e2fb0cd13a4f4e542) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -45.221 } max: { latitude: 1.768 }
+after : { _id: ObjId(4ad3405e2fb0cd13a4f4e542) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: -45.221 } max: { latitude: 1.768 }
+Mon Oct 12 07:42:40 autosplitting netbeams.SondeDataContainer size: 70892514 shard: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 91.405 } max: { latitude: 180.999 }
+before: { _id: ObjId(4ad33ee52fb0cd13a4f4e540) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 91.405 } max: { latitude: 136.423 }
+after : { _id: ObjId(4ad33ee52fb0cd13a4f4e540) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 91.405 } max: { latitude: 136.423 }
+before: { _id: ObjId(4ad340602fb0cd13a4f4e543) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 136.423 } max: { latitude: 180.999 }
+after : { _id: ObjId(4ad340602fb0cd13a4f4e543) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 136.423 } max: { latitude: 180.999 }
+Mon Oct 12 07:42:42 autosplitting netbeams.SondeDataContainer size: 70892514 shard: shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 1.768 } max: { latitude: 91.405 }
+before: { _id: ObjId(4ad33e672fb0cd13a4f4e53e) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 1.768 } max: { latitude: 46.693 }
+after : { _id: ObjId(4ad33e672fb0cd13a4f4e53e) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 1.768 } max: { latitude: 46.693 }
+before: { _id: ObjId(4ad340622fb0cd13a4f4e544) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 46.693 } max: { latitude: 91.405 }
+after : { _id: ObjId(4ad340622fb0cd13a4f4e544) }	shard  ns:netbeams.SondeDataContainer shard: 192.168.1.11:10001 min: { latitude: 46.693 } max: { latitude: 91.405 }
+creating WriteBackListener for: 192.168.1.10:10000
+Mon Oct 12 07:46:43 reloading shard info for: netbeams.SondeDataContainer
+Mon Oct 12 07:51:49 end connection 127.0.0.1:28804
+Mon Oct 12 07:51:50 connection accepted from 127.0.0.1:7613 #2
+creating WriteBackListener for: localhost:20000
+Mon Oct 12 07:59:36 end connection 127.0.0.1:7613

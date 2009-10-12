@@ -1,0 +1,4 @@
+killall mongos
+killall mongod
+rm -f data/shard-a/*
+rm -f data/shards-config/*

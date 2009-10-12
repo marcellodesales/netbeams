@@ -1,0 +1,31 @@
+Mon Oct 12 07:20:04 Mongo DB : starting : pid = 16234 port = 20000 dbpath = data/shards-config/ master = 0 slave = 0  32-bit 
+
+** NOTE: when using MongoDB 32 bit, you are limited to about 2 gigabytes of data
+**       see http://blog.mongodb.org/post/137788967/32-bit-limitations for more
+
+Mon Oct 12 07:20:04 db version v1.1.1, pdfile version 4.5
+Mon Oct 12 07:20:04 git version: eca1e97b76dca3cb995ee2e806ae1b1071c3c837
+Mon Oct 12 07:20:04 sys info: Linux domU-12-31-39-01-70-B4 2.6.21.7-2.fc8xen #1 SMP Fri Feb 15 12:39:36 EST 2008 i686
+Mon Oct 12 07:20:04 waiting for connections on port 20000
+Mon Oct 12 07:20:10 connection accepted from 127.0.0.1:32706 #1
+Mon Oct 12 07:20:10 allocating new datafile data/shards-config/config.ns, filling with zeroes...
+Mon Oct 12 07:20:10 done allocating datafile data/shards-config/config.ns, size: 16MB, took 0.032 secs
+Mon Oct 12 07:20:10 allocating new datafile data/shards-config/config.0, filling with zeroes...
+Mon Oct 12 07:20:12 done allocating datafile data/shards-config/config.0, size: 64MB, took 1.767 secs
+Mon Oct 12 07:20:12 building new index on { _id: ObjId(000000000000000000000000) } for config.version...
+Mon Oct 12 07:20:12 Buildindex config.version idxNo:0 { name: "_id_", ns: "config.version", key: { _id: ObjId(000000000000000000000000) } }
+Mon Oct 12 07:20:12 done for 0 records 0.001secs
+Mon Oct 12 07:20:10 insert config.version 1827ms
+Mon Oct 12 07:20:27 building new index on { _id: ObjId(000000000000000000000000) } for config.databases...
+Mon Oct 12 07:20:27 Buildindex config.databases idxNo:0 { name: "_id_", ns: "config.databases", key: { _id: ObjId(000000000000000000000000) } }
+Mon Oct 12 07:20:27 done for 0 records 0secs
+Mon Oct 12 07:20:27 building new index on { _id: ObjId(000000000000000000000000) } for config.shards...
+Mon Oct 12 07:20:27 Buildindex config.shards idxNo:0 { name: "_id_", ns: "config.shards", key: { _id: ObjId(000000000000000000000000) } }
+Mon Oct 12 07:20:27 done for 0 records 0secs
+Mon Oct 12 07:20:27 building new index on { _id: ObjId(000000000000000000000000) } for config.chunks...
+Mon Oct 12 07:20:27 Buildindex config.chunks idxNo:0 { name: "_id_", ns: "config.chunks", key: { _id: ObjId(000000000000000000000000) } }
+Mon Oct 12 07:20:27 done for 0 records 0secs
+Mon Oct 12 07:20:27 connection accepted from 127.0.0.1:25308 #2
+Mon Oct 12 07:21:07 end connection 127.0.0.1:32706
+Mon Oct 12 07:21:15 connection accepted from 127.0.0.1:25564 #3
+Mon Oct 12 07:54:41 connection accepted from 127.0.0.1:51131 #4

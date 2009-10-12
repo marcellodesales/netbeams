@@ -1,6 +1,7 @@
 package org.netbeams.dsp.persistence.controller;
 
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +32,10 @@ import com.mongodb.MongoException;
  * 
  */
 public class DSPMongoCRUDService {
+    
+    private static final DecimalFormat ONE_DECIMAL_FORMATTER = new DecimalFormat("###0.0");
+    private static final DecimalFormat TWO_DECIMALS_FORMATTER = new DecimalFormat("###0.00");
+    private static final DecimalFormat THREE_DECIMALS_FORMATTER = new DecimalFormat("###0.000");
 
     /**
      * The default mongoDB database name for the project.
@@ -78,6 +83,10 @@ public class DSPMongoCRUDService {
     public static BasicDBObject buildKeySegment(PersistentMessageUnit tranMsg, long factTime, BasicDBObject docValue) {
         BasicDBObject doc = new BasicDBObject();
         doc.put("sensor_ip_address", tranMsg.getSensorLocation().getIpAddress());
+        //doc.put("latitude", tranMsg.getSensorLocation().getLatitude());
+        //doc.put("longitude", tranMsg.getSensorLocation().getLongitude());
+        doc.put("latitude", Double.valueOf(THREE_DECIMALS_FORMATTER.format((Math.random() * 180 + 1) * (Math.random() > .5 ? 1 : -1))));
+        doc.put("longitude", Double.valueOf(THREE_DECIMALS_FORMATTER.format((Math.random() * 180 + 1) * (Math.random() > .5 ? 1 : -1))));
         doc.put("message_id", tranMsg.getDspMessage().getMessageID());
         doc.put("transaction_time", tranMsg.getCollectionTimeMilliseconds());
         doc.put("fact_time", factTime);
@@ -122,19 +131,19 @@ public class DSPMongoCRUDService {
      */
     public static BasicDBObject buildValueSegment(SondeDataType sondeData) {
         BasicDBObject docValue = new BasicDBObject();
-        docValue.put("temperature", "" + sondeData.getTemp().floatValue());
-        docValue.put("sp_condition", "" + sondeData.getSpCond().floatValue());
-        docValue.put("condition", "" + sondeData.getCond().floatValue());
-        docValue.put("resistence", "" + sondeData.getResist().floatValue());
-        docValue.put("salinity", "" + sondeData.getSal().floatValue());
-        docValue.put("pressure", "" + sondeData.getPress().floatValue());
-        docValue.put("depth", "" + sondeData.getDepth().floatValue());
-        docValue.put("ph", "" + sondeData.getPH().floatValue());
-        docValue.put("pH_mv", "" + sondeData.getPhmV().floatValue());
-        docValue.put("odo_sat", "" + sondeData.getODOSat().floatValue());
-        docValue.put("odo_condition", "" + sondeData.getODOConc().floatValue());
-        docValue.put("turbidity", "" + sondeData.getTurbid().floatValue());
-        docValue.put("battery", "" + sondeData.getBattery().floatValue());
+        docValue.put("temperature", Double.valueOf(TWO_DECIMALS_FORMATTER.format(sondeData.getTemp())));
+        docValue.put("sp_condition", Double.valueOf(ONE_DECIMAL_FORMATTER.format(sondeData.getSpCond())));
+        docValue.put("condition", Double.valueOf(ONE_DECIMAL_FORMATTER.format(sondeData.getCond())));
+        docValue.put("resistence", Double.valueOf(TWO_DECIMALS_FORMATTER.format(sondeData.getResist())));
+        docValue.put("salinity", Double.valueOf(TWO_DECIMALS_FORMATTER.format(sondeData.getSal())));
+        docValue.put("pressure", Double.valueOf(THREE_DECIMALS_FORMATTER.format(sondeData.getPress())));
+        docValue.put("depth", Double.valueOf(THREE_DECIMALS_FORMATTER.format(sondeData.getDepth())));
+        docValue.put("ph", Double.valueOf(TWO_DECIMALS_FORMATTER.format(sondeData.getPH())));
+        docValue.put("pH_mv", Double.valueOf(ONE_DECIMAL_FORMATTER.format(sondeData.getPhmV())));
+        docValue.put("odo_sat", Double.valueOf(ONE_DECIMAL_FORMATTER.format(sondeData.getODOSat())));
+        docValue.put("odo_condition", Double.valueOf(TWO_DECIMALS_FORMATTER.format(sondeData.getODOConc())));
+        docValue.put("turbidity", Double.valueOf(ONE_DECIMAL_FORMATTER.format(sondeData.getTurbid())));
+        docValue.put("battery", Double.valueOf(ONE_DECIMAL_FORMATTER.format(sondeData.getBattery())));
         return docValue;
     }
 }

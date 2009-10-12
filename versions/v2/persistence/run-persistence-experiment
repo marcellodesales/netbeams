@@ -7,7 +7,7 @@ DATABASE_NAME=netbeams
 COLLECTION_NAME=SondeDataContainer
 
 JAVA_MEM_MIN=-Xms200m
-JAVA_MEM_MAX=-Xmx2500m
+JAVA_MEM_MAX=-Xmx1500m
 MONGO_JAVA=../thirdparty/mongodb/mongo-0.11.jar
 MONGO_SERVER_IP=127.0.0.1
 JAVA_EXPERIMENT_CLASSPATH=../runtime/deployment/DSPDataPersistence-0.1.jar:../runtime/deployment/DSPSondeProducer-0.1.jar:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:$MONGO_JAVA:../thirdparty/stopwatch/stopwatch-0.4-with-deps.jar
@@ -20,12 +20,19 @@ MONGO_DATA_EXPORT_CSV=logs/experiment-$NUMBER_SAMPLES-data-exported-$LOG_SUFIX_D
 
 echo "########### Netbeams to MongoDB Experiment $LOG_SUFIX ############# "
 echo "\n* 1. Cleaning any existing MongoDB data at '$DATA_DIR'\n"
-rm -rf $DATA_DIR/*
-ls -lah $DATA_DIR
+#rm -rf $DATA_DIR/*
+ls -lah $DATA_DIR/shard-a
+ls -lah $DATA_DIR/shard-b
 
-echo "\n* 2. Starting MongoDB Server... NetBEAMS data will be saved at dir '$DATA_DIR'\n"
+echo "\n* 2. Starting MongoDB Server with 2 local shards (1 remote)... NetBEAMS data will be saved at dir '$DATA_DIR'\n"
 
-mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG & 
+#mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG & 
+
+#mongod --dbpath data/shard-a/ --port 10000 | tee logs/shard-a.log &
+#mongod --dbpath data/shard-b/ --port 10001 | tee logs/shard-b.log &
+#mongod --dbpath data/shards-config/ --port 20000 | tee logs/shards-config.log &
+
+mongos --configdb localhost:20000 | tee $MONGO_SERVER_LOG &
 
 echo "\n* 3. Ready to run Java experiment with $NUMBER_SAMPLES samples\n"
 
@@ -43,8 +50,8 @@ echo "- NetBEAMS to mongoDB data transfer log output: $NETBEAMS_2_MONGO_LOG (aft
 echo "- mongoDB data exported in CSV format: $MONGO_DATA_EXPORT_CSV"
 
 echo "\n* 6. mongoDB data dir '$DATA_DIR' size after experiments...\n" 
-du -h $DATA_DIR
-ls -lah $DATA_DIR
+du -h $DATA_DIR/shard-a/
+ls -lah $DATA_DIR/shard-b/
 
 echo "\n* 7. Accessing the persisted sensor data after the experiments...\n"
 echo " - You can use the mongoDB Client using the command \"mongo $DATABASE_NAME\""
@@ -61,4 +68,5 @@ echo " -     'db.$COLLECTION_NAME.find().limit(3)' = returns the first 3 element
 echo " -     'db.$COLLECTION_NAME.find( {sensor_ip_address:"192.168.0.79"} ).count())' = returns the number of elements of the collection '$COLLECTION_NAME' with the given sensor's ip address."
 echo " -     'db.$COLLECTION_NAME.find({"data.ph":"1.45"})' = returns all the elements that has the property 'data.ph' equals to '1.45'"
 echo " -   More details on how to use the mongo client shell at http://www.mongodb.org/display/DOCS/dbshell+Reference"
+
 mongo $DATABASE_NAME | tee $MONGO_CLIENT_LOG

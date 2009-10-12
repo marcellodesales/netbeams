@@ -154,7 +154,7 @@ public class DSPMessageToMongoDBExperiment {
         System.out.println("Experiment started at " + DATE_FORMATTER.format(new Date()));
         long start = System.currentTimeMillis();
         System.out.println("Starting to generate " + NUMBER_SAMPLES + " sonde samples at "
-                + DATE_FORMATTER.format(new Date(start)));
+                + DATE_FORMATTER.format(new Date(start)) + "; MEM USED: " + startMemoryUse);
 
         SondeDataContainer container = SondeTestData.generateRandomSondeDataContainer(NUMBER_SAMPLES);
 
@@ -177,8 +177,8 @@ public class DSPMessageToMongoDBExperiment {
         Stopwatch.stop(watchMessageCreationId);
 
         SensorLocation.Builder builder = new SensorLocation.Builder();
-        builder.setIpAddress(hostIpAddr).setLatitude((float) (Math.random() * 100 + 1)).setLongitude(
-                (float) (Math.random() * 100 + 1));
+        builder.setIpAddress(hostIpAddr).setLatitude((float) (Math.random() * 180 + 1)).setLongitude(
+                (float) (Math.random() * 180 + 1));
         PersistentMessageUnit pmu = new PersistentMessageUnit(msg, builder.build());
 
         try {

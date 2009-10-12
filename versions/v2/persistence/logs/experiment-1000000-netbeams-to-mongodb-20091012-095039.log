@@ -1,0 +1,14 @@
+Experiment started at 10/12/2009 09:50:44:398
+Starting to generate 1000000 sonde samples at 10/12/2009 09:50:44:400; MEM USED: 1776832
+Finished Generating 1000000 sonde samples on 6.3601 minutes (381606 milliseconds) at 10/12/2009 09:57:06:06 consuming ~684851.0Kb
+Producing a random DSP Message with 1000000 items on the content message
+Started saving netbeams samples as mongodb objects at 10/12/2009 09:58:17:199
+Starting mongodb transaction at 10/12/2009 09:58:52:63
+Finished tranaction and saving netbeams samples to mongodb objects in 17.956282 minutes (1077377 milliseconds) at 10/12/2009 10:16:14:576 consuming ~150357Kb
+Experiment finished saving 1000000 sonde samples on MongoDB on 27.005085 minutes (1620305 milliseconds) at 10/12/2009 10:17:44:705 consuming ~150384.0 Kb
+
+Processing times for sections
+Group="Complete Experiene"  Label="entire-experience"  Count=1  Min=1621520ms  Avg=1621520ms  Max=1621520ms  Total=1621520ms
+Group="Transaction time for inserting"  Label="sonde-2-mongodb"  Count=1  Min=1042701ms  Avg=1042701ms  Max=1042701ms  Total=1042701ms
+Group="Sonde Data Transformation and Persistence"  Label="sonde-2-mongodb"  Count=1000000  Min=0ms  Avg=0.88ms  Max=22990ms  Total=882379ms
+Group="DSP Message Creation"  Label="dsp-creation"  Count=1  Min=116ms  Avg=116ms  Max=116ms  Total=116ms

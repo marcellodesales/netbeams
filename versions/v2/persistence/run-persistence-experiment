@@ -19,12 +19,12 @@ NETBEAMS_2_MONGO_LOG=logs/experiment-$NUMBER_SAMPLES-netbeams-to-mongodb-$LOG_SU
 MONGO_DATA_EXPORT_CSV=logs/experiment-$NUMBER_SAMPLES-data-exported-$LOG_SUFIX_DATE.csv
 
 echo "########### Netbeams to MongoDB Experiment $LOG_SUFIX ############# "
-echo "\n* 1. Cleaning any existing MongoDB data at '$DATA_DIR'\n"
+echo "\n# 1. Cleaning any existing MongoDB data at '$DATA_DIR'\n"
 #rm -rf $DATA_DIR/*
 ls -lah $DATA_DIR/shard-a
 ls -lah $DATA_DIR/shard-b
 
-echo "\n* 2. Starting MongoDB Server with 2 local shards (1 remote)... NetBEAMS data will be saved at dir '$DATA_DIR'\n"
+echo "\n# 2. Starting MongoDB Server with 2 local shards (1 remote)... NetBEAMS data will be saved at dir '$DATA_DIR'\n"
 
 #mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG & 
 
@@ -34,7 +34,7 @@ echo "\n* 2. Starting MongoDB Server with 2 local shards (1 remote)... NetBEAMS 
 
 mongos --configdb localhost:20000 | tee $MONGO_SERVER_LOG &
 
-echo "\n* 3. Ready to run Java experiment with $NUMBER_SAMPLES samples\n"
+echo "\n# 3. Ready to run Java experiment with $NUMBER_SAMPLES samples\n"
 
 java $JAVA_MEM_MIN $JAVA_MEM_MAX -classpath $JAVA_EXPERIMENT_CLASSPATH $JAVA_EXPERIMENT_CLASS $NUMBER_SAMPLES | tee $NETBEAMS_2_MONGO_LOG
 
@@ -62,11 +62,12 @@ echo " - The database name is '$DATABASE_NAME'. The collection name is '$COLLECT
 echo " - Type 'show collections' to show all the collections in the current database"
 echo " - Type 'use $DATABASE_NAME' to change to that database."
 echo " - Type 'db.$COLLECTION_NAME.*' to issue a command to the collection '$COLLECTION_NAME'"
-echo " - Ex: 'db.$COLLECTION_NAME.count()' = returns the number of elements on the collection '$COLLECTION_NAME'"
-echo " -     'db.$COLLECTION_NAME.findOne()' = returns the first element of the collection '$COLLECTION_NAME'"
-echo " -     'db.$COLLECTION_NAME.find().limit(3)' = returns the first 3 elements of the collection '$COLLECTION_NAME'"
-echo " -     'db.$COLLECTION_NAME.find( {sensor_ip_address:"192.168.0.79"} ).count())' = returns the number of elements of the collection '$COLLECTION_NAME' with the given sensor's ip address."
-echo " -     'db.$COLLECTION_NAME.find({"data.ph":"1.45"})' = returns all the elements that has the property 'data.ph' equals to '1.45'"
+echo " - Ex: 'db.$COLLECTION_NAME.count()' = Global Shard Query, returns the number of docs on the collection '$COLLECTION_NAME'"
+echo " -     'db.$COLLECTION_NAME.findOne()' = Target Shard Query, returns the first element of the collection '$COLLECTION_NAME'"
+echo " -     'db.$COLLECTION_NAME.find().limit(3)' = Target Shard Query, returns the first 3 elements of the collection '$COLLECTION_NAME'"
+echo " -     'db.$COLLECTION_NAME.find( {sensor_ip_address:\"192.168.0.79\"} ).length()' = returns the number of elements of the collection '$COLLECTION_NAME' with the given sensor's ip address."
+echo " -     'db.$COLLECTION_NAME.find( {\"data.ph\":1.45} ).limit(4)' = returns 4 docs that has the property 'data.ph' equals to '1.45'"
+echo " -      db.$COLLECTION_NAME.dataSize() = returns the size of the collection in bytes"
 echo " -   More details on how to use the mongo client shell at http://www.mongodb.org/display/DOCS/dbshell+Reference"
 
 mongo $DATABASE_NAME | tee $MONGO_CLIENT_LOG

@@ -1,0 +1,13 @@
+Sun Oct 11 16:04:18 Mongo DB : starting : pid = 30506 port = 20000 dbpath = data/shards-config/ master = 0 slave = 0  32-bit 
+
+** NOTE: when using MongoDB 32 bit, you are limited to about 2 gigabytes of data
+**       see http://blog.mongodb.org/post/137788967/32-bit-limitations for more
+
+Sun Oct 11 16:04:18 db version v1.1.1, pdfile version 4.5
+Sun Oct 11 16:04:18 git version: eca1e97b76dca3cb995ee2e806ae1b1071c3c837
+Sun Oct 11 16:04:18 sys info: Linux domU-12-31-39-01-70-B4 2.6.21.7-2.fc8xen #1 SMP Fri Feb 15 12:39:36 EST 2008 i686
+Sun Oct 11 16:04:18 waiting for connections on port 20000
+Sun Oct 11 16:15:35 connection accepted from 127.0.0.1:34201 #1
+Sun Oct 11 16:45:20 connection accepted from 127.0.0.1:17356 #2
+Sun Oct 11 17:33:31 connection accepted from 127.0.0.1:39623 #3
+Sun Oct 11 17:33:31 end connection 127.0.0.1:39623

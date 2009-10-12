@@ -1,0 +1,25 @@
+MongoDB shell version: 1.1.1
+url: test
+connecting to: test
+type "help" for help
+> admin = db.getSisterDB("admin")
+admin
+> config = db.getSisterDB("config")
+config
+> 
+> admin.runCommand({addshard:"192.168.1.10:10000"})
+{"ok" : 1 , "added" : "192.168.1.10:10000"}
+> admin.runCommand({addshard:"192.168.1.11:10001"})
+{"ok" : 1 , "added" : "192.168.1.11:10001"}
+> 
+> admin.runCommand({listshards:1})
+{"shards" : [{"_id" :  ObjectId( "4ad35e0a4f51545b3ee6f755")  , "host" : "192.168.1.10:10000"},{"_id" :  ObjectId( "4ad35e0a4f51545b3ee6f756")  , "host" : "192.168.1.11:10001"}] , "ok" : 1}
+> 
+> admin.runCommand({enablesharding:"netbeams"})
+{"ok" : 1}
+> admin.runCommand({shardcollection:"netbeams.SondeDataContainer", key:{latit<llection:"netbeams.SondeDataContainer", key:{latitu                         de:1}})
+{"collectionsharded" : "netbeams.SondeDataContainer" , "ok" : 1}
+> 
+> config.chunks.find()
+{"lastmod" : {"t" : 1255366154000 , "i" : 1} , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : { $minKey : 1 }} , "max" : {"latitude" : { $maxKey : 1 }} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad35e0a0e88d58604fe0540") }
+> bye

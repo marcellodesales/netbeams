@@ -1,0 +1,1 @@
+mongo < setup-mongo-shards.js | tee logs/setup-mongo-shards-for-netbeams.log

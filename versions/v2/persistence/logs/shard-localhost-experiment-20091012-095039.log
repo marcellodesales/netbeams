@@ -1,0 +1,277 @@
+Mon Oct 12 09:48:41 Mongo DB : starting : pid = 21849 port = 10001 dbpath = data/shard-a/ master = 0 slave = 0  32-bit 
+
+** NOTE: when using MongoDB 32 bit, you are limited to about 2 gigabytes of data
+**       see http://blog.mongodb.org/post/137788967/32-bit-limitations for more
+
+Mon Oct 12 09:48:41 db version v1.1.1, pdfile version 4.5
+Mon Oct 12 09:48:41 git version: eca1e97b76dca3cb995ee2e806ae1b1071c3c837
+Mon Oct 12 09:48:41 sys info: Linux domU-12-31-39-01-70-B4 2.6.21.7-2.fc8xen #1 SMP Fri Feb 15 12:39:36 EST 2008 i686
+Mon Oct 12 09:48:41 waiting for connections on port 10001
+Mon Oct 12 09:49:14 connection accepted from 192.168.1.11:32132 #1
+Mon Oct 12 09:49:14 allocating new datafile data/shard-a/netbeams.ns, filling with zeroes...
+Mon Oct 12 09:49:15 done allocating datafile data/shard-a/netbeams.ns, size: 16MB, took 0.218 secs
+Mon Oct 12 09:49:15 allocating new datafile data/shard-a/netbeams.0, filling with zeroes...
+Mon Oct 12 09:49:16 done allocating datafile data/shard-a/netbeams.0, size: 64MB, took 1.451 secs
+Mon Oct 12 09:49:16 building new index on { _id: ObjId(000000000000000000000000) } for netbeams.SondeDataContainer...
+Mon Oct 12 09:49:16 Buildindex netbeams.SondeDataContainer idxNo:0 { name: "_id_", ns: "netbeams.SondeDataContainer", key: { _id: ObjId(000000000000000000000000) } }
+Mon Oct 12 09:49:16 done for 0 records 0.002secs
+Mon Oct 12 09:49:16 info: creating collection netbeams.SondeDataContainer on add index
+Mon Oct 12 09:49:16 building new index on { latitude: 1.0 } for netbeams.SondeDataContainer...
+Mon Oct 12 09:49:16 Buildindex netbeams.SondeDataContainer idxNo:1 { ns: "netbeams.SondeDataContainer", key: { latitude: 1.0 }, name: "latitude_1" }
+Mon Oct 12 09:49:16 done for 0 records 0secs
+Mon Oct 12 09:49:14 insert netbeams.system.indexes 1685ms
+Mon Oct 12 09:49:16 allocating new datafile data/shard-a/netbeams.1, filling with zeroes...
+Mon Oct 12 09:49:19 done allocating datafile data/shard-a/netbeams.1, size: 128MB, took 3.336 secs
+Mon Oct 12 09:50:37 end connection 192.168.1.11:32132
+Mon Oct 12 09:58:52 connection accepted from 192.168.1.11:946 #2
+Mon Oct 12 09:58:52 connection accepted from 192.168.1.11:1202 #3
+Finding size for ns: netbeams.SondeDataContainer between { : MinKey } and { : MaxKey } took 134ms.
+Mon Oct 12 10:00:17 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: MinKey }, max: { latitude: MaxKey } }  nreturned:1 139ms
+Mon Oct 12 10:00:30 allocating new datafile data/shard-a/netbeams.2, filling with zeroes...
+Mon Oct 12 10:00:32 done allocating datafile data/shard-a/netbeams.2, size: 256MB, took 2.07 secs
+Mon Oct 12 10:00:30 newExtent: netbeams.SondeDataContainer file 0 full, adding a new file
+Finding size for ns: netbeams.SondeDataContainer between { : MinKey } and { : MaxKey } took 195ms.
+Mon Oct 12 10:00:46 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: MinKey }, max: { latitude: MaxKey } }  nreturned:1 197ms
+Finding size for ns: netbeams.SondeDataContainer between { : MinKey } and { : MaxKey } took 223ms.
+Mon Oct 12 10:01:13 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: MinKey }, max: { latitude: MaxKey } }  nreturned:1 230ms
+Mon Oct 12 10:01:13 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -180.998, $lt: MaxKey } } }  nreturned:1 339ms
+Finding size for ns: netbeams.SondeDataContainer between { : -180.998 } and { : MaxKey } took 342ms.
+Mon Oct 12 10:01:40 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: MaxKey } }  nreturned:1 343ms
+Mon Oct 12 10:01:40 got movechunk.start: { movechunk.start: "netbeams.SondeDataContainer", from: "192.168.1.11:10001", to: "192.168.1.10:10000", filter: { latitude: { $gte: 180.995, $lt: MaxKey } } }
+Mon Oct 12 10:01:40 connection accepted from 192.168.1.10:14557 #4
+Mon Oct 12 10:01:40 allocating new datafile data/shard-a/local.ns, filling with zeroes...
+Mon Oct 12 10:01:40 done allocating datafile data/shard-a/local.ns, size: 16MB, took 0.025 secs
+Mon Oct 12 10:01:40 allocating new datafile data/shard-a/local.0, filling with zeroes...
+Mon Oct 12 10:01:41 done allocating datafile data/shard-a/local.0, size: 64MB, took 0.338 secs
+Mon Oct 12 10:01:41 allocating new datafile data/shard-a/local.1, filling with zeroes...
+Mon Oct 12 10:01:46 done allocating datafile data/shard-a/local.1, size: 256MB, took 4.805 secs
+Mon Oct 12 10:01:40 query netbeams.$cmd ntoreturn:1 reslen:53 nscanned:0 { logCollection: "netbeams.SondeDataContainer", start: 1 }  nreturned:1 5180ms
+Mon Oct 12 10:01:48    movechunk.start res: { finishToken: { fromhost: "192.168.1.11:10001", collection: "netbeams.SondeDataContainer", query: { latitude: { $gte: 180.995, $lt: MaxKey } }, cursorId: new Date(0) }, ok: 1.0 }
+Mon Oct 12 10:01:40 query admin.$cmd ntoreturn:1 reslen:212 nscanned:0 { movechunk.start: "netbeams.SondeDataContainer", from: "192.168.1.11:10001", to: "192.168.1.10:10000", filter: { latitude: { $gte: 180.995, $lt: MaxKey } } }  nreturned:1 7944ms
+Mon Oct 12 10:01:48 connection accepted from 192.168.1.11:37346 #5
+Mon Oct 12 10:01:48 end connection 192.168.1.10:14557
+Mon Oct 12 10:01:48 connection accepted from 192.168.1.10:14813 #6
+Mon Oct 12 10:01:48 allocating new datafile data/shard-a/local.2, filling with zeroes...
+Mon Oct 12 10:01:48 end connection 192.168.1.10:14813
+Mon Oct 12 10:01:49 insert netbeams.SondeDataContainer 1457ms
+Mon Oct 12 10:01:51 insert netbeams.SondeDataContainer 4800ms
+Mon Oct 12 10:01:55 insert netbeams.SondeDataContainer 130ms
+Mon Oct 12 10:01:56 insert netbeams.SondeDataContainer 467ms
+Mon Oct 12 10:01:56 insert netbeams.SondeDataContainer 1353ms
+Mon Oct 12 10:01:58 insert netbeams.SondeDataContainer 2318ms
+Mon Oct 12 10:02:00 insert netbeams.SondeDataContainer 1305ms
+Mon Oct 12 10:02:01 insert netbeams.SondeDataContainer 133ms
+Mon Oct 12 10:02:02 insert netbeams.SondeDataContainer 1296ms
+Mon Oct 12 10:02:03 insert netbeams.SondeDataContainer 1485ms
+Mon Oct 12 10:02:05 insert netbeams.SondeDataContainer 1386ms
+Mon Oct 12 10:02:06 insert netbeams.SondeDataContainer 1099ms
+Mon Oct 12 10:02:08 insert netbeams.SondeDataContainer 3292ms
+Mon Oct 12 10:02:12 insert netbeams.SondeDataContainer 947ms
+Mon Oct 12 10:02:12 insert netbeams.SondeDataContainer 172ms
+Mon Oct 12 10:02:13 insert netbeams.SondeDataContainer 509ms
+Mon Oct 12 10:02:13 insert netbeams.SondeDataContainer 324ms
+Mon Oct 12 10:02:14 insert netbeams.SondeDataContainer 731ms
+Mon Oct 12 10:02:14 insert netbeams.SondeDataContainer 122ms
+Mon Oct 12 10:02:14 insert netbeams.SondeDataContainer 146ms
+Mon Oct 12 10:02:15 done allocating datafile data/shard-a/local.2, size: 256MB, took 26.306 secs
+Mon Oct 12 10:02:15 insert netbeams.SondeDataContainer 130ms
+Mon Oct 12 10:02:20 insert netbeams.SondeDataContainer 134ms
+Mon Oct 12 10:02:20 insert netbeams.SondeDataContainer 179ms
+Finding size for ns: netbeams.SondeDataContainer between { : -180.998 } and { : 180.995 } took 554ms.
+Mon Oct 12 10:02:35 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: 180.995 } }  nreturned:1 574ms
+Finding median for index: { latitude: 1.0 } between { : -180.998 } and { : 180.995 } took 310ms.
+Mon Oct 12 10:02:36 query admin.$cmd ntoreturn:1 reslen:84 nscanned:0 { medianKey: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: 180.995 } }  nreturned:1 385ms
+Mon Oct 12 10:02:36 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -1.418, $lt: 180.995 } } }  nreturned:1 209ms
+Mon Oct 12 10:02:36 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -180.998, $lt: -1.418 } } }  nreturned:1 375ms
+Finding size for ns: netbeams.SondeDataContainer between { : -180.998 } and { : -1.418 } took 205ms.
+Mon Oct 12 10:03:28 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: -1.418 } }  nreturned:1 225ms
+Finding size for ns: netbeams.SondeDataContainer between { : -1.418 } and { : 180.995 } took 272ms.
+Mon Oct 12 10:03:28 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -1.418 }, max: { latitude: 180.995 } }  nreturned:1 283ms
+Mon Oct 12 10:03:42 insert netbeams.SondeDataContainer 154ms
+Finding size for ns: netbeams.SondeDataContainer between { : -180.998 } and { : -1.418 } took 243ms.
+Mon Oct 12 10:04:21 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: -1.418 } }  nreturned:1 264ms
+Finding median for index: { latitude: 1.0 } between { : -180.998 } and { : -1.418 } took 213ms.
+Mon Oct 12 10:04:21 query admin.$cmd ntoreturn:1 reslen:84 nscanned:0 { medianKey: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: -1.418 } }  nreturned:1 217ms
+Mon Oct 12 10:04:22 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -91.569, $lt: -1.418 } } }  nreturned:1 253ms
+Mon Oct 12 10:04:22 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -180.998, $lt: -91.569 } } }  nreturned:1 181ms
+Finding size for ns: netbeams.SondeDataContainer between { : -1.418 } and { : 180.995 } took 343ms.
+Mon Oct 12 10:04:22 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -1.418 }, max: { latitude: 180.995 } }  nreturned:1 370ms
+Finding median for index: { latitude: 1.0 } between { : -1.418 } and { : 180.995 } took 261ms.
+Mon Oct 12 10:04:23 query admin.$cmd ntoreturn:1 reslen:84 nscanned:0 { medianKey: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -1.418 }, max: { latitude: 180.995 } }  nreturned:1 261ms
+Mon Oct 12 10:04:23 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: 90.587, $lt: 180.995 } } }  nreturned:1 263ms
+Mon Oct 12 10:04:23 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -1.418, $lt: 90.587 } } }  nreturned:1 270ms
+Mon Oct 12 10:04:50 allocating new datafile data/shard-a/netbeams.3, filling with zeroes...
+Mon Oct 12 10:04:50 newExtent: netbeams.SondeDataContainer file 1 full, adding a new file
+Mon Oct 12 10:04:51 insert netbeams.SondeDataContainer 225ms
+Mon Oct 12 10:04:51 insert netbeams.SondeDataContainer 199ms
+Mon Oct 12 10:04:51 insert netbeams.SondeDataContainer 210ms
+Mon Oct 12 10:04:52 insert netbeams.SondeDataContainer 142ms
+Mon Oct 12 10:04:52 insert netbeams.SondeDataContainer 155ms
+Mon Oct 12 10:04:52 insert netbeams.SondeDataContainer 245ms
+Mon Oct 12 10:04:53 insert netbeams.SondeDataContainer 121ms
+Mon Oct 12 10:04:54 insert netbeams.SondeDataContainer 514ms
+Mon Oct 12 10:04:54 insert netbeams.SondeDataContainer 107ms
+Mon Oct 12 10:04:55 insert netbeams.SondeDataContainer 142ms
+Mon Oct 12 10:04:55 insert netbeams.SondeDataContainer 109ms
+Mon Oct 12 10:04:55 insert netbeams.SondeDataContainer 1619ms
+Mon Oct 12 10:04:57 insert netbeams.SondeDataContainer 263ms
+Mon Oct 12 10:04:57 insert netbeams.SondeDataContainer 638ms
+Mon Oct 12 10:04:58 insert netbeams.SondeDataContainer 592ms
+Mon Oct 12 10:04:59 insert netbeams.SondeDataContainer 684ms
+Mon Oct 12 10:05:01 insert netbeams.SondeDataContainer 116ms
+Mon Oct 12 10:05:01 insert netbeams.SondeDataContainer 508ms
+Mon Oct 12 10:05:02 insert netbeams.SondeDataContainer 257ms
+Mon Oct 12 10:05:02 insert netbeams.SondeDataContainer 118ms
+Mon Oct 12 10:05:03 insert netbeams.SondeDataContainer 837ms
+Mon Oct 12 10:05:04 insert netbeams.SondeDataContainer 1216ms
+Mon Oct 12 10:05:05 insert netbeams.SondeDataContainer 1176ms
+Mon Oct 12 10:05:06 insert netbeams.SondeDataContainer 170ms
+Mon Oct 12 10:05:06 insert netbeams.SondeDataContainer 1102ms
+Mon Oct 12 10:05:07 insert netbeams.SondeDataContainer 117ms
+Mon Oct 12 10:05:08 insert netbeams.SondeDataContainer 387ms
+Mon Oct 12 10:05:08 insert netbeams.SondeDataContainer 243ms
+Mon Oct 12 10:05:08 insert netbeams.SondeDataContainer 538ms
+Mon Oct 12 10:05:09 done allocating datafile data/shard-a/netbeams.3, size: 512MB, took 18.883 secs
+Mon Oct 12 10:05:09 insert netbeams.SondeDataContainer 130ms
+Mon Oct 12 10:05:10 insert netbeams.SondeDataContainer 137ms
+Mon Oct 12 10:05:13 insert netbeams.SondeDataContainer 1101ms
+Mon Oct 12 10:05:15 insert netbeams.SondeDataContainer 346ms
+Mon Oct 12 10:05:15 insert netbeams.SondeDataContainer 430ms
+Mon Oct 12 10:05:15 insert netbeams.SondeDataContainer 293ms
+Mon Oct 12 10:05:16 insert netbeams.SondeDataContainer 217ms
+Mon Oct 12 10:05:16 insert netbeams.SondeDataContainer 493ms
+Mon Oct 12 10:05:20 insert netbeams.SondeDataContainer 220ms
+Finding size for ns: netbeams.SondeDataContainer between { : 90.587 } and { : 180.995 } took 461ms.
+Mon Oct 12 10:06:03 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: 90.587 }, max: { latitude: 180.995 } }  nreturned:1 502ms
+Finding size for ns: netbeams.SondeDataContainer between { : -1.418 } and { : 90.587 } took 377ms.
+Mon Oct 12 10:06:03 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -1.418 }, max: { latitude: 90.587 } }  nreturned:1 377ms
+Finding size for ns: netbeams.SondeDataContainer between { : -180.998 } and { : -91.569 } took 260ms.
+Mon Oct 12 10:06:04 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: -91.569 } }  nreturned:1 260ms
+Finding size for ns: netbeams.SondeDataContainer between { : -91.569 } and { : -1.418 } took 256ms.
+Mon Oct 12 10:06:04 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -91.569 }, max: { latitude: -1.418 } }  nreturned:1 264ms
+Finding size for ns: netbeams.SondeDataContainer between { : 90.587 } and { : 180.995 } took 696ms.
+Mon Oct 12 10:08:06 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: 90.587 }, max: { latitude: 180.995 } }  nreturned:1 737ms
+Finding size for ns: netbeams.SondeDataContainer between { : -91.569 } and { : -1.418 } took 400ms.
+Mon Oct 12 10:08:07 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -91.569 }, max: { latitude: -1.418 } }  nreturned:1 403ms
+Finding size for ns: netbeams.SondeDataContainer between { : -1.418 } and { : 90.587 } took 344ms.
+Mon Oct 12 10:08:07 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -1.418 }, max: { latitude: 90.587 } }  nreturned:1 357ms
+Finding size for ns: netbeams.SondeDataContainer between { : -180.998 } and { : -91.569 } took 382ms.
+Mon Oct 12 10:08:09 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: -91.569 } }  nreturned:1 385ms
+Mon Oct 12 10:09:27 insert netbeams.SondeDataContainer 102ms
+Mon Oct 12 10:10:01 insert netbeams.SondeDataContainer 149ms
+Mon Oct 12 10:10:02 insert netbeams.SondeDataContainer 151ms
+Mon Oct 12 10:10:05 insert netbeams.SondeDataContainer 152ms
+Finding size for ns: netbeams.SondeDataContainer between { : -91.569 } and { : -1.418 } took 491ms.
+Mon Oct 12 10:10:10 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -91.569 }, max: { latitude: -1.418 } }  nreturned:1 494ms
+Finding median for index: { latitude: 1.0 } between { : -91.569 } and { : -1.418 } took 246ms.
+Mon Oct 12 10:10:11 query admin.$cmd ntoreturn:1 reslen:84 nscanned:0 { medianKey: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -91.569 }, max: { latitude: -1.418 } }  nreturned:1 263ms
+Mon Oct 12 10:10:11 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -46.377, $lt: -1.418 } } }  nreturned:1 208ms
+Mon Oct 12 10:10:11 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -91.569, $lt: -46.377 } } }  nreturned:1 128ms
+Mon Oct 12 10:10:12 insert netbeams.SondeDataContainer 135ms
+Mon Oct 12 10:10:12 insert netbeams.SondeDataContainer 105ms
+Mon Oct 12 10:10:12 insert netbeams.SondeDataContainer 108ms
+Finding size for ns: netbeams.SondeDataContainer between { : 90.587 } and { : 180.995 } took 324ms.
+Mon Oct 12 10:10:12 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: 90.587 }, max: { latitude: 180.995 } }  nreturned:1 326ms
+Finding median for index: { latitude: 1.0 } between { : 90.587 } and { : 180.995 } took 231ms.
+Mon Oct 12 10:10:12 query admin.$cmd ntoreturn:1 reslen:84 nscanned:0 { medianKey: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: 90.587 }, max: { latitude: 180.995 } }  nreturned:1 231ms
+Mon Oct 12 10:10:13 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: 135.919, $lt: 180.995 } } }  nreturned:1 257ms
+Mon Oct 12 10:10:13 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: 90.587, $lt: 135.919 } } }  nreturned:1 233ms
+Finding size for ns: netbeams.SondeDataContainer between { : -1.418 } and { : 90.587 } took 432ms.
+Mon Oct 12 10:10:13 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -1.418 }, max: { latitude: 90.587 } }  nreturned:1 435ms
+Finding median for index: { latitude: 1.0 } between { : -1.418 } and { : 90.587 } took 157ms.
+Mon Oct 12 10:10:14 query admin.$cmd ntoreturn:1 reslen:84 nscanned:0 { medianKey: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -1.418 }, max: { latitude: 90.587 } }  nreturned:1 178ms
+Mon Oct 12 10:10:14 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: 45.641, $lt: 90.587 } } }  nreturned:1 150ms
+Mon Oct 12 10:10:14 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -1.418, $lt: 45.641 } } }  nreturned:1 216ms
+Finding size for ns: netbeams.SondeDataContainer between { : -180.998 } and { : -91.569 } took 420ms.
+Mon Oct 12 10:10:15 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: -91.569 } }  nreturned:1 430ms
+Finding median for index: { latitude: 1.0 } between { : -180.998 } and { : -91.569 } took 179ms.
+Mon Oct 12 10:10:16 query admin.$cmd ntoreturn:1 reslen:84 nscanned:0 { medianKey: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: -91.569 } }  nreturned:1 198ms
+Mon Oct 12 10:10:16 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -136.247, $lt: -91.569 } } }  nreturned:1 185ms
+Mon Oct 12 10:10:16 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -180.998, $lt: -136.247 } } }  nreturned:1 203ms
+Mon Oct 12 10:10:31 insert netbeams.SondeDataContainer 115ms
+Mon Oct 12 10:13:02 allocating new datafile data/shard-a/netbeams.4, filling with zeroes...
+Mon Oct 12 10:13:02 newExtent: netbeams.SondeDataContainer file 2 full, adding a new file
+Mon Oct 12 10:13:03 insert netbeams.SondeDataContainer 184ms
+Mon Oct 12 10:13:04 insert netbeams.SondeDataContainer 424ms
+Mon Oct 12 10:13:05 insert netbeams.SondeDataContainer 103ms
+Mon Oct 12 10:13:06 insert netbeams.SondeDataContainer 351ms
+Mon Oct 12 10:13:08 insert netbeams.SondeDataContainer 137ms
+Mon Oct 12 10:13:08 insert netbeams.SondeDataContainer 172ms
+Mon Oct 12 10:13:09 insert netbeams.SondeDataContainer 509ms
+Mon Oct 12 10:13:09 insert netbeams.SondeDataContainer 234ms
+Mon Oct 12 10:13:09 insert netbeams.SondeDataContainer 508ms
+Mon Oct 12 10:13:10 insert netbeams.SondeDataContainer 230ms
+Mon Oct 12 10:13:10 insert netbeams.SondeDataContainer 147ms
+Mon Oct 12 10:13:11 insert netbeams.SondeDataContainer 105ms
+Mon Oct 12 10:13:11 insert netbeams.SondeDataContainer 248ms
+Mon Oct 12 10:13:11 insert netbeams.SondeDataContainer 560ms
+Mon Oct 12 10:13:12 insert netbeams.SondeDataContainer 240ms
+Mon Oct 12 10:13:12 insert netbeams.SondeDataContainer 3102ms
+Mon Oct 12 10:13:15 insert netbeams.SondeDataContainer 6150ms
+Mon Oct 12 10:13:22 insert netbeams.SondeDataContainer 436ms
+Mon Oct 12 10:13:23 insert netbeams.SondeDataContainer 927ms
+Mon Oct 12 10:13:26 insert netbeams.SondeDataContainer 411ms
+Mon Oct 12 10:13:31 insert netbeams.SondeDataContainer 171ms
+Mon Oct 12 10:13:31 done allocating datafile data/shard-a/netbeams.4, size: 512MB, took 29.128 secs
+Mon Oct 12 10:13:36 insert netbeams.SondeDataContainer 283ms
+Mon Oct 12 10:13:36 insert netbeams.SondeDataContainer 412ms
+Mon Oct 12 10:13:51 insert netbeams.SondeDataContainer 467ms
+Mon Oct 12 10:13:54 insert netbeams.SondeDataContainer 198ms
+Mon Oct 12 10:13:55 insert netbeams.SondeDataContainer 156ms
+Mon Oct 12 10:13:57 insert netbeams.SondeDataContainer 114ms
+Finding size for ns: netbeams.SondeDataContainer between { : 90.587 } and { : 135.919 } took 4118ms.
+Mon Oct 12 10:13:58 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: 90.587 }, max: { latitude: 135.919 } }  nreturned:1 4174ms
+Finding size for ns: netbeams.SondeDataContainer between { : -91.569 } and { : -46.377 } took 693ms.
+Mon Oct 12 10:14:02 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -91.569 }, max: { latitude: -46.377 } }  nreturned:1 697ms
+Finding size for ns: netbeams.SondeDataContainer between { : -1.418 } and { : 45.641 } took 674ms.
+Mon Oct 12 10:14:05 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -1.418 }, max: { latitude: 45.641 } }  nreturned:1 695ms
+Finding size for ns: netbeams.SondeDataContainer between { : -46.377 } and { : -1.418 } took 234ms.
+Mon Oct 12 10:14:06 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -46.377 }, max: { latitude: -1.418 } }  nreturned:1 238ms
+Finding size for ns: netbeams.SondeDataContainer between { : 45.641 } and { : 90.587 } took 275ms.
+Mon Oct 12 10:14:07 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: 45.641 }, max: { latitude: 90.587 } }  nreturned:1 278ms
+Finding size for ns: netbeams.SondeDataContainer between { : 135.919 } and { : 180.995 } took 227ms.
+Mon Oct 12 10:14:07 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: 135.919 }, max: { latitude: 180.995 } }  nreturned:1 234ms
+Finding size for ns: netbeams.SondeDataContainer between { : -180.998 } and { : -136.247 } took 387ms.
+Mon Oct 12 10:14:08 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -180.998 }, max: { latitude: -136.247 } }  nreturned:1 387ms
+Finding size for ns: netbeams.SondeDataContainer between { : -136.247 } and { : -91.569 } took 163ms.
+Mon Oct 12 10:14:10 query admin.$cmd ntoreturn:1 reslen:87 nscanned:0 { datasize: "netbeams.SondeDataContainer", keyPattern: { latitude: 1.0 }, min: { latitude: -136.247 }, max: { latitude: -91.569 } }  nreturned:1 169ms
+Mon Oct 12 10:14:28 insert netbeams.SondeDataContainer 159ms
+Mon Oct 12 10:14:30 insert netbeams.SondeDataContainer 111ms
+Mon Oct 12 10:14:30 insert netbeams.SondeDataContainer 269ms
+Mon Oct 12 10:14:43 insert netbeams.SondeDataContainer 110ms
+Mon Oct 12 10:14:51 insert netbeams.SondeDataContainer 170ms
+Mon Oct 12 10:15:01 insert netbeams.SondeDataContainer 172ms
+Mon Oct 12 10:15:01 insert netbeams.SondeDataContainer 433ms
+Mon Oct 12 10:15:01 insert netbeams.SondeDataContainer 285ms
+Mon Oct 12 10:15:02 insert netbeams.SondeDataContainer 135ms
+Mon Oct 12 10:15:02 insert netbeams.SondeDataContainer 125ms
+Mon Oct 12 10:15:03 insert netbeams.SondeDataContainer 136ms
+Mon Oct 12 10:15:04 insert netbeams.SondeDataContainer 186ms
+Mon Oct 12 10:15:04 insert netbeams.SondeDataContainer 133ms
+Mon Oct 12 10:15:04 insert netbeams.SondeDataContainer 354ms
+Mon Oct 12 10:15:05 insert netbeams.SondeDataContainer 159ms
+Mon Oct 12 10:15:05 insert netbeams.SondeDataContainer 109ms
+Mon Oct 12 10:15:09 insert netbeams.SondeDataContainer 155ms
+Mon Oct 12 10:15:10 insert netbeams.SondeDataContainer 417ms
+Mon Oct 12 10:15:37 insert netbeams.SondeDataContainer 109ms
+Mon Oct 12 10:15:41 insert netbeams.SondeDataContainer 173ms
+Mon Oct 12 10:15:41 insert netbeams.SondeDataContainer 146ms
+Mon Oct 12 10:15:49 insert netbeams.SondeDataContainer 137ms
+Mon Oct 12 10:15:50 insert netbeams.SondeDataContainer 228ms
+Mon Oct 12 10:15:50 insert netbeams.SondeDataContainer 112ms
+Mon Oct 12 10:16:05 insert netbeams.SondeDataContainer 162ms
+Mon Oct 12 10:16:05 insert netbeams.SondeDataContainer 117ms
+Mon Oct 12 10:16:05 insert netbeams.SondeDataContainer 264ms
+Mon Oct 12 10:16:11 insert netbeams.SondeDataContainer 410ms
+Mon Oct 12 10:20:32 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -180.998, $lt: -136.247 } } }  nreturned:1 392ms
+Mon Oct 12 10:20:32 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -1.418, $lt: 45.641 } } }  nreturned:1 435ms
+Mon Oct 12 10:20:33 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -91.569, $lt: -46.377 } } }  nreturned:1 540ms
+Mon Oct 12 10:20:33 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: 90.587, $lt: 135.919 } } }  nreturned:1 550ms
+Mon Oct 12 10:20:34 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -46.377, $lt: -1.418 } } }  nreturned:1 515ms
+Mon Oct 12 10:20:34 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: 135.919, $lt: 180.995 } } }  nreturned:1 421ms
+Mon Oct 12 10:20:35 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: 45.641, $lt: 90.587 } } }  nreturned:1 473ms
+Mon Oct 12 10:20:35 query netbeams.$cmd ntoreturn:1 reslen:64 nscanned:0 { count: "SondeDataContainer", query: { latitude: { $gte: -136.247, $lt: -91.569 } } }  nreturned:1 387ms
+Mon Oct 12 10:21:30 getmore netbeams.SondeDataContainer cid:2950470156209676987 ntoreturn:0 bytes:1048718 nreturned:2378 1814ms
+Mon Oct 12 10:21:32 getmore netbeams.SondeDataContainer cid:2950470156209676987 ntoreturn:0 bytes:1048718 nreturned:2378 1789ms
+Mon Oct 12 10:21:34 getmore netbeams.SondeDataContainer cid:2950470156209676987 ntoreturn:0 bytes:1048718 nreturned:2378 1569ms
+Mon Oct 12 10:21:35 getmore netbeams.SondeDataContainer cid:2950470156209676987 ntoreturn:0 bytes:1048718 nreturned:2378 1638ms

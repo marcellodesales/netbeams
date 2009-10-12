@@ -1,0 +1,38 @@
+MongoDB shell version: 1.1.1
+url: netbeams
+connecting to: netbeams
+type "help" for help
+> mongod      db.SondeDataContainer.count()
+1000000
+> db.SondeDataContainer.count()       daa taSize()
+443994348
+> db.SondeDataContainer.dataSize()          findOne()
+{"_id" :  ObjectId( "a96f4007e160d34a20ef4e00")  , "sensor_ip_address" : "192.168.0.127" , "latitude" : 180.995 , "longitude" : -60.881 , "message_id" : "3c028613-6852-48e9-9d31-68dbce7e022c" , "transaction_time" : 1255366697199 , "fact_time" : 1255366296000 , "data" : {"temperature" : 50.6 , "sp_condition" : 22.4 , "condition" : 136.9 , "resistence" : 2351.16 , "salinity" : 0.04 , "pressure" : 0.833 , "depth" : 1.696 , "ph" : 4.38 , "pH_mv" : -85.1 , "odo_sat" : 67.2 , "odo_condition" : 15.34 , "turbidity" : 0 , "battery" : 7.6}}
+> db.SondeDataContainer.findOne()() () () > db.SondeDataContainer.find(> db.SondeDataContainer.find(){)})"})"})d"})a"})t"})a"})."})b"})a"})t"})t"})e"})r"})y"})> db.SondeDataContainer.find({"data.battery":}) })7}).})6})> db.SondeDataContainer.find({"data.battery": 7.6}> db.SondeDataContainer.find({"data.battery": 7.6}).length()
+9868
+> data    config = config.       db.getSisterDB("config")
+config
+> confg,  ig.shards.              s config      use config
+switched to db config
+> show collections
+chunks
+databases
+shards
+system.indexes
+version
+> config.shards.find()
+{"_id" :  ObjectId( "4ad35e0a4f51545b3ee6f755")  , "host" : "192.168.1.10:10000"}
+{"_id" :  ObjectId( "4ad35e0a4f51545b3ee6f756")  , "host" : "192.168.1.11:10001"}
+> config.chunks.find()
+{"lastmod" : {"t" : 1255366908000 , "i" : 1} , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : { $minKey : 1 }} , "max" : {"latitude" : -180.998} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad35e0a0e88d58604fe0540") }
+{"lastmod" : {"t" : 1255367416000 , "i" : 2} , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : -180.998} , "max" : {"latitude" : -136.247} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad360d96805505eafdd5856") }
+{"lastmod" : {"t" : 1255366908000 , "i" : 2} , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : 180.995} , "max" : {"latitude" : { $maxKey : 1 }} , "shard" : "192.168.1.10:10000" , "_id" :  ObjectId( "4ad360f46805505eafdd5857") }
+{"lastmod" : "Tue Jan -2147483647 170860106 20:34:53 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : -1.418} , "max" : {"latitude" : 45.641} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad3612c6805505eafdd5858") }
+{"lastmod" : "Tue Jan -2147483647 170860106 17:26:31 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : -91.569} , "max" : {"latitude" : -46.377} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad361966805505eafdd5859") }
+{"lastmod" : "Tue Jan -2147483647 170860106 03:32:05 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : 90.587} , "max" : {"latitude" : 135.919} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad361976805505eafdd585a") }
+{"lastmod" : "Tue Jan -2147483647 170860106 17:26:31 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : -46.377} , "max" : {"latitude" : -1.418} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad362f36805505eafdd585b") }
+{"lastmod" : "Tue Jan -2147483647 170860106 03:32:05 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : 135.919} , "max" : {"latitude" : 180.995} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad362f56805505eafdd585c") }
+{"lastmod" : "Tue Jan -2147483647 170860106 20:34:53 GMT-0800 (PST)" , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : 45.641} , "max" : {"latitude" : 90.587} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad362f66805505eafdd585d") }
+{"lastmod" : {"t" : 1255367416000 , "i" : 3} , "ns" : "netbeams.SondeDataContainer" , "min" : {"latitude" : -136.247} , "max" : {"latitude" : -91.569} , "shard" : "192.168.1.11:10001" , "_id" :  ObjectId( "4ad362f86805505eafdd585e") }
+> exit
+bye

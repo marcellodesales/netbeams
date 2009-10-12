@@ -1,0 +1,41 @@
+Sun Oct 11 00:43:09 Mongo DB : starting : pid = 9356 port = 10000 dbpath = data/ master = 0 slave = 0  32-bit 
+
+** NOTE: when using MongoDB 32 bit, you are limited to about 2 gigabytes of data
+**       see http://blog.mongodb.org/post/137788967/32-bit-limitations for more
+
+Sun Oct 11 00:43:09 db version v1.1.1, pdfile version 4.5
+Sun Oct 11 00:43:09 git version: eca1e97b76dca3cb995ee2e806ae1b1071c3c837
+Sun Oct 11 00:43:09 sys info: Linux domU-12-31-39-01-70-B4 2.6.21.7-2.fc8xen #1 SMP Fri Feb 15 12:39:36 EST 2008 i686
+Sun Oct 11 00:43:09 waiting for connections on port 10000
+Sun Oct 11 00:44:42 connection accepted from 192.168.1.11:55787 #1
+Sun Oct 11 00:44:54 end connection 192.168.1.11:55787
+Sun Oct 11 00:58:42 connection accepted from 192.168.1.11:14757 #2
+Sun Oct 11 00:59:05 end connection 192.168.1.11:14757
+Sun Oct 11 01:02:58 connection accepted from 192.168.1.11:56543 #3
+Sun Oct 11 01:03:42 end connection 192.168.1.11:56543
+Sun Oct 11 01:04:35 connection accepted from 192.168.1.11:7316 #4
+Sun Oct 11 01:04:53 end connection 192.168.1.11:7316
+Sun Oct 11 01:43:36 connection accepted from 192.168.1.11:32935 #5
+Sun Oct 11 01:43:36 killCursors: found 0 of 1
+Sun Oct 11 01:43:36 killcursors  0ms
+Sun Oct 11 01:45:15 end connection 192.168.1.11:32935
+Sun Oct 11 01:58:25 connection accepted from 192.168.1.11:60863 #6
+Sun Oct 11 01:59:51 end connection 192.168.1.11:60863
+Sun Oct 11 02:10:57 connection accepted from 192.168.1.11:52700 #7
+Sun Oct 11 02:10:57 startCloneCollection.  db:admin.$cmd collection:netbeams.SondeDataContainer from: 192.168.1.11:10001 query: { latitude: { $gte: 180.995, $lt: MaxKey } }
+Sun Oct 11 02:11:03 allocating new datafile data/netbeams.ns, filling with zeroes...
+Sun Oct 11 02:11:03 done allocating datafile data/netbeams.ns, size: 16MB, took 0.041 secs
+Sun Oct 11 02:11:03 allocating new datafile data/netbeams.0, filling with zeroes...
+Sun Oct 11 02:11:06 done allocating datafile data/netbeams.0, size: 64MB, took 2.661 secs
+Sun Oct 11 02:11:06 building new index on { _id: ObjId(000000000000000000000000) } for netbeams.SondeDataContainer...
+Sun Oct 11 02:11:06 Buildindex netbeams.SondeDataContainer idxNo:0 { name: "_id_", ns: "netbeams.SondeDataContainer", key: { _id: ObjId(000000000000000000000000) } }
+Sun Oct 11 02:11:06 done for 0 records 0secs
+Sun Oct 11 02:11:06 building new index on { latitude: 1.0 } for netbeams.SondeDataContainer...
+Sun Oct 11 02:11:06 Buildindex netbeams.SondeDataContainer idxNo:1 { ns: "netbeams.SondeDataContainer", key: { latitude: 1.0 }, name: "latitude_1" }
+Sun Oct 11 02:11:06 done for 1 records 0secs
+Sun Oct 11 02:11:06 allocating new datafile data/netbeams.1, filling with zeroes...
+Sun Oct 11 02:10:57 query admin.$cmd ntoreturn:1 reslen:212 nscanned:0 { startCloneCollection: "netbeams.SondeDataContainer", from: "192.168.1.11:10001", query: { latitude: { $gte: 180.995, $lt: MaxKey } } }  nreturned:1 8532ms
+Sun Oct 11 02:11:06 connection accepted from 192.168.1.11:53212 #8
+Sun Oct 11 02:11:06 finishCloneCollection.  db:admin.$cmd collection:netbeams.SondeDataContainer from: 192.168.1.11:10001 query: { latitude: { $gte: 180.995, $lt: MaxKey } }
+Sun Oct 11 02:11:07 connection accepted from 192.168.1.11:53468 #9
+Sun Oct 11 02:11:29 done allocating datafile data/netbeams.1, size: 128MB, took 22.671 secs

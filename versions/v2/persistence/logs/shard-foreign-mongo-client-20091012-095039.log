@@ -1,0 +1,17 @@
+MongoDB shell version: 1.1.1
+url: test
+connecting to: 127.0.0.1:10000/test
+type "help" for help
+> use netbeams
+switched to db netbeams
+> show collections
+SondeDataContainer
+system.indexes
+> SondeDataContainer. dSondeDataContainer> dbSondeDataContainer> db.SondeDataContainer> db.> db.S> db.So> db.Son> db.Sond> db.Sonde> db.SondeD> db.SondeDa> db.SondeDat> db.SondeData> db.SondeDataC> db.SondeDataCo> db.SondeDataCon> db.SondeDataCont> db.SondeDataConta> db.SondeDataContai> db.SondeDataContain> db.SondeDataContaine> db.SondeDataContainer.find()      count()
+13
+> db.SondeDataContainer.count()       findOne()
+{"_id" :  ObjectId( "a96f4007e160d34a20ef4e00")  , "sensor_ip_address" : "192.168.0.127" , "latitude" : 180.995 , "longitude" : -60.881 , "message_id" : "3c028613-6852-48e9-9d31-68dbce7e022c" , "transaction_time" : 1255366697199 , "fact_time" : 1255366296000 , "data" : {"temperature" : 50.6 , "sp_condition" : 22.4 , "condition" : 136.9 , "resistence" : 2351.16 , "salinity" : 0.04 , "pressure" : 0.833 , "depth" : 1.696 , "ph" : 4.38 , "pH_mv" : -85.1 , "odo_sat" : 67.2 , "odo_condition" : 15.34 , "turbidity" : 0 , "battery" : 7.6}}
+> db.SondeDataContainer.findOne()         dataSize()
+5772
+> exit
+bye

@@ -1,6 +1,6 @@
 package org.netbeams.dsp.persistence.controller;
 
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +15,7 @@ import org.netbeams.dsp.data.property.DSProperty;
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.DSPMessagesFactory;
 import org.netbeams.dsp.message.Header;
+import org.netbeams.dsp.message.MeasureMessage;
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.message.MessageContent;
 import org.netbeams.dsp.message.QueryMessage;
@@ -23,6 +24,16 @@ import org.netbeams.dsp.persistence.model.TransientPersistenceLayer;
 import org.netbeams.dsp.persistence.model.component.data.PersistentMessageUnit;
 import org.netbeams.dsp.util.NetworkUtil;
 
+/**
+ * The DSP Data Persistence is the main DSP Component responsible for the persistence of DSP Measure Messages into 
+ * the Database. When the component is activated, it starts the worker thread DSP Data Flusher with the flush
+ * rate (it should be a Listener instead) given through the DSP Update Message during the activation.
+ * 
+ * The first version of this component saves data into a mongoDB server.
+ * 
+ * @author marcello
+ *
+ */
 public class DSPDataPersistence implements DSPComponent {
 
     /**
@@ -80,7 +91,7 @@ public class DSPDataPersistence implements DSPComponent {
             try {
                 TransientPersistenceLayer transientLayer = TransientPersistenceLayer.INSTANCE;
                 thLog.debug("Retrieving all transient messages to be flushed...");
-                List<PersistentMessageUnit> tranMsgs = transientLayer.retrieveAllTransientMessages();
+                Set<PersistentMessageUnit> tranMsgs = transientLayer.retrieveTransientMessagesUnitSet();
 
                 if (tranMsgs.size() > 0) {
                     thLog.debug("Preparing to transfer messages " + tranMsgs.size() + " to database...");
@@ -92,8 +103,6 @@ public class DSPDataPersistence implements DSPComponent {
 
                 } else {
                     thLog.debug("There are no transient messages in the transient persistent layer...");
-                    thLog.debug(transientLayer.retrieveAllPersistentMessages().size()
-                            + " messages were saved on the db during the current session");
                 }
 
             } catch (Exception e) {
@@ -200,7 +209,7 @@ public class DSPDataPersistence implements DSPComponent {
             log.debug("Query message delivered...");
             this.queryComponentProperties((QueryMessage) message);
 
-        } else {
+        } else if (message instanceof MeasureMessage){
 
             log.debug("Adding the DSP message to the Transient Persistence layer...");
             // add the message to the queues
@@ -208,6 +217,11 @@ public class DSPDataPersistence implements DSPComponent {
         }
     }
 
+    /**
+     * Queries the DSP Data Persistence component's current properties values.
+     * @param queryMessage the DSP Query Message.
+     * @throws DSPException if any problem with the DSP platform occurs
+     */
     private void queryComponentProperties(QueryMessage queryMessage) throws DSPException {
         MessageContent content = queryMessage.getBody().getAny();
         log.debug("Content class " + content.getClass().getName());

@@ -5,11 +5,11 @@
 %%%%% TeX class and packages
 
 \documentclass[12pt,oneside]{sfsuthesis}
-
-\usepackage{amsthm,amsmath,amssymb,amsfonts,latexsym,graphicx,enumerate,setspace,verbatim,tocloft}
-
-%\usepackage{color}                    % For creating colored text and background
-%\usepackage{hyperref}                 % For creating hyperlinks in cross references
+\usepackage{amsthm,amsmath,amssymb,amsfonts,latexsym,graphicx,enumerate,setspace,verbatim,makeidx,subfigure, multirow, url, soul}
+\usepackage[subfigure]{tocloft}
+\usepackage{color}                       % For creating colored text and background
+%\usepackage{hyperref}                 % For creating hyperlinks in cross
+%references
 % other possibly useful packages: textcomp,mathrsfs,amscd,epsfig,euscript,cancel
 
 %%%%% Layout
@@ -26,14 +26,17 @@
 %     generating the Title Page.
 
 \hoffset=.5in 
-\oddsidemargin=0in   % = 1in because LaTeX adds 1in
-\evensidemargin=0in  % = 1in because LaTeX adds 1in
-\topmargin=0in       % = 1in because LaTeX adds 1in
+\oddsidemargin=0in
+\evensidemargin=0in
+\topmargin=0.1in 
 \headheight=0in
-\headsep=1in         % Distance from top of pagenum (for page numbers at top-right corner of page) to text
-\footskip=1.2in      % Distance from bottom of text to the page number (for page number at bottom of page)
-\textwidth=5.9in     % Should be 6in, but use 5.9in to be conservative
-\textheight=8.0in    % Best for Title Page (will change after the Title Page)
+\headsep=1in
+\footskip=.8in
+\textwidth=5.9in
+\textheight=7in
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
 
 \pagestyle{plain}
 
@@ -84,6 +87,7 @@
 \usepackage[Lenny]{fncychap}
 
 %Hifens
+
 \usepackage[latin1]{inputenc}
 \usepackage[USenglish]{babel}
 
@@ -92,9 +96,8 @@
 \pagenumbering{roman}
 \thispagestyle{empty}
 
-
 \[ \]
-\vspace{-1.9in}
+\vspace{-1.8in}
 
 \begin{center}
 {\mytitle}
@@ -103,14 +106,14 @@
 
 \singlespace{A thesis presented to the faculty of\\
 San Francisco State University\\
-In partial fulfilment of\\
+In partial fulfillment of\\
 The requirements for\\ The degree}
 
 \vspace{.5in}
 
 \singlespace{Master of Science\\ In\\ Computer Science}
 
-\vspace{3.1in}
+\vspace*{\fill}
 
 {by \\[12pt] 
 \myname \\[12pt]
@@ -120,8 +123,6 @@ San Francisco, California\\[12pt]
 \end{center}
 
 \newpage
-\textheight=7.1in    % For all pages after the Title Page -- try making this number smaller (7.0 or 6.9) if the bottom margins are too small
-\footskip=1.1in      % Distance from bottom of text to the page number (for page number at bottom of page)
 \thispagestyle{empty}
 
 $\mbox{}$
@@ -147,12 +148,12 @@ $\mbox{}$
 \begin{center}
 {CERTIFICATION OF APPROVAL}
 \end{center}
-\vspace{.6in}
+\vspace{.5in}
 \begin{quote}
-I certify that I have read {\it \mytitle} by \myname and that in my opinion this work meets the criteria for approving a thesis submitted in partial fulfillment of the requirements for the degree: Master of Science in Computer Science at San Francisco State University.
+I certify that I have read {\it \mytitle} by \myname, and that in my opinion this work meets the criteria for approving a thesis submitted in partial fulfillment of the requirements for the degree: Master of Science in Computer Science at San Francisco State University.
 \end{quote}
 
-\vspace{0.75in}
+\vspace{1.5in}
 
 \hspace*{\fill}\parbox{3.5in}{
 \singlespace{
@@ -160,9 +161,7 @@ I certify that I have read {\it \mytitle} by \myname and that in my opinion this
 \hrule{\hspace{3.5in}} \\ 
 Prof. Arno Puder, Ph.D.\\
 Professor of Computer Science\\
-
 \vspace{1in}
-
 \hrule{\hspace{3.5in}} \\
 Prof. Marguerite C. Murphy, Ph.D.\\
 Professor of Computer Science
@@ -181,16 +180,17 @@ Professor of Computer Science
 
 \singlespace{
 \myname \\
-San Francisco State University \\ 
+San Francisco, California \\  
 \thisyear \\
 }
 
 \end{center}
 
-\vspace{.3in}
+\vspace{.5in}
 
-\doublespacing{\noindent
-Your abstract comes here. % maximum one page
+%\doublespacing{\noindent
+\onehalfspacing{\noindent      
+Abstract goes here
 }
 
 \vspace*{\fill}
@@ -200,27 +200,27 @@ Your abstract comes here. % maximum one page
 \noindent
 I certify that the Abstract is a correct representation of the content of this thesis.
 
-\vspace{.6in} 
+\vspace{.5in} 
 
 \hrule{\hspace{3.75in}} \\[-10pt]
 Chair, Thesis Committee 
 \hspace{2.5in}
 Date
-
+\doublespacing
 \newpage
 \[ \]
 \vspace{-1.8in}
 \begin{center}{ACKNOWLEDGMENTS}\end{center}
 
-\vspace{.3in}
+\vspace{.5in}
 \begin{quote}
 \noindent
-I thank everybody and their mothers\dots (optional).
+Acknowledgments
 \end{quote}
 
-\renewcommand{\contentsname}{\vspace{-1.8in} \begin{center} \normalsize \rm TABLE OF CONTENTS \end{center}}
-\renewcommand{\listfigurename}{\vspace{-1.8in} \begin{center} \normalsize \rm LIST OF FIGURES \end{center}}
-\renewcommand{\listtablename}{\vspace{-1.8in} \begin{center} \normalsize \rm LIST OF TABLES \end{center}}
+\renewcommand{\contentsname}{\vspace{-1.7in} \begin{center} \normalsize \rm TABLE OF CONTENTS \end{center}}
+\renewcommand{\listfigurename}{\vspace{-1.7in} \begin{center} \normalsize \rm LIST OF FIGURES \end{center}}
+\renewcommand{\listtablename}{\vspace{-1.7in} \begin{center} \normalsize \rm LIST OF TABLES \end{center}}
 \renewcommand{\cftchapfont}{\normalfont}
 \renewcommand{\cftchappagefont}{\normalfont}
 \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % formatting commands for table of contents

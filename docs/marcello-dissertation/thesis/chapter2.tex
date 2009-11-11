@@ -1,7 +1,7 @@
 % main.tex, to be used with thesis.tex
 % This contains the main work of your thesis.
 
-%\bibliography{thesis}  % uses the references stored in Chapter1Radar.bib
+\bibliography{thesis}  % uses the references stored in Chapter1Radar.bib
 
 \chapter{State of the Art}
 
@@ -367,7 +367,7 @@ As it is shown, the data produced by this type of sensor runs in the order of
 at most hundreds of Megabytes a year, what can be considered a very low data
 storage requirement. Upon collecting the data from sensors, the RTC lab staff
 use automation scripts written in Matlab to process, index and distribute the
-raw data in different formats, including the OPeNDAP \ref{opendap}, a format
+raw data in different formats, including the OPeNDAP \cite{opendap}, a format
 widely used in the research institutions that promotes easier data exchange
 among them.
 
@@ -406,13 +406,13 @@ transported from the network nodes to the main network sink, the RTC labs.
 
 The Data Sensor Platform, in short DSP Platform, is based on a micro-kernel
 architecture developed on top of the Java modular framework called OSGi
-\ref{osgi}. The platform represents the foundation of the execution of
+\cite{osgi}. The platform represents the foundation of the execution of
 NetBEAMS, since it is executed from an embedded hardware called Gumstix
-\ref{gumstix} using a Linux operating system and on top of the Java Virtual
+\cite{gumstix} using a Linux operating system and on top of the Java Virtual
 Machine (JVM). In order to transport data from sensors hosts to the network
 sink, the use of a cellular connection is used to transport the collected data
 from the senso devices using the HTTP Protocol, as described by
-\cite{netbeams09}. Figure \ref{fig:sf-netbeams-node} shows the
+\cite{netbeams2009}. Figure \ref{fig:sf-netbeams-node} shows the
 architecture of the inhanced node designed by the NetBEAMS research group.
 
 \begin{figure}

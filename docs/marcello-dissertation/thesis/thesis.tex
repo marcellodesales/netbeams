@@ -1,0 +1,34 @@
+% thesis.tex
+% This is the main file, which calls up preamble.tex, frontmatter.tex, and thesis.bib as needed.
+
+% Frontmatter shortcuts; note the extra space at the end, which is unfortunately necessary:
+\newcommand\myname{Marcello Alves de Sales Junior }
+\newcommand\mytitle{Persisting Collected Sensor Network Data: A New Approach Based on Schema-less Document-Oriented Databases }
+\newcommand\thismonth{December }
+\newcommand\thisyear{2009 }
+
+% Shortcuts (add your own...):
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+% One of the following two has to be commented out:
+%\include{draftpreamble}  % eco-friendly draft version
+\include{preamble}   % final version, formatted according to the Graduate
+% Division's guidelines
+
+% Main body of work:
+
+\include{chapter1}
+\include{chapter2}
+\include{source-code}
+
+% Bibliography (calls up the entries in thesis.bib if you run bibTeX):
+\bibliographystyle{amsplain}
+\addcontentsline{toc}{chapter}{Bibliography}
+\singlespacing
+\bibliography{thesis}
+
+\end{document}

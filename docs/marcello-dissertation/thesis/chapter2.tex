@@ -36,14 +36,14 @@ networks, with applications on research, industrial or militery.
 
 Each of the nodes can be deployed in a random way such as being dropped
 from an airplane, or in a manual fashion at deliberately chosen geographical 
-points \cite{snintro01}. Moreover, the deployment can be done as a one-time
+points \cite{sn-intro01}. Moreover, the deployment can be done as a one-time
 event or an iterative way. 
 
 However, nodes can be able to move around the deployed area or be static in
 this place. In the case of the degree of the former behaviour, a sensor node
 can move occasionally or continuously, being a result of an incidental 
 side-effect or a desired property of the device, where they are an automotive
-device or attached to another moving object. For this reason, \cite{snintro01} 
+device or attached to another moving object. For this reason, \cite{sn-intro01} 
 describes those types of mobility as active or passive.
 
 \subsection{Device Size, Resources, Cost, Energy, Heterogeneity}
@@ -52,11 +52,11 @@ Such sensor nodes can be of different sizes, ranging from microscopically small
 particles, small devices to bigger ones with a few feet cubic. In addition to
 being limited in size, they are also limited in resources and computational
 power, forcing their conception limited to have its energy stored in either
-batteries or scavenged from solar cells \cite{snintro01}.
+batteries or scavenged from solar cells \cite{sn-intro01}.
 
 Since sensor devices range on size and capabilities, the cost for each of the
 devices very from hundreds to thousands of dollars, depending on its
-functionality, energy utilization, etc. For thie reason, \cite{snintro01}
+functionality, energy utilization, etc. For thie reason, \cite{sn-intro01}
 explains that a sensor network may potentially contain similar sensor devices,
 as they can contain dissimilar ones from each other, which characterizes the heterogeneity 
 of a sensor network by the hardware capabilities such as GPS enabled or having
@@ -69,7 +69,7 @@ Connectivity}
 Sensor nodes can communicate in different modalities such as radio, diffuse
 light, inductive or sound, which may influence on the type of protocols used to
 communicate among the nodes, where they can be said to be in an organized
-infrastructure or as an ad hoc way \cite{snintro01}.
+infrastructure or as an ad hoc way \cite{sn-intro01}.
 
 When it comes to the sensor network different organizational infrastructure,
 they can differ in types of topology: single-hop, star, networked stars, tree
@@ -84,7 +84,7 @@ its purpose, its size in terms of number of nodes and its relating lifetime. As
 sensors are deployed in different areas, they can be distributed in a sparse or
 dense way, yet providing necessary coverage for the environment. However, 
 considering that sensor devices are very likely to constant failures, projects 
-have provided redundant nodes \cite{snintro01}. This degree of coverage also 
+have provided redundant nodes \cite{sn-intro01}. This degree of coverage also 
 influences on the connectivity of the sensor nodes, where they can be
 considered connected when a connection is available at all times. On the other
 hand, nodes can communicate with other nodes in an intermittent way or sporadic
@@ -96,18 +96,18 @@ time.
 
 Similar to the degree of coverage of the sensor network is the number of
 sensor nodes deployed in the network, where they can be in the order of
-dozens, hundreds or even thousand of nodes \cite{snintro01}.
+dozens, hundreds or even thousand of nodes \cite{sn-intro01}.
 
 The application of the sensor network determines how long the sensor
 network may be exist. For example, the lifetime of an environmental sensor
-networks \cite{snex01} may be not determined since its service serves in a
+networks \cite{sn-ex01} may be not determined since its service serves in a
 regular basis, whereas the lifetime of a sensor network to determine the number
 of people in an event is limited to the event. 
 
 Finally, the design of sensor networks can be related to the constraints
 related to quality-of-service (QoS) such as real-time delivery within certain
 period of time or robustness such as maintaining data alive even though there
-a communication link is not available \cite{snintro02}.
+a communication link is not available \cite{sn-intro02}.
 
 \section{Data Persistence in Sensor Networks}
 
@@ -367,7 +367,7 @@ As it is shown, the data produced by this type of sensor runs in the order of
 at most hundreds of Megabytes a year, what can be considered a very low data
 storage requirement. Upon collecting the data from sensors, the RTC lab staff
 use automation scripts written in Matlab to process, index and distribute the
-raw data in different formats, including the OPeNDAP \cite{opendap}, a format
+raw data in different formats, including the OPeNDAP \ref{opendap}, a format
 widely used in the research institutions that promotes easier data exchange
 among them.
 
@@ -406,9 +406,9 @@ transported from the network nodes to the main network sink, the RTC labs.
 
 The Data Sensor Platform, in short DSP Platform, is based on a micro-kernel
 architecture developed on top of the Java modular framework called OSGi
-\cite{osgi}. The platform represents the foundation of the execution of
+\ref{osgi}. The platform represents the foundation of the execution of
 NetBEAMS, since it is executed from an embedded hardware called Gumstix
-\cite{gumstix} using a Linux operating system and on top of the Java Virtual
+\ref{gumstix} using a Linux operating system and on top of the Java Virtual
 Machine (JVM). In order to transport data from sensors hosts to the network
 sink, the use of a cellular connection is used to transport the collected data
 from the senso devices using the HTTP Protocol, as described by

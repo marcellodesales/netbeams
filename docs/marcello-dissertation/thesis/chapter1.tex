@@ -8,16 +8,16 @@
 
 Sensor networks are commonly used in different areas for different purposes
 such as scientific measurements and general population use
-\cite{snintro01} \cite{snintro02}. In the scientific community, they serve as
+\cite{sn-intro01} \cite{sn-intro02}. In the scientific community, they serve as
 tools to monitor the state of the environment by storing samples of data in specific 
 periods of time. For instance, the NASA Jet Propulsion Laboratory uses the 
-Volcano SensorWeb \cite{snex02}, a sensor network which aims to collect data
+Volcano SensorWeb \cite{sn-ex02}, a sensor network which aims to collect data
 from specific volcanoes in Alaska and South Pacific to be used with heuristics 
 regarding dangerous activities. Similarly, the National Data Buoy Center, a
 department of the National Oceanic and Atmospheric Administration (NOAA)
-\cite{snex03}, provides online data from different buoys in different coast
+\cite{sn-ex03}, provides online data from different buoys in different coast
 shores around the world regarding water quality, temperature, tides, etc, what 
-characterizes sensor network for environmental monitoring \cite{snex01}.
+characterizes sensor network for environmental monitoring \cite{sn-ex01}.
 Therefore, sensor networks can be seen as a very important scientific research and 
 commercial field with direct application and use of its produced data.
 
@@ -34,12 +34,12 @@ primarily archived in a centralized database system for later reuse
 \cite{sn-storage02}.
 
 When it comes to data model implementation, the relational data model
-\cite{db01} is one of the most used approaches to represent data in sensor 
-network databases in any of the query processing strategies, and in most cases 
+\cite{relational-model} is one of the most used approaches to represent data in
+sensor network databases in any of the query processing strategies, and in most cases 
 with a modified version of the SQL language \cite{sn-db-newop01}
 \cite{sn-db-newop02}. However, the design of the database system must be done
 with prior knowledge of the sensor types when  choosing the relational data
-model, as the database design must be normalized \cite{db02} for the entities
+model, as the database design must be normalized \cite{db-normalization} for the entities
 already identified for the system. For instance, the introduction of a new
 sensor device might represent a potential change on the database structure by
 seeking a new normalized version of the database structure. In addition to
@@ -55,9 +55,9 @@ performance during data retrieval by using different strategies such a
 data-centric storage \cite{sn-storage03}.
 
 In summary, this dissertation discusses the solution of a centralized
-data-centric persistence storage component for the NetBEAMS \cite{nb01}, Data
-Sensor Platform (DSP), an open-source \cite{se01} implementation of a sensor
-network that primarily focused on environmental data produced by NetBEAMS. 
+data-centric persistence storage component for the NetBEAMS \cite{netbeams09},
+Data Sensor Platform (DSP), an open-source \cite{open-source} implementation of
+a sensor network that primarily focused on environmental data produced by NetBEAMS. 
 Different challenges can be related to the DSP in the context of sensor 
 networks: data model, data persistence organization and strategy, and user data
 access and distribution. First, NetBEAMS needs to provide means to safely 
@@ -88,15 +88,15 @@ face by the Romberg Tiburon Center and its use of NetBEAMS. Furthermore,
 the evaluation of different technologies is discussed in order to provide a
 loosely-coupled component-based solution based on the infrastructure of the 
 DSP Platform. For the reason of providing a 'lighter' data model, a subtype of
-the Key-Value Pair \cite{kvp01} data model was chosen to easily capture the
+the Key-Value Pair \cite{db-kvp01} data model was chosen to easily capture the
 description of any sensor device's properties, along with the use of time
 series data models \cite{sn-provenance01} for time snapshots. In that way, data
 modeling process does not represent a new refactoring each time a new sensor 
 type is added or removed from the persistence system, giving users means to 
 retrieve data accordingly. Similarly, in contemplation of scalability, this 
 work proposes the use of an increasingly popular infrastructure technique called
-Database Sharding \cite{dbshard01} \cite{dbshard02}, which takes the approach of
-Data-Centric storage \cite{sn-storage03} on in-network query processing in a
+Database Sharding \cite{db-shard01} \cite{db-shard02}, which takes the approach
+of Data-Centric storage \cite{sn-storage03} on in-network query processing in a
 centralized database system. In order to provide such mechanism, this work
 evaluates the use of shard keys based on the geographic origin of the collected
 data as cited to be one of the options when working with Provenance data in 
@@ -106,7 +106,7 @@ platform without doing  any changes to the current DSP Platform, providing an
 scalable solution that can adjust according to any data load increase. Finally,
 the selected technology provides different data access mechanisms, which
 directly addressed problems related to data access and Information Fusion 
-\cite{sndp06}, providing export-import capabilities and visualization through
+\cite{sn-info-fusion}, providing export-import capabilities and visualization through
 the availability of APIs written in different popular programming languages.
 
 This dissertation report is organized as follows: the next chapter is an 

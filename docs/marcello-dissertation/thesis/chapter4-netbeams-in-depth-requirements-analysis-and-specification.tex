@@ -1,0 +1,760 @@
+% main.tex, to be used with thesis.tex
+% This contains the main work of your thesis.
+
+%\bibliography{thesis}  % uses the references stored in Chapter1Radar.bib
+
+\chapter{Netbeams in Depth: Requirements Analysis and Specification}
+
+This chapter presents NetBEAMS and its implementation details, showing its
+main application of the the environmental sensor network deployed at the
+Romberg Tiburon Center (RTC) as it is the main case study.
+
+\section{SF-BEAMS: a Marine Sensor Network for Water Quality Monitoring}
+
+The San Francisco Bay Environmental Assessment and Monitoring Station,
+or SF-BEAMS, is a marine sensor network operated by the Romberg Tiburon Center
+(RTC). This section details the SF-BEAMS sensor network located at
+the Tiburon Island, California, and then presents the details of NetBEAMS, as
+it is part of the case study of this work.
+
+\subsection{The SF-BEAMS Infrastructure}
+
+The RTC's main focuses are in the study of complex marine and estuarine
+environments using the SF-BEAMS sensors deployed offshore of its pier located
+on the banks of the San Francisco Bay at the Tiburon Island, California. In
+this way, the project is responsible for providing data for water quality
+monitoring, as well as weather and surface conditions. Figure 
+\ref{fig:sf-beams} shows a picture taken from the SF-BEAMS web-cam placed
+in-site.
+
+\begin{figure}[!b]
+  \centering
+    \includegraphics[scale=0.7]{../diagrams/cam_image-oct15}
+  \caption{Picture of the SF-BEAMS Network, at the RTC pier. Tiburon, CA.}
+  \label{fig:sf-beams}
+\end{figure}
+
+In general, the SF-BEAMS network infrastructure contains heterogeneous wired and
+wireless devices standing on pilons docked in the pier, where each of them is
+responsible for observing different conditions of the area, as well as having
+its own mechanisms for internal storage for the collected data. In this way,
+data can be directly transferred to the labs via ethernet cables or collected
+manually download by a staff's laptop computer.
+
+\subsection{SF-BEAMS produced data and collection process}
+\label{sec:sfbeams}
+
+As described in section \ref{sec:sn-infrastructure}, sensor devices generates
+its observed data based on properties of measurements defined by its
+manufacturer. SF-BEAMS is a single-hop star sensor network containing
+different instances of sensors, including the "YSI 6600 ESD V2", as seen on
+figure \ref{fig:ysi-device}, which is a powerful water quality monitoring
+device that produces around 52 bytes (13x4 Bytes) on a single real-time data
+stream as shown on table \ref{tab:ysi-data-stream}.
+
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.7]{../diagrams/ysi-device}
+  \caption{Picture of the case study sonde device: YSI 6600 ESD V2}
+  \label{fig:ysi-device}
+\end{figure}
+
+\begin{table}
+    \caption{YSI Data Stream}
+    \begin{center}
+        \begin{tabular}{lr}
+  12.20    192    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5  8.83 
+  0.4     8.7
+        \end{tabular}
+    \end{center}
+    \label{tab:ysi-data-stream}
+\end{table}
+
+In order to have access to the observed data, the network staff downloads
+the data using one of the device's connection such as the RS-232 serial
+connector \cite{rs232}. Then, the data is transferred to the RTC labs for
+archival, where it is described, indexed and distributed to its main users.
+According to its staff members, in May 2009 the infrastructure of the SF-BEAMS
+included the following was organized as follows:
+
+\begin{itemize}
+  \item 5 YSI sondes in operation at the RTC site Pier in Tiburon Island, San
+  Francisco Bay;
+  \item Each YSI sonde produces 52 Bytes for each its observations;
+  \item The sampling frequency rate could be configured in ranges of 1, 6 or
+  15 minutes, depending on the staff's speficiation. 
+\end{itemize}
+
+Considering the infrastructure previously described, the size of the data
+produced by the YSI sonde sensors at the RTC pier can estimated by its
+measurement frequency as follows:
+
+\begin{table}
+    \label{tab:ysi-data-distribution}
+    \caption{Amount of data produced by the RTC's YSI sondes}
+        \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|}\hline 
+        \textbf{YSIs} & \textbf{Rate} & \textbf{Hourly} & \textbf{Daily} &
+        \textbf{Weeky} & \textbf{Monthly} & \textbf{Yearly}\\\hline 
+        1 & 1 min & 3.04 Kb & 73.12 Kb & 511.87 Kb & 1.99 Mb & 23.99 Mb\\\hline 
+        5 & 6 min & 15.23 Kb & 365.62 Kb & 2.5 Mb & 9.99 Mb & 119.97 Mb\\\hline 
+        1 & 15 min & 0.5 Kb & 12.18 Kb & 85.31 Kb & 341.25 Kb & 3.99 Mb\\\hline 
+        5 & 1 min & 2.54 Kb & 60.93 Kb & 426.56 Kb & 1.67 Mb & 19.99 Mb\\\hline
+        1 & 6 min & 0.2 Kb & 4.87 Kb & 34.12 Kb & 136.5 Kb & 1.6 Mb\\\hline 
+        5 & 15 min & 1.0 Kb & 24.37 Kb & 170.62 Kb & 682.5 Kb & 7.99 Mb\\\hline
+        \end{tabular}
+        \end{center}
+\end{table}
+
+As it is shown, the data produced by this type of sensor runs in the order of
+at most hundreds of Megabytes a year, what can be considered a very low data
+storage requirement as compared to other systems such as web applications. Upon
+collecting the data from sensors, the RTC lab staff use automation scripts
+written in Matlab to process, index and distribute the raw data in different
+formats, including the OPeNDAP \cite{opendap}, a format widely used in the
+research institutions that promotes easier data exchange among them. The
+access to the archived data is done by using the OPeNDAP server is located at
+http://sfbeams.sfsu.edu:8080/opendap.
+
+Although the execution of the RTC SF-BEAM sensor network produces its
+execution, many operational challenges were faced by this type of
+infrastructure, when it comes to the data utilization of wireless sensors that
+are deployed in offshore conditions, \cite{netbeams2009} described the
+operational challenges faced by the RTC staff and proposed NetBEAMS, a
+component-based infrastructure that uses COTS \footnote{Common-Off-The-Shelf
+designates a product that is produced and sold in bulk} embedded systems and
+software to automate the process of data collection. Next section describes
+how NetBEAMS is used to extract data from the SF-BEAMS sensor network.
+
+\section{RTC Requirements for Data Use}
+\label{sec:problem-requirements}
+
+Main users are biologists, students and researchers with some knowledge in
+programming and scripting languages. 
+
+\subsection{Functional Requirements}
+
+\begin{itemize}
+  \item Reuse the NetBEAMS infrastructure and develop a component responsible
+  for data persistence in a database system;
+\end{itemize}
+
+\subsection{Non-Functional Requirements}
+
+\begin{itemize}
+  \item Main users are biologists, no expertise in Database Systems;
+  \item Data Representation in human-readable format;
+  \item Scalable system with low degree of maintanance;
+  \item Data searchable in near-real-time
+\end{itemize}
+
+\section{Understanding NetBEAMS Architecture}
+\label{netbeams-architecture}
+
+The Networked Bay Environmental Assessment and Monitoring System, or NetBEAMS, 
+is a work-in-progress joint project proposed by the department of Computer
+Science and the RTC at San Francisco State University. As described by
+\cite{netbeams2009}, the solution can be used to automated the data gathering
+process of the SF-BEAMS as described in section \ref{sec:sfbeams}. This
+section fully details how NetBEAMS is executed in order to collect data from
+SF-BEAMS, describing pertinent design and architectural details.
+
+One of the motivations for the inception of NetBEAMS was the automation
+of the data gathering and processing from the SF-BEAMS sondes without requiring
+human intervention. Most importantly, the decrease with the costs of constant 
+offshore site visits by boat, where biologists need manually collect the data
+from the sensor devices in order to take them for further processing at the
+lab. For this reason, the NetBEAMS research group proposed the use of the Data
+Sensor Platform (DSP) \cite{netbeams2009}, as the second attempt to automate
+the operation of SF-BEAMS.
+
+This following sections details the DSP, its architecture and how data is
+transported from the network nodes to the main network sink, the RTC labs.
+
+\subsection{The Data Sensor Platform (DSP)}
+
+The Data Sensor Platform, in short DSP Platform, is based on a micro-kernel
+architecture developed on top of the Java modular framework called OSGi
+\cite{osgi}. The platform represents the foundation of the execution of
+NetBEAMS, since it is executed from an embedded hardware called Gumstix
+\cite{gumstix} using a Linux operating system and on top of the Java Virtual
+Machine (JVM). In order to transport data from sensors hosts to the network
+sink, the use of a cellular connection is used to transport the collected data
+from the senso devices using the HTTP Protocol, as described by
+\citet{netbeams2009}. Figure \ref{fig:sf-netbeams-node} shows the
+architecture of the inhanced node designed by the NetBEAMS research group.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/DSP-Gateway-Node}
+  \caption{The NetBEAMS Node enhancement with the Gumstix and the GSM Modem}
+  \label{fig:sf-netbeams-node}
+\end{figure}
+
+The following list describes each of the devices in the NetBEAMS Node.
+
+\begin{itemize}
+  \item \textbf{YSI 6600EDS V2}: the YSI device is the regular sonde
+  responsible for observing the environment. It is connected to the Gumstix
+  embedded system, where the DSP is executed;
+  \item \textbf{Gumstix console-vx}: it's a COTS ARM-based hardware that
+  provides a computer-on-module environment for the development of small
+  embedded systems. This is the main environment of data extraction and remote
+  processing is accomplished. It runs a cross-compiled version of Linux Kernel
+  2.6;
+  \item \textbf{Huawei E220 USB Modem}: it is used to transfer the data from the
+  Gumstix to the RTC Labs Data Center.
+\end{itemize} 
+
+The DSP runs inside of the embedded system Gumstix. The following sections
+details its design and process for extracting data.
+
+\subsection{The DSP System Design}
+
+This section focus on the development of a Software Platform for the NetBEAMS
+Gateway Embedded System, or on the system developed in the Gumstix device. As
+shown in figure \ref{fig:netbeams-software-stack}, the NetBEAMS Gateway Node is
+an embedded system that contains a set of layer found in any computer.
+However, each of the resources described from the system were customized for
+the NetBEAMS system. The main components of such system can be summarized as
+follows:
+
+\begin{itemize}
+  \item \textbf{Operating System}: it uses a cross-compiled Gentoo Linux, which
+  supports a wide variety of development tools, including the Java Virtual Machine
+  (JVM), the underlying platform system;
+  \item \textbf{Java Virtual Machine}: it uses the JamVM, a ~200 KB version of
+  the Sun Microsystems Java Virtual Machine, version 2.0;
+  \item \textbf{OSGi Framework}: it uses the Knopflerfish implementation of the
+  OSGi 4.1 specification. More details in the following sections.
+  \item \textbf{DSP Platform and other Bundles}: The plug-and-play DSP
+  Components are based on the OSGi bundles capabilities, which can reuse services registered in the OSGi framework.
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{../diagrams/NetBEAMS-Client-Node-Components}
+  \caption{The NetBEAMS's Gumstix Software Stack}
+  \label{fig:netbeams-software-stack}
+\end{figure}
+
+As depicted in figure \ref{fig:netbeams-software-stack}, the DSP Sonde Data
+Producer component opens a serial connection with the device through the Java
+Native Interface (JNI) driver and produces the data flow 1. The data stream
+format at this stage is as described on table \ref{tab:ysi-data-stream}.
+Later, by parsing and transforming the data to DSP internal representation, it
+sends the data to the DSP Platform as depicted on flow 2. Finally, the DSP
+Platform decides to send the data to the DSP Wire Transport Client, as shown
+on flow 3, by following rules defined by the system administrator. At this
+point, the data is ready to be transmitted to the server, which is covered on
+the following sections.
+
+\subsection{The DSP Platform Architecture}
+
+The architecture of the DSP, aligned with the OSGi capabilities, reuses the
+Service-Oriented Architecture that can easily enable and disable plug-and-play
+components. By following a publish-subscriber design-pattern \cite{gof}, the
+service producer registers into the service broker while the consumer looks
+for a given registered service in the Service Broker. For this reason, this
+approach allows decoupled interoperability among modules as it is shown in
+figure \ref{fig:publish-subscriber-pattern}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{../diagrams/publish-subscriber-pattern}
+  \caption{The publish-subscriber design-pattern for services}
+  \label{fig:publish-subscriber-pattern}
+\end{figure}
+
+The DSP infrastructure is based on a loosely-coupled architecture hosted in a
+given host computer with an OSGi container, where the entire system is
+composed by a set of plug-n-play OSGi modules. Each DSP component, as an
+instance of an OSGi Module, can perform specialized tasks according to its
+specification. In general, each DSP component can be categorized as follows:
+
+\begin{itemize}
+  \item \textbf{Data Producer (DP)}, whose main function is to produce data for
+  the system;
+  \item \textbf{Data Consumer (DC)}, whose main function is to consume the
+  received data.
+\end{itemize}
+
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.7]{../diagrams/DSP-Producers-Consumers-Components-Interactions}
+  \caption{The basic architecture of a Data Sensor Platform (DSP)}
+  \label{fig:DSP-Producers-Consumers-Components-Interactions}
+\end{figure}
+
+The Data Producers and Data Consumers exchange data through the DSP Message
+Broker using a message unit called DSP Message. As it is depicted in figure
+\ref{fig:DSP-Producers-Consumers-Components-Interactions}, a Data Producer
+creates a set of one or more DSP Messages wrapped up in a DSP
+MessagesContainer in order to be sent to the DSP Message Broker. When the
+broker receives the set of DSP Messages, it requests a list of Data Consumers
+to each of the DSP Messages based on rules managed by the DSP Matcher.
+Whenever the broker acquires the list of Data Consumers, it delivers a copy of
+the DSP Message to each of the Data Consumers in the receiving list. Upon the
+DSP Message arrival, each Data Consumer can extract the actual data from the
+DSPMessage. Finally, although the components can be distinguished between Data
+Producers and Consumers, any of them are entitled to send and receive
+administrative DSP Messages, which is covered in the following sections.
+
+When the DSP Platform is installed into the OSGi framework, it follows the
+OSGi specifications without any changes to remain it in the installed state.
+In this way, it is important to note that the DSP Platform and its
+plug-and-play components are directly mapped with the OSGi Framework as
+follows:
+
+\begin{itemize}
+  \item \textbf{OSGi Bundle} = DSP Component Artifact in Jar format
+  \begin{itemize}
+    \item SondeDSPProducer.jar is the component developed for the YSI sonde
+  \end{itemize}  
+  \item \textbf{OSGi Activator} = DSP Component Activator
+  \begin{itemize}
+    \item Class specified in the MANIFEST.MF artifact (next sections)
+  \end{itemize} 
+  \item \textbf{OSGi Service Reference} = DSP Component Class
+  \begin{itemize}
+    \item  Class specified by the component author.
+  \end{itemize}
+\end{itemize}
+
+The DSP Platform, along with the DSP Framework, are the only DSP Components
+needed to be installed into the OSGi container. For this reason,the DSP
+Platform is responsible to install and activate the additional DSP components
+that makes part of the platform during the start up process, which leverages
+its bootstrap process. Nevertheless, in order to automate the process of
+automatic install and removal of the plug-and-play components, the DSP Platform
+provides a deployment configuration file that describes which DSP components
+must be installed with a given priority number. The name of this configuration
+artifact is called config.xml (see listing \ref{file:dsp-config.xml}), and is
+depicted by the XML Schema \cite{xml-schema} in figure
+\ref{fig:dsp-config-schema}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.8]{../diagrams/config-schema}
+  \caption{XML Schema for the main DSP deployment configuration artifact}
+  \label{fig:dsp-config-schema}
+\end{figure}
+
+In order to show an example, consider the DSP Platform on the embedded system
+Gumstix in figure \ref{fig:sf-netbeams-node}. It is started by providing a
+deployment configuration artifact config.xml included in the appendix. It lists
+the components that the DSP Platform needs to install and load for its
+operation. As it is shown, the DSPWireTransportClient and the DSPSondeProducer
+are the identification of the components, followed by the name of the physical
+file and an assigned loading priority. While the DSPWireTransportClient is
+responsible for the serialization and deserialization of the DSP Messages
+exchanged by the DSPSondeProducer and any remote DSP component. In this case,
+the DSPSondeProducer is the DSP component responsible to collect measurement
+data from the YSI Sonde and temporarily store them before being transmitted.
+
+Therefore, in order to orchestrate the DSP Components together, the DSP
+Platform component is responsible for installing and uninstalling during its
+state "Starting" and "Stopping", respectively, as it is shown in figure
+\ref{fig:DSPPlatform-Install-Usage-State-Diagram}. When the system
+administrator starts the DSP Platform, it performs the regular OSGi procedures
+to start the bundle. Up until that state, it will get the list of DSP
+Components to be installed as described in the config.xml artifact, trying to
+install each of them in an optimistic way. After that, it will continue on the
+state "Active" until the system administrator decides to stop it.
+
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.6]{../diagrams/DSPPlatform-Install-Usage-State-Diagram}
+  \caption{The DSP Platform State Diagram}
+  \label{fig:DSPPlatform-Install-Usage-State-Diagram}
+\end{figure}
+
+When the DSP Platform is on the Active state, it is ready to manage the DSP
+Messages exchanges as described through figure
+\ref{fig:DSP-Producers-Consumers-Components-Interactions}. The following
+sections describe the participating classes in starting the DSP Platform and
+its execution.
+
+In a nutshell, the DSP Platform is an extension of the OSGi Platform, as it can
+be seen in the UML Class Diagram \cite{uml} in figure
+\ref{fig:DSP-Platform-Class-Diagram-Simple}. The class Activator contains a
+unique instance of the Platform class, which contains instances of the classes
+ComponentManager, Matcher, the MessageBroker and DSPContextImpl. The
+DSPBundleController is the main instance that manages the plug-and-play DSP
+components, and therefore, is tightly-coupled with the OSGi Framework classes.
+Additionally, this class is part of the publish-subscriber design-pattern, as
+it it implements the interfaces Bundle Listener and Service Listener, whose
+responsibility is to track listens to the changes of the state of
+ServicesReferences on the DSP Platform.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.7]{../diagrams/DSP-Platform-Class-Diagram-Simple}
+  \caption{The DSP Platform UML Class Diagram}
+  \label{fig:DSP-Platform-Class-Diagram-Simple}
+\end{figure}
+
+\section{DSP Message and DSP Messages Container}
+
+As shown in the previous section, a DSP Message is the main unit of
+communication among DSP Components. In a nutshell, a DSP Message can be seen
+as an abstraction of an envelop containing the sections: a header and a body.
+The former is used for identification and routing purposes, while the latter is
+used to carry the payload of the message, that is, the collected data from
+a sensor. Figure \ref{fig:DSP-Message-Representation} depicts the abstraction
+of a DSP Message and its main components.
+
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.8]{../diagrams/DSP-Message-Representation}
+  \caption{An Abstraction of a DSP Message and its components}
+  \label{fig:DSP-Message-Representation}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Header} is composed by 2 blocks that identify the data
+  producer and consumer of the message, as well as the time of creation, UUID,
+  etc. It is an important piece of information for the data delivery and
+  routing purposes.
+  \item \textbf{Body} contains the payload of the message. This section carries
+  the collected data from a sensor.
+\end{itemize}
+
+In general, the DSP Platform offers a veriety of types of DSP Messages for
+different purposes. For example, any measurement data must be
+wrapped up in a Measurement Message, while a Query Message is used to exchange
+messages among the components for the purpose of management. In this way, the
+main DSP Messages can be summarized as follows:
+
+\begin{itemize}
+  \item \textbf{Measurement Message} is used to transport any sensor collected
+  data;
+  \item \textbf{Query Message} is used to query a DSP component about its
+  configuration properties;
+  \item \textbf{Update Message} used to update a DSP component's configuration
+  properties;
+  \item \textbf{Acknowledgement Message} is used for the transport communication
+  protocol, by acknowledging the reception of a DSP Message. More details in the
+  Remote Data delivery section.
+\end{itemize}
+
+These DSP Classes and other can be seen in figure the  UML Class
+Diagram \cite{uml} of figure \ref{fig:DSP-Messages-Classes}. Each DSP Message
+contains an instance of a Header and Body. Whenever a DSP component is ready
+to transmit messages, it wraps up the set of DSP Messages into the instance of
+the Messages Container, which contains information about the collection of
+messages being transmitted with its own identification. In this fashion, the
+Messages Container is the main communication unit between 2 different DSP
+Components.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.6]{../diagrams/DSP-Messages-Classes}
+  \caption{The DSP Messages UML Class Diagram}
+  \label{fig:DSP-Messages-Classes}
+\end{figure}
+
+Another use of the DSP Messages is during the DSP Platform activation process,
+where bootstrap messages are used to configure each DSP component. In order to
+send configuration parameters, the DSP Platform uses Update Messages using a
+unique type of Message Content called DSP Properties, which is described in the
+next section.
+
+\section{Collected Sensor Data as the DSP Message Content}
+
+As mentioned in the previsou section, a DSP Message can carry any data on its
+body, also called the payload. In such a way, any data representation must
+just extend from the Message Content abstract class as it is shown
+\ref{fig:Sonde-MessageContainer-Class-Diagram}, as defines the data
+representation of the YSI Sonde data.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.6]{../diagrams/Sonde-MessageContainer-Class-Diagram}
+  \caption{The YSI Payload - Message Content UML Class Diagram}
+  \label{fig:Sonde-MessageContainer-Class-Diagram}
+\end{figure}
+
+The properties measured from the YSI Sonde can be captured by the class
+SondeDataType as a direct render of the measurements data depicted in table
+\ref{tab:ysi-data-stream}. In addition to the regular data types, the class
+also provides additional properties such as the attribute "samplingTimeStamp"
+that carries the time when the data was collected from the YSI Sonde. However,
+in order to capture a set of measurements at once, the SondeDataContainer
+class used to carry a set of SondeDataType classes, as it is composed by one
+or more instances of SondeDataType. In order to illustrate other examples,
+consider the UML Class Diagram \cite{uml} of image
+\ref{fig:Mouse-Actions--MessageContainer-Class-Diagram} as a payload of
+observations made from a mouse over a screen, which captures the name of the
+event, the button name and the x/y coordinates.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/Mouse-Actions--MessageContainer-Class-Diagram}
+  \caption{The Mouse Actions Payload - Message Content UML Class Diagram}
+  \label{fig:Mouse-Actions--MessageContainer-Class-Diagram}
+\end{figure}
+
+As described in the previous section, the DSP Platform uses DSP Update
+Messages to configure internal components' initial configuration values. In
+order to do so, the DSP Platform uses an instance of the DSP Properties, which
+is composed of a list of initial DSP Property and their relating Values
+instance depicted on the UML class diagram \cite{uml} of figure
+\ref{fig:DSP-Property-Class-Diagram}. 
+
+\begin{itemize}
+  \item \textbf{Property Instance}: initial-rate
+  \item \textbf{Value Instance}: 40
+\end{itemize}
+
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.6]{../diagrams/DSP-Property-Class-Diagram}
+  \caption{The DSP Property Payload - Message Content UML Class Diagram}
+  \label{fig:DSP-Property-Class-Diagram}
+\end{figure}
+
+\subsection{DSP Platform Initialization Process}
+
+All in all, the DSP Platform requires the knowledge of the aforementioned DSP
+classes in order to initialize. The UML Sequence Diagram \cite{uml} in figure
+\ref{fig:From-OSGi-DSP-Platform-Start-to-All-Components-Sequence-Diagram}
+depicts the exact moments when the additional the plug-and-play DSP components
+are installed and bootstrapped by the DSP Platform, as the UML State Diagram
+\cite{uml} in figure \ref{fig:DSPPlatform-Install-Usage-State-Diagram}
+described.
+
+\begin{itemize}
+  \item \textbf{Start DSP Activator Gate}: after installing the Activator
+  indicated by the DSP Bundle's MANIFEST.MF artifact, the OSGi Framework makes
+  a call to the method Activator.start();
+  \item \textbf{Bootstrap DSP Component Gate}: after the component has been
+  initialized (by the call the method init() from the class ComponentManager),
+  the DSP Component is ready to be bootstrapped, and the optional bootstrap
+  message is delivered.
+\end{itemize}
+
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/From-OSGi-DSP-Platform-Start-to-All-Components-Sequence-Diagram}
+  \caption{The DSP Platform Initialization UML Sequence Diagram}
+  \label{fig:From-OSGi-DSP-Platform-Start-to-All-Components-Sequence-Diagram}
+\end{figure}
+
+\subsection{Data Delivery Mechanism}
+
+In general, when a DSP Component finishes preparing the DSP Messages Container,
+it contacts an entity responsible for sending and proxying message to other
+components. The DSP Broker acts like a mailman, receiving messages and
+forwarding copies of it to other entities in the system, abstraction in which
+is shown in figure \ref{fig:DSP-Message-Broker-Abstraction}. In this way, the
+DSP Broker receives a DSP Message and makes necessary deliveries to DSP
+components that it has knowledge of.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/DSP-Message-Broker-Abstraction}
+  \caption{A DSP Message Broker Abstraction}
+  \label{fig:DSP-Message-Broker-Abstraction}
+\end{figure}
+
+The use of messaging exchange paradigm is used in NetBEAMS because it decouples
+the system by using messages take into account their structure to filter the
+messages. In this way, the DSP Broker uses a filter component called DSP
+Matcher, which provides a list of DSP Components that needs to receive a copy
+of the DSP Message. It turns out that the DSP Matcher bases its decisions on
+structured rules provided by the system administrator for an specific DSP
+Platform instance. The UML Class diagram for the DSP Broker, Matcher and
+particiaping classes is depicted in figure
+\ref{fig:DSPBroker-Matcher-Class-Diagram}, and describes how the DSP Broker
+implementation is tightly coupled with the DSP Matcher, as well as to the
+lists of DSP Components sorted by name and type.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/DSPBroker-Matcher-Class-Diagram}
+  \caption{The DSP Broker-Matcher UML Class Diagram}
+  \label{fig:DSPBroker-Matcher-Class-Diagram}
+\end{figure}
+
+In general, the DSP Matcher is composed by a list of MatchRule, which contains
+a reference to a MatchCriteria and a MatchTarget. The former identifies the
+rule for matching a given DSP Message based on the producer and consumer's
+message type and location, while the latter describes the DSP Component that
+will receive the DSP Message, and if its delivery is done by means of a gateway
+component. In this way, the DSP Matcher can be seen as a function that takes a
+DSP Message as an input and returns a list of DSP consumers, and the
+matching configuration artifact provided by the administrator. See listing
+\ref{file:dsp-matcher-config.xml}) for details.
+
+\begin{table}
+    \caption{DSP Matcher Rule Algorithm to filter Data Consumer components to
+    receive a given Message}
+    \begin{center}
+        \begin{tabular}{lr}
+          \textit{Data Consumers ( DSP Message ) := Verify the DSP
+          Message's Header + Verify the matcher rules (which contains the list
+          of consumers)}
+        \end{tabular}
+    \end{center}
+    \label{tab:ysi-data-stream}
+\end{table}
+
+One example of such matching rule used by the DSP installed at the Gumstix can
+be seen in listing \ref{file:dsp-matcher-config-gumstix.xml}. the Gumstix
+system to configure the data delivery of the messages produced by the DSP
+Component DSP Sonde Producer. It describes a list of maching rules that
+reseambles a filtering system. This configuration contains 2 match rules: one
+related to internal DSP Configuration and another for a remote destination.
+The match criteria describes what the DSP Message Header properties must be,
+while the match target is the destination of the message. One important
+definition is the gateway Component Type, which defines the name of a remote
+DSP Component that is capable of receiving a remote DSP Message.
+
+Upon receiving all the matching rules and analyzing the DSP Message against
+the rules, the DSP Broker selects a set of the running DSP components to receive
+a copy of the DSP Message object in two different ways:
+
+\begin{itemize}
+  \item \textbf{In-memory local message delivery}: if the receiving DSP
+  Component is located in the current local host, a deep copy of the instance
+  of the DSP message is delivered;
+    \begin{itemize}[label=\textbullet]
+        \item IP Addresses are correctly resolved by using the Ethernet card in
+        the device: localhost, 127.0.0.1, or the same IP Address for Producer
+        and Receiver resolves into a local device. An example for such type of
+        delivery can be seen in the match ruleID
+        all messages sent to dsp manager of listing 
+        \ref{file:dsp-matcher-config-gumstix.xml}.
+    \end{itemize}
+  \item \textbf{Serialized remote message delivery}: if the receiving DSP
+  Component is located in a foreign/remote host, the message is serialized in a
+  format defined by the transport protocol chosen the DSP Component responsible
+  for the transport. The following section describes the existing DSP Data
+  Transport component;     
+  \begin{itemize}[label=\textbullet]
+        \item IP Address from the Producer and Consumer are different, and are
+        not resolved to be in the same host. An instance of such match rule can
+        be seen in the match rule ID send-message-to-remote url dsp of the code
+        snippet \ref{file:dsp-matcher-config-gumstix.xml}.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Sending DSP Messages through the Wire}
+
+In order to send messages through the wire, the DSP Platform uses two symmetric
+components that serialize and deserialize DSP Messages to XML and back to Java
+POJO, respectively, and vice-versa. Named DSP Wire Transport Client and DSP
+Wire Transport Server \cite{netbeams2009}, these components use the HTTP
+\cite{http} protocol to transport the serialized version of the DSP Messages.
+Figure \ref{fig:DSP-to-DSP-Remote-Communication} depicts the scenario where a
+DSP Sensor Node transmits a DSP Message through an HTTP POST request.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.6]{../diagrams/DSP-to-DSP-Remote-Communication}
+  \caption{The remote communication between two DSP Components using the HTTP
+  Protocol}
+  \label{fig:DSP-to-DSP-Remote-Communication}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{DSP Wire Transport Client}: responsible for making HTTP POST
+  Requests to the service provided by the DSP Wire Transport Server component.
+  The body of the HTTP POST request contains a serialized version of an
+  instance of a DSP MessagesContainer in XML format;
+  \item \textbf{DSP Wire Transport Server}: exposes a Web Server listening to
+  port 8080 that receives the HTTP POST request from the Client. Upon receiving
+  the request, the server deserializes the DSP MessagesContainer back to the
+  in-memory POJO and proceeds with the delivery to the DSP Broker. At this
+  situation, the component packages acknowledgement messages and any queued
+  message to the client and piggybacks \cite{xml-piggybacking} it to the HTTP
+  response body.
+\end{itemize}
+
+As described by \cite{netbeams2009}, NetBEAMS is a single-hop sensor network
+whose sensors transmits data from the sensors to the server. Upon receiving the
+data stream, the DSP Wire Transport Server component desirializes the DSP
+MessagesContainer and its enclosing DSP Messages back to a Java class instance
+and delivers each of the DSP Messages to the DSP Broker, which delivers a
+copy of the message to each DSP Component listed by the maching rule. 
+%This
+%process is depicted by the UML Sequence Diagram \cite{uml} in figure \ref{fig:}
+
+Whenever a DSP bundle producer is ready to transmit messages, they are added
+into a DSP Messages Container (see UML Class Diagram in figure
+\ref{fig:DSP-Messages-Classes}), which is serialized in XML to be transmitted.
+Listing \ref{file:dsp-message-serialized-ysi} shows an instance of a DSP
+MessagesContainer in serialized in XML, ready for transmission. In fact, the
+listing is an example of the transmitted data collected from a sensor located
+at the 192.168.0.103 to be transmitted to the host 192.168.0.106, and the
+process of transmission in the server-side can be followed in figure
+\ref{fig:From-DSPSondeComponent-to-DSPWireTransportClient-Sequence}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/From-DSPSondeComponent-to-DSPWireTransportClient-Sequence}
+  \caption{The UML Sequence Diagram for the production of a YSI Message}
+  \label{fig:From-DSPSondeComponent-to-DSPWireTransportClient-Sequence}
+\end{figure}
+
+The Sonde DSP Component is responsible for starting a worker thread called
+SondeProducer, which is responsible for constantly read from the RS-232 serial
+port by using an instance of the SerialReader class. This process depicts the
+production of the data flow "flow 1" of figure
+\ref{fig:netbeams-software-stack}, which is a collection of SondeDataType for
+each of the measurement data read on a SondeDataContainer. As depicted in
+figure \ref{fig:From-DSPSondeComponent-to-DSPWireTransportClient-Sequence}, it
+first read the serial connection using the class SerialReader, which parses 
+the data stream. After parsing the data, the reader creates an instance of the
+class SondeDataType, the POJO responsible for carrying out the measurement
+data. As described earlier, the data is added into the SondeDataContainer to
+dispatched to the DSP Broker, whose responsibility is to get the list of DSP
+Components that is setup to receive a copy of the DSP message (see previous
+code snippet). As for the setup done for the Gumstix, the measurement message
+is supposed to be sent to a remote destination of host 192.168.0.7. At this
+point, the DSP Broker makes a decision to send the DSP Message to the default
+gateway component DSPWireTransportClient.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/From-DSPWireTransport-Client-to-DSPWireTransportServer-Sequence}
+  \caption{The UML Sequence Diagram describing the Wire Transport Server
+  receiving a DSP Message}
+  \label{fig:From-DSPWireTransport-Client-to-DSPWireTransportServer-Sequence}
+\end{figure}
+
+After the message arrives in the DSPWireTransportClient, the message is
+maintained in a temporary repository of outbound DSP Messages called
+MessagesQueues after the message is hashed by the destination IP address and
+the DSP Client sender using an instance of QueueMessageData. As shown in figure
+\ref{fig:From-DSPWireTransport-Client-to-DSPWireTransportServer-Sequence}, the
+DSP TransportSender is a worker thread that is started by the DSP Wire
+Transport Client and is constantly transmits the data in the outbound queues
+after a configurable rate. It makes a transport of the message and receives
+the response, updates the state of the messages to transmitted, to finally
+send the response messages to the DSP Message Broker.
+
+While the DSPWireTransportClient makes an HTTP Request with the DSP Message,
+the DSPWireTransportServer's servlet receives the request. It first
+deserializes the MessagesContainer and delivers each of its messages to the DSP
+Broker. At this point, the server verifies if there are messages in the
+outbound queue that are addressed for the host that requested the messages
+delivery. By using a technique called piggybacking, the server adds to the HTTP
+Response a serialized version of the MessagesContainer with any DSP Messages.
+In addition to any DSP Message, the server prepares and sends acknowledgement
+messages back to the requesting host to the host.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/From-DSPWireTransport-Server-To-DSP-Broker}
+  \caption{The UML Sequence diagram describing the DSP
+Message delivery on the server-side and the response}
+  \label{fig:From-DSPWireTransport-Server-To-DSP-Broker}
+\end{figure}
+
+The gate "From DSP WireTransport Server to Broker Gate" defines the actual
+delivery of the DSP Message to the DSP Broker. As this section is a tutorial
+about the DSP Platform, the remaining steps will be explained on Section 3,
+while showing the design and implementation of the component DSP Data
+Persistence.

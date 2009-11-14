@@ -1,0 +1,107 @@
+\chapter{Appendix - Source Code / Artifacts}
+
+This section includes the source-code for the DSP Data Persistence. Each
+section details one single main artifact used on the development of the
+component. However, only the main ones will be added into this document, while
+the remainder can be downloaded directly from the Subversion repository.
+
+The source code is located in the Subversion repository for the NetBEAMS
+project. This is how it is structured:
+
+\section{DSP Data Persistence Component}
+
+This artifact defines the ANT build file.
+
+\lstinputlisting[language=Ant,label=file:dsp-build.xml,caption=Build
+system using Apache ANT]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/build.xml}
+
+%\lstinputlisting[language=bash,label=file:osgi-manifest,caption=OSGi
+%Manifest
+%Descriptor]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/META-INF/MANIFEST.MF}
+
+\lstinputlisting[language=XML,label=file:dsp-config.xml,caption=DSP
+Deployment
+Configuration]{../../../../netbeams/versions/v2/config/deployment/config.xml}
+
+\lstinputlisting[language=XML,label=file:dsp-matcher-config.xml,caption=DSP
+Matching Rules]{../../../../netbeams/versions/v2/config/deployment/matcher_config.xml}
+
+\lstinputlisting[language=XML,label=file:dsp-matcher-config-gumstix.xml,caption=DSP
+Matching Rules
+for
+Gumstix]{../../../../netbeams/versions/v2/config/deployment/matcher_config-gumstix.xml}
+
+%TODO: add bootstrap message in case it is implemented
+
+\lstinputlisting[language=Java,label=file:dsp-activator,caption=OSGi
+Activator]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/osgi/DataPersistenceActivator.java}
+
+\lstinputlisting[language=Java,label=file:dsp-component-service,caption=OSGi
+Service - Component]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPDataPersistence.java}
+
+\lstinputlisting[language=Java,label=file:dsp-mongo-service,caption=DSP Data to
+Mongo DB
+Service]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPMongoCRUDService.java}
+
+\lstset{language=XML,morecomment=[s]{!--}{--},label=file:dsp-message-serialized-ysi,caption=DSP
+Message with a YSI sonde data payload}
+\begin{lstlisting}
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MessagesContainer uudi="24929c29-60ee-4d17-af08-64d9446277ef"
+        creationTime="2009-03-06T15:17:18-0800" destinationHost="192.168.0.106">
+   <MeasureMessage ContentType="org.netbeams.dsp.ysi"
+         messageID="435a61f6-370f-458d-aeb7-6e92270a79cb">
+      <Header>
+         <CreationTime>1236381438480</CreationTime>
+         
+         <Producer>   
+            <ComponentType>
+                 org.netbeams.dsp.platform.management.component.ComponentManager
+            </ComponentType>
+            
+            <ComponentLocator>
+               <ComponentNodeId>1234</ComponentNodeId>
+               <NodeAddress>192.168.0.103</NodeAddress>
+            </ComponentLocator>
+         </Producer>
+         
+         <Consumer>
+            <ComponentType>
+                 org.netbeams.dsp.wiretransport.client
+            </ComponentType>
+            
+            <ComponentLocator>
+               <NodeAddress>LOCAL</NodeAddress>
+            </ComponentLocator>
+         </Consumer>
+      </Header>
+      <Body>
+         <SondeDataContainer>
+            <soundeData date="15:17:18" time="03-06-2009">  
+               <Temp>21.20</Temp>
+               <SpCond>193</SpCond>
+               <Cond>179</Cond>
+               <Resist>5588.40</Resist>
+               <Sal>0.09</Sal>
+               <Press>0.084</Press>
+               <Depth>0.059</Depth>
+               <pH>7.98</pH>
+               <phmV>-79.6</phmV>
+               <ODOSat>99.5</ODOSat>
+               <ODOConc>8.83</ODOConc>
+               <Turbid>0.4</Turbid>
+               <Battery>8.7</Battery>
+            </soundeData>
+         </SondeDataContainer>
+      </Body>
+   </MeasureMessage>
+</MessagesContainer>
+\end{lstlisting}
+
+\section{Experiment Implementation}
+
+\lstinputlisting[language=Bash,label=file:experiment-setup-executor,caption=Experiment
+Implementation]{../../../../netbeams/versions/v2/persistence/run-persistence-experiment}
+
+\lstinputlisting[language=Java,label=file:experiment-dsp-implementation,caption=Experiment
+Implementation]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPMessageToMongoDBExperiment.java}

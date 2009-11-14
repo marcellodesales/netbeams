@@ -1,0 +1,120 @@
+% main.tex, to be used with thesis.tex
+% This contains the main work of your thesis.
+
+
+%\bibliography{thesis}  % uses the references stored in Chapter1Radar.bib
+
+\chapter{Introduction}
+
+Sensor networks are commonly used in different areas for different purposes
+such as scientific measurements and general population use \cite{sn-intro01}
+\cite{sn-intro02}. In the scientific community, they serve as tools to monitor
+the state of the environment by storing samples of data in specific periods of
+time. For instance, the NASA Jet Propulsion Laboratory uses the Volcano
+SensorWeb \cite{sn-ex02}, a sensor network which aims to collect data from
+specific volcanoes in Alaska and South Pacific to be used with heuristics
+regarding dangerous activities. Similarly, the National Data Buoy Center, a
+department of the National Oceanic and Atmospheric Administration (NOAA)
+\cite{sn-ex03}, provides online data from different buoys in different coast
+shores around the world regarding water quality, temperature, tides, etc, what
+characterizes sensor network for environmental monitoring \cite{sn-ex01}.
+Therefore, sensor networks can be seen as a very important scientific research
+and commercial field with direct application and use of its produced data.
+
+In order to provide access to the collected sensor data, different approaches
+can be taken to interrogate sensor devices indirectly by accessing its data in
+places called network sink. These data nodes can be located in the network or 
+in a centralized host. In this way, the query process can take place on the
+network nodes themselves or on the centralized data sink. The former is
+generally used when the data is collected at the sensor node on its local
+storage, being shown by \cite{sn-storage01} \cite{sn-storage03}
+\cite{sn-storage04} that this strategy helps mitigating energy consumption.
+However, this strategy is used when data archival is not the primary reason,
+given the limited resources on the sensor devices. For this reason, the the
+latter strategy has been used when the collected data is primarily archived in
+a centralized database system for later reuse \cite{sn-storage02}.
+
+When it comes to data model implementation, the relational data model
+\cite{relational-model} is one of the most used approaches to represent data in
+sensor network databases in any of the query processing strategies, and in most cases 
+with a modified version of the SQL language \cite{sn-db-newop}. However, the
+design of the database system must be done with prior knowledge of the sensor
+types when choosing the relational data model, as the database design must be
+normalized \cite{db-normalization} for the entities already identified for the
+system. For instance, the introduction of a new sensor device might represent
+a potential change on the database structure by seeking a new normalized
+version of the database structure. In addition to challenges of maintaining
+the database schema normalized, the use of Data Provenance approaches in
+sensor network data \cite{sn-provenance} usually addresses the problem related
+with the lineage of data  and its full history. However, once the data model
+is chosen and implemented, one of the most important non-functional
+requirements in sensor networks is scalability of the persistence storage.
+Since an operational sensor network can produce huge amounts of data, it must
+be able to cope with the increase and data load during data gathering, and yet
+provide users the same performance during data retrieval by using different
+strategies such a data-centric storage \cite{sn-storage03}.
+
+In summary, this dissertation discusses the solution of a
+centralized data-centric persistence storage component for the NetBEAMS
+\cite{netbeams2009}, an implementation of a sensor network that primarily
+focused on environmental data. Different challenges can be related to the
+selection of a technology that handles data persistence in the context of sensor
+networks: the network infrastructure, the nature and location of the collected
+data, the chosen data model, among others. First, NetBEAMS needs to provide
+means to safely represent sensor devices' properties without the need of
+restructuring any existing data model, taking into account the use cases from
+the main users. For example, a marine biologist may query the the persistence
+storage regarding the temperature of a specific geographic region at the San
+Francisco Bay at a given time frame. Second, since a sensor network may
+experiment grown in terms of number of sensors, and consequently the number of
+data produced, the persistence  storage must be able to reasonably scale and
+be well structured in terms of storage space with the least service
+interruption. For instance, if the persistence storage is close to reach its
+storage capacity, what should the network administrator do? Last, but not
+least, the means to access the data for reuse is the most important features
+of the system, taking into account the different data formats used by the main
+users of the system. How to export specific collected data to a spreadsheet or
+archive files to be published or shared with other users? For these, and many
+other reasons, the persistence storage problem addressed by this work can be
+seen as a very challenging experience to solve.
+
+In view of the fact that the persistence storage of a sensor network imposes
+many different challenges, and taking into account the case study NetBEAMS, this
+work's main strategy focused analyzing the different specifications of data
+persistence in the literature in order to find new types of mechanisms to
+provide data persistence for sensor network data. In this way, the kernel of
+this dissertation is focused on providing solutions to the real-world problem
+face by the Romberg Tiburon Center and its use of NetBEAMS. Furthermore,
+the evaluation of different technologies is discussed in order to provide a
+loosely-coupled component-based solution based on the infrastructure of the 
+DSP Platform. For the reason of providing a 'lighter' data model, a subtype of
+the Key-Value Pair \cite{db-kvp} data model was chosen to easily capture the
+description of any sensor device's properties, along with the use of time
+series data models \cite{sn-provenance} for time snapshots. In that way, data
+modeling process does not represent a new refactoring each time a new sensor 
+type is added or removed from the persistence system, giving users means to 
+retrieve data accordingly. Similarly, in contemplation of scalability and the
+use of Data-Centric approach \cite{sn-storage03}, this work proposes the use of
+Database Sharding \cite{db-shard01} \cite{db-shard02}, on a centralized
+database system. 
+
+In order to provide such mechanism, this work first takes a look at the related
+literature to study the properties of sensor networks, in the context of its
+produced data and infrastructure for storage and query processing. Then, a
+summarized list of taxonomies is proposed to be the basis of an empirical  the
+use of shard keys based on the geographic origin of the collected data as cited to be one of the options when working with Provenance data in sensor networks \cite{sn-provenance}. As a result, the data persistence system component was conceived using the plug-and-play capability from the DSP platform without doing  any changes to the current DSP Platform, providing an scalable solution that can adjust according to any data load increase. Finally, the selected technology provides different data access
+mechanisms, which directly addressed problems related to data access and
+Information Fusion \cite{sn-info-fusion}, providing export-import capabilities
+and visualization through the availability of APIs written in different
+popular programming languages.
+
+This dissertation report is organized as follows: the next chapter is an 
+overview of the state of art on topics that supports the implementation of the
+solution of this work, providing the necessary background foundation for the 
+following chapters. Chapter 3 presents the design and architecture of the 
+conceived persistence module, describing the requirements needed to be
+addressed,  while Chapter 4 describes the implementation based on the design. 
+The analysis and investigation of the implemented solution is shown through 
+the analyzes of the experiment results on Chapter 5. Last, but not least, 
+Chapter 6 presents the conclusions of this work, followed by the possible 
+future works and recommendations presented on Chapter 7.

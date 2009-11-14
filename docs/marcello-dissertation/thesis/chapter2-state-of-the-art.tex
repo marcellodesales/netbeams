@@ -1,7 +1,7 @@
 % main.tex, to be used with thesis.tex
 % This contains the main work of your thesis.
 
-\bibliography{thesis}  % uses the references stored in Chapter1Radar.bib
+%\bibliography{thesis}  % uses the references stored in Chapter1Radar.bib
 
 \chapter{State of the Art}
 
@@ -25,7 +25,7 @@ topics such as the differences between the KVP data model and the relational
 data model, as well as discussing about the approaches used on Database
 Sharding.
 
-\section{Sensor Networks}
+\section{Sensor Networks Survey}
 
 Sensor Networks are specialized types of network systems comprised of network 
 nodes with specific goals to observe and collect data. The following
@@ -109,7 +109,7 @@ related to quality-of-service (QoS) such as real-time delivery within certain
 period of time or robustness such as maintaining data alive even though there
 a communication link is not available \cite{sn-intro02}.
 
-\section{Data Persistence in Sensor Networks}
+\section{Persistence Storage for Sensor Networks}
 
 The most important purpose of a sensor network is related to its main product:
 the use of the raw data. Data collection in sensor networks is directly
@@ -129,7 +129,7 @@ and the final destination of the produced data. In a nutshell,
 
 At first glance, the raw data serves as the primary product of the sensor
 network. However, the first consideration that must take place is regarding the
-purpose of the collected data, as \cite{sn-provenance01} explains
+purpose of the collected data, as \cite{sn-provenance} explains
 differentiates between two main use of the sensor data:
 
 \begin{itemize}
@@ -145,35 +145,12 @@ archival data needs to be stored in a secondary memory. Nonetheless, given the
 nature of the sensor device specification, the low-level data produced
 by a given sensor device might not contain necessary information regarding the
 identity of the data itself. The use of Data Provenance techniques is described
-by \cite{sn-provenance01} as an important step to provide the collected data 
+by \cite{sn-provenance} as an important step to provide the collected data 
 specific metadata regarding its location and lineage.
 
 Under these circumstances, the collected data needs first to face its jorney
 starting from its transmission from its producing device to the specified data 
 sink as specified by \cite{sn-storage01} \cite{sn-storage02} \cite{sn-storage03}.
-
-\subsubsection{Providing Identity to the Collected Sensor Data}
-
-Most of sensor networks implementations use the collected data from the sensor
-devices after they observe the environment. \cite{sn-provenance01} showed that
-collected data used for archival purposes are usually missing important
-features. First, the device's sampling are usually in raw format or without
-obvious names. In order to provide search over the collected sensor data, the
-data needs first to be described and indexed, and this process can be related
-to Data Provenance \cite{db-provenance}. 
-
-An example of Data Provenance application is the use of aggregation of data
-over time to estimate the changing effects of the weather in a given region.
-For this reason, the collected data needs descriptions or annotations that can
-give enough information to track changes, that is, the history of how and when
-a given data has changed. The following should be the foundation of a
-provenance-aware collected data according to \cite{sn-provenance01}:
-
-\begin{itemize}
-  \item each low-level observation as it describes the actual data;
-  \item the location where the collected data was generated;
-  \item the time when the data was collected.
-\end{itemize}
 
 \subsection{Storage Location for Collected Data}
 \label{sec:sn-storage-locations}
@@ -209,19 +186,20 @@ data such as location. Regardless the data storage mechanism used, the query
 processing will depend on the sensor network infrastructure and data location.
 
 \subsection{Query Processing for Storage Locations}
+\label{sec:query-process}
 
 Given the different locations where the collected data might be as described in
 section \ref{sec:sn-storage-locations}, different query processing for the
 collected sensor data can be used as described by \cite{sn-storage03}:
 
 \begin{itemize}
-  \item {In-Network Query Processing}: sensor nodes that provides real-time
-  data stream usually replies to requests to properties. Likewise, when the
+  \item \textbf{In-Network Query Processing}: sensor nodes that provides
+  real-time data stream usually replies to requests to properties. Likewise, when the
   data is used for archival purpose, the data can be located at a network node
   specialized in storing the neighbors collected data. In this way, when a
   query is issued to the sensor network, the query processor will
   collectively verify every storage node for the collected data.
-  \item {Centralized Query Processing}: a main network sink receives the
+  \item \textbf{Centralized Query Processing}: a main network sink receives the
   collected data from the peer nodes. In this case, the query processor queries
   the solo centralized node for the overall values of the participating sensor
   devices.
@@ -234,9 +212,9 @@ the amount of data transmitted from the sensor devices to the final data sink, a
 sensor devices are usually limited by constraints such as energy utilization 
 \cite{sn-storage03}. Along with this strategy, the literature describes
 different proposals that aims at upgrading the Structured Query Language (SQL)
-adding location-sensitive clauses to the language \cite{sn-db-newop01}
-\cite{sn-db-newop02}. However, this main problem related to this approach is
-that it may potentially flood all nodes with query messages \cite{sn-storage04}.
+adding location-sensitive clauses to the language \cite{sn-db-newop}. However,
+this main problem related to this approach is that it may potentially flood
+all nodes with query messages \cite{sn-storage04}.
 
 In order to mitigate the problems related flooded nodes in in-network query
 processing, the use of a Data-Centric storage strategy has been shown to be a
@@ -257,7 +235,7 @@ not affect any of the sensor nodes in the network and, thus, maximizes the
 sensor device utilization. Moreover, the use of the data for historical
 purposes is easier to manage and give access to the primary end users of the
 data, following the process of data processing, compression, aggregation, etc
-\cite{sn-db02}.
+\cite{sn-db-modeling02}.
 
 Although this approach seems to be convenient to the point of view of the
 sensor nodes and used as the tradeoff between achieving capacity and energy
@@ -267,184 +245,167 @@ to as the phenomenon of congestion, or funneling effect \cite{sn-storage04}.
 For this reason, simple distributed system techniques such as the use of
 master-slave or data replication can be used to decrease the overhead.
 
-\section{SF-BEAMS: a Marine Sensor Network for Water Quality Monitoring}
+\section{Data Models and Query Engines for Sensor Networks}
+\label{sec:data-models}
 
-The San Francisco Bay Environmental Assessment and Monitoring Station,
-or SF-BEAMS, is a marine sensor network operated by the Romberg Tiburon Center
-(RTC). This section details the SF-BEAMS sensor network located at
-the Tiburon Island, California, and then presents the details of NetBEAMS, as
-it is part of the case study of this work.
-
-\subsection{The SF-BEAMS Infrastructure}
-
-The RTC's main focuses are in the study of complex marine and estuarine
-environments using the SF-BEAMS sensors deployed offshore of its pier located
-on the banks of the San Francisco Bay at the Tiburon Island, California. In
-this way, the project is responsible for providing data for water quality
-monitoring, as well as weather and surface conditions. 
-
-In general, the SF-BEAMS network infrastructure contains heterogeneous wired and
-wireless devices standing on pilons docked in the pier, where each of them is
-responsible for observing different conditions of the area, as well as having
-its own mechanisms for internal storage for the collected data. In this way,
-data can be directly transferred to the labs via ethernet cables or collected
-manually download by a staff's laptop computer. Figure \ref{fig:sf-beams}
-shows a picture taken from the SF-BEAMS web-cam placed in-site.
-
-\begin{figure}
-  \centering
-    \includegraphics{../diagrams/cam_image-oct15}
-  \caption{Picture of the SF-BEAMS Network, at the RTC pier. Tiburon, CA.}
-  \label{fig:sf-beams}
-\end{figure}
-
-\subsection{SF-BEAMS produced data and collection process}
-\label{sec:sfbeams}
-
-As described in section \ref{sec:sn-infrastructure}, sensor devices generates
-its observed data based on properties of measurements defined by its
-manufacturer. SF-BEAMS is a single-hop star sensor network containing
-different instances of sensors, including the "YSI 6600 ESD V2", as seen on
-figure \ref{fig:ysi-device}, which is a powerful water quality monitoring
-device that produces around 52 bytes (13x4 Bytes) on a single real-time data
-stream as shown on table \ref{tab:ysi-data-stream}.
-
-\begin{figure}
-  \centering
-  \includegraphics{../diagrams/ysi-device}
-  \caption{Picture of the case study sonde device: YSI 6600 ESD V2}
-  \label{fig:ysi-device}
-\end{figure}
-
-\begin{table}
-    \caption{YSI Data Stream}
-    \begin{center}
-        \begin{tabular}{lr}
-  12.20    192    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5  8.83 
-  0.4     8.7
-        \end{tabular}
-    \end{center}
-    \label{tab:ysi-data-stream}
-\end{table}
-
-In order to have access to the observed data, the network staff downloads
-the data using one of the device's connection such as the RS-232 serial
-connector \cite{rs232}. Then, the data is transferred to the RTC labs for
-archival, where it is described, indexed and distributed to its main users.
-According to its staff members, in May 2009 the infrastructure of the SF-BEAMS
-included the following was organized as follows:
+Different approaches are used to represent the collected data from sensors. The
+use of simple data descriptors have been used in research groups which
+expertise is not database systems, while others use such technology and the way
+to represent data using more robust approaches. \cite{sn-data-model-survey}
+have shown different data models and the advantages and desadvantages. The
+following is a summary of these approaches used by the sensor network
+community.
 
 \begin{itemize}
-  \item 5 YSI sondes in operation at the RTC site Pier in Tiburon Island, San
-  Francisco Bay;
-  \item Each YSI sonde produces 52 Bytes for each its observations;
-  \item The sampling frequency rate could be configured in ranges of 1, 6 or
-  15 minutes, depending on the staff's speficiation. 
+  \item \textbf{Tabular Data Model}: comma-separeted values are very popular
+  due to its simplicity. Although data is not index, it is an easy approach for data
+ exchange among researchers.
+  \item \textbf{Relational Data Model}: it is used in the majority of the
+  projects. Most of them due to the easy access to database systems, with
+  refactored versions that support the implementation of sensor networks and
+  its requirements \cite{sn-db-tinydb};
+  \item \textbf{Structured Data Model}: simiar to the relational model,
+  structured data models are becoming popular due to the Internet. The use of
+  XML data \cite{xml} is not yet popular, but there are a few projects using it
+  \cite{sn-xml-usage01}\cite{sn-xml-usage01}, implementing its query by using a
+  middleware \cite{sn-xml-middleware} \cite{sn-xml-query-engines}.
+  \item \textbf{Key-Value Pair and Document-Oriented Data Model}: as
+  an emerging data model, the Key-Value Pair (KVP) \cite{db-kvp} data model is
+  becoming popular with the up-coming trend of cloud computing. Although there are no
+  records of the use of this model data model in sensor networks, this work
+  will investigate it.
 \end{itemize}
 
-Considering the infrastructure previously described, the size of the data
-produced by the YSI sonde sensors at the RTC pier can estimated by its
-measurement frequency as follows:
+Most importantly, the use of Data Provenance approaches to describe the
+collected data is shown to be important \cite{sn-provenance}, given the nature
+of the collected data. Therefore, this section describes these approaches for
+modeling data collected from sensor devices, taking into account the need of
+metadata for the data.
 
-\begin{table}
-    \label{tab:ysi-data-distribution}
-    \caption{Amount of data produced by the RTC's YSI sondes}
-        \begin{center}
-        \begin{tabular}{|c|c|c|c|c|c|c|}\hline 
-        \textbf{YSIs} & \textbf{Rate} & \textbf{Hourly} & \textbf{Daily} &
-        \textbf{Weeky} & \textbf{Monthly} & \textbf{Yearly}\\\hline 
-        1 & 1 min & 3.04 Kb & 73.12 Kb & 511.87 Kb & 1.99 Mb & 23.99 Mb\\\hline 
-        5 & 6 min & 15.23 Kb & 365.62 Kb & 2.5 Mb & 9.99 Mb & 119.97 Mb\\\hline 
-        1 & 15 min & 0.5 Kb & 12.18 Kb & 85.31 Kb & 341.25 Kb & 3.99 Mb\\\hline 
-        5 & 1 min & 2.54 Kb & 60.93 Kb & 426.56 Kb & 1.67 Mb & 19.99 Mb\\\hline
-        1 & 6 min & 0.2 Kb & 4.87 Kb & 34.12 Kb & 136.5 Kb & 1.6 Mb\\\hline 
-        5 & 15 min & 1.0 Kb & 24.37 Kb & 170.62 Kb & 682.5 Kb & 7.99 Mb\\\hline
-        \end{tabular}
-        \end{center}
-\end{table}
+\subsection{Tabular Data Model and Query}
 
-As it is shown, the data produced by this type of sensor runs in the order of
-at most hundreds of Megabytes a year, what can be considered a very low data
-storage requirement. Upon collecting the data from sensors, the RTC lab staff
-use automation scripts written in Matlab to process, index and distribute the
-raw data in different formats, including the OPeNDAP \cite{opendap}, a format
-widely used in the research institutions that promotes easier data exchange
-among them.
-
-Although the execution of the RTC SF-BEAM sensor network produces its
-execution, many operational challenges were faced by this type of
-infrastructure, when it comes to the data utilization of wireless sensors that
-are deployed in offshore conditions, \cite{netbeams2009} described the
-operational challenges faced by the RTC staff and proposed NetBEAMS, a
-component-based infrastructure that uses common-off-the-shelfs (COTS) embedded
-systems and software to automate the process of data collection. Next section
-describes how NetBEAMS is used to extract data from the SF-BEAMS sensor network.
-
-\section{NetBEAMS: a Real-World Case Study on Environmental Sensor Network}
-
-The Networked Bay Environmental Assessment and Monitoring System, or NetBEAMS, 
-is a work-in-progress joint project proposed by the department of Computer
-Science and the RTC at San Francisco State University. As described by
-\cite{netbeams2009}, the solution can be used to automated the data gathering
-process of the SF-BEAMS as described in section \ref{sec:sfbeams}. This
-section fully details how NetBEAMS is executed in order to collect data from
-SF-BEAMS, describing pertinent design and architectural details.
-
-One of the motivations for the inception of NetBEAMS was the automation
-of the data gathering and processing from the SF-BEAMS sondes without requiring
-human intervention. Most importantly, the decrease with the costs of constant 
-offshore site visits by boat, where biologists need manually collect the data
-from the sensor devices in order to take them for further processing at the
-lab. For this reason, the NetBEAMS research group proposed the use of the Data
-Sensor Platform (DSP) \cite{netbeams2009}, as the second attempt to automate
-the operation of SF-BEAMS.
-
-This following sections details the DSP, its architecture and how data is
-transported from the network nodes to the main network sink, the RTC labs.
-
-\subsection{The Data Sensor Platform (DSP)}
-
-The Data Sensor Platform, in short DSP Platform, is based on a micro-kernel
-architecture developed on top of the Java modular framework called OSGi
-\cite{osgi}. The platform represents the foundation of the execution of
-NetBEAMS, since it is executed from an embedded hardware called Gumstix
-\cite{gumstix} using a Linux operating system and on top of the Java Virtual
-Machine (JVM). In order to transport data from sensors hosts to the network
-sink, the use of a cellular connection is used to transport the collected data
-from the senso devices using the HTTP Protocol, as described by
-\cite{netbeams2009}. Figure \ref{fig:sf-netbeams-node} shows the
-architecture of the inhanced node designed by the NetBEAMS research group.
-
-\begin{figure}
-  \centering
-  \includegraphics{../diagrams/DSP-Gateway-Node}
-  \caption{The NetBEAMS Node enhancement with the Gumstix and the GSM Modem}
-  \label{fig:sf-netbeams-node}
-\end{figure}
-
-The following list describes each of the devices in the NetBEAMS Node.
+Simple use of Comma-Separated Values is an example os sensor network data. Data
+is structured by the top header, and the values are in each line of the file.
+The implementation of the SF-BEAMS \cite{sfbeams2006} uses this approach. In
+summary, in a tabular data model
 
 \begin{itemize}
-  \item \textbf{YSI 6600EDS V2}: the YSI device is the regular sonde
-  responsible for observing the environment. It is connected to the Gumstix
-  embedded system, where the DSP is executed;
-  \item \textbf{Gumstix console-vx}: it's a COTS ARM-based hardware that
-  provides a computer-on-module environment for the development of small
-  embedded systems. This is the main environment of data extraction and remote
-  processing is accomplished. It runs a cross-compiled version of Linux Kernel
-  2.6;
-  \item \textbf{Huawei E220 USB Modem}: it is used to transfer the data from the
-  Gumstix to the RTC Labs Data Center.
-\end{itemize} 
+  \item data is represented by columns in a flat file separated by a character
+  that separates the values. One example of such data in sensor networks is the
+  OPenDAP \cite{opendap} format, used by the SF-BEAMS project
+  \cite{sfbeams2006}.
+  \item data is queried using a text editor file, without any indexing
+  associated with it. 
+\end{itemize}
 
-The DSP runs inside of the embedded system Gumstix. The following sections
-details its design and process for extracting data.
+\subsection{Relational Data Model and Query}
 
-\subsection{The DSP System Design}
+Many different projects have used the relational model \cite{relational-model}
+as the representation of data for sensor networks. In general, the following
+properties apply to sensor networks:
 
-This section focus on the development of a Software Platform for the NetBEAMS Gateway Embedded System, or on the system developed in the Gumstix device. As shown on Image 2.4.1.1, the NetBEAMS Gateway Node is an embedded system that contains a set of layer found in any computer. However, each of the resources described from the system were customized for the NetBEAMS system. The main components of such system can be summarized as follows: 
+\begin{itemize}
+  \item data is structured in tables, and sensor properties are represented 
+ by the columns of these tables. Data instances are represented by tuples or
+ rows of these tables. Finally, table relationships are implemented based
+ on the relational algebra abstraction, which is the mechanism used to 
+describe the relationship among different data types.
+  \item data is queried using the Structured Query Languange (SQL), and uses
+  the definitions of the tables and columns to extract data.
+\end{itemize}
 
-    * Operating System: it uses a cross-compiled Gentoo Linux, which supports a wide variety of development tools, including the Java Virtual Machine (JVM), the underlying platform system;
-    * Java Virtual Machine: it uses the JamVM, a ~200 KB version of the Sun Microsystems Java Virtual Machine, version 2.0;
-    * OSGi Framework: it uses the Knopflerfish implementation of the OSGi 4.1 specification. More details in the following sections.
-    * DSP Platform and other Bundles: The plug-and-play DSP Components are based on the OSGi bundles capabilities, which can reuse services registered in the OSGi framework.
+Before the conception of such model, a database normalization process is
+necessary to describe the data in an appropriate way. An example of such use
+of the relational model is the TinyDB database systems \cite{sn-db-tinydb},
+which uses the relational model to represent the types of sensors. Due to the
+popularity of relational models, this is a popular choice since of the vast
+availability of research on relational database models.
+
+Although the implementation of a relational database seems to cover the needs
+of data representation, \cite{sn-data-model-survey} described the problems
+related to this approach. One such problem is that the relational model is not
+suited for modeling time series data and metadata related to identify, time and
+location. For the problems related to it, came the implementation of different
+approaches that adds semantics to data types and different query clauses to the
+Structured Query Language (SQL) to solve join \cite{sn-db-newop}.
+
+\subsection{Structured Data Model and Query}
+
+The use of XML is used to represent data in sensor networks has become popular
+due the popularity of this data format. In general, the use of XML for
+persistence can be summarized as follows:
+
+\begin{itemize}
+  \item data is structured in the collected data properties can be represented through the
+XML \cite{xml} instances by using tags, having its model validated by the use
+of XML Schema \cite{xml-schema}.
+  \item in order to extract data from XML-based databases, the use of XML XPath
+  is used to query XML documents.
+\end{itemize}
+
+Some examples of the application of XML in sensor networks in 
+\cite{sn-xml-usage02} some have investigated the effecient use of XML in
+sensor networks to represent the collected data \cite{sn-xml-usage01}. An
+example of querying xml data in sensor networks described by
+\cite{sn-xml-query-engines}, while others use XML as a means of data exchange
+by implementing of middlewares to query and extract query data
+\cite{sn-xml-middleware}. NetBEAMS is one of such sensor network that contains
+an XML-based communication middleware for data exchange among the sensor nodes
+\cite{netbeams2009}.
+
+\subsection{Key-Value Pair and Document-Oriented Data Models}
+
+The advance of distributed systems and the Internet have enabled the
+development of powerful database systems that can be organized in the context
+of database systems and how to represent models. An important up-coming
+approach is the use of database systems that does not use structured language
+for quering its data. One such example is called Key-Value Pair (KVP) data model
+\cite{db-kvp}. Such model has the following properties:
+
+\begin{itemize}
+  \item data is structured in collections of key-value pairs, as it is done in
+  hash data structure. The definition of the key is a given property with its
+  associating value.
+  \item the query process is using mechanics similar to programming or
+  scripting language, that is, the use of APIs in a given programming language.
+\end{itemize}
+
+Different variants of such data model is the document-oriented data model,
+where data is modelled using structured documents. However, these documents
+have a dynamic structure that can be freely described without the use of an
+schema validation mechanism as used in XML Schema. One example of such
+approach is the use of the JSON data format \cite{json} in the implementation
+of database systems which are becoming popular with the new trend called Cloud
+Computing \cite{cloud-comp-architectures}. Databases implementing this strategy
+is the mongoDB \cite{mongodb} and CouchDB \cite{mongodb}.
+
+\subsection{Data Provenance for Sensor Networks}
+
+Most of sensor networks implementations use the collected data from the sensor
+devices after they observe the environment. As shown by
+\cite{sn-data-model-survey}, different data models contains its pros and
+cons to represent data. However, one important aspect in sensor networks is the
+description of it collected data, as \cite{sn-provenance} discussed the
+properties and nature of sensor networks generated data. First, the device's
+sampling are usually in raw format or without obvious names. In order to
+provide search over the collected sensor data, the data needs first to be
+described and indexed, and this process can be related to Data Provenance
+\cite{db-provenance}.
+
+An example of Data Provenance application is the use of aggregation of data
+over time to estimate the changing effects of the weather in a given region.
+For this reason, the collected data needs descriptions or annotations that can
+give enough information to track changes, that is, the history of how and when
+a given data has changed. The following should be the foundation of a
+provenance-aware collected data according to \cite{sn-provenance}:
+
+\begin{itemize}
+  \item each low-level observation as it describes the actual data;
+  \item the location where the collected data was generated;
+  \item the time when the data was collected.
+\end{itemize}
+
+While Data Provenance provides necessary mechanisms to describe sensor networks
+data in general, others see the importance of the time space of sensor
+networks. \cite{sn-time-series} describes strategies to used to cluster
+distributed sensor data as time series of data.

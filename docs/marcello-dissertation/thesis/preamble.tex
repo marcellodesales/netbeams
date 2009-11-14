@@ -76,6 +76,36 @@
 
 \lstset{commentstyle=\tiny,captionpos=t,tabsize=2,frame=lines,keywordstyle=\color{blue}\tiny,commentstyle=\color{gray}\tiny,stringstyle=\color{red}\tiny,numbers=left,numberstyle=\tiny,breaklines=true,showstringspaces=false,basicstyle=\tiny,emph={label}}
 
+%\definecolor{darkgreen}{named}{green}
+%\definecolor{darkblue}{named}{blue}
+%\definecolor{darkred}{named}{red}
+%\definecolor{grau}{named}{gray}
+%\let\Righttorque\relax
+%\lstset{
+%commentstyle=\itshape\color{darkgreen},
+%keywordstyle=\bfseries\color{darkblue},
+%stringstyle=\color{darkred},
+%extendedchars=true,
+%basicstyle=\scriptsize\ttfamily,
+%basicstyle=\tiny\ttfamily,
+%tabsize=2,
+% keywordstyle=\textbf,
+%commentstyle=\color{grau},
+% stringstyle=\textit,
+%numbers=left,
+%numberstyle=\tiny,
+% für schönen Zeilenumbruch
+%breakautoindent = true,
+%breakindent = 2em,
+%breaklines = true,
+%postbreak = ,
+%prebreak = \raisebox{-.8ex}[0ex][0ex]{\ensuremath{\lrcorner}},
+%prebreak = \raisebox{-.8ex}[0ex][0ex]{\Righttorque},
+%showspaces=false, % Keine Leerzeichensymbole
+%showtabs=false, % Keine Tabsymbole
+%showstringspaces=false,% Leerzeichen in Strings
+%}
+
 \usepackage{caption}
 \DeclareCaptionFont{white}{\color{white}}
 \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
@@ -87,9 +117,14 @@
 \usepackage[Lenny]{fncychap}
 
 %Hifens
-
 \usepackage[latin1]{inputenc}
 \usepackage[USenglish]{babel}
+
+%Harvard citation style
+\usepackage{natbib}
+%enhanced items
+% http://dante.ctan.org/tex-archive/macros/latex/contrib/enumitem/enumitem.pdf
+\usepackage{enumitem}
 
 \begin{document}
 

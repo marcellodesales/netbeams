@@ -196,7 +196,45 @@ Other projects have been using the XML data models. It falls into the same
 category as the Relational Model, since the XML documents, when in the context
 of a database, must be complaint to an XML Schema. As shown in section 3, this
 model uses XPath technology for querying documents, although some hibrid
-technologies may still use SQL for that matter.
+technologies may still use SQL for that matter. In this way, an instance of
+such schema dependent types can be seen in figure
+\ref{fig:persistence-example-relational}.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.65]{../diagrams/persistence-example-relational}
+  \caption{Instance of a Relational Model Database Prototype}
+  \label{fig:persistence-example-relational}
+\end{figure}
+
+Although this data model have been used in different types of applications,
+developers have tried to use the Relational Model to model an application that
+could prevent any database change through the use of a technique that relates a
+key to a value, called Key-Value data model. With the advent of Internet
+applications, the need of such a model that does not need constant refactoring
+led developers to propose such approach using the relational model as
+documented in technical articles such as \cite{db-kvp-in-relational01} and
+\cite{db-kvp-in-relational02}. Based in these articles, consider the relational
+model depicted in figure \ref{fig:KVP-on-Relational-Model} as model for the
+persistence data for our case study using the key-value strategy. The problem
+with it is that key repetition occurs, since the nature of time-series data
+requires the use of a timestamp key for each property of the sensor. Therefore,
+this strategy is not well-suited to provide persistence data from collected
+sensor networks.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/KVP-on-Relational-Model}
+  \caption{KVP Data Model implementation using Relational Model}
+  \label{fig:KVP-on-Relational-Model}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/persistence-example-relational-kvp}
+  \caption{KVP over Relational Model Database Prototype}
+  \label{fig:persistence-example-relational-kvp}
+\end{figure}
 
 \subsection{Analysis of the Schema-less Models}
 
@@ -204,25 +242,114 @@ The advance of Cloud Computing, and dynamic web applications have motivated the
 database community to implement different mechanisms for persisting data
 without the heavy-process of data modeling. Given the fact that sensor networks
 may be updated at any time by the addition of new sensor types, the use of
-moding approaches such as Key-Value Pairs have been proposed []. One could be
-tempted to implement a KVP over relational \ref{fig:KVP-on-Relational-Model}:
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.65]{../diagrams/KVP-on-Relational-Model}
-  \caption{KVP Data Model implementation using Relational Model}
-  \label{fig:KVP-on-Relational-Model}
-\end{figure}
+moding approaches such as Key-Value Database have been proposed \cite{db-kvp}.
 
 \begin{itemize}
-  \item tules are not complaint to the normalization rules;
-  \item difficult access to key and values
+  \item entities from the same domains are placed into a bucket;
+  \item entities have a set of attributes and relating values
+  \item entities with different set of attributes may be contained in the same
+  bucket, since there is no schema to govern the bucket items restriction.
 \end{itemize}
 
-The real use of KVP and Document-Oriented data models mitigates the problem of
-data modeling process.
+For instance, all data needed for the YSI sonde data, as well as all necessary
+provenance data that describes the data, are represented by means of key-value
+pairs \ref{fig:persistence-example-kvp}.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/persistence-example-kvp}
+  \caption{KVP Database instance Prototype}
+  \label{fig:persistence-example-kvp}
+\end{figure}
 
 \subsection{Technology Analysis}
+
+The data models were compared by \cite{db-is-rdbs-dommed} and can be summarized
+as follows:
+
+\begin{table}
+    \label{tab:ysi-data-distribution}
+    \caption{Schema-Dependent X Schema-less Databases Compared: Properties}
+    \begin{center}
+    \begin{tabular}{|p{210pt}|p{210pt}|}\hline
+    Schema-Dependent Databases & Schema-less Databases\\\hline
+    \begin{enumerate}
+      \item Real-world model by entities, classified in tables;
+      \item Tables composed by columns and rows. Rows are comprised by column
+      values, which have the same schema;
+      \item Data Model defined in advance with a schema, which contains
+      relationships and constraints to enforce data integrity;
+      \item Data represents ``natural'' entities, not application specific;
+      \item Data Normalization is the data structuring process to remove data
+      duplication, as well as establishing data associations through table
+      relationships.
+    \end{enumerate} 
+    & 
+    \begin{enumerate}
+      \item Real-world model by entities, classified in Domains;
+      \item Domains are similar to tables, but like buckets that contains items
+      without a pre-defined schema, what enable them to have different schemas;
+      \item Items are identified by keys, as well as have a dynamic set of
+      attributes attached to it, however with no schema defined;
+      \item Items may represent not only the natural representation of data, but
+      also include application-specific data;
+      \item Since data may be repeated, no data normalization is done, so that
+      integrity is done in the application layer.
+    \end{enumerate}
+    \\\hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+\begin{table}
+    \label{tab:ysi-data-distribution}
+    \caption{Schema-Dependent X Schema-less Databases: Data Access}
+    \begin{center}
+    \begin{tabular}{|p{210pt}|p{210pt}|}\hline
+    Schema-Dependent Databases & Schema-less Databases\\\hline
+    \begin{enumerate}
+      \item The basic operations CRUD \footnote{Create-Retrieve-Update-Update
+      database operations} data are performed using a structured language such
+      as the SQL or XPath;
+      \item Query languages can access data from different tables through
+      joins, contains functions for aggregation and complex filter.
+    \end{enumerate} 
+    & 
+    \begin{enumerate}
+      \item The CRUD operations are performed via API \footnote{Application
+      Programming Interface} through programming languages;
+      \item Some technologies provide basic SQL-like syntax for filter criteria
+      with some predicates like =, !=, <, > that ca be applied;
+      \item The data and application integrity logic is placed in the
+      application layer.
+    \end{enumerate}
+    \\\hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+\begin{table}
+    \label{tab:ysi-data-distribution}
+    \caption{Schema-Dependent X Schema-less Databases: Application Interface}
+    \begin{center}
+    \begin{tabular}{|p{210pt}|p{210pt}|}\hline
+    Schema-Dependent Databases & Schema-less Databases\\\hline
+    \begin{enumerate}
+      \item Have their own specific API or through ODBC\footnote{Open Database
+      Connectivity};
+      \item Data is stored in a format that represents its natural structure,
+      and for this reason, in a single or distributed fashion.
+    \end{enumerate} 
+    & 
+    \begin{enumerate}
+      \item Systems tend to provide SOAP/REST \cite{http-rest};
+      \item \cite{db-is-rdbs-dommed} claims that data is stored in a more
+      effective way, requiring only code plumbing for the relational code;
+    \end{enumerate}
+    \\\hline
+    \end{tabular}
+    \end{center}
+\end{table}
 
 \begin{itemize}
   \item MySQL: NO SUPPORT
@@ -261,7 +388,7 @@ be an addition to persist sensor data.
 \begin{itemize}
   \item \textbf{MySQL}: Supports
   \item \textbf{Microsoft SQL}: Supports
-  \item \textbf{Berkeley TinyDB}: Supports
+  \item \textbf{Berkeley TinyDB}: NO Supports
   \item \textbf{MongoDB}: Supports
   \item \textbf{CouchDB}: Supports
   \item \textbf{IBM DB2}: Supports

@@ -1,0 +1,114 @@
+% main.tex, to be used with thesis.tex
+% This contains the main work of your thesis.
+
+%\bibliography{thesis}  % uses the references stored in Chapter1Radar.bib
+
+\chapter{DSP Data Persistence: Component Implementation}
+
+This section shows the implementation of the DSP Data Persistence, which
+follows the specifications of the DSP Components described on section 2.4,
+along with the setup of the mongoDB, the chosen database system that handles
+document-oriented instances. The implementation of the DSP Data Persistence
+component was developed using the DSP Subversion repository at
+http://code.google.com/p/netbeams.
+
+\section{DSP Deployment on OSGi Framework}
+
+    * Description of the OSGi MANIFEST.MF
+    * Description of the component on the config.xml
+    * Adding a matching rule on the matcher\underline{ }config.xml
+    * Adding a bootstrap message the component and database configuration
+
+
+    * Adding a new entry into the deployment configuration artifact config.xml;
+    * Adding a new entry into the matcher configuration artifact matcher\underline{ }config.xml;
+    * Adding an optional configuration message that sets up the new DSP Component;
+    * Adding new Java drivers that communicates with the Database system;
+    * Installing and configuring the proposed database system.
+
+\subsection{Starting the DSP Platform}
+
+    * command-line (Knopflerfish Framework)
+    * user interface (Knopflerfish Framework)
+
+\subsection{Stopping the the DSP Platform}
+
+    * command-line (Knopflerfish Framework)
+    * user interface (Knopflerfish Framework)
+
+\subsection{Execution Logs}
+
+\section{mongoDB Deployment}
+
+Given that Document-Oriented Model makes a good candidate persist sensors'
+properties and the recently enumerated list technologies in the previous
+article DSPDataPersistence, the open-source project called mongoDB was chosen
+for the evaluation on our case study, the netBEAMS DSP Platform.
+
+mongoDB supports storage based on collections of data, stored using BSON, a
+binary representation the JSON data representation format, including dynamic
+queries and indexing support. As it's stated in their web site, mongoDB
+"bridges the gap between key/value stores (which are fast and highly scalable)
+and traditional RDBMS systems (which are deep in functionality)".
+
+\begin{itemize}
+  \item mongoDB implements a document-oriented structure, which is similar to
+  KVP;
+  \item mongoDB is written in C++, and therefore, can is available in any major
+  platform, as well as offers a broad range of API drivers written in different
+  languages such as Java, Python, Perl and Ruby; 
+  \item mongoDB is open-source, with good community support and availability
+  through mailing lists, freenode IRC channel, and commercial support through
+  10gen company; 
+  \item mongoDB has support to distributed systems properties such as
+  Master-Slave replication, and features like Database Shards with
+  auto-sharding based on shard keys.
+\end{itemize} 
+
+nstallation of mongoDB
+- Explanation about mongoDB processes: mongod, mongos, mongo
+- Specification of the shards, shard key, etc
+
+    * The database instance is called "netbeams";
+    * The database "netbeams" may contain different collections, categorized by
+    the Sensor Content Type, that is, depending on how the DSP Component was
+    described;  
+
+\subsection{Document-Oriented Data Model}
+
+An example of the data is as folows (using the JSON syntax). Listing
+\ref{file:mongodb-ysi-data-format} follows the strategy described on Section X,
+where the entity representation is denormalized, and each of the properties of
+the sensor is repeated in each instance of the data. The fact and transaction
+times are expressed in milliseconds. The data element contains the complete
+structure of the originating sensor such as the IP address. The collection of
+instances of this document represents the sensor data type.
+
+\subsection{Starting the Database}
+
+\subsection{Stopping the Database}
+
+\subsection{Execution Logs}
+
+- Java API implementation
+- Python API implementation
+
+\section{Data Access Using Database Shell}
+
+The mongoDB client can be started by using the following command. Make sure you
+have started the mongoDB server before executing the mongoDB client.
+
+
+mongo netbeams | tee output\underline{ }number\underline{ }date.log
+
+
+Here, the iterative mongo client shell offers users to verify and navigate on a
+given database and its collections. This first section shows the connection of
+the mongo client to the database netbeams. It also highlights the query for the
+collections available. During the experiment, the SondeDataContainer?
+collection was created as related to the type from the DSP Messages for the YSI
+Sonde.
+
+The shell references to the mongoDB system can be found at
+http://www.mongodb.org/display/DOCS/dbshell+Reference 
+

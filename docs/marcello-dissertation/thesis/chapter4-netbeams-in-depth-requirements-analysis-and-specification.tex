@@ -114,7 +114,8 @@ written in Matlab to process, index and distribute the raw data in different
 formats, including the OPeNDAP \cite{opendap}, a format widely used in the
 research institutions that promotes easier data exchange among them. The
 access to the archived data is done by using the OPeNDAP server is located at
-http://sfbeams.sfsu.edu:8080/opendap.
+http://sfbeams.sfsu.edu:8080/opendap, as a request and the related output for
+one of the YSI devices can be see in listing \ref{file:rtc-ysi-opendap}.
 
 Although the execution of the RTC SF-BEAM sensor network produces its
 execution, many operational challenges were faced by this type of
@@ -507,7 +508,7 @@ instance depicted on the UML class diagram \cite{uml} of figure
   \item \textbf{Value Instance}: 40
 \end{itemize}
 
-\begin{figure}[!b]
+\begin{figure}[!t]
   \centering
   \includegraphics[scale=0.6]{../diagrams/DSP-Property-Class-Diagram}
   \caption{The DSP Property Payload - Message Content UML Class Diagram}
@@ -541,6 +542,8 @@ described.
   \label{fig:From-OSGi-DSP-Platform-Start-to-All-Components-Sequence-Diagram}
 \end{figure}
 
+\newpage
+
 \subsection{Data Delivery Mechanism}
 
 In general, when a DSP Component finishes preparing the DSP Messages Container,
@@ -551,9 +554,9 @@ is shown in figure \ref{fig:DSP-Message-Broker-Abstraction}. In this way, the
 DSP Broker receives a DSP Message and makes necessary deliveries to DSP
 components that it has knowledge of.
 
-\begin{figure}[!t]
+\begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/DSP-Message-Broker-Abstraction}
+  \includegraphics[scale=0.8]{../diagrams/DSP-Message-Broker-Abstraction}
   \caption{A DSP Message Broker Abstraction}
   \label{fig:DSP-Message-Broker-Abstraction}
 \end{figure}
@@ -570,9 +573,9 @@ particiaping classes is depicted in figure
 implementation is tightly coupled with the DSP Matcher, as well as to the
 lists of DSP Components sorted by name and type.
 
-\begin{figure}[!t]
+\begin{figure}[!b]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/DSPBroker-Matcher-Class-Diagram}
+  \includegraphics[scale=0.6]{../diagrams/DSPBroker-Matcher-Class-Diagram}
   \caption{The DSP Broker-Matcher UML Class Diagram}
   \label{fig:DSPBroker-Matcher-Class-Diagram}
 \end{figure}
@@ -650,7 +653,7 @@ Wire Transport Server \cite{netbeams2009}, these components use the HTTP
 Figure \ref{fig:DSP-to-DSP-Remote-Communication} depicts the scenario where a
 DSP Sensor Node transmits a DSP Message through an HTTP POST request.
 
-\begin{figure}[!t]
+\begin{figure}[!b]
   \centering
   \includegraphics[scale=0.6]{../diagrams/DSP-to-DSP-Remote-Communication}
   \caption{The remote communication between two DSP Components using the HTTP
@@ -691,7 +694,7 @@ at the 192.168.0.103 to be transmitted to the host 192.168.0.106, and the
 process of transmission in the server-side can be followed in figure
 \ref{fig:From-DSPSondeComponent-to-DSPWireTransportClient-Sequence}.
 
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
   \includegraphics[scale=0.5]{../diagrams/From-DSPSondeComponent-to-DSPWireTransportClient-Sequence}
   \caption{The UML Sequence Diagram for the production of a YSI Message}
@@ -716,14 +719,6 @@ is supposed to be sent to a remote destination of host 192.168.0.7. At this
 point, the DSP Broker makes a decision to send the DSP Message to the default
 gateway component DSPWireTransportClient.
 
-\begin{figure}[!t]
-  \centering
-  \includegraphics[scale=0.5]{../diagrams/From-DSPWireTransport-Client-to-DSPWireTransportServer-Sequence}
-  \caption{The UML Sequence Diagram describing the Wire Transport Server
-  receiving a DSP Message}
-  \label{fig:From-DSPWireTransport-Client-to-DSPWireTransportServer-Sequence}
-\end{figure}
-
 After the message arrives in the DSPWireTransportClient, the message is
 maintained in a temporary repository of outbound DSP Messages called
 MessagesQueues after the message is hashed by the destination IP address and
@@ -734,6 +729,14 @@ Transport Client and is constantly transmits the data in the outbound queues
 after a configurable rate. It makes a transport of the message and receives
 the response, updates the state of the messages to transmitted, to finally
 send the response messages to the DSP Message Broker.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/From-DSPWireTransport-Client-to-DSPWireTransportServer-Sequence}
+  \caption{The UML Sequence Diagram describing the Wire Transport Server
+  receiving a DSP Message}
+  \label{fig:From-DSPWireTransport-Client-to-DSPWireTransportServer-Sequence}
+\end{figure}
 
 While the DSPWireTransportClient makes an HTTP Request with the DSP Message,
 the DSPWireTransportServer's servlet receives the request. It first

@@ -23,7 +23,6 @@ First, the contender technologies are as follows:
   \item IBM DB2
 \end{itemize}
 
-
 \section{Analysis of the Purpose of Sensor Data Taxonomy}
 
 Considering the infrastructure of NetBEAMS, as described in the previous
@@ -59,6 +58,7 @@ Any of the contenders are options to cover for Data Archival.
 \end{itemize}
 
 \section{Analysis of the Location of Sensor Data Taxonomy}
+\label{sec:sn-data-location}
 
 Some observations regarding the location of the collected sensor data for
 NetBEAMS were described in the previous section and summarized as follows:
@@ -97,11 +97,72 @@ massive data sets since the operations of the data are directed to specific
 locations. Besides, this approach helps the network managers scale the data
 storage just by adding new data nodes as required.
 
+In order to support this strategy, a technique called Database Sharding
+\cite{db-shard02} is a technique used in distributed database systems that
+uses denormalized data models to improve scalability in terms of data storage
+and data location. It is a type of database system patitioning where
+de-normalized data is spread across different other hosts, or shard \cite{db-shard01}.
+Different models of database sharding can be developed \cite{db-shard-schemas}.
+
+\begin{itemize}
+  \item Vertical Partitioning: each feature of the system, usually represented
+  by a table in the relational model, is placed in a different server host. For
+  example, each sensor in a given network can be divided by its device type;
+  \item Range Based Partitioning: after partitioning each feature on a
+  different server host, different multiple shards, or similar hosts, can be
+  added by using the range of a given key of the entity of a function. For
+  example, all sensor types in a geographic location may contain its own shard
+  based on its IP address;
+  \item Key or Hash Based Partitioning: a given value for a given property of
+  an instance of data that is chosen to be used in a hash function, whose
+  output determines which shard to use;
+  \item Directory Based Partitioning: a simple lookup service is used to
+  identify which database shard to use, where the lookup table can be stored
+  in a secondary area. Each approach for database sharding used be used
+  together on a given function depending on the needs for performance.
+\end{itemize}
+
+For example, figure \ref{fig:database-sharding-by-region} is an example of
+data storage with shards \cite{db-shard01} related the location of data, where
+each shard is assumed to be placed in different server host. Since the data
+model is denormalized, the organization of data is entirely placed in each of
+these shards. As it is shown, the shards by location can be defined by a shard
+key, as described before. The horizontal scalability is given related to
+positions, while the vertical by the shards added.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.65]{../diagrams/database-sharding-by-region}
+  \caption{Example of Data-Centric Storage for Sensor Networks using Database
+  Sharding}
+  \label{fig:database-sharding-by-region}
+\end{figure}
+
+%This data organization architecture is currently being used to manage
+%structured data that scales to petabytes or more data. One example of such use
+%is on BigTable \cite{bigtable}, which provides support to different Google
+%products with requirements on high availability and dynamic data models and
+%uses automatic sharding to its data. The BigTable project uses MapReduce
+%[ds02], a programming model designed to search huge amounts of data in
+%paralell.
+
 \subsection{Disadvantages of the Data-Centric Approach}
 
 The data partitioning is a very restricted technology, mostly available to
 advanced users of distributed database systems. The main users of wireless
 sensor networks do not have such expertise.
+
+\begin{itemize}
+  \item Referential integrity: any cross-shard queries can represent problems 
+  since the application layer is responsible to enforce data integrity, like
+  verifying constraints of foreign keys;
+  \item Rebalancing Shards: If the schema model changes for the shards, the
+  strategy of rebalancing must be done. For instance, when one of the shards 
+  outgrows more than the others. As a consequence, the database shards must be
+  rebalanced by transferring data to new locations whenever necessary. This
+  technique is starting to appear as COTS implemetations such as
+  \cite{mongodb}.
+\end{itemize}
 
 \subsection{Technology Analysis}
 
@@ -193,16 +254,16 @@ version of the relational model be depicted in figure
 \end{itemize}
 
 Other projects have been using the XML data models. It falls into the same
-category as the Relational Model, since the XML documents, when in the context
-of a database, must be complaint to an XML Schema. As shown in section 3, this
-model uses XPath technology for querying documents, although some hibrid
-technologies may still use SQL for that matter. In this way, an instance of
-such schema dependent types can be seen in figure
-\ref{fig:persistence-example-relational}.
+category as the Relational Model, since the XML documents \cite{xml}, when in
+the context of a database, must be complaint to an XML Schema \cite{xml-schema}. As shown in
+section 3, this model uses XPath \cite{xml-xpath} technology for querying
+documents, although some hibrid technologies may still use SQL \cite{sql} for
+that matter. In this way, an instance of such schema dependent types can be
+seen in figure \ref{fig:persistence-example-relational}.
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.65]{../diagrams/persistence-example-relational}
+  \includegraphics[scale=0.7]{../diagrams/persistence-example-relational}
   \caption{Instance of a Relational Model Database Prototype}
   \label{fig:persistence-example-relational}
 \end{figure}
@@ -224,14 +285,14 @@ sensor networks.
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/KVP-on-Relational-Model}
+  \includegraphics[scale=0.7]{../diagrams/KVP-on-Relational-Model}
   \caption{KVP Data Model implementation using Relational Model}
   \label{fig:KVP-on-Relational-Model}
 \end{figure}
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/persistence-example-relational-kvp}
+  \includegraphics[scale=0.7]{../diagrams/persistence-example-relational-kvp}
   \caption{KVP over Relational Model Database Prototype}
   \label{fig:persistence-example-relational-kvp}
 \end{figure}
@@ -363,9 +424,9 @@ as follows:
 \section{Analysis of the Database System Organization Taxonomy}
 
 Sensor Network data can be saved in either Centralized or Distributed Systems.
-While Centralized Database Systems are easier to manage, it may face challenges
-regarding its data. For this reason, the use of partitioning or sharding would
-be an addition to persist sensor data.
+As described in  While Centralized Database Systems are easier to manage, it may
+face challenges regarding its data. For this reason, the use of partitioning or
+sharding would be an addition to persist sensor data.
 
 \subsection{Advantages of Database Partitioning and Sharding}
 

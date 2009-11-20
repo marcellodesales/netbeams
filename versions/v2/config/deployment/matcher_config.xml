@@ -1,105 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 
-    <!-- 
-      * ANY   Existing information 
-      * LOCAL Any address representing the local Network Interface: LOCAL, LOCALHOST, 127.0.0.0 and current IP
-      * KEEP  Keep current information
-      * NONE  NO information should exist
-      -->
-    
-    <matchRule>
-        <ruleid>LocalRule</ruleid>
-        
-        <matchCriteria>
-            <producerType>ANY</producerType>
-            <producerAddress>ANY</producerAddress>
-            <consumerType>ANY</consumerType>
-            <consumerAddress>LOCAL</consumerAddress>
-        </matchCriteria>
-        
-        <matchTarget>
-            <consumerType>KEEP</consumerType>
-            <consumerAddress>KEEP</consumerAddress>
-        </matchTarget>
-    </matchRule>
-    
-    <matchRule>
-    	<ruleid>all_messages_no_consumer_sent_to_componentmanager</ruleid>
-        <matchCriteria>
-            <producerType>ANY</producerType>
-            <producerAddress>LOCAL</producerAddress>
-            <consumerType>NONE</consumerType>
-            <consumerAddress>NONE</consumerAddress>
-        </matchCriteria>
-        
-        <matchTarget>
-            <consumerType>org.netbeams.dsp.management</consumerType>
-            <consumerAddress>LOCAL</consumerAddress>
-        </matchTarget>
-    </matchRule>
-    
-    <matchRule>
-    	<ruleid>all_messages_with_consumer_sent_to_componentmanager</ruleid>
-        <matchCriteria>
-            <producerType>ANY</producerType>
-            <producerAddress>ANY</producerAddress>
-            <consumerType>ANY</consumerType>
-            <consumerAddress>LOCAL</consumerAddress>
-        </matchCriteria>
-        
-        <matchTarget>
-            <consumerType>org.netbeams.dsp.management</consumerType>
-            <consumerAddress>LOCAL</consumerAddress>
-        </matchTarget>
-    </matchRule>    
+  <!--
+    * ANY Existing information 
+    * LOCAL Any address representing the local Network Interface: 
+           LOCAL, LOCALHOST, 127.0.0.0 and current IP
+    * KEEP Keep current information 
+    * NONE NO information should exist
+  -->
 
+  <matchRule>
+    <ruleid>LocalRule</ruleid>
 
-    <matchRule>
-    	<ruleid>all_messages_no_consumer_sent_to_remote_componentmanager</ruleid>
-        <matchCriteria>
-            <producerType>ANY</producerType>
-            <producerAddress>ANY</producerAddress>
-            <consumerType>NONE</consumerType>
-            <consumerAddress>NONE</consumerAddress>
-        </matchCriteria>
-        
-        <matchTarget>
-            <consumerType>org.netbeams.dsp.management</consumerType>
-            <consumerAddress>192.168.1.4</consumerAddress>
-            <gateway>org.netbeams.dsp.wiretransport.client</gateway>
-        </matchTarget>
-    </matchRule>    
-    
-    <matchRule>
-    	<ruleid>all_messages_with_consumer_sent_to_remote_componentmanager</ruleid>
-        <matchCriteria>
-            <producerType>ANY</producerType>
-            <producerAddress>ANY</producerAddress>
-            <consumerType>ANY</consumerType>
-            <consumerAddress>REMOTE</consumerAddress>
-        </matchCriteria>
-        
-        <matchTarget>
-            <consumerType>KEEP</consumerType>
-            <consumerAddress>KEEP</consumerAddress>
-            <gateway>org.netbeams.dsp.wiretransport.client</gateway>
-        </matchTarget>
-    </matchRule>   
+    <matchCriteria>
+      <producerType>ANY</producerType>
+      <producerAddress>ANY</producerAddress>
+      <consumerType>ANY</consumerType>
+      <consumerAddress>LOCAL</consumerAddress>
+    </matchCriteria>
 
-    <matchRule>
-        <ruleid>all_messages_with_consumer_sent_server_persist</ruleid>
-        <matchCriteria>
-            <producerType>ANY</producerType>
-            <producerAddress>REMOTE</producerAddress>
-            <consumerType>ANY</consumerType>
-            <consumerAddress>LOCAL</consumerAddress>
-        </matchCriteria>
-        
-        <matchTarget>
-            <consumerType>org.netbeams.dsp.persistence</consumerType>
-            <consumerAddress>LOCAL</consumerAddress>
-        </matchTarget>
-    </matchRule>
+    <matchTarget>
+      <consumerType>KEEP</consumerType>
+      <consumerAddress>KEEP</consumerAddress>
+    </matchTarget>
+  </matchRule>
+
+  <matchRule>
+    <ruleid>all_messages_no_consumer_sent_to_componentmanager
+    </ruleid>
+    <matchCriteria>
+      <producerType>ANY</producerType>
+      <producerAddress>LOCAL</producerAddress>
+      <consumerType>NONE</consumerType>
+      <consumerAddress>NONE</consumerAddress>
+    </matchCriteria>
+
+    <matchTarget>
+      <consumerType>org.netbeams.dsp.management
+      </consumerType>
+      <consumerAddress>LOCAL</consumerAddress>
+    </matchTarget>
+  </matchRule>
+
+  <matchRule>
+    <ruleid>all_messages_with_consumer_sent_to_componentmanager
+    </ruleid>
+    <matchCriteria>
+      <producerType>ANY</producerType>
+      <producerAddress>ANY</producerAddress>
+      <consumerType>ANY</consumerType>
+      <consumerAddress>LOCAL</consumerAddress>
+    </matchCriteria>
+
+    <matchTarget>
+      <consumerType>org.netbeams.dsp.management
+      </consumerType>
+      <consumerAddress>LOCAL</consumerAddress>
+    </matchTarget>
+  </matchRule>
+
+  <matchRule>
+    <ruleid>all_messages_no_consumer_sent_to_remote_componentmanager
+    </ruleid>
+    <matchCriteria>
+      <producerType>ANY</producerType>
+      <producerAddress>ANY</producerAddress>
+      <consumerType>NONE</consumerType>
+      <consumerAddress>NONE</consumerAddress>
+    </matchCriteria>
+
+    <matchTarget>
+      <consumerType>org.netbeams.dsp.management
+      </consumerType>
+      <consumerAddress>192.168.1.4</consumerAddress>
+      <gateway>org.netbeams.dsp.wiretransport.client
+      </gateway>
+    </matchTarget>
+  </matchRule>
+
+  <matchRule>
+    <ruleid>all_messages_with_consumer_sent_to_remote_componentmanager
+    </ruleid>
+    <matchCriteria>
+      <producerType>ANY</producerType>
+      <producerAddress>ANY</producerAddress>
+      <consumerType>ANY</consumerType>
+      <consumerAddress>REMOTE</consumerAddress>
+    </matchCriteria>
+
+    <matchTarget>
+      <consumerType>KEEP</consumerType>
+      <consumerAddress>KEEP</consumerAddress>
+      <gateway>org.netbeams.dsp.wiretransport.client
+      </gateway>
+    </matchTarget>
+  </matchRule>
+
+  <matchRule>
+    <ruleid>all_messages_with_consumer_sent_server_persist
+    </ruleid>
+    <matchCriteria>
+      <producerType>ANY</producerType>
+      <producerAddress>REMOTE</producerAddress>
+      <consumerType>ANY</consumerType>
+      <consumerAddress>LOCAL</consumerAddress>
+    </matchCriteria>
+
+    <matchTarget>
+      <consumerType>org.netbeams.dsp.persistence
+      </consumerType>
+      <consumerAddress>LOCAL</consumerAddress>
+    </matchTarget>
+  </matchRule>
 
 </config>

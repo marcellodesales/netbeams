@@ -3,7 +3,8 @@ package org.netbeams.dsp.persistence.controller;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.netbeams.dsp.message.ComponentIdentifier;
 import org.netbeams.dsp.message.DSPMessagesFactory;
@@ -26,7 +27,7 @@ import com.mongodb.MongoException;
  * The experiment to transfer DSP Messages to mongoDB. It uses random data of DSP Message Contents.
  * 
  * @author Marcello de Sales (marcello.sales@gmail.com)
- *
+ * 
  */
 public class DSPMessageToMongoDBExperiment {
 
@@ -36,28 +37,7 @@ public class DSPMessageToMongoDBExperiment {
      */
     private static long fSLEEP_INTERVAL = 100;
 
-    /**
-     * Inserts the Message Content's instance into the mongoDB.
-     * 
-     * @param tranMsg is a persistent message unit from a DSP message transmitted by a sensor.
-     * @throws UnknownHostException
-     * @throws MongoException
-     */
-    public static void insertMessageUnit(PersistentMessageUnit tranMsg) throws UnknownHostException, MongoException {
-        long start = System.currentTimeMillis();
-        long startMemoryUse = getMemoryUse();
-        System.out.println("Started saving netbeams samples as mongodb objects at "
-                + DATE_FORMATTER.format(new Date(start)));
-
-        long watchTransaction = Stopwatch.start("Transaction time for inserting", "sonde-2-mongodb");
-        insertPersistentUnitMessageContents(tranMsg);
-        Stopwatch.stop(watchTransaction);
-
-        long end = System.currentTimeMillis();
-        long result = getMemoryUsedSinceGivenMemorySample(startMemoryUse);
-        System.out.println("Finished tranaction and saving netbeams samples to mongodb objects in "
-                + getTimeDifference(start, end) + " consuming ~" + result + "Kb");
-    }
+    private static final Set<SensorLocation> randomLocationsCache = new HashSet<SensorLocation>();
 
     /**
      * @param startMemoryUse is the number of bytes previously measured
@@ -76,28 +56,30 @@ public class DSPMessageToMongoDBExperiment {
      * @throws UnknownHostException
      * @throws MongoException
      */
-    public static void insertPersistentUnitMessageContents(PersistentMessageUnit tranMsg) throws UnknownHostException,
-            MongoException {
-        DBCollection netbeamsDbCollection = DSPMongoCRUDService.getPersistenceStorage(tranMsg);
-        MessageContent messageContent = tranMsg.getDspMessage().getBody().getAny();
-        System.out.println("Starting mongodb transaction at " + DATE_FORMATTER.format(new Date()));
-        DSPMongoCRUDService.getNetbeamMongoDb().requestStart();
-        if (messageContent instanceof SondeDataContainer) {
-            SondeDataContainer sondeContainer = (SondeDataContainer) messageContent;
-            for (SondeDataType sondeData : sondeContainer.getSondeData()) {
-                long watchSondeId = Stopwatch.start("Sonde Data Transformation and Persistence", "sonde-2-mongodb");
-                // build the document value
-                BasicDBObject docValue = DSPMongoCRUDService.buildValueSegment(sondeData);
-                // extract the fact time from the message, adding to the key
-                long factTime = sondeData.getDateTime().getTimeInMillis();
-                // build the document key
-                BasicDBObject docKey = DSPMongoCRUDService.buildKeySegment(tranMsg, factTime, docValue);
-                // insert the final collection
-                netbeamsDbCollection.insert(docKey);
-                Stopwatch.stop(watchSondeId);
+    public static void insertPersistentUnitMessageContents(Set<PersistentMessageUnit> tranMsgs) throws 
+            UnknownHostException, MongoException {
+
+        DSPMongoCRUDService.INSTANCE.getNetbeamMongoDb().requestStart();
+        for (PersistentMessageUnit tranMsg : tranMsgs) {
+            DBCollection netbeamsDbCollection = DSPMongoCRUDService.INSTANCE.getPersistenceStorage(tranMsg);
+            MessageContent messageContent = tranMsg.getDspMessage().getBody().getAny();
+            if (messageContent instanceof SondeDataContainer) {
+                SondeDataContainer sondeContainer = (SondeDataContainer) messageContent;
+                for (SondeDataType sondeData : sondeContainer.getSondeData()) {
+                    long watchSondeId = Stopwatch.start("Sonde Data Transformation and Persistence", "sonde-2-mongodb");
+                    // build the document value
+                    BasicDBObject docValue = DSPMongoCRUDService.INSTANCE.buildValueSegment(sondeData);
+                    // extract the fact time from the message, adding to the key
+                    long factTime = sondeData.getDateTime().getTimeInMillis();
+                    // build the document key
+                    BasicDBObject docKey = DSPMongoCRUDService.INSTANCE.buildKeySegment(tranMsg, factTime, docValue);
+                    // insert the final collection
+                    netbeamsDbCollection.insert(docKey);
+                    Stopwatch.stop(watchSondeId);
+                }
             }
         }
-        DSPMongoCRUDService.getNetbeamMongoDb().requestDone();
+        DSPMongoCRUDService.INSTANCE.getNetbeamMongoDb().requestDone();
     }
 
     /**
@@ -140,15 +122,57 @@ public class DSPMessageToMongoDBExperiment {
         }
     }
 
-    public static void main(String[] args) {
-        if (args.length == 0) {
+    private static Set<PersistentMessageUnit> generateRandomMessages(int numberItems) {
+
+        System.out.println("Producing " + numberItems + " random PersistentUnits with one DSP Message with a random "
+                + " sample frequence from the YSI Sonde");
+
+        Set<PersistentMessageUnit> persistentUnits = new HashSet<PersistentMessageUnit>(numberItems);
+        for (int i = 0; i < numberItems; i++) {
+            long messageUnitTime = Stopwatch.start("Each PersistentMessageUnit", "persistent-msgs-unit");
+            // build a random sensor location with fix GPS coordination from the RTC pier.
+            SensorLocation.Builder locationBuider = new SensorLocation.Builder();
+            locationBuider.setIpAddress("192.168.0." + ((int) (Math.random() * 253) + 2));
+            locationBuider.setLatitude(Double.valueOf(37.89155));
+            locationBuider.setLongitude(Double.valueOf(-122.4464));
+            SensorLocation location = locationBuider.build();
+            randomLocationsCache.add(location);
+
+            // build the producer identifier
+            ComponentIdentifier producerId = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier("experiment_comp",
+                    location.getIpAddress(), "sonde-data-type");
+
+            // build the message header
+            Header header = DSPMessagesFactory.INSTANCE.makeDSPMessageHeader(null, producerId, null);
+
+            // build just one sample observation for the message
+            SondeDataContainer container = SondeTestData.generateRandomSondeDataContainer(1);
+            Message msg = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, container);
+
+            // persistence unit
+            PersistentMessageUnit pmu = new PersistentMessageUnit(msg, locationBuider.build());
+            Stopwatch.stop(messageUnitTime);
+            persistentUnits.add(pmu);
+        }
+        return persistentUnits;
+    }
+
+    public static void main(String[] args) throws UnknownHostException, MongoException {
+        if (args.length < 2) {
             throw new IllegalArgumentException(
-                    "You need to provide the number of netbeams samples to generate: \nExample: DSPMongoCRUDService 5");
+                    "You need to provide the server IP address and number of netbeams samples to generate: "
+                            + "\nExample: DSPMongoCRUDService 127.0.0.1 5");
         }
         Stopwatch.setActive(true);
         long watchExperimentId = Stopwatch.start("Complete Experiene", "entire-experience");
 
-        int NUMBER_SAMPLES = Integer.valueOf(args[0]);
+        // the needed 3 arguments
+        final String SERVER_IP_ADDRESS = args[0];
+        final int NUMBER_SAMPLES = Integer.valueOf(args[1]);
+        String PROPERTIES_LIST = null;
+        if (args.length == 3) {
+            PROPERTIES_LIST = args[2];
+        }
 
         long startMemoryUse = getMemoryUse();
         System.out.println("Experiment started at " + DATE_FORMATTER.format(new Date()));
@@ -156,33 +180,23 @@ public class DSPMessageToMongoDBExperiment {
         System.out.println("Starting to generate " + NUMBER_SAMPLES + " sonde samples at "
                 + DATE_FORMATTER.format(new Date(start)) + "; MEM USED: " + startMemoryUse);
 
-        SondeDataContainer container = SondeTestData.generateRandomSondeDataContainer(NUMBER_SAMPLES);
+        long watchTransaction = Stopwatch.start("Time for creating random PersistentMessage Units", "all-messages");
+        Set<PersistentMessageUnit> messageUnits = generateRandomMessages(NUMBER_SAMPLES);
+        Stopwatch.stop(watchTransaction);
+
+        watchTransaction = Stopwatch.start("Time for initializing the mongo service", "mongo-service");
+        DSPMongoCRUDService.INSTANCE.initialize(SERVER_IP_ADDRESS, randomLocationsCache, PROPERTIES_LIST);
+        Stopwatch.stop(watchTransaction);
 
         long end = System.currentTimeMillis();
         float result = getMemoryUsedSinceGivenMemorySample(startMemoryUse);
-        System.out.println("Finished Generating " + container.getSondeData().size() + " sonde samples on "
+        System.out.println("Finished Generating " + NUMBER_SAMPLES + " sonde samples on "
                 + getTimeDifference(start, end) + " consuming ~" + result + "Kb");
 
-        startMemoryUse = getMemoryUse();
-
-        System.out.println("Producing a random DSP Message with " + container.getSondeData().size()
-                + " items on the content message");
-        long watchMessageCreationId = Stopwatch.start("DSP Message Creation", "dsp-creation");
-        String hostIpAddr = "192.168.0." + ((int) (Math.random() * 253) + 2);
-        ComponentIdentifier producerId = DSPMessagesFactory.INSTANCE.makeDSPComponentIdentifier("persistent",
-                hostIpAddr, "sonde-data-type");
-        Header header = DSPMessagesFactory.INSTANCE
-                .makeDSPMessageHeader(UUID.randomUUID().toString(), producerId, null);
-        Message msg = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, container);
-        Stopwatch.stop(watchMessageCreationId);
-
-        SensorLocation.Builder builder = new SensorLocation.Builder();
-        builder.setIpAddress(hostIpAddr).setLatitude((float) (Math.random() * 180 + 1)).setLongitude(
-                (float) (Math.random() * 180 + 1));
-        PersistentMessageUnit pmu = new PersistentMessageUnit(msg, builder.build());
-
         try {
-            insertMessageUnit(pmu);
+            watchTransaction = Stopwatch.start("Time for inserting all PersistentMessage Units", "insert-all");
+            insertPersistentUnitMessageContents(messageUnits);
+            Stopwatch.stop(watchTransaction);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (MongoException e) {
@@ -191,8 +205,8 @@ public class DSPMessageToMongoDBExperiment {
         Stopwatch.stop(watchExperimentId);
         end = System.currentTimeMillis();
         result = getMemoryUsedSinceGivenMemorySample(startMemoryUse);
-        System.out.println("Experiment finished saving " + container.getSondeData().size()
-                + " sonde samples on MongoDB on " + getTimeDifference(start, end) + " consuming ~" + result + " Kb");
+        System.out.println("Experiment finished saving " + messageUnits.size() + " sonde samples on MongoDB on "
+                + getTimeDifference(start, end) + " consuming ~" + result + " Kb");
 
         System.out.println("\nProcessing times for sections");
         for (Report report : Stopwatch.getAllReports()) {

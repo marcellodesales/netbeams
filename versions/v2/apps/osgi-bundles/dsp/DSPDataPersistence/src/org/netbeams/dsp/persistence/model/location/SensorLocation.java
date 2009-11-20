@@ -10,65 +10,77 @@ public class SensorLocation {
     /**
      * It's the latitude location of the sensor device
      */
-    private Float latitude;
+    private Double latitude;
     /**
      * It's the longitude location of the sensor device
      */
-    private Float longitude;
+    private Double longitude;
     /**
      * The IP address string representation of four octets divided by a (dot).
      */
     private String ipAddress;
 
-    private SensorLocation(String ipAddress) {
+    /**
+     * Creates a new instance of the sensor location. However, this constructor is only accessable through the
+     * Builder instance.
+     * @param ipAddress the ip address of the sensor location.
+     * @param lat the latitude value
+     * @param lon the longitude value 
+     */
+    private SensorLocation(String ipAddress, Double lat, Double lon) {
         this.ipAddress = ipAddress;
+        this.latitude = lat;
+        this.longitude = lon;
     }
-    
+
     /**
      * Local builder to build an instance of the Sensor Location
+     * 
      * @author marcello de sales (marcello.sales@gmail.com)
      */
     public static class Builder {
-        private float lat;
-        private float lon;
+        private Double lat;
+        private Double lon;
         private String ip;
-        
-        public Builder setLatitude(Float latitude) {
+
+        public Builder setLatitude(Double latitude) {
             this.lat = latitude;
             return this;
         }
-        
-        public Builder setLongitude(Float longitude) {
+
+        public Builder setLongitude(Double longitude) {
             this.lon = longitude;
             return this;
         }
-        
+
         public Builder setIpAddress(String ipAddress) {
             this.ip = ipAddress;
             return this;
         }
-        
+
         public SensorLocation build() {
             if (this.ip == null) {
                 throw new IllegalStateException("The IP address must be provided to build a Sensor Location");
             }
-            //TODO: right now, the IP address is the only required property. In the future, the coordinates
-            //could be also enforced.
-            return new SensorLocation(this.ip);
+            if (this.lat == 0 || this.lon == null) {
+                throw new IllegalStateException(
+                        "Both the latitude and longitude must be provided to build a Sensor Location");
+            }
+            return new SensorLocation(this.ip, this.lat, this.lon);
         }
     }
-    
+
     /**
      * @return the latitude of the sensor location.
      */
-    public float getLatitude() {
+    public double getLatitude() {
         return this.latitude;
     }
 
     /**
      * @return the longitude of the sensor location
      */
-    public float getLongitude() {
+    public double getLongitude() {
         return this.longitude;
     }
 
@@ -81,21 +93,21 @@ public class SensorLocation {
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#toString()
      */
     public String toString() {
         return this.ipAddress + ":" + this.latitude + "," + this.longitude;
     }
-    
+
     public int hashCode() {
         return 30 * this.ipAddress.hashCode();
     }
-    
+
     public boolean equals(Object obj) {
         if (obj instanceof SensorLocation) {
-            return ((SensorLocation)obj).ipAddress.equals(this.ipAddress);
-            
-        } else return false;
+            return ((SensorLocation) obj).ipAddress.equals(this.ipAddress);
+
+        } else
+            return false;
     }
 }

@@ -1,5 +1,7 @@
 package org.netbeams.dsp.persistence.controller;
 
+import java.net.UnknownHostException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,17 +24,20 @@ import org.netbeams.dsp.message.QueryMessage;
 import org.netbeams.dsp.message.UpdateMessage;
 import org.netbeams.dsp.persistence.model.TransientPersistenceLayer;
 import org.netbeams.dsp.persistence.model.component.data.PersistentMessageUnit;
+import org.netbeams.dsp.persistence.model.location.SensorLocation;
 import org.netbeams.dsp.util.NetworkUtil;
 
+import com.mongodb.MongoException;
+
 /**
- * The DSP Data Persistence is the main DSP Component responsible for the persistence of DSP Measure Messages into 
- * the Database. When the component is activated, it starts the worker thread DSP Data Flusher with the flush
- * rate (it should be a Listener instead) given through the DSP Update Message during the activation.
+ * The DSP Data Persistence is the main DSP Component responsible for the persistence of DSP Measure Messages into the
+ * Database. When the component is activated, it starts the worker thread DSP Data Flusher with the flush rate (it
+ * should be a Listener instead) given through the DSP Update Message during the activation.
  * 
  * The first version of this component saves data into a mongoDB server.
  * 
  * @author marcello
- *
+ * 
  */
 public class DSPDataPersistence implements DSPComponent {
 
@@ -96,8 +101,8 @@ public class DSPDataPersistence implements DSPComponent {
                 if (tranMsgs.size() > 0) {
                     thLog.debug("Preparing to transfer messages " + tranMsgs.size() + " to database...");
 
+                    DSPMongoCRUDService.INSTANCE.insertPersistentUnitMessageContents(tranMsgs);
                     for (PersistentMessageUnit tranMsg : tranMsgs) {
-                        DSPMongoCRUDService.insertPersistentUnitMessageContents(tranMsg);
                         tranMsg.setStateToFlushed();
                     }
 
@@ -110,7 +115,6 @@ public class DSPDataPersistence implements DSPComponent {
             }
         }
     }
-    
 
     /**
      * Shuts down all the threads started by the scheduler.
@@ -125,36 +129,64 @@ public class DSPDataPersistence implements DSPComponent {
     /**
      * Updates the internal Data Persistence properties.
      * 
-     * @param updateMessage
-     *            is an update message to configure the component.
-     * @throws DSPException
-     *             if any problem happens during the update.
+     * @param updateMessage is an update message to configure the component.
+     * @throws DSPException if any problem happens during the update.
      */
     private void updateComponentProperties(UpdateMessage updateMessage) throws DSPException {
 
         MessageContent propertiesNode = updateMessage.getBody().getAny();
 
         DSProperties properties = (DSProperties) propertiesNode;
-        boolean hasDelayChanged = false;
+        boolean delayHasChanged = false;
+        boolean databaseAddressHasChanged = false;
         for (DSProperty property : properties.getProperty()) {
-            System.setProperty(property.getName(), property.getValue());
-            if (property.getName().equals("TRANSIENT_DATA_FLUSHER_DELAY") && !hasDelayChanged
+            if (property.getName().equals("TRANSIENT_DATA_FLUSHER_DELAY")
                     && !System.getProperty(property.getName()).equals(property.getValue())) {
-                hasDelayChanged = true;
+                delayHasChanged = true;
             }
+            if (property.getName().equals("DATABASE_SERVER_IP_ADDRESS")
+                    && !System.getProperty(property.getName()).equals(property.getValue())) {
+                databaseAddressHasChanged = true;
+            }
+            System.setProperty(property.getName(), property.getValue());
             log.debug("Update Property: " + property.getName() + "=" + property.getValue());
+        }
+
+        if (databaseAddressHasChanged) {
+            SensorLocation.Builder builder = new SensorLocation.Builder();
+            builder.setIpAddress(System.getProperty("SENSOR_1_IP_ADDRESS"));
+            builder.setLatitude(Double.valueOf(System.getProperty("SENSOR_1_LATITUDE")));
+            builder.setLongitude(Double.valueOf(System.getProperty("SENSOR_1_LONGITUDE")));
+            Set<SensorLocation> sensors = new HashSet<SensorLocation>(1);
+            sensors.add(builder.build());
+
+            try {
+                String ipAddress = System.getProperty("DATABASE_SERVER_IP_ADDRESS");
+                String propertiesList =  System.getProperty("YSI_DESIRED_PROPERTIES");
+                DSPMongoCRUDService.INSTANCE.initialize(ipAddress, sensors, propertiesList);
+                log.info("Starting the database service targeting server at IP " + ipAddress);
+                log.info("Sensors Registered: " + sensors);
+
+            } catch (UnknownHostException uhe) {
+                log.error("Check if the IP for the database service is valid", uhe);
+                throw new DSPException(uhe);
+            } catch (MongoException me) {
+                log.error(me.getMessage(), me);
+                throw new DSPException(me);
+            }
         }
 
         long delay = this.getDelayForFlushingIntoDatabase();
         if (!this.scheduler.isShutdown()) {
             log.info("Starting scheduling the transient data flusher to wake up at every " + delay + " seconds...");
             this.scheduler.scheduleWithFixedDelay(new DspDataFlusher(), delay, delay, TimeUnit.SECONDS);
-        } else if (hasDelayChanged) {
+        } else if (delayHasChanged) {
             this.shutdownFlushWorkers();
             log.info("Rescheduling the transient data flusher to wake up at every " + delay + " seconds...");
             this.scheduler = Executors.newSingleThreadScheduledExecutor();
             this.scheduler.scheduleWithFixedDelay(new DspDataFlusher(), delay, delay, TimeUnit.SECONDS);
         }
+
         // Send the acknowledgment IFF the producer was the management.
         if (updateMessage.getHeader().getProducer().getComponentType().equals("org.netbeams.dsp.management")) {
             this.sendBackAcknowledge(updateMessage);
@@ -209,7 +241,7 @@ public class DSPDataPersistence implements DSPComponent {
             log.debug("Query message delivered...");
             this.queryComponentProperties((QueryMessage) message);
 
-        } else if (message instanceof MeasureMessage){
+        } else if (message instanceof MeasureMessage) {
 
             log.debug("Adding the DSP message to the Transient Persistence layer...");
             // add the message to the queues
@@ -219,6 +251,7 @@ public class DSPDataPersistence implements DSPComponent {
 
     /**
      * Queries the DSP Data Persistence component's current properties values.
+     * 
      * @param queryMessage the DSP Query Message.
      * @throws DSPException if any problem with the DSP platform occurs
      */

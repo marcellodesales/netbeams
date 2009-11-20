@@ -15,6 +15,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.log4j.Logger;
 import org.netbeams.dsp.ComponentDescriptor;
 import org.netbeams.dsp.DSPComponent;
@@ -223,6 +224,9 @@ public class DSPWireTransportHttpClient implements DSPComponent {
 
             UUID messagesContainerId = UUID.fromString(messagesForRequest.getUudi());
             HttpClient client = new HttpClient();
+            HttpClientParams params = new HttpClientParams();
+            params.setParameter(HttpClientParams.USER_AGENT, "DSP-Gateway-0.1");
+            client.setParams(params);
             PostMethod postMethod = new PostMethod(dest.toString());
 
             NameValuePair[] formValues = new NameValuePair[1];

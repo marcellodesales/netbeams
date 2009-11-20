@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#Make sure to run the steps 1 and 2 if running the experiment with sharded environment.
+echo "#######  NetBEAMS Experiments - Persistence on MongoDB  ########\n"
 DATA_DIR=data
 LOG_SUFIX_DATE=$(date +%Y%m%d-%H%M%S)
 NUMBER_SAMPLES=$1
@@ -8,8 +10,9 @@ COLLECTION_NAME=SondeDataContainer
 
 JAVA_MEM_MIN=-Xms200m
 JAVA_MEM_MAX=-Xmx1500m
-MONGO_JAVA=../thirdparty/mongodb/mongo-0.11.jar
+MONGO_JAVA=../thirdparty/mongodb/drivers/mongo-1.0.jar
 MONGO_SERVER_IP=127.0.0.1
+PROPERTIES_LIST=$3
 JAVA_EXPERIMENT_CLASSPATH=../runtime/deployment/DSPDataPersistence-0.1.jar:../runtime/deployment/DSPSondeProducer-0.1.jar:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:$MONGO_JAVA:../thirdparty/stopwatch/stopwatch-0.4-with-deps.jar
 JAVA_EXPERIMENT_CLASS=org.netbeams.dsp.persistence.controller.DSPMessageToMongoDBExperiment
 
@@ -20,23 +23,24 @@ MONGO_DATA_EXPORT_CSV=logs/experiment-$NUMBER_SAMPLES-data-exported-$LOG_SUFIX_D
 
 echo "########### Netbeams to MongoDB Experiment $LOG_SUFIX ############# "
 echo "\n# 1. Cleaning any existing MongoDB data at '$DATA_DIR'\n"
-#rm -rf $DATA_DIR/*
-ls -lah $DATA_DIR/shard-a
-ls -lah $DATA_DIR/shard-b
+rm -rf $DATA_DIR/*
+#ls -lah $DATA_DIR/shard-a
+#ls -lah $DATA_DIR/shard-b
 
 echo "\n# 2. Starting MongoDB Server with 2 local shards (1 remote)... NetBEAMS data will be saved at dir '$DATA_DIR'\n"
 
-#mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG & 
+mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG & 
 
 #mongod --dbpath data/shard-a/ --port 10000 | tee logs/shard-a.log &
 #mongod --dbpath data/shard-b/ --port 10001 | tee logs/shard-b.log &
 #mongod --dbpath data/shards-config/ --port 20000 | tee logs/shards-config.log &
 
-mongos --configdb localhost:20000 | tee $MONGO_SERVER_LOG &
+# when running sharded version of experiment, uncomment this line
+#mongos --configdb localhost:20000 | tee $MONGO_SERVER_LOG &
 
 echo "\n# 3. Ready to run Java experiment with $NUMBER_SAMPLES samples\n"
 
-java $JAVA_MEM_MIN $JAVA_MEM_MAX -classpath $JAVA_EXPERIMENT_CLASSPATH $JAVA_EXPERIMENT_CLASS $NUMBER_SAMPLES | tee $NETBEAMS_2_MONGO_LOG
+java $JAVA_MEM_MIN $JAVA_MEM_MAX -classpath $JAVA_EXPERIMENT_CLASSPATH $JAVA_EXPERIMENT_CLASS $MONGO_SERVER_IP $NUMBER_SAMPLES $PROPERTIES_LIST | tee $NETBEAMS_2_MONGO_LOG
 
 echo "\n* 4. Exporting the generated mongoDB data in CSV file format\n"
 echo "Executing the export command \nmongoexport -d $DATABASE_NAME -c $COLLECTION_NAME --dbpath $DATA_DIR --csv -f \"_id,sensor_ip_address,transaction_time,fact_time,data.temperature,data.sp_condition,data.condition,data.resistence,data.salinitude,data.pressure,data.depth,data.ph,data.pH_mv,data.odo_sat,data.odo_condition,data.turbidity,data.battery\" -o $MONGO_DATA_EXPORT_CSV\n"

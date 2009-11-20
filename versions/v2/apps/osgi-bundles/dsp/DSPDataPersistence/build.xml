@@ -8,7 +8,7 @@
     <target name="dsp-data-persistence.compile" depends="dsp-data-persistence.clean">
         <property name="dspmanagement.base.dir" value="${DSP.BUNDLES}/DSPManagement"/>
         <path id="dsp-data-persistence.classpath.id">
-            <pathelement location="${THIRDPARTY}/mongodb/mongo-0.11.jar"/>
+            <pathelement location="${THIRDPARTY}/mongodb/drivers/mongo-1.0.jar"/>
             <pathelement location="${THIRDPARTY}/stopwatch/stopwatch-0.4-with-deps.jar"/>
             <pathelement location="${XML.JAXB}/dsproperty/dist/dsproperty.jar"/>
             <pathelement location="${XML.JAXB}/message/dist/message.jar"/>
@@ -22,9 +22,11 @@
     </target>
 
     <target name="dsp-data-persistence.jar">
+        <property name="MONGO_JAVA_VERSION" value="1.0" />
+
         <mkdir dir="${DSP.PERSISTENCE}/classes/libs"/>
         <copy todir="${DSP.PERSISTENCE}/classes/libs">
-            <fileset dir="${THIRDPARTY}/mongodb/" includes="mongo-0.9.1.jar"/>
+            <fileset dir="${THIRDPARTY}/mongodb/drivers/" includes="mongo-${MONGO_JAVA_VERSION}.jar"/>
             <fileset dir="${THIRDPARTY}/stopwatch/" includes="stopwatch-0.4-with-deps.jar"/>
         </copy>
         <jar basedir="${DSP.PERSISTENCE}/classes" 

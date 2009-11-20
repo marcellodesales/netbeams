@@ -259,7 +259,7 @@ community.
 \begin{itemize}
   \item \textbf{Tabular Data Model}: comma-separeted values are very popular
   due to its simplicity. Although data is not index, it is an easy approach for data
- exchange among researchers.
+ exchange among researchers \cite{sn-provenance}.
   \item \textbf{Relational Data Model}: it is used in the majority of the
   projects. Most of them due to the easy access to database systems, with
   refactored versions that support the implementation of sensor networks and
@@ -269,18 +269,17 @@ community.
   XML data \cite{xml} is not yet popular, but there are a few projects using it
   \cite{sn-xml-usage01}\cite{sn-xml-usage01}, implementing its query by using a
   middleware \cite{sn-xml-middleware} \cite{sn-xml-query-engines}.
-  \item \textbf{Key-Value Pair and Document-Oriented Data Model}: as
-  an emerging data model, the Key-Value Pair (KVP) \cite{db-kvp} data model is
-  becoming popular with the up-coming trend of cloud computing. Although there are no
-  records of the use of this model data model in sensor networks, this work
-  will investigate it.
 \end{itemize}
 
-Most importantly, the use of Data Provenance approaches to describe the
-collected data is shown to be important \cite{sn-provenance}, given the nature
-of the collected data. Therefore, this section describes these approaches for
-modeling data collected from sensor devices, taking into account the need of
-metadata for the data.
+Although these approaches have been used in Sensor Networks, this work will
+also take a look at others still not used, as follows:
+
+\begin{itemize}
+  \item \textbf{Key-Value Pair Model}: as an emerging data model, the Key-Value
+  Pair (KVP) \cite{db-kvp} data model is becoming popular with the up-coming
+  trend of cloud computing. Although there are no records of the use of this
+  model data model in sensor networks, this work will investigate it.
+\end{itemize}
 
 \subsection{Tabular Data Model and Query}
 
@@ -353,14 +352,15 @@ by implementing of middlewares to query and extract query data
 an XML-based communication middleware for data exchange among the sensor nodes
 \cite{netbeams2009}.
 
-\subsection{Key-Value Pair and Document-Oriented Data Models}
+\subsection{Key-Value Pair Data Models}
 
 The advance of distributed systems and the Internet have enabled the
 development of powerful database systems that can be organized in the context
 of database systems and how to represent models. An important up-coming
 approach is the use of database systems that does not use structured language
 for quering its data. One such example is called Key-Value Pair (KVP) data model
-\cite{db-kvp}. Such model has the following properties:
+\cite{db-kvp}, which is also known as Document-Oriented, Distributed Hash Table.
+Such model has the following properties:
 
 \begin{itemize}
   \item data is structured in collections of key-value pairs, as it is done in
@@ -379,7 +379,8 @@ of database systems which are becoming popular with the new trend called Cloud
 Computing \cite{cloud-comp-architectures}. Databases implementing this strategy
 is the mongoDB \cite{mongodb} and CouchDB \cite{mongodb}.
 
-\subsection{Data Provenance for Sensor Networks}
+\section{How to describe collected sensor data using Data Provenance}
+\label{sec:sn-provenance}
 
 Most of sensor networks implementations use the collected data from the sensor
 devices after they observe the environment. As shown by
@@ -390,7 +391,8 @@ properties and nature of sensor networks generated data. First, the device's
 sampling are usually in raw format or without obvious names. In order to
 provide search over the collected sensor data, the data needs first to be
 described and indexed, and this process can be related to Data Provenance
-\cite{db-provenance}.
+\cite{db-provenance}. Needless to say, Data Provenance is the 
+Metadata\footnote{Data about data} about the collected sensor data.
 
 An example of Data Provenance application is the use of aggregation of data
 over time to estimate the changing effects of the weather in a given region.
@@ -400,12 +402,114 @@ a given data has changed. The following should be the foundation of a
 provenance-aware collected data according to \cite{sn-provenance}:
 
 \begin{itemize}
-  \item each low-level observation as it describes the actual data;
-  \item the location where the collected data was generated;
-  \item the time when the data was collected.
+  \item \textbf{what was collected?}: it can be simply one or more low-level
+  observations, which is a set of values with or without a description;
+  \item \textbf{When was the data collected?}: is the the time when the data was
+  collected, as most sensor data must be used depending on its existance;
+  \item \textbf{Where was the data collected?}: it is primarily the location
+  where the collected data was observed. However, It is important to note that
+  the use of this metadata depends on the applicability of the data.
 \end{itemize}
 
 While Data Provenance provides necessary mechanisms to describe sensor networks
 data in general, others see the importance of the time space of sensor
 networks. \cite{sn-time-series} describes strategies to used to cluster
-distributed sensor data as time series of data.
+distributed sensor data as time series of data, as well as to decrease the size
+of data streams being transmitted in real-time sensor networks when these
+collected data does not need to be transferred \cite{sn-data-reduction}.
+
+Finally, an important application of collected sensor data is the so-called
+blackbox of an aircraft, which carries the collection of raw data collected
+from a group of sensors placed in different places of the aircraft, as
+described by \cite{sn-exemple-blackbox}. The author describes the data is
+used in a process of data recovery and analysis in order to identify the
+possible reason of an aircraft accident, by using the time, and location of
+the aircraft, along with the different variables from the sensors.
+
+\subsection{What was collected?}
+
+Different sensor devices will provide different attribute sets regarding a
+specific observation. In general, these data sets does not have obvious names,
+which leads to difficulties when indicies are necessary in order to make the
+data searcheable. Specially for the purpose of data archival, as described
+earlier in this chapter, the collected data needs to receive and identity,
+which identifies the data by itself in a regular database
+\cite{relational-model}. Equally, \cite{sn-provenance} described that
+traditional sensor networks uses the collected data for analysis long after
+the attribute set has been collected, usually before it is categorized and
+indexed. Annotations and tags are also names given by \cite{sn-provenance} as
+means to describe collected sensor data.
+
+In a nutshell, data is described by the name of the observation, when this is
+not provided. For example, 
+
+\begin{itemize}
+  \item \textbf{temperature} = 73.45: this is the value of the collected
+  observation, which in general, the attribute name ``temperature'' is not
+  provided in the data stream;
+  \item \textbf{temperature-scale} = ``Fahrenheit'': the metadata regarding the
+  temperature attribute, which describes the scale of the temperature.
+  \item \textbf{device-version} = 5: the metadata that describes the version of
+  the sensor device, since sensors can be replaced, and as a consequence, data
+  accuracy may be as well be changed.
+\end{itemize} 
+
+\subsection{When was the data collected?}
+
+In order to use historical sensor data, the use of a point in time is the most
+important characteristic of data, as it is considered an important metadata
+for different types of sensor networks such as an aircraft the blackbox
+\cite{sn-exemple-blackbox}. Other projects which classifies data in a
+time-series \cite{sn-time-series-example}, while others provide approaches to
+decrease the creation of data based on clustering data before they are sent to
+the sink \cite{sn-time-series}.
+
+In different areas, temporal databases or time-series are the ones that takes
+the real-world time into consideration. In general, data on a temporal
+database can be classified by its dimention, as surveyed by \cite{db-temporal}:
+
+\begin{itemize}
+  \item \textbf{Valid time}: it is the point in time during which a fact
+  happened with respect to the real world. This value is only when data is captured, an
+  cannot be changed because of its nature, as well as placing a restriction over
+  Update operations;
+  \item \textbf{Transaction time}: is the point in time at which a fact is
+  collected, transferred or processed in the database. This value is used
+  during Insertion operations, as well as in Update ones.
+\end{itemize}
+
+When both temporal dimensions are applied, the data is consided to be 
+Bitemporal when \cite{db-temporal}. Usually, the data type of the valid and
+transaction time columns are simple timestamps, with any supported accuracy.
+For example, the following set of attribute and values shows a temperature of
+70 degrees that was observed on November 15, 2009, but collected only 3 days
+later.
+
+\begin{itemize}
+  \item \textbf{temperature} = 70;
+  \item \textbf{fact-time} = Nov 15, 2009 10:45 PM PST
+  \item \textbf{transaction-time} = Nov 18, 2009 11:11 PM PST
+\end{itemize}
+
+When it comes to Data Provenance in sensor networks, \cite{sn-provenance}
+shows that the collected data for historical purpose is usually saved in
+self-described flat-files by file-names, containing complicated naming
+conventions that includes the timestamp information about the data. For this
+reason, time is an important metadata needed in any data model used, since it 
+helps identifying data uniquely for a given data set.
+
+\subsection{Where was the data collected from?}
+
+Depending on the application of the collected sensor data, the location in
+which the data was collected may be needed. For instance, the geographic
+location of the collected data is important to identify the specific
+GPS\footnote{Global Positioning System} coordinates of the sensor device
+\cite{sn-ex02}. Similarly, the position of any event captured in a black-box of
+an aircraft carries is also used as a metadata for the event. It will either
+depend on the sensor device provide such sampling attribute, or entered
+manually at the database.
+
+A correlation between time and location is presented by \cite{sn-time-series}
+as an important feature to reduce the traffic generated in a sensor network by
+clustering similar data when the sensor devices are placed in concentrated
+environment.

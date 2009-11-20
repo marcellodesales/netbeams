@@ -17,7 +17,7 @@ this work to evaluate different existing database systems implementations,
 taking into account different requirements and specifications of different
 sensor networks.
 
-\section{Nature and Location of Sensor Data Taxonomy}
+\section{Nature of Sensor Data Taxonomy}
 
 No matter the type of resource management used, the first taxonomy presented is
 related to the purpose of the use of the collected sensor data. That is, when
@@ -35,23 +35,40 @@ them. The related taxon is depicted by figure \ref{fig:taxonomy-data-purpose}.
 
 \begin{itemize}
   \item \textbf{Real-time Data Stream}: data is used as real-time data stream
-  during data query \cite{sn-intro01}.
-    \begin{itemize}[label=\textbullet]
-        \item \textbf{Local Storage}: The data can be temporarily persisted
-        in-memory, or a secondary memory device in a local storage device.
-    \end{itemize}
+  during data query \cite{sn-intro01};
   \item \textbf{Archival Data}: data is used for historical purposes such as
-  data analysis or data fusion \cite{sn-intro01, sn-intro02}.  
-    \begin{itemize}[label=\textbullet]
-      \item \textbf{External Storage}: The data is usually located in an
-       external storage device with a data management system such as a database
-       system.
-      \item \textbf{Data-Centric Storage}: the collected data can arranged in a
-      categorized fashion as described by \cite{sn-storage03}. This taxon of
-      system allows the data to be partitioned by a specific property. Nowadays,
-      the strategy is often related to database partition \cite{db-partition}
-      and database sharding approaches \cite{db-shard01} \cite{db-shard02}.
-    \end{itemize}
+  data analysis or data fusion \cite{sn-intro01, sn-intro02}.
+\end{itemize}
+
+\section{Location of Sensor Data Taxonomy}
+
+No matter the type of resource management used, the first taxonomy presented is
+related to the purpose of the use of the collected sensor data. That is, when
+and how the collected data is going to be used as described in section
+\ref{sec:sn-data-purpose}. In addition to it, the mechanism for data storage
+described in section \ref{sec:sn-infrastructure} can be related to each of
+them. The related taxon is depicted by figure \ref{fig:taxonomy-data-purpose}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics{../diagrams/taxonomy-data-purpose}
+  \caption{The Nature and Location of Sensor Data Taxonomy}
+  \label{fig:taxonomy-data-purpose}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Local Storage}: The data can be temporarily persisted
+   in-memory, or a secondary memory device in a local storage device. It is
+  directly related to the real-time data stream taxon, since it occurs at
+  the place of the sensor device;
+  \item \textbf{External Storage}: The data is usually located in an
+  external storage device with a data management system such as a database
+  system.
+  \item \textbf{Data-Centric Storage}: the collected data can arranged in a
+  categorized fashion as described by \cite{sn-storage03}. This taxon of
+  system allows the data to be partitioned by a specific property. Nowadays,
+  the strategy is often related to database partition \cite{db-partition}
+  and database sharding approaches \cite{db-shard01} \cite{db-shard02}.
 \end{itemize}
 
 \section{Data Model Taxonomy}
@@ -85,6 +102,12 @@ classes of data models, as shown in figure \ref{fig:taxonomy-data-model}.
   and the document-oriented models, whose usage in wireless sensor networks
   have not been reported.
 \end{itemize}
+
+No matter the type of data model used, the support for Data Provenance as shown
+in section \ref{sec:sn-provenance} is as important as the data being
+collected. For this reason, the data model taxonomy must have support for the
+data types that support the use of provenance-related attributes in the
+collected sensor data.
 
 \section{Query Processing Mechanism Taxonomy}
 

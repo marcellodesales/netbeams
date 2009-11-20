@@ -313,8 +313,9 @@ moding approaches such as Key-Value Database have been proposed \cite{db-kvp}.
 \end{itemize}
 
 For instance, all data needed for the YSI sonde data, as well as all necessary
-provenance data that describes the data, are represented by means of key-value
-pairs \ref{fig:persistence-example-kvp}.
+provenance data that describes the data, depicted in section
+\ref{sec:sn-provenance}, are represented by means of key-value pairs
+\ref{fig:persistence-example-kvp}.
 
 \begin{figure}[!h]
   \centering
@@ -343,7 +344,9 @@ as follows:
       \item Data represents ``natural'' entities, not application specific;
       \item Data Normalization is the data structuring process to remove data
       duplication, as well as establishing data associations through table
-      relationships.
+      relationships;
+      \item Data Provenance can be provided through data types such as
+      ``Timestamp'' for time or float for the GPS float-based coordinates; 
     \end{enumerate} 
     & 
     \begin{enumerate}
@@ -355,7 +358,9 @@ as follows:
       \item Items may represent not only the natural representation of data, but
       also include application-specific data;
       \item Since data may be repeated, no data normalization is done, so that
-      integrity is done in the application layer.
+      integrity is done in the application layer;
+      \item Data provenance can be added through the use of keys and relating
+      values for the time information and location of the data.
     \end{enumerate}
     \\\hline
     \end{tabular}

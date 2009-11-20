@@ -5,6 +5,7 @@
 
 \chapter{Netbeams in Depth: Requirements Analysis and Specification}
 \label{chap:netbeams-overview}
+
 This chapter presents NetBEAMS and its implementation details, showing its
 main application of the the environmental sensor network deployed at the
 Romberg Tiburon Center (RTC) as it is the main case study.
@@ -82,7 +83,9 @@ included the following was organized as follows:
   Francisco Bay;
   \item Each YSI sonde produces 52 Bytes for each its observations;
   \item The sampling frequency rate could be configured in ranges of 1, 6 or
-  15 minutes, depending on the staff's speficiation. 
+  15 minutes, depending on the staff's speficiation;
+  \item Data for final users are published with Provenance Data regarding time,
+  but not regarding location.
 \end{itemize}
 
 Considering the infrastructure previously described, the size of the data
@@ -146,7 +149,7 @@ programming and scripting languages.
   \item Main users are biologists, no expertise in Database Systems;
   \item Data Representation in human-readable format;
   \item Scalable system with low degree of maintanance;
-  \item Data searchable in near-real-time
+  \item Data searchable in near-real-time.
 \end{itemize}
 
 \section{Understanding NetBEAMS Architecture}
@@ -596,9 +599,10 @@ matching configuration artifact provided by the administrator. See listing
     receive a given Message}
     \begin{center}
         \begin{tabular}{lr}
-          \textit{Data Consumers ( DSP Message ) := Verify the DSP
-          Message's Header + Verify the matcher rules (which contains the list
-          of consumers)}
+          \textit{Data Consumers ( DSP Message )} := \\ 
+          Verify the DSP Message's Header + \\
+          Verify the matcher rules, which contains the list of consumers for
+          the given message
         \end{tabular}
     \end{center}
     \label{tab:ysi-data-stream}

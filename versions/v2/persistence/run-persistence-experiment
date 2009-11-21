@@ -9,7 +9,7 @@ DATABASE_NAME=netbeams
 COLLECTION_NAME=SondeDataContainer
 
 JAVA_MEM_MIN=-Xms200m
-JAVA_MEM_MAX=-Xmx1500m
+JAVA_MEM_MAX=-Xmx1800m
 MONGO_JAVA=../thirdparty/mongodb/drivers/mongo-1.0.jar
 MONGO_SERVER_IP=127.0.0.1
 PROPERTIES_LIST=$3
@@ -58,8 +58,9 @@ du -h $DATA_DIR/shard-a/
 ls -lah $DATA_DIR/shard-b/
 
 echo "\n* 7. Accessing the persisted sensor data after the experiments...\n"
-echo " - You can use the mongoDB Client using the command \"mongo $DATABASE_NAME\""
-echo " - You can use the mongoDB REST Web Services using HTTP GET Requests http://$MONGO_SERVER_IP:28017/$DATABASE_NAME/$COLLECTION_NAME/?limit=-5"
+echo " - Through the mongoDB Client using via command line \"mongo $DATABASE_NAME\""
+echo " - Through the mongoDB REST Web Services client using HTTP GET Requests http://$MONGO_SERVER_IP:28017/$DATABASE_NAME/$COLLECTION_NAME/?limit=-5"
+echo " - Through Futon2Mongo, the check the web client at http://127.0.0.1:4567/_utils/index.html"
 
 echo "\n* 7. Running the mongDB client after the experiments...\n"
 echo " - The database name is '$DATABASE_NAME'. The collection name is '$COLLECTION_NAME'"

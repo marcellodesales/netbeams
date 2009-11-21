@@ -2,6 +2,7 @@ package org.netbeams.dsp.persistence.controller;
 
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,6 +40,20 @@ public class DSPMessageToMongoDBExperiment {
 
     private static final Set<SensorLocation> randomLocationsCache = new HashSet<SensorLocation>();
 
+    private static Set<PersistentMessageUnit> persistentUnits;
+
+    private static boolean inWriteLock = true;
+
+    private static int insertedDocuments = 0;
+
+    public static int getNumberOfInsertedDocuments() {
+        return insertedDocuments;
+    }
+
+    public static boolean isInWriteLock() {
+        return inWriteLock;
+    }
+
     /**
      * @param startMemoryUse is the number of bytes previously measured
      * @return the amount of memory in bytes between the start number measurement and the current.
@@ -46,40 +61,6 @@ public class DSPMessageToMongoDBExperiment {
     public static long getMemoryUsedSinceGivenMemorySample(long startMemoryUse) {
         float endMemoryUse = getMemoryUse();
         return Math.round((endMemoryUse - startMemoryUse) / 1024);
-    }
-
-    /**
-     * Inserts the DSP Message Content into the mongoDB as it is extracted and converted from the given
-     * PersistentMessageUnit.
-     * 
-     * @param tranMsg is the PersistentMessageUnit containing information about the sensor location and the message.
-     * @throws UnknownHostException
-     * @throws MongoException
-     */
-    public static void insertPersistentUnitMessageContents(Set<PersistentMessageUnit> tranMsgs) throws 
-            UnknownHostException, MongoException {
-
-        DSPMongoCRUDService.INSTANCE.getNetbeamMongoDb().requestStart();
-        for (PersistentMessageUnit tranMsg : tranMsgs) {
-            DBCollection netbeamsDbCollection = DSPMongoCRUDService.INSTANCE.getPersistenceStorage(tranMsg);
-            MessageContent messageContent = tranMsg.getDspMessage().getBody().getAny();
-            if (messageContent instanceof SondeDataContainer) {
-                SondeDataContainer sondeContainer = (SondeDataContainer) messageContent;
-                for (SondeDataType sondeData : sondeContainer.getSondeData()) {
-                    long watchSondeId = Stopwatch.start("Sonde Data Transformation and Persistence", "sonde-2-mongodb");
-                    // build the document value
-                    BasicDBObject docValue = DSPMongoCRUDService.INSTANCE.buildValueSegment(sondeData);
-                    // extract the fact time from the message, adding to the key
-                    long factTime = sondeData.getDateTime().getTimeInMillis();
-                    // build the document key
-                    BasicDBObject docKey = DSPMongoCRUDService.INSTANCE.buildKeySegment(tranMsg, factTime, docValue);
-                    // insert the final collection
-                    netbeamsDbCollection.insert(docKey);
-                    Stopwatch.stop(watchSondeId);
-                }
-            }
-        }
-        DSPMongoCRUDService.INSTANCE.getNetbeamMongoDb().requestDone();
     }
 
     /**
@@ -106,11 +87,17 @@ public class DSPMessageToMongoDBExperiment {
         return (totalMemory - freeMemory);
     }
 
+    /**
+     * Try to force the garbage collection to clean up the memory
+     */
     private static void putOutTheGarbage() {
         collectGarbage();
         collectGarbage();
     }
 
+    /**
+     * Try to call garbage collection
+     */
     private static void collectGarbage() {
         try {
             System.gc();
@@ -122,14 +109,20 @@ public class DSPMessageToMongoDBExperiment {
         }
     }
 
+    /**
+     * Generates a given number of persistent message units
+     * 
+     * @param numberItems is the number of persistent messages unit. Must be bigger than 0
+     * @return the set of unique persistent message Unit items
+     */
     private static Set<PersistentMessageUnit> generateRandomMessages(int numberItems) {
 
         System.out.println("Producing " + numberItems + " random PersistentUnits with one DSP Message with a random "
                 + " sample frequence from the YSI Sonde");
 
-        Set<PersistentMessageUnit> persistentUnits = new HashSet<PersistentMessageUnit>(numberItems);
+        persistentUnits = new HashSet<PersistentMessageUnit>(numberItems);
+        final Calendar TRANSACTION_TIME = Calendar.getInstance();
         for (int i = 0; i < numberItems; i++) {
-            long messageUnitTime = Stopwatch.start("Each PersistentMessageUnit", "persistent-msgs-unit");
             // build a random sensor location with fix GPS coordination from the RTC pier.
             SensorLocation.Builder locationBuider = new SensorLocation.Builder();
             locationBuider.setIpAddress("192.168.0." + ((int) (Math.random() * 253) + 2));
@@ -150,19 +143,51 @@ public class DSPMessageToMongoDBExperiment {
             Message msg = DSPMessagesFactory.INSTANCE.makeDSPMeasureMessage(header, container);
 
             // persistence unit
-            PersistentMessageUnit pmu = new PersistentMessageUnit(msg, locationBuider.build());
-            Stopwatch.stop(messageUnitTime);
+            PersistentMessageUnit pmu = new PersistentMessageUnit(msg, locationBuider.build(), TRANSACTION_TIME);
             persistentUnits.add(pmu);
         }
         return persistentUnits;
     }
 
-    public static void main(String[] args) throws UnknownHostException, MongoException {
+    /**
+     * Inserts the DSP Message Content into the mongoDB as it is extracted and converted from the given
+     * PersistentMessageUnit.
+     * 
+     * @param tranMsg is the PersistentMessageUnit containing information about the sensor location and the message.
+     * @throws UnknownHostException
+     * @throws MongoException
+     */
+    public static void insertPersistentUnitMessageContents(Set<PersistentMessageUnit> tranMsgs)
+            throws UnknownHostException, MongoException {
+
+        DSPMongoCRUDService.INSTANCE.getNetbeamMongoDb().requestStart();
+        for (PersistentMessageUnit tranMsg : tranMsgs) {
+            DBCollection netbeamsDbCollection = DSPMongoCRUDService.INSTANCE.getPersistenceStorage(tranMsg);
+            MessageContent messageContent = tranMsg.getDspMessage().getBody().getAny();
+            SondeDataContainer sondeContainer = (SondeDataContainer) messageContent;
+            SondeDataType sondeData = sondeContainer.getSondeData().get(0);
+            // build the document value
+            BasicDBObject docValue = DSPMongoCRUDService.INSTANCE.buildValueSegment(sondeData);
+            // extract the fact time from the message, adding to the key
+            long factTime = sondeData.getDateTime().getTimeInMillis();
+            // build the document key
+            BasicDBObject docKey = DSPMongoCRUDService.INSTANCE.buildKeySegment(tranMsg, factTime, docValue);
+            // insert the final collection
+            netbeamsDbCollection.insert(docKey);
+            ++insertedDocuments;
+        }
+        inWriteLock = false;
+        DSPMongoCRUDService.INSTANCE.getNetbeamMongoDb().requestDone();
+    }
+
+    public static void main(String[] args) throws UnknownHostException, MongoException, InterruptedException {
         if (args.length < 2) {
             throw new IllegalArgumentException(
                     "You need to provide the server IP address and number of netbeams samples to generate: "
                             + "\nExample: DSPMongoCRUDService 127.0.0.1 5");
         }
+
+        putOutTheGarbage();
         Stopwatch.setActive(true);
         long watchExperimentId = Stopwatch.start("Complete Experiene", "entire-experience");
 
@@ -180,10 +205,68 @@ public class DSPMessageToMongoDBExperiment {
         System.out.println("Starting to generate " + NUMBER_SAMPLES + " sonde samples at "
                 + DATE_FORMATTER.format(new Date(start)) + "; MEM USED: " + startMemoryUse);
 
+        Thread status = new Thread("Messages-Generator") {
+            public void run() {
+                int i = 0;
+                int min = 0;
+                System.out.println();
+                while (persistentUnits == null || persistentUnits.size() < NUMBER_SAMPLES) {
+                    try {
+                        i++;
+                        if (i < 60) {
+                            System.out.print(".");
+                        }
+                        if (i % 20 == 0) {
+                            System.out.println();
+                            System.out.println("Generated Messages = " + persistentUnits.size());
+                            System.out.println();
+                        }
+                        if (i == 60) {
+                            i = 0;
+                            ++min;
+                            System.out.println();
+                            System.out.println(" " + min + " min #= " + persistentUnits.size());
+                            System.out.println();
+                        }
+                        this.sleep(1000);
+                    } catch (InterruptedException e) {
+
+                    }
+                }
+            }
+        };
+        status.start();
         long watchTransaction = Stopwatch.start("Time for creating random PersistentMessage Units", "all-messages");
         Set<PersistentMessageUnit> messageUnits = generateRandomMessages(NUMBER_SAMPLES);
+        putOutTheGarbage();
         Stopwatch.stop(watchTransaction);
+        System.out.println("Persistent Message Units: " + persistentUnits.size());
 
+        status = new Thread("Status-Initializer") {
+            public void run() {
+                int i = 0;
+                int min = 0;
+                while (!DSPMongoCRUDService.hasFinished()) {
+                    try {
+                        i++;
+                        if (i < 60) {
+                            System.out.print(".");
+                        }
+                        if (i == 60) {
+                            i = 0;
+                            ++min;
+                            System.out.println();
+                            System.out.println(" " + min + " min on Initializing Persistence Service");
+                            System.out.println();
+                        }
+                        this.sleep(1000);
+                    } catch (InterruptedException e) {
+
+                    }
+                }
+            }
+        };
+        status.start();
         watchTransaction = Stopwatch.start("Time for initializing the mongo service", "mongo-service");
         DSPMongoCRUDService.INSTANCE.initialize(SERVER_IP_ADDRESS, randomLocationsCache, PROPERTIES_LIST);
         Stopwatch.stop(watchTransaction);
@@ -193,6 +276,36 @@ public class DSPMessageToMongoDBExperiment {
         System.out.println("Finished Generating " + NUMBER_SAMPLES + " sonde samples on "
                 + getTimeDifference(start, end) + " consuming ~" + result + "Kb");
 
+        status = new Thread("Status-Insertion") {
+            public void run() {
+                int i = 0;
+                int min = 0;
+                while (isInWriteLock()) {
+                    try {
+                        i++;
+                        if (i < 60) {
+                            System.out.print(".");
+                        }
+                        if (i % 20 == 0) {
+                            System.out.println();
+                            System.out.println("Inserted Units = " + getNumberOfInsertedDocuments());
+                            System.out.println();
+                        }
+                        if (i == 60) {
+                            i = 0;
+                            ++min;
+                            System.out.println();
+                            System.out.println(" " + min + " min on Inserting Data");
+                            System.out.println();
+                        }
+                        this.sleep(1000);
+                    } catch (InterruptedException e) {
+
+                    }
+                }
+            }
+        };
+        status.start();
         try {
             watchTransaction = Stopwatch.start("Time for inserting all PersistentMessage Units", "insert-all");
             insertPersistentUnitMessageContents(messageUnits);
@@ -202,6 +315,7 @@ public class DSPMessageToMongoDBExperiment {
         } catch (MongoException e) {
             e.printStackTrace();
         }
+
         Stopwatch.stop(watchExperimentId);
         end = System.currentTimeMillis();
         result = getMemoryUsedSinceGivenMemorySample(startMemoryUse);

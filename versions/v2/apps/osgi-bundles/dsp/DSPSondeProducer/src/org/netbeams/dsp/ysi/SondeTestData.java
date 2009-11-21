@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,19 +23,45 @@ public class SondeTestData {
     private static final DecimalFormat TWO_DECIMALS_FORMATTER = new DecimalFormat("###0.00");
     private static final DecimalFormat THREE_DECIMALS_FORMATTER = new DecimalFormat("###0.000");
 
+    private static final int CALENDARS_CACHE_SIZE = 15;
+    private static final ArrayList<Calendar> calendarsCache = new ArrayList<Calendar>(CALENDARS_CACHE_SIZE);
+
+    static {
+        for (int i = 0; i < CALENDARS_CACHE_SIZE; i++) {
+            Calendar cdr = Calendar.getInstance();
+            cdr.set(Calendar.DAY_OF_MONTH, (int) (Math.random() * (30 - 1)) + 1);
+            cdr.set(Calendar.HOUR_OF_DAY, (int) (Math.random() * 23));
+            cdr.set(Calendar.MINUTE, (int) (Math.random() * 59));
+            cdr.set(Calendar.SECOND, (int) (Math.random() * 59));
+            long val1 = cdr.getTimeInMillis();
+
+            cdr.set(Calendar.HOUR_OF_DAY, (int) (Math.random() * 23));
+            cdr.set(Calendar.MINUTE, (int) (Math.random() * 59));
+            cdr.set(Calendar.SECOND, (int) (Math.random() * 59));
+            long val2 = cdr.getTimeInMillis();
+
+            long randomTS = (long) (Math.random() * (val2 - val1)) + val1;
+            cdr.setTime(new Date(randomTS));
+            calendarsCache.add(cdr);
+        }
+    }
+
     /**
      * Creates a new test data with the given number of sonde data to be in the container.
      * 
-     * @param numberOfSondeData
-     *            is the number of data to be in the container.
+     * @param numberOfSondeData is the number of data to be in the container.
      */
     private SondeTestData() {
 
     }
 
+    private static Calendar getRandomCalendar() {
+        int calendarIndex = (int) (Math.random() * (calendarsCache.size() - 1));
+        return calendarsCache.get(calendarIndex);
+    }
+
     /**
-     * @param numberOfRandomSondeDataTypes
-     *            is the number of Sonde Data to be in the container.
+     * @param numberOfRandomSondeDataTypes is the number of Sonde Data to be in the container.
      * @return a SondeDataContainer with a random list of SondeDataTypes containing the given number of random Sonde
      *         Data Types.
      */
@@ -46,8 +73,7 @@ public class SondeTestData {
     }
 
     /**
-     * @param numberOfRandomSondeData
-     *            is the number of random sonde data types to be generated.
+     * @param numberOfRandomSondeData is the number of random sonde data types to be generated.
      * @return a random list of SondeDataType with the current date and time information.
      */
     public static List<SondeDataType> generateRandomSondeData(int numberOfRandomSondeData) {
@@ -63,7 +89,7 @@ public class SondeTestData {
      */
     public static SondeDataType getRandomSondeData() {
         SondeDataType sdt = new SondeDataType();
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = getRandomCalendar();
         sdt.setDateTime(DATE_FORMATTER.format(cal.getTime()), TIME_FORMATTER.format(cal.getTime()));
         sdt.setTemp(Float.valueOf(TWO_DECIMALS_FORMATTER.format(100.69 * Math.random())));
         sdt.setSpCond(Float.valueOf(ONE_DECIMAL_FORMATTER.format(183.0 * Math.random())));

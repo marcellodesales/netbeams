@@ -3,7 +3,6 @@ package org.netbeams.dsp.persistence.model.component.data;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import org.netbeams.dsp.message.Message;
 import org.netbeams.dsp.persistence.model.location.SensorLocation;
@@ -51,13 +50,15 @@ public class PersistentMessageUnit {
     /**
      * Builds a new PersistentMessageUnit with a given dspMessage. The unit is created under the state of TRANSIENT.
      * 
-     * @param dspMessage
+     * @param dspMessage is the DSP message
+     * @param sensorLocation is the location of the sensor
+     * @param collectionTime is the current time when the message was collected.
      */
-    public PersistentMessageUnit(Message dspMessage, SensorLocation sensorLocation) {
+    public PersistentMessageUnit(Message dspMessage, SensorLocation sensorLocation, Calendar collectionTime) {
         this.dspMessage = dspMessage;
         this.sensorLocation = sensorLocation;
         this.state = PersistentMessageState.TRANSIENT;
-        this.collectionDateTime = GregorianCalendar.getInstance();
+        this.collectionDateTime = collectionTime;
     }
 
     /**

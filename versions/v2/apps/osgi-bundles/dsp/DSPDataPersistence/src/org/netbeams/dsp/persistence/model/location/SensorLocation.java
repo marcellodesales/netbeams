@@ -73,14 +73,14 @@ public class SensorLocation {
     /**
      * @return the latitude of the sensor location.
      */
-    public double getLatitude() {
+    public Double getLatitude() {
         return this.latitude;
     }
 
     /**
      * @return the longitude of the sensor location
      */
-    public double getLongitude() {
+    public Double getLongitude() {
         return this.longitude;
     }
 
@@ -106,7 +106,6 @@ public class SensorLocation {
     public boolean equals(Object obj) {
         if (obj instanceof SensorLocation) {
             return ((SensorLocation) obj).ipAddress.equals(this.ipAddress);
-
         } else
             return false;
     }

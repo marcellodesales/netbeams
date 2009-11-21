@@ -1,5 +1,6 @@
 package org.netbeams.dsp.persistence.model;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -100,7 +101,7 @@ public enum TransientPersistenceLayer {
         }
 
         SensorLocation sl = new SensorLocation.Builder().setIpAddress(destinationIp).build();
-        PersistentMessageUnit pMsg = new PersistentMessageUnit(newDspMessage, sl);
+        PersistentMessageUnit pMsg = new PersistentMessageUnit(newDspMessage, sl, Calendar.getInstance());
 
         this.addPersistentMessageUnitIntoTransientSet(pMsg);
         log.debug("Sensor location: " + pMsg.getSensorLocation());

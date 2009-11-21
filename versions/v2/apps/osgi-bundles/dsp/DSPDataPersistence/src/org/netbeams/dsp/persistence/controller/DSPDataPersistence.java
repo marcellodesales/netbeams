@@ -140,12 +140,14 @@ public class DSPDataPersistence implements DSPComponent {
         boolean delayHasChanged = false;
         boolean databaseAddressHasChanged = false;
         for (DSProperty property : properties.getProperty()) {
-            if (property.getName().equals("TRANSIENT_DATA_FLUSHER_DELAY")
-                    && !System.getProperty(property.getName()).equals(property.getValue())) {
+            if (property.getName().equals("TRANSIENT_DATA_FLUSHER_DELAY") && 
+                    (System.getProperty(property.getName()) == null || 
+                     !System.getProperty(property.getName()).equals(property.getValue()))) {
                 delayHasChanged = true;
             }
-            if (property.getName().equals("DATABASE_SERVER_IP_ADDRESS")
-                    && !System.getProperty(property.getName()).equals(property.getValue())) {
+            if (property.getName().equals("DATABASE_SERVER_IP_ADDRESS") && 
+                    (System.getProperty(property.getName()) == null ||
+                    !System.getProperty(property.getName()).equals(property.getValue()))) {
                 databaseAddressHasChanged = true;
             }
             System.setProperty(property.getName(), property.getValue());

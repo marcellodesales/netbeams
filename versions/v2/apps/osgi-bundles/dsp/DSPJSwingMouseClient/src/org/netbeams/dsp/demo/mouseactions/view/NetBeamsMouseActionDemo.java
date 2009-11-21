@@ -115,7 +115,7 @@ public class NetBeamsMouseActionDemo extends JPanel implements MouseListener, Mo
     private void notifyNetBeamsMouseListeners(String description, MouseEvent me, NetBeamsMouseActionEnum action) {
         log.debug("Notifying the Mouse Action listeners");
         NetBeamsMouseInfo nbmi = NetBeamsMouseInfo.makeNetBeamsMouseInfo(action, NetBeamsMouseButtonEnum
-                .getInstanceByValue(me.getButton()), me.getPoint());
+                .getInstanceByValue(me.getButton()), me.getPoint(), System.currentTimeMillis());
         for (NetBeamsMouseListener nbml : this.netBeamsMouseListener) {
             nbml.trackMouseActionUpdate(nbmi);
         }

@@ -10,8 +10,6 @@ package org.netbeams.dsp.demo.mouseactions;
 
 import org.netbeams.dsp.message.XmlDecoratable;
 
-
-
 /**
  * <p>Java class for mouseAction complex type.
  * 
@@ -36,6 +34,7 @@ import org.netbeams.dsp.message.XmlDecoratable;
 //@XmlType(name = "mouseAction")
 public class MouseAction implements XmlDecoratable {
 
+    protected long collectionTime;
 //    @XmlAttribute
     protected Integer x;
 //    @XmlAttribute
@@ -44,6 +43,14 @@ public class MouseAction implements XmlDecoratable {
     protected ButtonName button;
 //    @XmlAttribute
     protected EventName event;
+
+    public long getCollectionTime() {
+        return collectionTime;
+    }
+
+    public void setCollectionTime(long collectionTime) {
+        this.collectionTime = collectionTime;
+    }
 
     /**
      * Gets the value of the x property.
@@ -146,6 +153,7 @@ public class MouseAction implements XmlDecoratable {
         builder.append("<mouseAction");
         builder.append(this.button.toXml());
         builder.append(this.event.toXml());
+        builder.append(" time=\"" + this.collectionTime + "\"");
         builder.append(" x=\"" + this.x + "\"");
         builder.append(" y=\"" + this.y + "\"/>");
         return builder.toString();

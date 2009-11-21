@@ -60,7 +60,23 @@
   </matchRule>
 
   <matchRule>
-    <ruleid>all_messages_no_consumer_sent_to_remote_componentmanager
+    <ruleid>all_messages_with_consumer_sent_server_persist
+    </ruleid>
+    <matchCriteria>
+      <producerType>ANY</producerType>
+      <producerAddress>ANY</producerAddress>
+      <consumerType>ANY</consumerType>
+      <consumerAddress>LOCAL</consumerAddress>
+    </matchCriteria>
+
+    <matchTarget>
+      <consumerType>org.netbeams.dsp.persistence</consumerType>
+      <consumerAddress>LOCAL</consumerAddress>
+    </matchTarget>
+  </matchRule>
+  
+  <matchRule>
+    <ruleid>all_messages_no_consumer_send_to_data_persistence
     </ruleid>
     <matchCriteria>
       <producerType>ANY</producerType>
@@ -70,47 +86,10 @@
     </matchCriteria>
 
     <matchTarget>
-      <consumerType>org.netbeams.dsp.management
-      </consumerType>
-      <consumerAddress>192.168.1.4</consumerAddress>
-      <gateway>org.netbeams.dsp.wiretransport.client
-      </gateway>
-    </matchTarget>
-  </matchRule>
-
-  <matchRule>
-    <ruleid>all_messages_with_consumer_sent_to_remote_componentmanager
-    </ruleid>
-    <matchCriteria>
-      <producerType>ANY</producerType>
-      <producerAddress>ANY</producerAddress>
-      <consumerType>ANY</consumerType>
-      <consumerAddress>REMOTE</consumerAddress>
-    </matchCriteria>
-
-    <matchTarget>
-      <consumerType>KEEP</consumerType>
-      <consumerAddress>KEEP</consumerAddress>
-      <gateway>org.netbeams.dsp.wiretransport.client
-      </gateway>
-    </matchTarget>
-  </matchRule>
-
-  <matchRule>
-    <ruleid>all_messages_with_consumer_sent_server_persist
-    </ruleid>
-    <matchCriteria>
-      <producerType>ANY</producerType>
-      <producerAddress>REMOTE</producerAddress>
-      <consumerType>ANY</consumerType>
-      <consumerAddress>LOCAL</consumerAddress>
-    </matchCriteria>
-
-    <matchTarget>
-      <consumerType>org.netbeams.dsp.persistence
-      </consumerType>
+      <consumerType>org.netbeams.dsp.persistence</consumerType>
       <consumerAddress>LOCAL</consumerAddress>
     </matchTarget>
   </matchRule>
+
 
 </config>

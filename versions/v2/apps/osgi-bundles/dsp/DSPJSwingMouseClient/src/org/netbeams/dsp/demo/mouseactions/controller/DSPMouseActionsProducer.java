@@ -113,6 +113,7 @@ public class DSPMouseActionsProducer implements NetBeamsMouseListener {
             mc.setEvent(EventName.fromValue(mouseInfoCollected.getMouseAction().toString()));
             mc.setX((int) mouseInfoCollected.getPointClicked().getX());
             mc.setY((int) mouseInfoCollected.getPointClicked().getY());
+            mc.setCollectionTime(mouseInfoCollected.getWhenOccurred());
 
             actionsContainer.getMouseAction().add(mc);
         }

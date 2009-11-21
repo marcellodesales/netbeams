@@ -18,6 +18,14 @@
   </component>
 
   <component>
+    <name>DSPJSwingMouseClient</name>
+    <bundle>DSPJSwingMouseClient-0.1.jar
+    </bundle>
+    <priority>80</priority>
+    <required />
+  </component>
+
+  <component>
     <name>DSPDataPersistence</name>
     <bundle>DSPDataPersistence-0.1.jar
     </bundle>

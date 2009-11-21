@@ -3,6 +3,7 @@ package org.netbeams.dsp.persistence.model;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -96,12 +97,15 @@ public enum TransientPersistenceLayer {
         String destinationIp = newDspMessage.getHeader().getConsumer().getComponentLocator().getNodeAddress()
                 .getValue();
 
+        SensorLocation.Builder sl = new SensorLocation.Builder();
         if (destinationIp.equals("LOCAL") || destinationIp.equals("LOCALHOST")) {
             destinationIp = NetworkUtil.getCurrentEnvironmentNetworkIp();
         }
+        sl.setIpAddress(destinationIp);
+        sl.setLatitude(new Double(System.getProperty("SENSOR_1_LATITUDE")));
+        sl.setLongitude(new Double(System.getProperty("SENSOR_1_LONGITUDE")));
 
-        SensorLocation sl = new SensorLocation.Builder().setIpAddress(destinationIp).build();
-        PersistentMessageUnit pMsg = new PersistentMessageUnit(newDspMessage, sl, Calendar.getInstance());
+        PersistentMessageUnit pMsg = new PersistentMessageUnit(newDspMessage, sl.build(), Calendar.getInstance());
 
         this.addPersistentMessageUnitIntoTransientSet(pMsg);
         log.debug("Sensor location: " + pMsg.getSensorLocation());
@@ -109,6 +113,25 @@ public enum TransientPersistenceLayer {
         log.debug("Message Type: " + pMsg.getMessageType());
         log.debug("Message Content Type: " + pMsg.getMessageContentType());
         log.debug("Stored at " + pMsg.getCollectionDateTime());
+    }
+    
+    /**
+     * @param pmu is the message unit already flushed.
+     */
+    public synchronized void setMessageToFlushed(PersistentMessageUnit pmu) {
+        Set<PersistentMessageUnit> messages = retrieveTransientMessagesUnitSet();
+        if (pmu != null) {
+            synchronized (messages) {
+                for (Iterator<PersistentMessageUnit> it = messages.iterator(); it.hasNext();) {
+                    PersistentMessageUnit messageUnit = it.next();
+                    if (messageUnit.getDspMessage().getMessageID().equals(pmu.getDspMessage().getMessageID())) {
+                        messageUnit.setStateToFlushed();
+                        it.remove();
+                        break;
+                    }
+                }
+            }
+        }   
     }
 
     /**

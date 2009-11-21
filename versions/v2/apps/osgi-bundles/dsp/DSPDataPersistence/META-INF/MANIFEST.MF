@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-Activator: org.netbeams.dsp.persistence.osgi.DataPersistenceActivator
 Bundle-Category: DSP
 Bundle-ClassPath: ., 
- libs/mongo-0.11.jar, 
+ libs/mongo-1.0.jar, 
  libs/stopwatch-0.4-with-deps.jar
 Bundle-Description: The DSP Data Persistence service 
 Bundle-ManifestVersion: 2
@@ -17,5 +17,6 @@ Import-Package: org.netbeams.dsp,
  org.netbeams.dsp.data.property,
  org.netbeams.dsp.platform,
  org.netbeams.dsp.ysi,
+ org.netbeams.dsp.demo.mouseactions,
  org.osgi.framework, 
  org.apache.log4j

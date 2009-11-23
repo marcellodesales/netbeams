@@ -7,19 +7,20 @@
 \chapter{Introduction}
 
 Sensor networks are commonly used in different areas for different purposes
-such as scientific measurements and general population use \cite{sn-intro01}
-\cite{sn-intro02}. In the scientific community, they serve as tools to monitor
-the state of the environment by storing samples of data in specific periods of
-time. For instance, the NASA Jet Propulsion Laboratory uses the Volcano
-SensorWeb \cite{sn-ex02}, a sensor network which aims to collect data from
-specific volcanoes in Alaska and South Pacific to be used with heuristics
-regarding dangerous activities. Similarly, the National Data Buoy Center, a
-department of the National Oceanic and Atmospheric Administration (NOAA)
-\cite{sn-ex03}, provides online data from different buoys in different coast
-shores around the world regarding water quality, tide information, etc, what
-characterizes sensor network for environmental monitoring \cite{sn-ex01}.
-Therefore, sensor networks can be seen as a very important scientific research
-and commercial field with direct application and use of its produced data.
+such as accurate measurements and the general public use \cite{sn-intro01}
+\cite{sn-intro02}. In the scientific community, they serve as tools to watch
+the state of the environment by storing samples of data at particular periods
+of time. For example, the NASA Jet Propulsion Laboratory uses the Volcano
+SensorWeb \cite{sn-ex02}, a sensor network which aims at collecting data from
+individual volcanoes in Alaska and South Pacific to be used with heuristics
+regarding hazardous activities. Similarly, the National Data Buoy Center, a
+division of the National Oceanic and Atmospheric Administration (NOAA)
+\cite{sn-ex03}, provides online information from different buoys in different
+shores around the world regarding water quality, current information, etc,
+what characterizes sensor network for environmental monitoring \cite{sn-ex01}.
+Therefore, sensor networks can be seen as an extremely valuable scientific
+research and commercial sector with direct application and use of its produced
+data.
 
 In order to provide access to the collected sensor data, different approaches
 can be taken to interrogate sensor devices indirectly by accessing its data in
@@ -28,47 +29,47 @@ location may also influence in the process of reusing the collected data. In
 this way, the lack of a persistence layer for existing sensor networks requires
 a deep understanding about its infrastructure, the nature and location of the
 collected data, the chosen data model representation, among others. For
-instance, how can a data persistence layer safely represent the collected sensor
-devices' properties without the need of restructuring any existing data model?
-Should the end users' skills in database system be taken into account or the
-use of programming languages to access the data \cite{sn-programming-language}?
-This problem is currently faced by the departent of Biology at San
-Francisco State University with a marine sensor network managed by
-researchers without Computer Science skills. While the data access may impose
-the difficulties, technical issues may also rise while the execution of a
-sensor network such as growth in terms of number of sensor devices and,
-consequently, the number of data produced. Last, but not least, the means to
-access the data for reuse is the most important features of the sensor
-network, taking into account the different data formats used by the main users
-of the system. How can specific collected sensor data be exported to other
-formats such as spreadsheets or archived files meant to be shared among
-research peers? For these, and many other reasons, the inception of a
-persistence storage can be a very challenging problem to solve.
+instance, how can a data persistence layer safely represent the collected
+sensor devices’ properties without the necessity of restructuring any existing
+data model? Should the end users’ skills in database system be taken into
+account or the use of programming languages to access the data
+\cite{sn-programming-language}? This problem is currently faced by the
+department of Biology at San Francisco State University with a marine sensor
+network managed by researchers without Computer Science skills. While the data
+access may enforce the difficulties, technical issues may also increase while
+the implementation of a sensor network such as growth in terms of the number of
+sensor devices and, consequently, the number of data produced. Last, but not
+least, the way to read the data for reuse is the most striking features of the
+sensor network, taking into account the different data formats used by the
+primary users of the system. How can individual collected sensor data be
+exported to other formats such as spreadsheets or archived files meant to be
+shared among research peers? For these reasons, the inception of a persistence
+storage can be an exceptionally challenging problem to solve.
 
 In view of the fact that the persistence storage of a sensor network imposes
-many different challenges, this work proposes the review of the current state of
-the art for sensor networks in order to provide a data persistence layer for an
-existing sensor network. As a matter of fact, this work's first contribution is
-the inception of a set of basic taxonomies for data persistence in sensor
-networks, proposed to drive an empirical evaluation of different technologies
-used in the sensor network community. Furthermore, it also takes a look at
-different alternatives not yet explored through experiments for a selected
-sensor network as a case study. Similarly, this work makes another novice
-contribution by suggesting a ``lighter" data model and database infrastructure
-that easily captures sensor network device's observations, taking into account
-the non-predictable scalability of its infrastructure, as well as the aspects of
-the data's nature such as identity, time and location of the collected data.
+many different challenges, this work proposes the assessment of the current
+state of the art for sensor networks in order to provide a data persistence
+layer for an existing sensor network. As a matter of fact, this work’s first
+contribution is the creation of a set of basic taxonomies for data persistence
+in sensor networks, proposed to drive an empirical analysis of different
+technologies used in the sensor network community. Furthermore, it also takes a
+look at different alternatives not yet explored through experiments for a
+selected sensor network as a case study. Similarly, this work makes another
+novice contribution by suggesting a “lighter” data model and database
+infrastructure that simply captures sensor network devices' observations,
+taking into account the non-predictable scalability of its infrastructure, as
+well as aspects of the nature of the data such as identity, time and location
+of the collected data.
 
-This dissertation is organized as follows: the next chapter describes the
-literature review as the state of art on sensor networks and data persistence, 
-providing the needed foundation for the design of taxonomies in data
-persistence for sensor networks in chapter 3. Then, chapter 4 examines the
-selected case study and its requirements for a persistence layer, whose
-technology properties are evaluated in chapter 5 against the developed
-taxonomies. The culmination of this work is chapter 6, which details the design
-and implementation of a data persistence solution for the selected case
-study. Likewise, chapter 7 discusses the solution by presenting the
-measurements and conducted experiments, and describing the findings
-and contributions of this work. Last, but not least, chapter 8 presents the
-conclusions of this work, together with the possible future works not addressed
-here.
+This paper is organized as follows: the next chapter describes the literature
+review as the state of art on sensor networks and data persistence, providing
+the underlying foundation for the design of taxonomies in data persistence for
+sensor networks in chapter 3. Then, chapter 4 examines the selected case study
+and its requirements for a persistence layer, whose technology properties are
+evaluated in chapter 5 against the developed taxonomies. The culmination of
+this work is chapter 6, which details the design and implementation of a data
+persistence solution for the selected case study. Likewise, chapter 7 discusses
+the solution by presenting the measurements and conducted experiments, and
+describes the findings and contributions of this work. Last, but not least,
+chapter 8 presents the conclusions of this work, together with the possible
+future works not addressed here.

@@ -10,12 +10,12 @@ Networks}
 Different mechanisms are used for persisting data collected from sensor
 networks, as described by the section regarding the state of the art in sensor
 networks and different approaches for persistence. This section analyzes these
-approaches and presents the different approaches through taxonomy
-\footnote{Taxonomy is the practice and science of classification, by using
-taxonomic units known as taxa (singular taxon)}, which will be used throughout
-this work to evaluate different existing database systems implementations,
-taking into account different requirements and specifications of different
-sensor networks.
+approaches and presents the different approaches through 
+taxonomy\footnote{Taxonomy is the practice and science of classification, by
+using taxonomic units known as taxa (singular taxon)}, which will be used
+throughout this work to evaluate different existing database systems
+implementations, taking into account different requirements and specifications
+of different sensor networks.
 
 \section{Nature of Sensor Data Taxonomy}
 
@@ -47,13 +47,13 @@ related to the purpose of the use of the collected sensor data. That is, when
 and how the collected data is going to be used as described in section
 \ref{sec:sn-data-purpose}. In addition to it, the mechanism for data storage
 described in section \ref{sec:sn-infrastructure} can be related to each of
-them. The related taxon is depicted by figure \ref{fig:taxonomy-data-purpose}.
+them. The related taxon is depicted by figure \ref{fig:taxonomy-data-location}.
 
 \begin{figure}[h]
   \centering
-  \includegraphics{../diagrams/taxonomy-data-purpose}
+  \includegraphics{../diagrams/taxonomy-data-location}
   \caption{The Nature and Location of Sensor Data Taxonomy}
-  \label{fig:taxonomy-data-purpose}
+  \label{fig:taxonomy-data-location}
 \end{figure}
 
 \begin{itemize}
@@ -103,11 +103,30 @@ classes of data models, as shown in figure \ref{fig:taxonomy-data-model}.
   have not been reported.
 \end{itemize}
 
+\section{Data Provenance Taxonomy}
+
 No matter the type of data model used, the support for Data Provenance as shown
-in section \ref{sec:sn-provenance} is as important as the data being
-collected. For this reason, the data model taxonomy must have support for the
-data types that support the use of provenance-related attributes in the
-collected sensor data.
+in section \ref{sec:sn-provenance} is as important as the data being collected.
+For this reason, the data model taxonomy must have support for the data types
+that support the use of provenance-related attributes in the collected sensor
+data. In this way, Figure \ref{fig:taxonomy-data-provenance} describes the data types
+for the metadata support.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics{../diagrams/taxonomy-data-provenance}
+  \caption{Data Provenance Taxonomy}
+  \label{fig:taxonomy-data-provenance}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{What: Data Identity}: the data type that uniquely identifies
+  the collected sensor dat;
+  \item \textbf{When: Time Dimension}: the data type that identifies the
+  collected data;
+  \item \textbf{Where: Data Location}: an optional data type that identifies
+  where the data came from.
+\end{itemize}
 
 \section{Query Processing Mechanism Taxonomy}
 

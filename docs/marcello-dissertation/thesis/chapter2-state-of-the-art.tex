@@ -17,20 +17,49 @@ different approach to persisting data using a different data model, covering
 topics that will be referred throughout the following other chapters.
 
 This chapter will first give an overview on different related problems
-described  in the literature that solved problems related to data modeling and 
-representation in sensor networks. Then, it presents the design, architecture 
-and implementation details of the DSP Platform, which is the bases for this 
-dissertation. Finally, this chapter will briefly give a tutorial on advanced 
-topics such as the differences between the KVP data model and the relational 
-data model, as well as discussing about the approaches used on Database
-Sharding.
+described in the literature that solved problems related to data modeling and
+representation in sensor networks.
 
 \section{Sensor Networks Survey}
 
 Sensor Networks are specialized types of network systems comprised of network 
-nodes with specific goals to observe and collect data. The following
-subsections describe classes of characteristis of these types of sensor
-networks, with applications on research, industrial or militery.
+nodes with specific goals to observe and collect data. Data Persistence in
+Sensor Networks, however, depends on the approaches used to store the data,
+since data nodes can be located close to the devices in the network or in a
+centralized node. In this way, the query process can take place on the network
+nodes themselves or on the centralized data sink. The former approach is
+generally used when the data is collected at the sensor node on its local
+storage \cite{sn-storage01}\cite{sn-storage03}, strategy mainly used to
+maximize the sensor's resources while minimizing energy consumption
+\cite{sn-storage04}. However, this strategy is used when data archival is not
+the primary reason, given the limited resources on the sensor devices. For
+this reason, the the latter strategy has been used when the collected data is
+primarily archived in a centralized database system for later reuse
+\cite{sn-storage02}.
+
+When it comes to data representation, the relational data model
+\cite{relational-model} is one of the most used approaches to represent data
+in sensor network databases in any of the query processing strategies and, in
+most cases, with a modified version of the SQL language \cite{sn-db-newop}.
+However, the design of the database system must be done with prior knowledge
+of the sensor types when choosing the relational data model, as the database
+design must be normalized \cite{db-normalization} for the entities already
+identified for the system. For instance, the introduction of a new sensor
+device might represent a potential change on the database structure by seeking
+a new normalized version of the database structure. In addition to challenges
+of maintaining the database schema normalized, the use of Data Provenance
+approaches in sensor network data \cite{sn-provenance} usually addresses the
+problem related with the lineage of data  and its full history. However, once
+the data model is chosen and implemented, one of the most important
+non-functional requirements in sensor networks is scalability of the
+persistence storage. Since an operational sensor network can produce huge
+amounts of data, it must be able to cope with the increase and data load
+during data gathering, and yet provide users the same performance during data
+retrieval by using different strategies such a data-centric storage
+\cite{sn-storage03}.
+
+The following subsections describe classes of characteristis of these types of
+sensor networks, with applications on research, industrial or militery.
 
 \subsection{Deployment and Mobility}
 
@@ -379,7 +408,7 @@ of database systems which are becoming popular with the new trend called Cloud
 Computing \cite{cloud-comp-architectures}. Databases implementing this strategy
 is the mongoDB \cite{mongodb} and CouchDB \cite{mongodb}.
 
-\section{How to describe collected sensor data using Data Provenance}
+\section{Data Provenance: How to describe collected data?}
 \label{sec:sn-provenance}
 
 Most of sensor networks implementations use the collected data from the sensor

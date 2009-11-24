@@ -6,35 +6,189 @@
 \chapter{DSP Data Persistence: Component Implementation}
 
 This section shows the implementation of the DSP Data Persistence, which
-follows the specifications of the DSP Components described on section 2.4,
-along with the setup of the mongoDB, the chosen database system that handles
-document-oriented instances. The implementation of the DSP Data Persistence
-component was developed using the DSP Subversion repository at
-http://code.google.com/p/netbeams.
+follows the specifications of the DSP Components in the previous chapter,
+along with the setup of the mongoDB, the chosen database system that models
+data in a type of key-value pair model. Moreover, this chapter also describes
+the experiments conducted for the persistence.
 
-\section{DSP Deployment on OSGi Framework}
+The implementation of the DSP Data Persistence component, as well as the
+implementation of the experiments, were developed and managed using the DSP a
+reserved development branch at the Subversion \cite{subversion} repository
+located at the Google Code website. In this way, anyone can checkout the entire
+source-code from the branch
+\textit{https://netbeams.googlecode.com/svn/branches/marcello/persistence},
+as shown in Figure \ref{fig:dsp-data-persistence-dir}. In this way, the
+recommended checkout branch directory will give the remaining directory
+structure as summarized:
 
-    * Description of the OSGi MANIFEST.MF
-    * Description of the component on the config.xml
-    * Adding a matching rule on the matcher\underline{ }config.xml
-    * Adding a bootstrap message the component and database configuration
+\begin{itemize}
+  \item \textbf{NEBEAMS-DIR/}: the directories under the subdirectory
+  ``persistence'';
+  \item \textbf{DEV-VERSION}: the directory of the current development
+  version for the DSP; That is, ``\textbf{NEBEAMS-DIR}/versions/v2/''
+  \item \textbf{PERSISTENCE-DIR}: the directory of the DSP component, that is,
+  ``\textbf{DEV-VERSION}/apps/osgi-intro-bundles/dsp/DSPDataPersistence''.
+\end{itemize}
 
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.6]{../diagrams/dsp-data-persistence-dir}
+  \caption{The DSP Data Persistence Directory Structure}
+  \label{fig:dsp-data-persistence-dir}
+\end{figure}
 
-    * Adding a new entry into the deployment configuration artifact config.xml;
-    * Adding a new entry into the matcher configuration artifact matcher\underline{ }config.xml;
-    * Adding an optional configuration message that sets up the new DSP Component;
-    * Adding new Java drivers that communicates with the Database system;
-    * Installing and configuring the proposed database system.
+The DSP Platform defines its own run-time directory, which organizes the
+artifacts used by the osgi-intro Framework, as well as the its own configuration
+descriptor and matcher, as described in the previous section. 
 
+\begin{itemize}
+  \item \textbf{RUNTIME-DIR}: the main directory for the execution of the DSP
+Platform, with all the necessary osgi-intro-related artifacts are placed, as shown in
+Figure \ref{fig:dsp-runtime-dir}.
+\end{itemize}
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/dsp-runtime-dir}
+  \caption{The DSP Data Persistence Directory Structure}
+  \label{fig:dsp-runtime-dir}
+\end{figure}
+
+\section{DSP Platform Deployment}
+
+As described in the previous chapter, the DSP Data Persistence Component was
+implemented using the Java Programming language, on top of the osgi-intro Framework
+API. This section describes the setup process of the implementation, as well as
+the artifacts use during the implementation, which will be listed in the
+appendix section.
+
+The structure of the artifacts implemented for the DSP Data Persistence
+Component follow the conventions of the NetBEAMS implementation, where the main
+directory \textbf{PERSISTENCE-DIR}, depicted by Figure
+\ref{fig:dsp-data-persistence-dir-checkedout}, holds each of the development
+artifacts.
+
+\begin{itemize}
+  \item \textbf{DSPDataPersistence}: Main directory with the build.xml (Listing
+  \ref{file:dsp-build.xml}) and other Eclipse-related artifacts. The other
+  major directories are also listed:
+  \item \textbf{META-INF}: this directory contains the descriptor file for
+  the osgi-intro Framework, this this case the MANIFEST.MF;
+  \item \textbf{src}: the main directory structure for the source-code
+  implemented. Note that it follows the Java specification for packaging, and
+  therefore, lists the package org.netbeams.dsp.persistence as the main
+  package, including the layers controller, model and osgi-intro.
+\end{itemize}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/dsp-data-persistence-dir-checkedout}
+  \caption{The DSP Data Persistence Directory Structure}
+  \label{fig:dsp-data-persistence-dir-checkedout}
+\end{figure}
+
+\subsection{osgi-intro Deployment Process}
+
+Since each NetBEAMS component is managed by an osgi-intro component and its
+infrastructure, this section describes the basic functionality of the osgi-intro
+platform \cite{osgi-intro}, a framework was conceived to support modularity in
+terms resources-limited environments such mobile devices and vehicles, but it
+was first widely deployed on Eclipe IDE\footnote{Integrated Development
+Environment}, because it promotes the use of reusable loosely-coupled modules
+using the Java Programming Language \cite{java}. The most basic layer of the
+osgi-intro Framework depicted in Figure \ref{fig:layering-osgi-intro} are as follows:
+
+\begin{itemize}
+  \item \textbf{Module Layer}: manages the osgi-intro bundles deployed on the osgi-intro
+  Platform, providing the necessary "wiring" of the components. In other words,
+  the modules, called osgi-intro Bundles, can export and/or import packages in the
+  level of a Java Class managed by the osgi-intro Framework;
+  \item \textbf{Service Layer}: resposible for the interoperability between 2
+  or more bundles, enabling the bundles to register services offered by
+  the its specification;
+  \item \textbf{Execution Layer}: executes the bundles, managing and changing
+  their life-cycle through the bundle execution.
+\end{itemize}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/layering-osgi}
+  \caption{The osgi-intro Framework Layers}
+  \label{fig:layering-osgi-intro}
+\end{figure}
+
+NetBEAMS uses the concept of the modularization through the use of the the
+Producer-Consumer paradigm described in the previous section. Since the DSP
+Components are essentially osgi-intro bundles, the interoperability between them are
+given in the implementation and reuse existing bundles in the osgi-intro Framework
+and the DSP Platform, described by an artifact called MANIFEST.MF as seen in
+listing \cite{file:osgi-intro-manifest}. In general, an osgi-intro bundle must
+provide specifications that describes the module to be published into the osgi-intro
+Framework. In this way, the main properties of the osgi-intro MANIFEST.MF artifact can
+used by the DSP Data Persistence can be summarized as follows:
+
+\begin{itemize}
+  \item \textbf{Bundle-Activator}: The name of the instance of an osgi-intro Activator
+  class, responsible to manage the bundle. The implemented class
+  ``DataPersistenceActivator'' provides the activation mechanisms for the
+  services provided by the DSP Data Persistence Component;
+  \item \textbf{Bundle-ClassPath}: the necessary Java Jars list needed to run
+  the bundle. It lists the mongoDB Java driver as one of the required
+  dependencies deployed in the same package;
+  \item \textbf{Import-Package}: the Java Packages needed by the DSP Data
+  Persistence Component Bundle. These Java Packages must be provided by other
+  DSP components, forcing the execution to be dependent on those package.
+  They are provided through a ``Export-Package'' section in other osgi-intro
+  bundles and, as it is shown in listing \cite{file:osgi-intro-manifest}, they
+  are from different packages.
+\end{itemize}
+
+Once the osgi-intro bundle is installed into the osgi-intro Platform, it will be managed by
+the osgi-intro Execution layer and change the bundle state according to its
+lify-cycle, as described in the previous chapter. Therefore, the packaging of
+the osgi-intro source-code is done using a JAR\footnote{Java Archival Repository}
+artifact specification \cite{java-tutorial}. In this way, the DSP Data
+Platform osgi-intro bundle JAR is created by the Apache ANT build script
+\cite{apache-ant} in Listing \ref{file:dsp-build.xml}. The task
+``dsp-data-persistence.all'' compiles all the source-code created from the
+design of the previous chapter and packages everything into the artifact
+``DSPDataPersistence-x.x.jar'', where x.x is the version of the bundle. Figure
+\ref{fig:dsp-runtime-dir} shows the DSP Data Persistence file under the
+dirctory ``\textbf{RUNTIME-DIR}/deployment/''.
+
+\subsection{Adding DSP Data Persistence into DSP Platform }
+
+Once the new component was developed, the DSP Data Persistence component was
+deployed by editing two main descriptors, as well as the optional bootstrap
+message, as described in chapter 5:
+
+\begin{itemize}
+  \item \textbf{config.xml}: the DSP Data Persistence is added to the DSP
+  Platform adding an entry for the component;
+  \item \textbf{matcher\underline{ }config.xml}: the addition of the rules that
+  filters the messages to the DSP Data Persistence;
+  \item \textbf{DSPDataPersistence\underline{ }001.xml}: depicts the bootstrap
+  message for the DSP Data Persistence Component, as shown in Listing 
+  \ref{file:dsp-data-pers-bootstrap.xml}.
+\end{itemize}
+
+The first configuration artifact enables NetBEAMS to initialize contain the
+descriptor of the component, as shown in Listing \ref{file:dsp-config.xml}.
+The component is added with the highest priority, since it contains
+dependencies to other DSP Components. 
 \subsection{Starting the DSP Platform}
 
-    * command-line (Knopflerfish Framework)
-    * user interface (Knopflerfish Framework)
+Once the DSP Platform automatically installs all the components described by
+the configuration descriptor, the container verifies the dependencies and
+starts each of the DSP components of Figure \ref{fig:knopflerfish-execution},
+the osgi-intro Framework container Knopflerfish \cite{knopflerfish}.
 
-\subsection{Stopping the the DSP Platform}
-
-    * command-line (Knopflerfish Framework)
-    * user interface (Knopflerfish Framework)
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=0.65]{../diagrams/knopflerfish-execution}
+  \caption{The execution of the Knopflerfish Container}
+  \label{fig:knopflerfish-execution}
+\end{figure}
 
 \subsection{Execution Logs}
 
@@ -63,9 +217,22 @@ and traditional RDBMS systems (which are deep in functionality)".
   \item mongoDB has support to distributed systems properties such as
   Master-Slave replication, and features like Database Shards with
   auto-sharding based on shard keys.
-\end{itemize} 
+\end{itemize}
 
-nstallation of mongoDB
+The artifacts of the mongoDB are located in the thirdparty directory of the
+NetBEAMS resources. However, the build script from the DSP Data Persistence
+component can be executed to produce the persistence directory
+structure for NetBEAMS, as described in figure
+\ref{fig:dsp-persistence-system-dir}.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/dsp-persistence-system-dir}
+  \caption{The osgi-intro Framework Layers}
+  \label{fig:dsp-persistence-system-dir}
+\end{figure}
+
+Installation of mongoDB
 - Explanation about mongoDB processes: mongod, mongos, mongo
 - Specification of the shards, shard key, etc
 
@@ -135,10 +302,36 @@ JSONnotation.
 \lstset{label=cmd:mongo-findone,caption=Querying the database: one item}
 \begin{lstlisting}
 > db.SondeDataContainer.findOne()
-{"_id" :  ObjectId( "d36f4007b7e7ac4a03c60000")  , "sensor_ip_address" : "192.168.0.136" , "message_id" : "7b6624d6-0ca1-4cba-a343-f166e88da73b" ,
-"transaction_time" : 1252845473412 , "fact_time" : 1252845346000 , "data" : {"temperature" : "45.01" , "sp_condition" : "37.6"
-, "condition" : "145.8" , "resistence" : "159.77" , "salinitude" : "0.0" , "pressure" : "0.391" , "depth" : "0.46" , "ph" : "5.64" ,
-"pH_mv" : "-62.1" , "odo_sat" : "89.7" , "odo_condition" : "59.34" , "turbidity" : "0.0" , "battery" : "9.4"}}
+{
+    "_id" : ObjectId("5d6f40078ec8074bba980900"),
+    "message_id" : "020d82e1-18b2-4fe2-800c-a0f68e22ea86",
+    "sensor" : {
+        "ip_address" : "192.168.0.91",
+        "location" : {
+            "latitude" : 37.89155,
+            "longitude" : -122.4464
+        }
+    },
+    "time" : {
+        "valid" : "Wed Nov 04 2009 02:30:12 GMT-0800 (PST)",
+        "transaction" : "Sat Nov 21 2009 03:01:33 GMT-0800 (PST)"
+    },
+    "observation" : {
+        "WaterTemperature" : 88.58,
+        "SpecificConductivity" : 180.5,
+        "Conductivity" : 167.3,
+        "Resistivity" : 491.89,
+        "Salinity" : 0.06,
+        "Pressure" : 1.109,
+        "Depth" : 2.642,
+        "pH" : 7.11,
+        "pHmV" : -42.9,
+        "Turbidity" : 0.2,
+        "ODOSaturation" : 72.4,
+        "ODO" : 10.85,
+        "Battery" : 2.7
+    }
+}
 \end{lstlisting}
 
 The query based on attributes can be done using the "dot" notation, as you

@@ -307,16 +307,6 @@ community.
   using a middleware \cite{sn-xml-middleware}\cite{sn-xml-query-engines}.
 \end{itemize}
 
-Although these approaches have been used in Sensor Networks, this work will
-also take a look at others still not used, as follows:
-
-\begin{itemize}
-  \item \textbf{Key-Value Pair Model}: as an emerging data model, the Key-Value
-  Pair (KVP) \cite{db-kvp} data model is becoming popular with the up-coming
-  movement of cloud computing. Although there are no records of the use of this
-  model data model in sensor networks, this work will consider it.
-\end{itemize}
-
 \subsection{Tabular Data Model and Query}
 
 Simple use of Comma-Separated Values is an example of sensor network data. Data
@@ -348,7 +338,6 @@ properties apply to sensor networks:
   \item data is queried using the Structured Query Languange (SQL) and uses the
   definitions of the tables and columns to extract data.
 \end{itemize}
-
 
 Before the creation of such a model, a database normalization process is
 necessary to describe the data in a convenient way. An example of such use of
@@ -388,33 +377,6 @@ by implementing of middleware to query and extract query data
 \cite{sn-xml-middleware}. NetBEAMS is one of such sensor network that contains
 an XML-based communication middleware for data exchange among the sensor nodes
 \cite{netbeams2009}.
-
-\subsection{Key-Value Pair Data Models}
-
-The growth of distributed systems and the Internet have enabled the development
-of powerful database servers that can be organized in the context of
-infrastructure and how to represent models. An powerful up-coming approach is
-the use of database systems that does not use structured language for querying
-its data. One such example is called Key-Value Pair (KVP) data model
-\cite{db-kvp}, which is also known as Document-Oriented, Distributed Hash
-Table. Such a model has the following properties:
-
-\begin{itemize}
-  \item data is structured in collections of key-value pairs, as it is done in
-  hash data structure. The definition of the key is a given property with its
-  associating value;
-  \item the query process is using mechanics similar to programming or
-  scripting language, that is, the use of APIs in a given programming language.
-\end{itemize}
-
-Different variants of such data model is the document-oriented data model,
-where data is modelled using structured documents. However, these documents
-have a dynamic structure that can be freely described without the use of a
-schema validation mechanism as used in XML Schema. One example of such approach
-is the use of the JSON data format \cite{json} in the implementation of
-database systems which are becoming popular with the new trend called Cloud
-Computing \cite{cloud-comp-architectures}. Databases implementing this
-strategy is the mongoDB \cite{mongodb} and CouchDB \cite{couchdb}.
 
 \section{Data Provenance: How to describe collected data?}
 \label{sec:sn-provenance}

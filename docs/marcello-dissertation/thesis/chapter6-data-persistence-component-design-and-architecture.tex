@@ -32,7 +32,7 @@ designed to support an environmental sensor network based in San Francisco
 Bay, composed by different types of sensors. The process of extracting the
 measurements from the sensors to be reused using the DSP Platform can be
 summarized following the UML Business Process Diagram \cite{uml} depicted in
-figure \ref{fig:fig:dsp-persistence-business-process}. It is important to note
+figure \ref{fig:dsp-persistence-business-process}. It is important to note
 that this diagrams details remote communication between sensor devices and a
 centralized server, as part of the main scenario to solve the problem of data
 persistence.
@@ -71,9 +71,10 @@ of the DSP Platform and the DSP Messages structure, the data is represented in
 programming language formats such as Java \cite{java} or in a serialized
 version in XML \cite{xml}. Similarly, the collected data contains measurements
 that uniquely identifies them, together with other properties such as time
-stamps of data creation and collected, as well as the the IP address
-\footnote{Internet Protocol Address} of the DSP Client that produced the data.
-Therefore, these are important properties for the proposed solution of this work.
+stamps of data creation and collected, as well as the the IP
+address\footnote{Internet Protocol Address} of the DSP Client that produced
+the data. Therefore, these are important properties for the proposed solution
+of this work.
 
 \section{Requirements Specification}
 
@@ -309,11 +310,11 @@ Platform can be initialized as described by the UML Sequence Diagram of figure
    \end{enumerate}
 \end{enumerate}
 
-Any configuration parameter required by a DSP Component is sent
-during its bootstrap process through the use of an optional DSP Update Message,
-as described in section \ref{sec:dsp-message}. The initialization of the DSP
-Component Activator and the DSP Component registration are also shown in figure
-\ref{fig:From-OSGi-Framework-to-DSP-Data-PersistenceActivator-Sequence-Diagram}.
+Any configuration parameter required by a DSP Component is sent during its
+bootstrap process through the use of an optional DSP Update Message, as
+described in section \ref{sec:dsp-message}. The initialization of the DSP
+Component Activator and the DSP Component registration are also shown in
+figure \ref{fig:From-OSGi-Framework-to-DSP-Data-PersistenceActivator-Sequence-Diagram}.
 
 \begin{figure}[!b]
   \centering
@@ -348,6 +349,13 @@ Diagram \cite{uml} for the main classes of this functionality.
   \label{fig:DSP-DataPersistence-Flusher-Classes}
 \end{figure}
 
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/DSP-Data-Persistence-Mongo-Classes}
+  \caption{UML Class diagram with Persistence Service for MongoDB}
+  \label{fig:DSP-Data-Persistence-Mongo-Classes}
+\end{figure}
+
 The DSP Data Flusher is a thread that is designed to be in two different
 states as depicted in figure
 \ref{fig:DSP-DataPersistence-Flusher-State-Diagram}: RUNNABLE and
@@ -377,7 +385,7 @@ the class regarding the location of the message, SensorLocation.
 As depicted by the the UML Sequence Diagram \cite{uml} of figure
 \ref{fig:From-DSPWireTransport-Server-To-DSP-Broker}, a DSP Message
 is delivery to the DSP Broker for its delivery to Data Consumers configured to
-receive that specific message. For this reason, figre
+receive that specific message. For this reason, Figure
 \ref{fig:From-DSP-Broker-To-DSPDataPersistence-General-Sequence} continues the
 steps of the DSP Broker from the gate "From DSP WireTransport Server to Broker
 Gate", showing the steps taken to transfer a DSP Message to the Singleton
@@ -508,7 +516,37 @@ Finally, the document key segment is prepared as follows in figure
   \label{fig:From-Creating-Key-Segment-Sequence}
 \end{figure}
 
-Next section details the implementation and deployment of the DSP Data
-Persistence component, as well as the database technology chosen in the previous
-section to provide the persistence for the collected data by the DSP Data
-Persistence component.
+\section{DSP Data Persistence Deployment}
+
+The deployment of the persistence layer is comprised of two main
+components: the DSP Data Persistence and the MongoDB Database Server. Two
+different approaches can be taken for the deployment: a single server of a
+cluster of mongoDB instances for a sharded environment.
+
+The single server approach maintains all data located in a simple space.
+Distributed Systems applications such as Master-Slave, Data Replication, etc
+can be used in this approach for scalability
+\ref{fig:DSP-Data-Persistence-Deployment-Single}. 
+
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.7]{../diagrams/DSP-Data-Persistence-Deployment-Single}
+  \caption{UML Deployment diagram with a single server}
+  \label{fig:DSP-Data-Persistence-Deployment-Single}
+\end{figure}
+
+However, given that mongoDB provides support to Shards, then the implementation
+of a Data-Centric approach can be done by deploying different mongoDB instances
+in a distributed cluster, where each node can hold a given type of data. The
+specification of what types of data should be stored in each of the cluster
+nodes is defined by a shard-key.
+
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.7]{../diagrams/DSP-Data-Persistence-Deployment-Sharded}
+  \caption{UML Deployment Diagram for a sharded server}
+  \label{fig:DSP-Data-Persistence-Deployment-Sharded}
+\end{figure}
+
+More details about the implementation of the DSP Data Persistence can be see in
+the next chapter.

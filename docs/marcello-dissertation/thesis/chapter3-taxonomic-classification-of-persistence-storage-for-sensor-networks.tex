@@ -3,8 +3,7 @@
 
 %\bibliography{thesis}  % uses the references stored in Chapter1Radar.bib
 
-\chapter{Taxonomic Classification of Persistence Storage Systems for Sensor
-Networks}
+\chapter{Taxonomic Classification of Data Persistence in Sensor Networks}
 \label{chap:taxonomies}
 
 Different mechanisms are used for persisting data collected from sensor
@@ -17,19 +16,17 @@ throughout this work to evaluate different existing database systems
 implementations, taking into account different requirements and specifications
 of different sensor networks.
 
-\section{Nature of Sensor Data Taxonomy}
+\section{Purpose of the Sensor Data Taxonomy}
 
 No matter the type of resource management used, the first taxonomy presented is
 related to the purpose of the use of the collected sensor data. That is, when
 and how the collected data is going to be used as described in section
-\ref{sec:sn-data-purpose}. In addition to it, the mechanism for data storage
-described in section \ref{sec:sn-infrastructure} can be related to each of
-them. The related taxon is depicted by figure \ref{fig:taxonomy-data-purpose}.
+\ref{sec:sn-data-purpose}.
 
 \begin{figure}[h]
   \centering
   \includegraphics{../diagrams/taxonomy-data-purpose}
-  \caption{The Nature and Location of Sensor Data Taxonomy}
+  \caption{The Purpose of Sensor Data Taxonomy}
   \label{fig:taxonomy-data-purpose}
 \end{figure}
 
@@ -40,19 +37,17 @@ them. The related taxon is depicted by figure \ref{fig:taxonomy-data-purpose}.
   data analysis or data fusion \cite{sn-intro01, sn-intro02}.
 \end{itemize}
 
-\section{Location of Sensor Data Taxonomy}
+\section{The Location of the Sensor Data Taxonomy}
 
-No matter the type of resource management used, the first taxonomy presented is
-related to the purpose of the use of the collected sensor data. That is, when
-and how the collected data is going to be used as described in section
-\ref{sec:sn-data-purpose}. In addition to it, the mechanism for data storage
-described in section \ref{sec:sn-infrastructure} can be related to each of
-them. The related taxon is depicted by figure \ref{fig:taxonomy-data-location}.
+Directly related to the purpose of data, the mechanism for data storage
+described in section \ref{sec:sn-infrastructure} depends on the purpose of
+the use of the collected data. The related taxon is depicted by figure
+\ref{fig:taxonomy-data-location}, and described as follows:
 
 \begin{figure}[h]
   \centering
   \includegraphics{../diagrams/taxonomy-data-location}
-  \caption{The Nature and Location of Sensor Data Taxonomy}
+  \caption{The Location of Sensor Data Taxonomy}
   \label{fig:taxonomy-data-location}
 \end{figure}
 
@@ -74,12 +69,13 @@ them. The related taxon is depicted by figure \ref{fig:taxonomy-data-location}.
 \section{Data Model Taxonomy}
 
 One of the major challenges in the development of a persistence storage for
-sensor network is related to the persistence model chosen. The addition of new
-sensor devices may trigger refactoring of the existing model or not, depending
-on how the data model accommodates the data. Different data models are reported
-to be used in the literature, as described in section \ref{sec:data-models}.
-For this reason, taxonomy related to the data model depicts two different
-classes of data models, as shown in figure \ref{fig:taxonomy-data-model}.
+sensor network is related to the data model chosen to represent the collected
+data. The addition of new sensor devices may trigger refactoring of the
+existing model or not, depending on how the data model accommodates the data.
+Different data models are reported to be used in the literature, as described
+in section \ref{sec:data-models}. For this reason, taxonomy related to the
+data model depicts two different classes of data models, as shown in figure
+\ref{fig:taxonomy-data-model}.
 
 \begin{figure}[h]
   \centering

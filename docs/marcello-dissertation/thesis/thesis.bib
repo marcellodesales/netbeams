@@ -78,6 +78,19 @@
     address = {Civic Square, Australia}
 }
 
+@inproceedings{sn-software-survey,
+ author = {Schafer, Steffen and Elrad, Tzilla and Weber-Jahnke, Jens},
+ title = {Building software for sensor networks},
+ booktitle = {OOPSLA '06: Companion to the 21st ACM SIGPLAN symposium on Object-oriented programming systems, languages, and applications},
+ year = {2006},
+ isbn = {1-59593-491-X},
+ pages = {620--620},
+ location = {Portland, Oregon, USA},
+ doi = {http://doi.acm.org/10.1145/1176617.1176636},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+ 
 @inproceedings{sn-programming-language,
  author = {Bai, Lan S. and Dick, Robert P. and Dinda, Peter A.},
  title = {Archetype-based design: Sensor network programming for application experts, not just programming experts},
@@ -88,6 +101,7 @@
  publisher = {IEEE Computer Society},
  address = {Washington, DC, USA},
 }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  PERSISTENCE IN SENSOR NETWORKS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -434,7 +448,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Distributed Systems %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-@article{db-shard01,
+@article{db-shard-intro,
  author = {Pritchett, Dan},
  title = {BASE: An Acid Alternative},
  journal = {Queue},
@@ -448,7 +462,7 @@
  address = {New York, NY, USA}
 }
 
-@misc{db-shard02,
+@misc{db-shard-discussion,
     title = {{An Unorthodox Approach to Database Design: The Coming of the Shard}},
     year = {2009},
     howpublished = "website",
@@ -475,7 +489,17 @@
  publisher = {IEEE Computer Society},
  address = {Washington, DC, USA},
  }
- 
+
+@misc{db-partitioning-relational,
+    title = {Improving Database Performance with Partitioning},
+    year = {2006},
+    month = {March},
+    author = {Schumacher, Robin},
+    howpublished  = "\url{http://dev.mysql.com/tech-resources/articles/performance-partitioning.html}",
+    key = {db-partitioning-relational}
+} 
+
+
 @inproceedings{db-table-partition,
  author = {Eadon, George and Chong, Eugene Inseok and Shankar, Shrikanth and Raghavan, Ananth and Srinivasan, Jagannathan and Das, Souripriya},
  title = {Supporting table partitioning by reference in oracle},
@@ -488,7 +512,34 @@
  publisher = {ACM},
  address = {New York, NY, USA},
  }
- 
+
+@misc{db-partitioning-relational-oracle,
+    title = {Partition Decisions},
+    year = {2006},
+    month = {June},
+    author = {Nanda, Arup},
+    howpublished  = "\url{http://www.oracle.com/technology/oramag/oracle/06-sep/o56partition.html}",
+    key = {db-partitioning-relational-oracle}
+} 
+
+@misc{db-mongo-partition,
+    title = {Sharding Introduction - MongoDB},
+    year = {2009},
+    month = {June},
+    author = {Merriman, Dwight},
+    howpublished  = "\url{http://www.mongodb.org/display/DOCS/Sharding+Introduction}",
+    key = {db-mongo-partition}
+}
+
+@misc{db-db2-partition,
+    title = {Database Partitioning, Table Partitioning, and MDC for DB2 9},
+    year = {2007},
+    month = {August},
+    author = {Chen, Whei-Jen and Fisher, Alain and Lalla, Aman and McLauchlan, Andrew and Agnew, Doug},
+    howpublished  = "\url{http://www.redbooks.ibm.com/abstracts/SG247467.html}",
+    key = {db-db2-partition}
+}
+
 @inproceedings{xml-piggybacking,
  author = {Chan, Chee Yong and Ni, Yuan},
  title = {Efficient xml data dissemination with piggybacking},
@@ -552,6 +603,16 @@
  publisher = {ACM},
  address = {New York, NY, USA},
  }
+ 
+@book{db-xml-enabled,
+ author = {Chaudhri, A. and Zicari, Roberto and Rashid, Awais},
+ title = {XML Data Management: Native XML and XML Enabled DataBase Systems},
+ year = {2003},
+ isbn = {0201844524},
+ publisher = {Addison-Wesley Longman Publishing Co., Inc.},
+ address = {Boston, MA, USA},
+ }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Software Engineering %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -605,6 +666,34 @@
  publisher = {CreateSpace},
  address = {Paramount, CA},
  }
+ 
+ 
+@article{cloud-comp-survey,
+ author = {Buyya, Rajkumar and Yeo, Chee Shin and Venugopal, Srikumar and Broberg, James and Brandic, Ivona},
+ title = {Cloud computing and emerging IT platforms: Vision, hype, and reality for delivering computing as the 5th utility},
+ journal = {Future Gener. Comput. Syst.},
+ volume = {25},
+ number = {6},
+ year = {2009},
+ issn = {0167-739X},
+ pages = {599--616},
+ doi = {http://dx.doi.org/10.1016/j.future.2008.12.001},
+ publisher = {Elsevier Science Publishers B. V.},
+ address = {Amsterdam, The Netherlands, The Netherlands},
+ }
+
+@inproceedings{cloud-comp-architectures,
+ author = {Lenk, Alexander and Klems, Markus and Nimis, Jens and Tai, Stefan and Sandholm, Thomas},
+ title = {What's inside the Cloud? An architectural map of the Cloud landscape},
+ booktitle = {CLOUD '09: Proceedings of the 2009 ICSE Workshop on Software Engineering Challenges of Cloud Computing},
+ year = {2009},
+ isbn = {978-1-4244-3713-9},
+ pages = {23--31},
+ doi = {http://dx.doi.org/10.1109/CLOUD.2009.5071529},
+ publisher = {IEEE Computer Society},
+ address = {Washington, DC, USA},
+ }
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  MISCELANEOUS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -813,30 +902,39 @@
     address = {Los Alamitos, CA, USA},
 }
 
-@inproceedings{cloud-comp-architectures,
- author = {Lenk, Alexander and Klems, Markus and Nimis, Jens and Tai, Stefan and Sandholm, Thomas},
- title = {What's inside the Cloud? An architectural map of the Cloud landscape},
- booktitle = {CLOUD '09: Proceedings of the 2009 ICSE Workshop on Software Engineering Challenges of Cloud Computing},
- year = {2009},
- isbn = {978-1-4244-3713-9},
- pages = {23--31},
- doi = {http://dx.doi.org/10.1109/CLOUD.2009.5071529},
- publisher = {IEEE Computer Society},
- address = {Washington, DC, USA},
- }
-
 @misc{mongodb,
-    title = {mongoDB},
+    title = {mongoDB: Combining the best features of document databases, key-value stores, and RDBMSes},
     year = {2009},
     howpublished  = "\url{http://www.mongodb.org/}",
     key = {mongodb}
 } 
 
-@misc{couchdb,
-    title = {couchDB},
+@misc{mysql,
+    title = {MySQL Database},
     year = {2009},
-    howpublished  = "\url{http://couchdb.apache.org/}",
-    key = {couchdb}
+    howpublished  = "\url{http://dev.mysql.com/}",
+    key = {mysql}
+}
+
+@misc{tinydb,
+    title = {TinyDB: A Declarative Database for Sensor Networks},
+    year = {2009},
+    howpublished  = "\url{http://telegraph.cs.berkeley.edu/tinydb/}",
+    key = {tinydb}
+} 
+
+@misc{db2,
+    title = {IBM DB2 Software},
+    year = {2009},
+    howpublished  = "\url{http://www-01.ibm.com/software/data/db2/xml/}",
+    key = {db2}
+}
+
+@misc{oracle,
+    title = {Oracle Database},
+    year = {2009},
+    howpublished  = "\url{http://www.oracle.com/technology/products/database/oracle11g/index.html}",
+    key = {oracle}
 }
 
 @book{uml,

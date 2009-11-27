@@ -518,10 +518,26 @@ Finally, the document key segment is prepared as follows in figure
 
 \section{DSP Data Persistence Deployment}
 
-The deployment of the persistence layer is comprised of two main
-components: the DSP Data Persistence and the MongoDB Database Server. Two
-different approaches can be taken for the deployment: a single server of a
-cluster of mongoDB instances for a sharded environment.
+The deployment of the persistence layer is comprised by the addition of two
+new components to the DSP Platform: the DSP Data Persistence and the MongoDB
+Database Server. The former is responsible for capturing any data
+produced by sensors in the data sink, as described in the previous sections of
+this chapter. On the other hand, the latter is where the data is going to be
+stored, as a result of the technology selection on the previous chapter. 
+
+The deployment of the DSP Data Persistence follows the specifications of how to
+deploy a DSP Component on an OSGi Framework. For the development of this work,
+the Knopflerfish OSGi Container was used, as described in section
+\ref{sec:dsp-data-persistence-implementation}. In contrast, the
+deployment of the mongoDB can be accomplished in different approaches, as
+summarized: 
+
+\begin{itemize}
+  \item \textbf{Single Server}: a regular deployment of a database system as it
+  is done in general applications, where data is managed by one single process;
+  \item \textbf{Sharded Server}: a deployment approach where data is sharded
+  into different servers.
+\end{itemize} 
 
 The single server approach maintains all data located in a simple space.
 Distributed Systems applications such as Master-Slave, Data Replication, etc

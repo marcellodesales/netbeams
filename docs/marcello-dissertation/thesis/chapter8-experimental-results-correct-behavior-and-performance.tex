@@ -5,26 +5,192 @@
 
 \chapter{Experimental Results: Correct Behavior and Performance}
 
-\section{Design Model For Sensor Networks}
+In order to evaluate the mongoDB, the different taxonomies identified are
+verified from the logs and experiment setup. The implementation of the Data
+Persistence Component and the mongoDB infrastructure are described in section
+\ref{sec:dsp-data-persistence-implementation}.
 
-Sensor Networks are specialized types of network systems comprised of network 
-nodes with specific goals to observe and collect data. The following
-subsections describe classes of characteristis of these types of sensor
-networks, with applications on research, industrial or militery.
+The purpose of Sensor Data is used for Data Archival, since the data from the
+sensor data categorized by the date and time it was collected. The location
+of the collected data from the sensor devices are stored using the External
+Storage, or using the Data-Centric Strategy. In this way, one of the advantages
+of the denormalized data model provided by mongoDB is that the data can be
+distributed using Horizontal Partitioning.
 
-\subsection{Strengths as compared to literature}
+\section{Experiment Setup}
 
-\subsection{Weaknesses as compared to literature}
+Experiments were conducted to evaluate mongoDB against the taxonomies defined in
+chapter 3 by creating a general shell script
+\ref{file:experiment-setup-executor} that sets up the environment by
+initializing the mongoDB server and indirectly inserts the a desired number of
+randomly generated YSI Data types \ref{file:random-ysi-data-generator}
+implemented in Java as part of the NetBEAMS data collection mechanism as shown
+in section \ref{sec:dsp-payload-implementation}. First, the definition of a 
+document will be conducted according to the definition of the Data Provenance
+definition of chapter 3. Then, the infrastructure of the database will be
+evaluated using different scenarios.
 
-\section{Data-Centric Storage and Database Shards}
+\subsection{Key-Value definition}
 
-Horizontal scalability for data based on specific keys.
+In document-oriented databases, there is no definition of table. In constrast,
+the entities are persisted using any data arrangment, in any order, attributes
+and the associated values. The definition of the document for mongoDB takes
+into account the properties defined by the data provenance study defined by
+\cite{sn-provenance}. The following list are the definitions of the values of
+the defined keys and the provenance-aware document, as an example described by
+Listing \ref{file:mongodb-ysi-data-format}:
 
-\subsection{Scalability facing High Volume of Collected Data}
+\begin{itemize}
+  \item \textbf{What: Data Identity}: the identification of the data captured
+  from the sensor, as well as the DSP Platform message. The keys are comprised
+  by the attributes ``\underline{ }id'' as an unique identifier provided by
+  mongodb, the ``message\underline{ }id'';
+  \item \textbf{When: Time Dimension}: the time dimensions give information
+  regarding when the data was collected and transferred to the network sink.
+  They are the ``time.valid'', ``time.transaction'';
+  \item \textbf{Where: Data Location}: the location where 
+ the data originated. The ``sensor.ip\underline{ }address'',
+ ``sensor.location.latitude'', ``sensor.location.longitude'' give information
+ regarding the .
+\end{itemize}
 
-Adding new shards as new hardware into the cluster, facing increasing data load
-produced by the sensor network.
+\subsection{Workload}
 
-\subsection{Weakness}
+The workload selected for the experiments reflacts the current use of the data
+at the SF-BEAMS infrastructure. A number of data worth a year of collected data
+from one single YSI device is randomly generated and inserted at the database.
+Then, five additional run will be performed and investigate different search
+scenarios for performance.
 
-Technological, and skills-based.
+In order to verify the system capacity to scale, the data will be devided into
+different shards as part of the support to distribute system, that is, in a
+Data-Centric way.
+
+\begin{itemize}
+  \item First Round: 483,840 items worth one year of produced YSI data at the
+  rate of 1 observation per minute;
+  \item 483,840 * 5, or 2,419,200, representing 5 different YSI components
+  producing data every minute;
+\end{itemize}
+
+\subsection{Single Server Environment}
+
+The definition for the single server follows a regular specification of the
+mongoDB database system. All the collected data from sensors are stored in a
+given Single Server, which characterizes an External Storage device.
+
+\subsection{Data-Centric Environment}
+
+The definition of a Data-Centric deployment follows the specification of the
+mongoDB shard servers, where in contrast to the single server, all the
+collected data is spread out to different mongoDB clients that manage
+partitions of servers on a cluster. 
+
+As described in the taxonomy reviews, the definition of the sharded system must
+include the definition of a shard key, which is responsible for partitioning
+the instances. In this way, the shard key is defined as the value of the
+attribute ``sensor.id\underline{ }address''.
+
+\subsection{Scenarios}
+
+In order to verify the feasibility of the system, the use of different search
+scenarios are used:
+
+\begin{itemize}
+  \item A) Find data by specific date ranges on either the valid or the
+  transaction time;
+  \item B) Find data by specific IP address, as it identifies a given sensor
+  device and any data produced;
+  \item C) Find data by specific values of the observed attributes of the sensor
+  device such as temperature, salinity, etc.
+\end{itemize}
+
+\section{Measurements Results}
+
+The result of the insertion of data in different scenarios are shown in the
+different logs captured during the experiments. First, the avarage insertion
+times gives the capacity of the system with and without the definition of
+indexes over the data. Then, the numbers regarding the scenarios described
+earlier will be shown:
+
+\subsection{Single Server Environment}
+
+The insersion time avarages are regarding the different approaches to model a
+document in the database system:
+
+\begin{itemize}
+  \item No Index : Insert Avarage = xyz 
+  \item Indexed : Insert Avarage = xyz
+\end{itemize}
+
+On the other hand, the avarages for each of the scenarios are devided by the
+amount of data produced by one single device or five different devices.
+
+For one single device, the values can be summarized as follows:
+\begin{itemize}
+  \item Not Index : A) = xyz
+  \item Indexed : A) = xzy
+  \item Not Index : B) = xyz
+  \item Indexed : B) = xzy
+  \item Not Index : C) = xyz
+  \item Indexed : C) = xzy
+\end{itemize}
+
+For data worth five different devices, the values can be summarized as follows:
+\begin{itemize}
+  \item Not Index : A) = xyz
+  \item Indexed : A) = xzy
+  \item Not Index : B) = xyz
+  \item Indexed : B) = xzy
+  \item Not Index : C) = xyz
+  \item Indexed : C) = xzy
+\end{itemize}
+
+\subsection{Data-Centric Cluster Environment}
+
+The insertions in a sharded environment are added the operation of finding
+which ``bucket'' the data must be placed. mongoDB gives support for automatic
+sharding after the definition of a key based on range of the values. The
+avarages of the insertions can be shown as follows:
+
+\begin{itemize}
+  \item NO Index : Insert Avarage = xyz
+  \item Indexed : Insert Avarage = xyz
+\end{itemize}
+
+For one single device, the values can be summarized as follows:
+
+\begin{itemize}
+  \item Not Index : A) = xyz
+  \item Indexed : A) = xzy
+  \item Not Index : B) = xyz
+  \item Indexed : B) = xzy
+  \item Not Index : C) = xyz
+  \item Indexed : C) = xzy
+\end{itemize}
+
+For data worth five different devices, the values can be summarized as follows:
+
+\begin{itemize}
+  \item Not Index : A) = xyz
+  \item Indexed : A) = xzy
+  \item Not Index : B) = xyz
+  \item Indexed : B) = xzy
+  \item Not Index : C) = xyz
+  \item Indexed : C) = xzy
+\end{itemize}
+
+\section{Discussion}
+
+mongoDB is that the data can be distributed using Horizontal Partitioning,
+which mitigates problems related to referencial integrity.
+
+\begin{itemize}
+  \item Strengths as compared to literature
+  \item Weaknesses as compared to literature
+\end{itemize}
+
+Data-Centric Storage and Database Shards = Horizontal scalability for data
+based on specific keys = Scalability facing High Volume of Collected Data
+
+Weakness, Technological, and skills-based.

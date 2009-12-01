@@ -31,14 +31,17 @@ definition of chapter 3. Then, the infrastructure of the database will be
 evaluated using different scenarios.
 
 \subsection{Key-Value definition}
+\label{sec:keys-definition}
 
 In document-oriented databases, there is no definition of table. In constrast,
 the entities are persisted using any data arrangment, in any order, attributes
-and the associated values. The definition of the document for mongoDB takes
-into account the properties defined by the data provenance study defined by
-\cite{sn-provenance}. The following list are the definitions of the values of
-the defined keys and the provenance-aware document, as an example described by
-Listing \ref{file:mongodb-ysi-data-format}:
+and the associated values, as shown in Listing
+\ref{file:mongodb-ysi-data-format}. The definition of the document for mongoDB
+takes into account the pairs of key and values related for the collected data
+from the sensors, as well as the properties defined by the data provenance
+study \cite{sn-provenance}. The collected data is stored in a key called
+``observation''. On the other hand, the provenance-aware keys are defined as
+follows:
 
 \begin{itemize}
   \item \textbf{What: Data Identity}: the identification of the data captured
@@ -55,6 +58,7 @@ Listing \ref{file:mongodb-ysi-data-format}:
 \end{itemize}
 
 \subsection{Workload}
+\label{sec:workload}
 
 The workload selected for the experiments reflacts the current use of the data
 at the SF-BEAMS infrastructure. A number of data worth a year of collected data
@@ -62,22 +66,18 @@ from one single YSI device is randomly generated and inserted at the database.
 Then, five additional run will be performed and investigate different search
 scenarios for performance.
 
-In order to verify the system capacity to scale, the data will be devided into
-different shards as part of the support to distribute system, that is, in a
-Data-Centric way.
-
 \begin{itemize}
-  \item First Round: 483,840 items worth one year of produced YSI data at the
-  rate of 1 observation per minute;
-  \item 483,840 * 5, or 2,419,200, representing 5 different YSI components
-  producing data every minute;
+  \item \textbf{First Round}: 483,840 items worth one year of produced YSI data
+  at the rate of 1 observation per minute;
+  \item \textbf{Next Rounds}: 483,840 * 5, or 2,419,200, representing 5
+  different YSI components producing data every minute.
 \end{itemize}
 
 \subsection{Single Server Environment}
 
 The definition for the single server follows a regular specification of the
 mongoDB database system. All the collected data from sensors are stored in a
-given Single Server, which characterizes an External Storage device.
+given single server, which characterizes an External Storage device.
 
 \subsection{Data-Centric Environment}
 
@@ -92,9 +92,11 @@ the instances. In this way, the shard key is defined as the value of the
 attribute ``sensor.id\underline{ }address''.
 
 \subsection{Scenarios}
+\label{sec:exp-scenarios}
 
 In order to verify the feasibility of the system, the use of different search
-scenarios are used:
+scenarios are used defined based on the use cases of section
+\ref{sec:use-cases}:
 
 \begin{itemize}
   \item A) Find data by specific date ranges on either the valid or the
@@ -105,92 +107,198 @@ scenarios are used:
   device such as temperature, salinity, etc.
 \end{itemize}
 
+Moreover, the experiments must also export data in different formats such as 
+spreadsheets and use different programming languages APIs to access the data.
+
 \section{Measurements Results}
+\label{sec:exp-measurements}
 
 The result of the insertion of data in different scenarios are shown in the
 different logs captured during the experiments. First, the avarage insertion
 times gives the capacity of the system with and without the definition of
 indexes over the data. Then, the numbers regarding the scenarios described
-earlier will be shown:
+earlier will be shown.
 
 \subsection{Single Server Environment}
 
-The insersion time avarages are regarding the different approaches to model a
-document in the database system:
+The insersion time avarages an impressive ~169,508 instances per minute during
+the experiments using the Java driver to connect with the mongoDB server. The
+following lists the storage consumed by the generated data described in the
+section \ref{sec:workload}.
 
 \begin{itemize}
-  \item No Index : Insert Avarage = xyz 
-  \item Indexed : Insert Avarage = xyz
+  \item 1 YSI worth of data = 234.16 MB 
+  \item 5 YSI worth of data = 1.23 GB
 \end{itemize}
 
 On the other hand, the avarages for each of the scenarios are devided by the
-amount of data produced by one single device or five different devices.
-
-For one single device, the values can be summarized as follows:
-\begin{itemize}
-  \item Not Index : A) = xyz
-  \item Indexed : A) = xzy
-  \item Not Index : B) = xyz
-  \item Indexed : B) = xzy
-  \item Not Index : C) = xyz
-  \item Indexed : C) = xzy
-\end{itemize}
-
-For data worth five different devices, the values can be summarized as follows:
-\begin{itemize}
-  \item Not Index : A) = xyz
-  \item Indexed : A) = xzy
-  \item Not Index : B) = xyz
-  \item Indexed : B) = xzy
-  \item Not Index : C) = xyz
-  \item Indexed : C) = xzy
-\end{itemize}
-
-\subsection{Data-Centric Cluster Environment}
-
-The insertions in a sharded environment are added the operation of finding
-which ``bucket'' the data must be placed. mongoDB gives support for automatic
-sharding after the definition of a key based on range of the values. The
-avarages of the insertions can be shown as follows:
+amount of data produced by one single device or five different devices. For
+data worth five different devices, without indexes in the database, the values
+can be summarized as follows:
 
 \begin{itemize}
-  \item NO Index : Insert Avarage = xyz
-  \item Indexed : Insert Avarage = xyz
-\end{itemize}
-
-For one single device, the values can be summarized as follows:
-
-\begin{itemize}
-  \item Not Index : A) = xyz
-  \item Indexed : A) = xzy
-  \item Not Index : B) = xyz
-  \item Indexed : B) = xzy
-  \item Not Index : C) = xyz
-  \item Indexed : C) = xzy
-\end{itemize}
-
-For data worth five different devices, the values can be summarized as follows:
-
-\begin{itemize}
-  \item Not Index : A) = xyz
-  \item Indexed : A) = xzy
-  \item Not Index : B) = xyz
-  \item Indexed : B) = xzy
-  \item Not Index : C) = xyz
-  \item Indexed : C) = xzy
+  \item A) = ``time.valid'' for week period, or 7 days = 3820ms
+  \item B) = a given IP address by ``sensor.ip\underline{ }address'' = 3721ms
+  \item C) = given values for the keys ``observation.Salinity'' and 
+  ``observation.WaterTemperature'' = 3167ms
 \end{itemize}
 
 \section{Discussion}
 
-mongoDB is that the data can be distributed using Horizontal Partitioning,
-which mitigates problems related to referencial integrity.
+The implementation of a data persistence for any sensor network must take into
+the characteristics of the sensor network, the location of the collected data,
+etc. As described in chapter 4, the taxonomies classify different aspects of
+the persistence of data. Along with it, the design and implementation of a data
+persistence layer for NetBEAMS must meet the requirements and specifications
+described in chapter 5 and chapter 6, respectively. This section discusses the
+experiments scenarios described to evaluate a real-world experiment relating
+the implementation and results to each of the taxonomies. Furthermore, the
+experiments provided by this work cover a one year worth of data for one and
+five YSI devices and evaluates the use cases defined in section
+\ref{sec:exp-scenarios}.
 
-\begin{itemize}
-  \item Strengths as compared to literature
-  \item Weaknesses as compared to literature
-\end{itemize}
+\subsection{Taxonomic Evaluation}
 
-Data-Centric Storage and Database Shards = Horizontal scalability for data
-based on specific keys = Scalability facing High Volume of Collected Data
+Any database system covers the purpose of the sensor data for NetBEAMS, which
+is Data Archival, along with the type of storage for the data as an External
+Storage. After selecting mongoDB, the development of the persistence layer met
+the requirements of archiving data after the randomly generated data for the
+YSI sonde was persisted. As it is shown in section \ref{sec:exp-measurements},
+the collected data is archived in files using the BSON format \cite{bson}, the
+binary representation used to store instances of the document described in
+Listing \ref{file:mongodb-ysi-data-format}. Along with the purpose of data
+archival, the use of mongoDB also met the specification of an external storage
+since the data persisted in the file system.
 
-Weakness, Technological, and skills-based.
+One of the requirements for NetBEAMS is the use of a schema-less data model.
+mongoDB uses a variation of the key-value data representation based on the JSON
+\cite{json}, and provides APIs in different languages for the data creation
+process. In this way, the implementation of the persistence model captures the
+instances of any known data collected from NetBEAMS and saves it using the
+document pattern as shown in Listing \ref{file:mongodb-ysi-data-format}. One
+application of a schema-less data model is the addition of any new key-value
+pair to any instance of the document, as mongoDB supports update operations to
+any of the collections. For instance, annotation in sensor networks is
+widely used to describe the findings of a particular data set
+\cite{sn-annotation-ex1, sn-annotation-ex2}. In case of an oil spill in the San
+Francisco Bay occurs, researchers can update the data set of a given date range
+by adding tags to the relating documents. As a consequence of the use of a
+schema-less data model, these changes do not affect the other data instances,
+since there are no schema changes.
+
+As described in chapter 5, the schema-less data model can provide a better
+support to Data Provenance because the data model gives support to the change
+of records without affecting the others. In this way, the metadata used by the
+implementation described in the previous chapter clearly describes the three
+fundamental questions regarding the collected data from sensor devices, as
+described in section \ref{sec:keys-definition}. First, the identity of the data
+is given by the key ``message\underline{ }id'', in a way that it uniquely
+identifies the data produced by the sensor identified by the key
+``sensor.ip\underline{ }address''. In this way, the message can be tracked back
+to the sensor that produced the data for different purposes such as tracking
+the data producer. Second, time dimensions were used in order to track two
+different aspects of the data collection: the valid time can be used to
+correlate observations to the exact moment it occurred, while the transaction
+time can be used to verify when the data was collected, and make decisions such
+as deleting the instances of data were collected in the previous two days, etc.
+Last, but not least, the use of the key ``sensor.location'' can give the exact
+location of the data, since researchers can be interested in finding data based
+on a specific location. Finally, the most important aspect of the schema-less
+data model is that the observed data is added to the key ``observation'', as
+any sensor device carries its set of attributes of key-value pairs. A good
+example of the applicability of the schema-less data model is the scalability
+regarding changes to the data structure. For instance, if an existing sensor
+device is flushed with a new version of the firmware\footnote{The first set of
+machine instructions to run on the hardware after the application of power stored
+permanently in PROM or ROM or semi-permanently in EPROM}, changing the format
+of data types or adding new values, the following instances of collected data
+may be different to the previous one by simply adding the new additions of
+data. For this reason, the DSP Data Persistence gives administrators the
+ability to choose which fields to persist by declaring it using a bootstrap
+message for the component, as shown in the parameter
+``YSI\underline{ }DESIRED\underline{ }PROPERTIES'' of Listing
+\ref{file:dsp-data-persistence-bootstrap.xml}.
+
+The centralized query processing used by NetBEAMS is a result of the
+infrastructure used by NetBEAMS, as well as the purpose of data and the
+location of the collected data. As a direct result of a schema-less data
+model, the centralized query processing is easily developed using any of the
+available programming languages provided by mongoDB. Considering the fact that
+programming languages are easier abstractions to researchers without computer
+science background \cite{sn-programming-language}, mongoDB's approach to data
+access through API can be seen as an easier task to manage data. As it is shown
+in Listing \ref{file:experiment-query-scenarios}, the scenarios designed to
+evaluate the implementation are written in Javascript, since it is the script
+language by the mongoDB Shell. Therefore, it attends the requirement of not
+using the SQL language as the main query language of the data.
+
+One of the most important features of a data persistence for sensor
+networks is the replacement of the SQL by the use of programming
+languages, as they tend to be easier abstraction to users without the
+background in database systems \cite{sn-programming-language}. In this way,
+mongoDB covers the requirements of providing data access to the collected
+sensor data in different languages. For example, the data collected by the DSP
+Data Persistence component is written in Java, while the implementation of the
+experiments scenarios for querying the collected data is given in Javascript. In
+this way, researchers of the RTC may choose one of the enumarated languages
+APIs provided by the mongoDB to access the stored data from NetBEAMS.
+
+Finally, the implementation supported by mongoDB is either in a single or
+distributed servers. The former approach is done as a regular database server
+on a single host machine, where its main goal is to manage the collected sensor
+data. On the other hand, however, the latter approach can be used to improve
+the performance of the data selection in larger data sets by offering different
+capabilities such as Database Shards and Data Replication.
+
+\subsection{General Evaluation}
+
+In general, the implementation of the DSP Data Persistence component meets
+the specification of the use cases defined in section \ref{sec:exp-scenarios}.
+The implementation of mongoDB using a single server environment can give
+support to the current workload and infrastructure from the use of NetBEAMS to
+collect data from the sensors. From the perspective of disk-space utilization
+and given that ~1.5 Gigabyte of disk storage is necessary to store
+one-year-worth of collected data for five YSI devices, the implementation
+scales to 80 years of data in a server with 120 Gb of available disk space.
+However, if the database server runs out of space, the addition of a new
+database shard can be done.
+
+The performance to insert data into the database system using the Java driver
+is documented by mongoDB as the fastest approach, providing persistence to
+approximaly 169,508 instances of data. Considering this number of insertions to
+the database, it is clear to say the mongoDB implementation can virtually
+support around 169 thousands of sensors a minute. Similarly, the implementation
+of a data-centric scenario using mongoDB can improve the performance of the
+system, given that the schema-less data model gives the ability to partition
+data horizontaly. In this way, latency related to data constraints and data
+integrity checks are avoid because an entire instance of the collected data
+resides in the same ``chunck'' of data. This is the main advantage over the
+relational model, previously discussed in chapter 5.
+
+One possibility of improving performance on the given implementation is the use
+of indexes on each of the keys. As a direct consequence of this procedure,
+insertion time to this approach is approximaly decreased by a 10th of the
+insertion time experienced with the experiments without indexes. Similarly, it
+turns out that the use of indexes improves the query processing by 5 times when
+indexes are not used. Therefore, the use of indexes should be enforced in a
+real-world deployment, since both requirements for insertion and retrieval are
+met.
+
+When it comes to re-using the data collected by the DSP Data Persistence,
+different approaches are available. First, the use of the export capabilities
+to a common-delimited values was performed \ref{file:mongodb-export-command},
+taking approximaly 3.3 minutes to export one year worth of data for 5 YSI
+devices. Second, the use of the client shell gives a centralized access to
+either the single server of sharded server option. However, in order to better
+provide access of data to users without skills in database systems, web
+applications can be built on top of the REST \cite{http-rest} Web Services APIs
+provided by mongoDB. One such example of using the REST API is the adaptation
+of Apache Futon 4 mongoDB, as shown in Figure
+\ref{fig:view-collections-instance-browser-futondb}, where users can navigate
+through the collections of the collected sensor network data categorized by the
+collection. Therefore, RTC staff technicians could take advantage of this tool
+to view the collected data.
+
+The design and implementation of the guidelines designed by the taxonomies can
+be applied to any sensor network that produces data with the purpose of Data
+Archival in External or Data-Centric storage. 

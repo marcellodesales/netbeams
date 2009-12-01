@@ -5,18 +5,49 @@
 
 \chapter{Conclusions and Future Works}
 
-This work presented a solution to store data from sensor networks.....
-...the main result of this work was that the persistence is
+This work presented a collection of taxonomies related to data persistence for
+sensor networks using different approaches ranging from data models and server
+infrastructure organization. The main result of this work was that persistence
+for collected data from sensors are better maintained using schema-less data
+models, since it provides offers an approach to deal with unanticipated data
+types from the sensor devices.
 
-There are many important features covered in this work, including...
-  - Use of open-source UI for KVP Sensor Data
+There are many important features covered in this work, including the
+importance of the sensor networks rely in how users have access to the
+collected data. In order to provide access to the collected data, one must
+first assess the different types of infrastructural characteristics of the
+studied sensor network. In general, the selection of a technology that
+provides such persistence capabilities can be part of a process of analysis of
+taxonomies proposed by this work. However, this work proposes a data model not
+yet used in the sensor network community and, thus, represents an important
+contribution for the area.
 
-Other important features that COULD HAVE BEEN covered, includes\ldots
-  - Different Dababase system, use of cloud computing, etc
-  - Use of MapReduce technology and implementations, distributed Processing that scales the proposed KVP storage
+Taking into account the software architecture provided by NetBEAMS, as well as
+the requirements for data collection from the RTC research group, this work
+shows a novice way to persist data collected from sensor devices by using a
+schema-less data model, whose query capabilities are based upon programming
+languages, in contrast to the use of the Structured Query Language, SQL. The
+experiment results showed that the implementation of a persistence layer with
+mongoDB can be used to persist data at its maximum rate of one sample per
+minute. However, performance can be improved by using techniques such as
+database sharding, since it offers a direct implementation capability to
+Data-Centric Storage approach. This approach decreases the amount of time to
+search data since it distributes the data instances across different cluster
+nodes.
 
-... The main results from this dissertation were important because of the contributions on new technologies...
-  - An alternative Data Model for Data Storage in Sensor Networks
-  - An alternative apprach for Data-Centric Storage in Sensor Networks
+There are many different directions for future works. First, the Data-Centric
+implementation performance may be extremely improved by using the technique
+called MapReduce \cite{map-reduce}. This approach allows mongoDB to search
+different machines in parallel whenever the data requested is located in
+different database shard hosts. In addition to that, the use techniques to
+cluster collected data before they are inserted into the database may be
+important as shown in \cite{sn-time-series}. One of the key issues in the
+implemented solution is that any measurement of data is considered to be
+persisted without further analysis.
 
-\section{TODO list}
+All in all, the DSP Data Persistence component implemented for the NetBEAMS
+solution to SF-BEAMS can be used in any network server. The solution for data
+persistence is a novice way to save data into the database, provided by
+mongoDB's ability to cope with the uncertainty of any properties collected from
+any sensor specification. Furthermore, the solution also provides a good
+support to the provenance-related data.

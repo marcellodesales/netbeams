@@ -720,7 +720,7 @@ Producer-Consumer paradigm described in the previous section. Since the DSP
 Components are essentially osgi-intro bundles, the interoperability between them are
 given in the implementation and reuse existing bundles in the osgi-intro Framework
 and the DSP Platform, described by an artifact called MANIFEST.MF as seen in
-listing \cite{file:osgi-intro-manifest}. In general, an osgi-intro bundle must
+Listing \ref{file:osgi-intro-manifest}. In general, an osgi-intro bundle must
 provide specifications that describes the module to be published into the osgi-intro
 Framework. In this way, the main properties of the osgi-intro MANIFEST.MF artifact can
 used by the DSP Data Persistence can be summarized as follows:
@@ -737,7 +737,7 @@ used by the DSP Data Persistence can be summarized as follows:
   Persistence Component Bundle. These Java Packages must be provided by other
   DSP components, forcing the execution to be dependent on those package.
   They are provided through a ``Export-Package'' section in other osgi-intro
-  bundles and, as it is shown in listing \ref{file:osgi-intro-manifest}, they
+  bundles and, as it is shown in Listing \ref{file:osgi-intro-manifest}, they
   are from different packages.
 \end{itemize}
 
@@ -767,7 +767,7 @@ message, as described in chapter 5:
   filters the messages to the DSP Data Persistence;
   \item \textbf{DSPDataPersistence\underline{ }001.xml}: depicts the bootstrap
   message for the DSP Data Persistence Component, as shown in Listing 
-  \ref{file:dsp-data-pers-bootstrap.xml}.
+  \ref{file:dsp-data-persistence-bootstrap.xml}.
 \end{itemize}
 
 The first configuration artifact enables NetBEAMS to initialize contain the
@@ -1022,7 +1022,7 @@ open-source tools developed to visualise mongoDB data.
 
 \subsection{Visualizing Data on The Browser}
 
-Futon4Mongo is an open-source software adapted from CouchDB \ref{couchdb}.
+Futon4Mongo is an open-source software adapted from CouchDB \cite{couchdb}.
 First, the collections list is shown. Figure
 \ref{fig:view-collections-instance-browser-futondb} shows one single collection
 for the YSI data containing 1 million objects.
@@ -1089,7 +1089,7 @@ format.
 \lstinputlisting[language=Ant,label=file:dsp-build.xml,caption=Build
 system using Apache ANT]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/build.xml}
 
-\lstinputlisting[label=file:osgi-manifest,caption=OSGi Manifest
+\lstinputlisting[label=file:osgi-intro-manifest,caption=OSGi Manifest
 Descriptor]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/META-INF/MANIFEST.MF}
 
 \lstinputlisting[language=XML,label=file:dsp-config.xml,caption=DSP
@@ -1178,13 +1178,16 @@ Message with a YSI sonde data payload}
 \section{Experiment Implementation}
 
 \lstinputlisting[language=Bash,label=file:experiment-setup-executor,caption=Experiment
-Implementation]{../../../../netbeams/versions/v2/persistence/run-persistence-experiment}
+Main Execution Script]{../../../../netbeams/versions/v2/persistence/run-persistence-experiment}
 
-\lstinputlisting[language=Java,label=file:random-ysi-data-generator,caption=Experiment
-Implementation]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPSondeProducer/src/org/netbeams/dsp/ysi/SondeTestData.java}
+\lstinputlisting[language=Bash,label=file:experiment-query-scenarios,caption=Experiment
+Scenarios Implementation]{../../../../netbeams/versions/v2/persistence/experiment-client-scenarios.js}
 
-\lstinputlisting[language=Java,label=file:experiment-dsp-implementation,caption=Experiment
-Implementation]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPMessageToMongoDBExperiment.java}
+\lstinputlisting[language=Java,label=file:random-ysi-data-generator,caption=Random
+Test Data Generator]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPSondeProducer/src/org/netbeams/dsp/ysi/SondeTestData.java}
+
+\lstinputlisting[language=Java,label=file:experiment-dsp-implementation,caption=Inserting
+Random Data to MongoDB]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPMessageToMongoDBExperiment.java}
 
 \lstset{label=file:mongodb-ysi-data-format,caption=JSON representation of the
 data produced by a YSI sensor on mongoDB}
@@ -1244,3 +1247,15 @@ YSI_REALTIME_CSV.Month, YSI_REALTIME_CSV.Day, YSI_REALTIME_CSV.Year, YSI_REALTIM
 11, 12, 2009, 16, 48, 50, 13.76, 4.3893, 3.447, 0, 28.53, 28.32, 2.628, 2.63, 7.9, -54.8, 10.6, -99999, -99999, 3.8, 1, 9.4, -99999
 \end{lstlisting}
 
+\lstset{label=file:mongodb-export-command,caption=Export Command to CSV format}
+\begin{lstlisting}
+mongoexport -d netbeams -c SondeDataContainer --dbpath data --csv -f "_id,sensor_ip_address,transaction_time,fact_time,data.temperature,data.sp_condition,data.condition,data.resistence,data.salinitude,data.pressure,data.depth,data.ph,data.pH_mv,data.odo_sat,data.odo_condition,data.turbidity,data.battery" -o logs/experiment-483840-data-exported-20091129-190207.csv
+
+Sun Nov 29 19:07:04 query netbeams.SondeDataContainer ntoreturn:0 reslen:2258 nscanned:101 { query: {}, $snapshot: 1 }  nreturned:101 202ms
+Sun Nov 29 19:07:04 getmore netbeams.SondeDataContainer cid:7749363894863150628 ntoreturn:0 query: { query: {}, $snapshot: 1 }  bytes:1048562 nreturned:47661 1767ms
+...
+...
+...
+Sun Nov 29 19:10:18 getmore netbeams.SondeDataContainer cid:7749363894863150628 ntoreturn:0 query: { query: {}, $snapshot: 1 }  bytes:793098 nreturned:36049 1975ms
+exported 2419200 records
+\end{lstlisting}

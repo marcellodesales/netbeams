@@ -5,36 +5,30 @@
 
 \chapter{State of the Art}
 
-Different aspects related to two fields of Computer Science have motivated to
-the commencement of this work. In the prospect of Database Systems and
-Distributed Systems, this work seeks a different approach for a persisting
-collected data from sensor networks into a storage system that can be seen as a
-cluster of distributed databases. Likewise, in the perspective of Software
-Engineering, this work adds a crucial capability to an existing sensor network
-framework, meeting the requirements and interfaces. In general, this chapter
-gives the foundation based on the motivations for the establishment of a
-different approach to persisting data using a different data model, covering
-topics that will be referred throughout the following other chapters.
+In general, this chapter reviews sensor networks characteristics and
+properties, necessary to the understanding of the basic properties of a sensor
+network. Moreover, it reviews the characteristics of data persistence for
+sensor networks, characterizing the different approaches used to store data
+such as data model used and how the collected data is described.
 
-This chapter will first give an overview on different related problems
-described in the literature that solved problems related to data modeling and
-representation in sensor networks.
-
-\section{Survey in Sensor Networks}
+\section{Survey in Sensor Networks and Its Data}
 
 Sensor Networks are specialized types of network systems comprised of nodes
-with specific goals to monitor and collect data. Data Persistence in Sensor
-Networks, however, depends on the approaches used to store the data, since data
-nodes can be located close to the devices in the network or in a centralized
-node. In this way, the query process can take place on the network nodes
-themselves or in the centralized data sink. The former approach is used when
-the data is collected at the sensor node on its local storage
-\cite{sn-storage01}\cite{sn-storage03}, strategy typically used to maximize
-the sensor's resources while minimizing energy consumption
-\cite{sn-storage04}. However, this strategy is used when data archival is not
-the main purpose, given the limited resources on the sensor devices. For this
-reason, the latter strategy has been used when the collected data is generally
-archived in a centralized database system for later reuse \cite{sn-storage02}.
+with specific goals such as to produce and collect data. The former is seen
+as a sensor device capable of producing data to the network based on an
+observation from the environment or just a raw value regarding a given
+propertiy, while the latter can be seen as the network sink responsible to
+receive the observed or ``sensed'' data. In this way, data persistence in sensor
+networks depends on the approaches used to store the data on the data sink,
+since these types of nodes can be located in the network close to the devices 
+or in a centralized location. As a consequence, the query used to query the
+data can take place in the network nodes themselves or in the centralized node.
+The former approach is used when the data is collected at the sensor node on
+its local storage \cite{sn-storage01, sn-storage03}, strategy typically
+used to maximize the sensor's resources, while minimizing energy consumption
+\cite{sn-storage04}.The latter strategy, however, has been used when the
+collected data is archived in a centralized database system for later reuse
+\cite{sn-storage02}.
 
 When it comes to data representation, the relational data model
 \cite{relational-model} is one of the most used approaches to represent data in
@@ -46,99 +40,102 @@ must be normalized \cite{db-normalization} for the entities already identified
 for the system. For example, the introduction of a new sensor device might
 represent a potential change on the database structure by seeking a new
 normalized version of the database design. In addition to challenges of
-maintaining the database schema normalized, the use of Data Provenance
-approaches in sensor network data \cite{sn-provenance} usually addresses the
-problem related with the origin of data and its entire history. However, once
-the data model is chosen and implemented, one of the most prominent
-nonfunctional requirements in sensor networks is scalability of the persistence
-storage. Since an operational sensor network can generate enormous amounts of
-data, it must be able to cope with the increase and data load during data
-gathering, and yet provide users the same performance during data retrieval by
-using different strategies such a data-centric storage \cite{sn-storage03}.
+maintaining the database schema normalized, the use of Data Provenance 
+approaches in sensor network data usually addresses the problem related with
+the origin of data and its entire history \cite{sn-provenance}.
 
-The following subsections describe classes of characteristis of these types of
-sensor networks, with applications on research, industrial or militery.
-
-The following subsections describe classes of characteristics of these types of
-sensor networks, with applications on research, commercial or military. 
+The following subsections describe the main characteristics of sensor networks
+described in the literature, and then others that interest data persistence in
+sensor networks.
 
 \subsection{Deployment and Mobility}
 
-Each of the nodes can be deployed in a arbitrary method
-such as being dropped from an airplane, or in a manual mode at carefully chosen
-geographical points \cite{sn-intro01}. Moreover, the deployment can be done like a
-one-time event or an iterative process.
+Each node of the sensor network can be deployed in an arbitrary method such as
+being dropped from an airplane, or in a manually placed at chosen geographic
+locations \cite{sn-intro01}. Moreover, the deployment can be done as a one-time
+event or as an iterative process, depending on the needs of where the sensor
+device needs to be placed.
 
-However, nodes can be able to move around the deployed locality or remain fixed
-in this place. In the case of the amount of the former behaviour, a sensor node
-can move occasionally or continuously, being a result of an accidental
-side-effect or a desired property of the device, where they are an automotive
-device or attached to another moving object. For this reason, \cite{sn-intro01}
-describes those types of mobility as active or passive.
+Nodes can be able to move around the deployed locality or remain fixed at a
+single place. In the case of a sensor networks comprised with different moving
+sensors, a given sensor node can move occasionally or continuously, as a result
+of an accidental side-effect or a desired property of the device. Usually,
+these sensors are automotive or they can be attached to another moving object.
+For this reason, \cite{sn-intro01} describes those types of mobility as active
+or passive.
 
 \subsection{Device Size, Resources, Cost, Energy, Heterogeneity}
 
 Such sensor nodes can be of different sizes, ranging from microscopically small
 particles, small devices to bigger ones with a few feet cubic. In addition to
 being limited in size, they are also limited in resources and computational
-power, forcing their  conception limited to maintain its energy stored  either
-on batteries or scavenged from solar cells \cite{sn-intro01}.
+power, as they are designed to either stored energy on batteries or
+use energy scavenged from solar cells \cite{sn-intro01}.
 
-Since sensor devices range in size and capabilities, the cost for each of the
-devices very from hundreds to thousands of dollars, depending on its
-functionality, energy utilization, etc. For this reason, \cite{sn-intro01}
-explains that a sensor network may potentially contain similar sensor devices,
-as they can contain dissimilar ones from each other, which characterizes the
-heterogeneity of a sensor network by the hardware capabilities such as GPS
-enabled or having GSM network connectivity.
+Sensor devices range in size, capabilities and other properties, which are
+associated to their cost ranging from hundreds to thousands of dollars. All in
+all, the price depends on the device's functionality, energy utilization
+capabilities, among others. For this reason, \cite{sn-intro01} explains that a
+sensor network may potentially contain similar sensor devices, as they can
+contain dissimilar ones from each other, which characterizes the heterogeneity
+of a sensor network by the hardware capabilities such as GPS enabled or having
+GSM network connectivity.
 
-\subsection{Communication Modality, Network Infrastructure, Coverage and
+\subsection{Communication Mode, Network Infrastructure, Coverage and
 Connectivity}
 \label{sec:sn-infrastructure}
 
-Sensor nodes can communicate in different modalities such as radio, diffuse
+Sensor nodes can communicate in different modes such as radio, diffuse
 light, inductive or sound, which may influence on the type of protocols used to
 communicate among the nodes, where they can be said to be in an organized
 infrastructure or as an ad hoc way \cite{sn-intro01}.
 
-When it comes to the sensor network different organizational infrastructure,
-they can differ in types of topology: single-hop, star, networked stars, tree
-and graph, where each of them may affect the characteristics of the network as
-it may also influence on data collection and routing mechanisms. While in a
-single-hop sensor network there are only two levels of sensor connectivity, the
-tree, graph or networked stars networks uses communications among the network
-hosts for data communication.
+When it comes to infrastructure, sensor networks differ in topology:
+single-hop, star, networked stars, tree and graph are examples of these
+topologies. Each of they topologies may influence on how data is collection
+and routed to their data sink. While there are only two levels of node
+connectivity in sensor networks deployed as single-hop and single start
+topologies, networks whose topology is either tree, graph or interconnected
+stars use communications among each of their nodes for data communication.
 
-Last, but not least, sensor networks may be influenced its coverage designed in
-its purpose, its size in terms of the number of nodes and its relating
-lifetime. As sensors are deployed in different areas, they can be distributed
-in a sparse or dense nature, yet providing essential coverage for the
-environment. However, considering that sensor devices are very likely to
-regular failures, projects have provided redundant nodes \cite{sn-intro01}.
-This level of coverage also influences on the connectivity of the sensor
-nodes, where they can be considered connected when a connection is available
-at all times. On the other hand, nodes can communicate with other nodes in a
-sporadic way. In the former, the sensor node is partitioned, while in the
-latter the nodes are isolated most of the time and communicates at certain
-moments in time.
+Last, but not least, the coverage of a sensor network is related to the
+physical space that is ``visible" to the sensors, which is directly related to
+the purpose of the network, its size in terms of the number of nodes that are
+deployed and the sensor network lifetime. In this way, sensor devices can be
+deployed in different areas and distributed in sparse or dense manners, where
+the sensor network they support is providing the necessary data that
+represents the coverage of the network. However, considering that some types of
+sensor devices are very likely to regular hardware failures, projects have
+provided redundant nodes \cite{sn-intro01} to provide better data coverage.
+
+No matter the type of coverage provided by a sensor network, different levels
+of coverage may also influence on the connectivity of the sensor nodes. In
+order to provide connectivity to redundant nodes, for example, a physical 
+connection must be available at all times. On the other hand, sensor nodes can
+also communicate with other nodes in a sporadic way when they are designed to
+be isolated with only communication activities to report the collected data to
+their immediate peer (other nodes and/or data sink).
 
 \subsection{Network Size, Lifetime and Quality-Of-Service}
 
-Similar to the degree of coverage of the sensor network is the number of
-devices deployed in the network, where they can be in the order of dozens,
-hundreds or even thousand of nodes \cite{sn-intro01}.
+The network size is related to the degree of coverage of a sensor network, and
+it is measured by the number of devices deployed as nodes of the network.
+\cite{sn-intro01} reports examples of sensor networks with sensor nodes ranging
+from dozens, hundreds or even thousand of network nodes.
 
-The application of the sensor network determines how long the sensor network
+The application of the sensor network determines for how long the sensor network
 may be exist. For example, the existence of an environmental sensor networks
-\cite{sn-ex01} may be not determined since its use serves in a regular basis,
-whereas the lifetime of a sensor network to determine the number of people in
-an event is limited to the event.
+\cite{sn-ex01} may be not determined since its the data collected from the
+network are used for archival purposes, hence, without termination of the
+execution of its sensing tasks. On the other hand, however, the lifetime of a
+sensor network designed to count the number of people who entered in different
+rooms of a building during an event has its life-time related to the period of
+the event.
 
-Finally, the design of sensor networks can be
-related to the constraints related to quality-of-service (QoS) such as
-real-time delivery within a certain period of time or robustness such as
-maintaining data alive even though there a communication link is not available
-\cite{sn-intro02}.
+Finally, the design of sensor networks can be related to the constraints
+related to quality-of-service (QoS) such as real-time delivery within a
+certain period of time or robustness such as maintaining data alive even
+though there a communication link is not available \cite{sn-intro02}.
 
 \section{Persistence Storage for Sensor Networks}
 
@@ -156,7 +153,7 @@ mechanisms and the final destination of the produced data. In a nutshell,
   tight.
 \end{itemize}
 
-\subsection{The Purpose of the Collected Data}
+\subsection{How the Collected Data is Used}
 \label{sec:sn-data-purpose}
 
 At first glance, the raw data serves as the main outcome of the sensor network.
@@ -182,18 +179,18 @@ specific metadata regarding its location and lineage.
 
 Under these circumstances, the collected data needs first to face its journey
 starting from its transmission from its producing device to the specified data
-sink as specified by \cite{sn-storage01}\cite{sn-storage02}\cite{sn-storage03}.
+sink as specified by \cite{sn-storage01, sn-storage02, sn-storage03}.
 
 \subsection{Storage Location for Collected Data}
 \label{sec:sn-storage-locations}
 
 Given that collected data can be used for different purposes as described in
-section \ref{sec:sn-data-purpose}, the sensor node that produces the data is responsible to send
-the raw data to a specified data storage target. Upon producing data, a sensor
-network node is specified to deal with the produced data where, in most cases,
-depending on the sensor network infrastructure used \cite{sn-storage03} (see
-section \ref{sec:sn-infrastructure}). In such a way, different storage
-mechanisms are provided:
+section \ref{sec:sn-data-purpose}, the sensor node that produces the data is
+responsible to send the raw data to a specified data storage target. Upon
+producing data, a sensor network node is specified to deal with the produced
+data where, in most cases, depending on the sensor network infrastructure used
+\cite{sn-storage03} (see section \ref{sec:sn-infrastructure}). In such a way,
+different storage mechanisms are provided:
 
 \begin{itemize}
   \item \textbf{External Storage}: the sensor device sends the produced data to
@@ -210,7 +207,7 @@ networks as a many-to-one data collection pattern, when its organization is
 based on single-hop or star. On the other hand, when the data organization is
 structured as a graph, tree, etc, the data flows from one intermediate sensor
 node to another until it reaches its final storage node as described by
-\cite{sn-storage01}\cite{sn-storage03}.
+\cite{sn-storage01, sn-storage03}.
 
 Last, but not least, yet a different storage strategy can be used: Data-Centric
 Storage. This strategy aims at clustering the collected data based on a given
@@ -253,7 +250,7 @@ flood all nodes with query messages \cite{sn-storage04}.
 In order to mitigate the problems related flooded nodes in in-network query
 processing, the use of a Data-Centric storage strategy has been shown to be a
 proven alternative for the purpose of energy consumption
-\cite{sn-storage03}\cite{sn-storage01}.Its primary goal is to organize the
+\cite{sn-storage03, sn-storage01}.Its primary goal is to organize the
 collected data based on a particular property, say location or event, in order
 to be sent to individual storage nodes that relate to the observation. As the
 main outcome of this strategy is to create network partitioning strategy, the
@@ -304,7 +301,7 @@ community.
   structured data models are becoming popular due to the Internet. The use of
   XML data \cite{xml} is not yet popular, but there are a few projects using
   it \cite{sn-xml-usage01}\cite{sn-xml-usage02}, implementing its query by
-  using a middleware \cite{sn-xml-middleware}\cite{sn-xml-query-engines}.
+  using a middleware \cite{sn-xml-middleware, sn-xml-query-engines}.
 \end{itemize}
 
 \subsection{Tabular Data Model and Query}
@@ -323,7 +320,7 @@ summary, in a tabular data model
   associated with it.
 \end{itemize}
 
-\subsection{Relational Data Model and Query}
+\subsection{Relational Data Model and its Query Mechanism}
 
 Many different projects have used the relational model \cite{relational-model}
 as the representation of data for sensor networks. In general, the following
@@ -354,7 +351,7 @@ and location. For problems related to it, came the implementation of different
 approaches that add semantics to data types and different query clauses to the
 Structured Query Language (SQL) to solve join operations \cite{sn-db-newop}. 
 
-\subsection{Structured Data Model and Query}
+\subsection{Structured Data Model and its Query Mechanism}
 
 The use of XML is used to represent data in sensor networks has become popular
 due the popularity of this data format. In general, the use of XML for
@@ -378,7 +375,7 @@ by implementing of middleware to query and extract query data
 an XML-based communication middleware for data exchange among the sensor nodes
 \cite{netbeams2009}.
 
-\section{Data Provenance: How to describe collected data?}
+\section{Data Provenance: How Collected Data is Described?}
 \label{sec:sn-provenance}
 
 Most of sensor networks implementations use the collected data from the sensor
@@ -510,4 +507,5 @@ manually on the database.
 
 A correlation between time and location is presented by \cite{sn-time-series}
 as a noteworthy feature to reduce the traffic generated in a sensor network by
-clustering similar data when the sensor devices are placed in concentrated environment.
+clustering similar data when the sensor devices are placed in concentrated 
+environment.

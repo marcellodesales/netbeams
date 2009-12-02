@@ -7,27 +7,32 @@
 \chapter{Introduction}
 
 Sensor networks are commonly used in different areas for different purposes
-such as accurate measurements and the general public use \cite{sn-intro01}
-\cite{sn-intro02}. In the scientific community, they serve as tools to watch
-the state of the environment by storing samples of data at particular periods
-of time. For example, the NASA Jet Propulsion Laboratory uses the Volcano
-SensorWeb \cite{sn-ex02}, a sensor network which aims at collecting data from
-individual volcanoes in Alaska and South Pacific to be used with heuristics
-regarding hazardous activities. Similarly, the National Data Buoy Center, a
-division of the National Oceanic and Atmospheric Administration (NOAA)
-\cite{sn-ex03}, provides online information from different buoys in different
-shores around the world regarding water quality, current information, etc,
-what characterizes sensor network for environmental monitoring \cite{sn-ex01}.
-Therefore, sensor networks can be seen as an extremely valuable scientific
-research and commercial sector with direct application and use of its produced
-data.
+such as accurate measurements during scientific research \cite{sn-intro01} and
+the general public access such as weather forecast \cite{sn-intro02}. In the
+scientific community, they serve as tools to watch the state of the environment
+by storing samples of data at particular periods of time. For example, the
+NASA Jet Propulsion Laboratory uses the Volcano SensorWeb \cite{sn-ex02}, a
+sensor network which aims at collecting data from individual volcanoes in
+Alaska and South Pacific to be used with heuristics regarding hazardous
+activities. Similarly, the National Data Buoy Center, a division of the
+National Oceanic and Atmospheric Administration (NOAA) \cite{sn-ex03},
+provides online information from different buoys in different shores around
+the world regarding water quality, current information, etc, what
+characterizes sensor network for environmental monitoring \cite{sn-ex01}.
+Therefore, sensor networks can be seen as an extremely valuable tool
+for the scientific and commercial sectors, makeing direct use of the sensor
+networks' produced data.
 
 In order to provide access to the collected sensor data, different approaches
-can be taken to interrogate sensor devices indirectly by accessing its data in
-places called network sink. Similarly, the data model and database system
-location may also influence in the process of reusing the collected data. In
-this way, the lack of a persistence layer for existing sensor networks requires
-a deep understanding about its infrastructure, the nature and location of the
+can be taken: interrogate sensor devices indirectly by accessing its data in
+places called network data sink or simply connect directly to the device. The 
+While the latter approach the data is only available in memory as a data
+stream, the former approach contains any sort of secondary memory such as a
+hard-disk or a flash memory, which are used to archive the collected data.
+Along with the location of the collected data from sensors, the the data model
+and may also influence in the process of reusing the collected data. In this
+way, the lack of a persistence layer for existing sensor networks requires a
+deep understanding about its infrastructure, the nature and location of the
 collected data, the chosen data model representation, among others. For
 instance, how can a data persistence layer safely represent the collected
 sensor devices' properties without the necessity of restructuring any existing
@@ -37,14 +42,14 @@ account or the use of programming languages to access the data
 department of Biology at San Francisco State University with a marine sensor
 network managed by researchers without Computer Science skills. While the data
 access may enforce the difficulties, technical issues may also increase while
-the implementation of a sensor network such as growth in terms of the number of
-sensor devices and, consequently, the number of data produced. Last, but not
-least, the way to read the data for reuse is the most striking features of the
-sensor network, taking into account the different data formats used by the
+the implementation of a sensor network such as growth in terms of the number
+of sensor devices and, consequently, the number of data produced. Last, but
+not least, the way to read the data for reuse is the most striking features of
+the sensor network, taking into account the different data formats used by the
 primary users of the system. How can individual collected sensor data be
-exported to other formats such as spreadsheets or archived files meant to be
-shared among research peers? For these reasons, the inception of a persistence
-storage can be an exceptionally challenging problem to solve.
+exported to other formats such as spreadsheets in order to be shared among
+research peers? For these reasons, the inception of a persistence storage can
+be an exceptionally challenging problem to solve.
 
 In view of the fact that the persistence storage of a sensor network imposes
 many different challenges, this work proposes the assessment of the current

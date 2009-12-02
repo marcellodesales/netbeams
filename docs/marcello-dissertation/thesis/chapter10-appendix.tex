@@ -600,7 +600,7 @@ about the DSP Platform, the remaining steps will be explained on Section 3,
 while showing the design and implementation of the component DSP Data
 Persistence.
 
-\chapter{DSP Data Persistence: Component Implementation}
+\section{DSP Data Persistence: Component Implementation}
 \label{sec:dsp-data-persistence-implementation}
 
 This section shows the implementation of the DSP Data Persistence, which
@@ -652,7 +652,7 @@ Figure \ref{fig:dsp-runtime-dir}.
   \label{fig:dsp-runtime-dir}
 \end{figure}
 
-\section{DSP Platform Deployment}
+\section{DSP Platform Deployment Details}
 
 As described in the previous chapter, the DSP Data Persistence Component was
 implemented using the Java Programming language, on top of the osgi-intro Framework
@@ -1020,7 +1020,7 @@ for the YSI data containing 1 million objects.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.3]{../diagrams/view-collections-instance-browser-futondb}
+  \includegraphics[scale=0.5]{../diagrams/view-collections-instance-browser-futondb}
   \caption{Viewing a partial list of data using the Futon for CouchDB/MongoDB}
   \label{fig:view-collections-instance-browser-futondb}
 \end{figure}
@@ -1032,7 +1032,7 @@ defined in the previous chapter, as shown in figure
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.3]{../diagrams/view-collected-data-list-browser-futondb}
+  \includegraphics[scale=0.5]{../diagrams/view-collected-data-list-browser-futondb}
   \caption{Viewing a partial list of data using the Futon for CouchDB/MongoDB}
   \label{fig:view-collected-data-list-browser-futondb}
 \end{figure}
@@ -1042,7 +1042,7 @@ it is shown in figure \ref{fig:view-collections-instance-browser-futondb}.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.3]{../diagrams/view-collected-data-instance-browser-futondb}
+  \includegraphics[scale=0.5]{../diagrams/view-collected-data-instance-browser-futondb}
   \caption{Viewing an instance of collected data using the Futon for
   CouchDB/MongoDB}
   \label{fig:view-collected-data-instance-browser-futondb}
@@ -1177,7 +1177,7 @@ Scenarios Implementation]{../../../../netbeams/versions/v2/persistence/experimen
 \lstinputlisting[language=Java,label=file:random-ysi-data-generator,caption=Random
 Test Data Generator]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPSondeProducer/src/org/netbeams/dsp/ysi/SondeTestData.java}
 
-\lstinputlisting[language=Java,label=file:experiment-dsp-implementation,caption=Inserting
+\lstinputlisting[language=Java,label=file:experiment-dsp-java-executor,caption=Inserting
 Random Data to MongoDB]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPMessageToMongoDBExperiment.java}
 
 \lstset{label=file:mongodb-ysi-data-format,caption=JSON representation of the

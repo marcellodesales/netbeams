@@ -5,507 +5,458 @@
 
 \chapter{State of the Art}
 
-In general, this chapter reviews sensor networks characteristics and
-properties, necessary to the understanding of the basic properties of a sensor
-network. Moreover, it reviews the characteristics of data persistence for
-sensor networks, characterizing the different approaches used to store data
-such as data model used and how the collected data is described.
+In general, this chapter reviews surveys and related papers in networks
+networks, providing a basic introduction about their characteristics to new 
+audience. Similarly, it reviews the characteristics of related works that
+discusses and provides data persistence solutions for sensor networks, 
+characterizing the different approaches used to described and model the
+gathered data from sensor devices.
 
-\section{Survey in Sensor Networks and Its Data}
+\section{Survey in Sensor Networks and Its Infrastructure}
 
-Sensor Networks are specialized types of network systems comprised of nodes
-with specific goals such as to produce and collect data. The former is seen
-as a sensor device capable of producing data to the network based on an
-observation from the environment or just a raw value regarding a given
-propertiy, while the latter can be seen as the network sink responsible to
-receive the observed or ``sensed'' data. In this way, data persistence in sensor
-networks depends on the approaches used to store the data on the data sink,
-since these types of nodes can be located in the network close to the devices 
-or in a centralized location. As a consequence, the query used to query the
-data can take place in the network nodes themselves or in the centralized node.
-The former approach is used when the data is collected at the sensor node on
-its local storage \cite{sn-storage01, sn-storage03}, strategy typically
-used to maximize the sensor's resources, while minimizing energy consumption
-\cite{sn-storage04}.The latter strategy, however, has been used when the
-collected data is archived in a centralized database system for later reuse
-\cite{sn-storage02}.
+According to \cite{sn-intro02}, sensor networks are specialized types of
+network systems comprised of nodes with specific goals such as to produce and
+collect data. The former is seen as a sensor device capable of producing data
+to the network based on an observation from the environment or simply a raw
+data. On the other hand, the latter is described as the final destination of
+the raw data in a sensor network and called the network data sink, or simply
+data sink, whose responsibility is to receive, categorize and store the
+``sensed'' data. In this way, the location of the the data sink is determined by
+the purpose of the collected data: data nodes are placed in-network close to
+the sensor devices when collected data has a life cycle, being discarded after
+being utilized. In contrast, data nodes are placed in in a centralized node
+when the collected data is used for historical purposes. 
 
-When it comes to data representation, the relational data model
-\cite{relational-model} is one of the most used approaches to represent data in
-sensor network databases in any of the query processing strategies and, in most
-cases, with a modified version of the SQL language \cite{sn-db-newop}. However,
-the design of the database system must be done with prior knowledge of the
-sensor types when choosing the relational data model, as the database design
-must be normalized \cite{db-normalization} for the entities already identified
-for the system. For example, the introduction of a new sensor device might
-represent a potential change on the database structure by seeking a new
-normalized version of the database design. In addition to challenges of
-maintaining the database schema normalized, the use of Data Provenance 
-approaches in sensor network data usually addresses the problem related with
-the origin of data and its entire history \cite{sn-provenance}.
+The following sections describe general properties of sensor networks regarding
+infrastructure and components as described in the literature.
 
-The following subsections describe the main characteristics of sensor networks
-described in the literature, and then others that interest data persistence in
-sensor networks.
+\subsection{Properties of Sensor Device Nodes in Sensor Networks}
 
-\subsection{Deployment and Mobility}
+Each sensor node perform different tasks for the network and, therefore,
+influences on the method of deployment used. \cite{sn-intro01} identifies that
+the deployment of sensor devices can use arbitrary methods such as being
+dropped from an airplane, or manually placed at chosen geographic locations.
+Moreover, those authors also mentioned that the deployment can be done as a
+one-time event or as an iterative process, where the sensor devices are moved
+to different places as needed.
 
-Each node of the sensor network can be deployed in an arbitrary method such as
-being dropped from an airplane, or in a manually placed at chosen geographic
-locations \cite{sn-intro01}. Moreover, the deployment can be done as a one-time
-event or as an iterative process, depending on the needs of where the sensor
-device needs to be placed.
+Moving to a differnt point, \cite{sn-intro01} reports that sensor nodes can be
+able to move around the place where they were deployed or a stationary sensor
+at a given location. In the case of a sensor networks comprised with different
+moving sensors, a given sensor node can move occasionally or continuously, as
+a result of an accidental side-effect or a desired property of the device. As
+a matter of fact, these sensors are automotive or they can be attached to
+another moving object. For this reason, \cite{sn-intro01} classifies those
+types of mobility as active or passive.
 
-Nodes can be able to move around the deployed locality or remain fixed at a
-single place. In the case of a sensor networks comprised with different moving
-sensors, a given sensor node can move occasionally or continuously, as a result
-of an accidental side-effect or a desired property of the device. Usually,
-these sensors are automotive or they can be attached to another moving object.
-For this reason, \cite{sn-intro01} describes those types of mobility as active
-or passive.
+Considering the physical design and capabilities of sensor devices, they range
+from microscopically small to bigger devices of a few cubic feet
+\cite{sn-intro02}. In addition to their limited size, their computational
+resources and power availability are also scarse, when they are located in
+areas of limited access to energy. In this way, \cite{sn-intro01} also
+distinguishes how sensor devices are usually designed to either store energy on
+batteries or use energy scavenged from solar cells. Even though a sensor
+network is designed for a purpose, \cite{sn-intro01} also explains that it can
+be comprised of different sensor devices playing different roles on what they
+observe in the environment, characterizing the heterogeneity the sensor
+network by the hardware capabilities and what types of data each of them
+produce.
 
-\subsection{Device Size, Resources, Cost, Energy, Heterogeneity}
+Finally, \cite{sn-intro01} mentions that sensor device nodes can communicate
+with each other using different media such as radio, diffuse light or
+inductive sound, influencing on the type of protocols they exchange data. They
+can have knowledge of their physical location if they are integrated with a
+GPS\footnote{Global Positioning System} device, which gives the latitude or
+longitude coordinate values. Therefore, their cost of these devices may range
+from hundreds to thousands of dollars, depends on a given device's functionality
+and capabilities of its design.
 
-Such sensor nodes can be of different sizes, ranging from microscopically small
-particles, small devices to bigger ones with a few feet cubic. In addition to
-being limited in size, they are also limited in resources and computational
-power, as they are designed to either stored energy on batteries or
-use energy scavenged from solar cells \cite{sn-intro01}.
-
-Sensor devices range in size, capabilities and other properties, which are
-associated to their cost ranging from hundreds to thousands of dollars. All in
-all, the price depends on the device's functionality, energy utilization
-capabilities, among others. For this reason, \cite{sn-intro01} explains that a
-sensor network may potentially contain similar sensor devices, as they can
-contain dissimilar ones from each other, which characterizes the heterogeneity
-of a sensor network by the hardware capabilities such as GPS enabled or having
-GSM network connectivity.
-
-\subsection{Communication Mode, Network Infrastructure, Coverage and
-Connectivity}
+\subsection{Properties of the Infrastructure of Sensor Networks}
 \label{sec:sn-infrastructure}
 
-Sensor nodes can communicate in different modes such as radio, diffuse
-light, inductive or sound, which may influence on the type of protocols used to
-communicate among the nodes, where they can be said to be in an organized
-infrastructure or as an ad hoc way \cite{sn-intro01}.
+Last section discussed the different properties of the sensor devices when
+placed in a sensor network. Depending on how they communicate with each other,
+\cite{sn-intro02} discusses that sensor devices can be in an organized in a
+structured or ad hoc way. For this reason, the infrastructure, of sensor
+networks differ in topology such as single-hop, star, tree or  graph. Each of
+these topologies may influence on how the produced data from sensor nodes is
+collected and routed to their related data sink. While there are only two
+levels of node connectivity in sensor networks deployed as single-hop and start
+topologies, sensor networks whose topology is either tree or graph use
+multi-hop communication among each of their nodes for data communication from
+the devices to the data sink.
 
-When it comes to infrastructure, sensor networks differ in topology:
-single-hop, star, networked stars, tree and graph are examples of these
-topologies. Each of they topologies may influence on how data is collection
-and routed to their data sink. While there are only two levels of node
-connectivity in sensor networks deployed as single-hop and single start
-topologies, networks whose topology is either tree, graph or interconnected
-stars use communications among each of their nodes for data communication.
+The property of coverage on a sensor network is defined by
+\cite{sn-intro01} as the physical space ``visible" to the sensors devices, which
+is also directly related to the purpose of the network, its size in terms of
+the number of nodes deployed and the sensor network lifetime. Therefore,
+sensors are deployed in sparse or dense manners, according to the
+specification of what needs to be covered by the sensor devices. Furthermore,
+considering that some types of sensor devices are very likely to regular
+hardware failures, \cite{sn-intro2} described sensor network examples with 
+redundant nodes that provide better data coverage and levels of coverage.
+Finally, the coverage of sensor devices also influence on the connectivity
+property of the sensor nodes. In order communicate with redundant nodes, a
+physical connection must be available at all times. On the other hand, lower
+level of coverage is is related sporadic communication among the sensor nodes.
 
-Last, but not least, the coverage of a sensor network is related to the
-physical space that is ``visible" to the sensors, which is directly related to
-the purpose of the network, its size in terms of the number of nodes that are
-deployed and the sensor network lifetime. In this way, sensor devices can be
-deployed in different areas and distributed in sparse or dense manners, where
-the sensor network they support is providing the necessary data that
-represents the coverage of the network. However, considering that some types of
-sensor devices are very likely to regular hardware failures, projects have
-provided redundant nodes \cite{sn-intro01} to provide better data coverage.
+The sensor network size is related to the degree of coverage mentioned earlier,
+and it is measured by the number of devices deployed. \cite{sn-intro01}
+reports examples of sensor networks composed by different ranges of deployed
+sensor devices such as dozens, hundreds or even thousands of nodes. However,
+the life time of a sensor network determines how long these devices are going
+to be used, as well as how long the sensor network may exist. For example, an
+environmental sensor network \cite{sn-ex01} with the purpose of collecting data
+for historic purposes may be have their sensor devices continuously performing
+their data collection tasks. On the other hand, however, the lifetime of a
+sensor network designed to achieve a goal may not exist after the sensor
+devices finish their tasks. Finally, \cite{sn-intro02} argues that the
+performance related to the orchestration of sensor devices in sensor networks
+is related to the constraints defined for quality-of-service (QoS) such as
+real-time data delivery within a thredshold or for robustness such as
+maintaining data alive even though a communication link is not available.
 
-No matter the type of coverage provided by a sensor network, different levels
-of coverage may also influence on the connectivity of the sensor nodes. In
-order to provide connectivity to redundant nodes, for example, a physical 
-connection must be available at all times. On the other hand, sensor nodes can
-also communicate with other nodes in a sporadic way when they are designed to
-be isolated with only communication activities to report the collected data to
-their immediate peer (other nodes and/or data sink).
-
-\subsection{Network Size, Lifetime and Quality-Of-Service}
-
-The network size is related to the degree of coverage of a sensor network, and
-it is measured by the number of devices deployed as nodes of the network.
-\cite{sn-intro01} reports examples of sensor networks with sensor nodes ranging
-from dozens, hundreds or even thousand of network nodes.
-
-The application of the sensor network determines for how long the sensor network
-may be exist. For example, the existence of an environmental sensor networks
-\cite{sn-ex01} may be not determined since its the data collected from the
-network are used for archival purposes, hence, without termination of the
-execution of its sensing tasks. On the other hand, however, the lifetime of a
-sensor network designed to count the number of people who entered in different
-rooms of a building during an event has its life-time related to the period of
-the event.
-
-Finally, the design of sensor networks can be related to the constraints
-related to quality-of-service (QoS) such as real-time delivery within a
-certain period of time or robustness such as maintaining data alive even
-though there a communication link is not available \cite{sn-intro02}.
+All things considered, sensor nodes play an important role during the execution
+of a sensor network, whose infrastructure is characterized by how and where the
+sensor nodes are deployed and communicate with each other. In this way, next
+section covers the approaches to deal with the product of this type of system
+network.
 
 \section{Persistence Storage for Sensor Networks}
 
-The most valuable objective of a sensor network is related to its first
-product: the use of the raw data. Data collection in sensor networks is
-directly dependent on the specifications of the sensor network, its routing
-mechanisms and the final destination of the produced data. In a nutshell,
-\cite{sn-storage03} describes data as follows:
+As traced in the last few sections, sensor networks are comprised of
+different types of sensors nodes. However, an important sensor node type is the
+data sink because it is the place where the raw data produced by sensor
+nodes resides. Data collection and access in sensor networks is directly
+related to the characteristics of the sensor network, its routing mechanisms
+and where the data sink is placed within the network. In a nutshell,
+\cite{sn-storage03} describes collected data as can be described as Low-level
+property or an observation such as the level of the ocean, etc.
 
-\begin{itemize}
-  \item \textbf{low-level property} as the raw data collected from the sensor
-  device; For example, the sea level as a number;
-  \item \textbf{Observation or Event} as the processed data in the format of
-  the final observation. For instance, if the ocean is in its highlight or low
-  tight.
-\end{itemize}
+The type of query mechanism used to directly or indirectly interrogate sensor
+devices in a sensor network is directly related to the aforementioned locations
+of the collected data. The in-network query processing is used when the
+location of the collected data is a local storage \cite{sn-storage01,
+sn-storage03} located in the network, strategy typically used to maximize the
+sensor's resources, while minimizing energy consumption \cite{sn-storage04}. On
+the contrary, the a typical centralized query processing is used to search for
+values over the collected data when its location is a centralized data
+node \cite{sn-storage02}.
 
-\subsection{How the Collected Data is Used}
+When it comes to the data representation, the relational data model
+\cite{relational-model} is one of the most traditional approaches used to
+describe the collected data of sensor networks, as it is reported in database
+systems such as the TinyDB \cite{sn-db-tinydb}. For instance, \cite{sn-db-newop}
+proposes a modified version of the SQL language of TinyDB proposed to solve
+SQL Join problems, so that the query processing takes into account the location
+of the distributed data. Conversely, \cite{sn-provenance} proposes the use of
+Data Provenance as the primary guidelines to describe collected data from
+sensor devices, giving the fact that these devices only produce observations as
+stream of raw data, and therefore, described to address the problems related to
+the origin of the data.
+
+The following sections describe general properties of sensor networks regarding
+data persistence, as reviewed in the literature.
+
+\subsection{Data Use and Where Data is Stored}
 \label{sec:sn-data-purpose}
-
-At first glance, the raw data serves as the main outcome of the sensor network.
-However, the first consideration that must be considered is regarding the
-purpose of the collected data, as \cite{sn-provenance} explains differentiates
-between two main benefit of the sensor data:
-
-\begin{itemize}
-  \item \textbf{Real-time Data Stream}, as the generated data from the sensor
-  is not transmitted, but extracted from the device as it is requested. The
-  data is still in its standard form specified by the sensor manufacturer;
-  \item \textbf{Archival Data}, as the collected data include historical
-  significance or will be use by other applications at a later time.
-\end{itemize}
-
-While real-time data stream are used and can potentially be discarded, the
-archival data needs to be stored in a secondary memory. Nonetheless, given the
-nature of the sensor device specification, the low-level data produced by a
-given sensor device might not include vital information regarding the identity
-of the data itself. The use of Data Provenance techniques is described by
-\cite{sn-provenance} as an essential step to provide the collected data
-specific metadata regarding its location and lineage.
-
-Under these circumstances, the collected data needs first to face its journey
-starting from its transmission from its producing device to the specified data
-sink as specified by \cite{sn-storage01, sn-storage02, sn-storage03}.
-
-\subsection{Storage Location for Collected Data}
 \label{sec:sn-storage-locations}
 
-Given that collected data can be used for different purposes as described in
-section \ref{sec:sn-data-purpose}, the sensor node that produces the data is
-responsible to send the raw data to a specified data storage target. Upon
-producing data, a sensor network node is specified to deal with the produced
-data where, in most cases, depending on the sensor network infrastructure used
-\cite{sn-storage03} (see section \ref{sec:sn-infrastructure}). In such a way,
-different storage mechanisms are provided:
+At first glance, the raw data serves as the main outcome of the sensor network.
+\cite{sn-provenance} differentiates the use of the collected data as follows as 
+\textbf{real-time data stream}, when they are generated data from a sensor
+device whenever the data is requested. In this way, the data is still in its raw
+format specified by the sensor manufacturer; On the other hand, the authors
+describes the data as \textbf{archivable}, since they a have historical
+significance and will be processed to be reused by other systems in a latter
+time. While the real-time data streams are used and potentially discarded, the
+archivable data is stored into secondary memory such as a hard-disk. Under
+these circumstances, the collected data needs first to face its journey
+starting from its production, transmission from the sensor device, to finally
+reach a specified data sink in the network \cite{sn-storage01, sn-storage02,
+sn-storage03}.
 
-\begin{itemize}
-  \item \textbf{External Storage}: the sensor device sends the produced data to
-  another sensor node that contains an external storage.
-  \item \textbf{Local Storage}: as it is the case of real-time data stream,
-  where data is allocated on the sensor device's main read-only memory.
-\end{itemize}
+After producing the ``sensed'' values for the observed parameters from the
+environment, the sensor node is responsible to send the raw data to a specific
+data node defined by the network infrastructure, as delineated in section
+\ref{sec:sn-infrastructure}. In such a way, \cite{sn-storage03}
+describes that the location for the collected sensor data provides two
+different types of storage devices: the \textbf{external storage} and the
+\textbf{local storage}. In the former type, the sensor device sends the
+produced data to another sensor node that contains an external storage, whereas
+the data only exists in memory or between its reading to its delivery as
+real-time data stream in the the latter type. On the whole, the sensor network
+infrastructure dictates where the movement performed by the sensor data, as
+\cite{sn-storage02} sees a wireless sensor networks as a many-to-one data
+collection pattern, when its organization is based on single-hop or star. On
+the other hand, data may also flow from one intermediate sensor node to another
+until it reaches its final data sink when the data organization is structured
+as a graph, tree \cite{sn-storage01, sn-storage03}.
 
-It is clear that the data flows from the sensor node to another depending on
-the definition of the network. On the whole, the sensor network infrastructure
-dictates where the data will flow to, as described in section
-\ref{sec:sn-infrastructure}. \cite{sn-storage02} sees a wireless sensor
-networks as a many-to-one data collection pattern, when its organization is
-based on single-hop or star. On the other hand, when the data organization is
-structured as a graph, tree, etc, the data flows from one intermediate sensor
-node to another until it reaches its final storage node as described by
-\cite{sn-storage01, sn-storage03}.
+Last, but not least, the use of different external storage devices can be used
+to partition the collected data. This practice is called \textbf{Data-Centric
+Storage}, and aims at clustering the collected data from different sensor
+devices based on a given a property of the data such as location or time of
+creation.
 
-Last, but not least, yet a different storage strategy can be used: Data-Centric
-Storage. This strategy aims at clustering the collected data based on a given
-nature of the data such as location. Regardless the data storage mechanism
-used, the query processing will depend on the sensor network infrastructure and
-data location.
-
-\subsection{Query Processing for Storage Locations}
+\subsection{Query Processing in Sensor Networks}
 \label{sec:query-process}
 
-Given the different locations where the collected data might be as described in
-section \ref{sec:sn-storage-locations}, different query processing for the
-collected sensor data can be used as described by \cite{sn-storage03}:
+The query processing in sensor networks is a direct or indirect method of
+accessing the collected data stored at data nodes, whose location is determined
+by different facts described in the previous section. \cite{sn-storage03}
+describes an example of an \textbf{in-network query processing} when sensor
+nodes, acting as data nodes, provides real-time data stream as a response
+to queries requesting the device's collected data. Likewise, if the collected
+data is in use for a specific period of time, the data is cached in an external
+storage device in a close-by data node. In this way, when a query is issued to
+the sensor network with these characteristics, the query processor considers 
+all data nodes return its final response to the query. In comparison, a sensor
+network whose topology is in form of star, the data sink is usually located in
+the center of structure, and thus, receives all the collected data from other
+sensor devices in the network. For this reason, it can be seen as a 
+\textbf{centralized query processing}. Factoring in that a centralized data
+sink receives all the collected data from the peer nodes, this query processing
+strategy is the solo responsible for responding to indirect queries about the
+produced data from the network. 
 
-\begin{itemize}
-  \item \textbf{In-Network Query Processing}: sensor nodes that provide
-  real-time data stream usually replies to requests to properties.
-  Likewise, when the data is used for archival purpose, the data can be
-  located at a network node specialized in storing the neighbors
-  collected data. In this way, when a query is issued to the sensor
-  network, the query processor will collectively verify every storage
-  node for the collected data.
-  \item \textbf{Centralized Query Processing}: a leading network sink receives
-  the collected data from the peer nodes. In this case, the query processor
-  queries the solo centralized node for the global values of the
-  participating sensor devices.
-\end{itemize}
+Based on the literature review, there are advantages and disadvantages related
+each of the query processing approaches described with regards to the
+infrastructure of the sensor network. \cite{sn-storage03} argues that the 
+primary purpose of the in-network query processing is to minimize the number
+of data transmitted from sensor devices to a data sink, as sensor devices are
+generally limited by energy use. Considering that sensor devices are also used
+as data nodes, \cite{sn-storage04} delineate that this approach can potentially
+flood all sensor nodes in the network, and therefore, decrease its performance.
+For this reason, \cite{sn-storage01} reports the use of the data-centric
+storage by organizing the collected data based on its particular properties
+values. In this way, the query processor hits specific data nodes that contains
+the types of data in the range of the requested data and, therefore, the author
+concludes that this approach decreases the network congestion and maximizes the
+capacity on the sensor devices and the performance of the sensor network.
 
-There are pros and cons related to both of the approaches of query processing,
-which are also related to the infrastructure, sensor network nature and
-requirements. The primary purpose of the in-network query processing is to
-minimize the number of data transmitted from the sensor devices to the final
-data sink, as sensor devices are generally limited by constraints such as
-energy utilization \cite{sn-storage03}. Along with this strategy, the literature
-describes different proposals that aim at upgrading the Structured Query
-Language (SQL) adding location-sensitive clauses to the language \cite{sn-db-newop}.
-However, this crucial problem related to this method is that it may potentially
-flood all nodes with query messages \cite{sn-storage04}.
+Unlike the in-network, the centralized query processing is related to a regular
+database system, located in one of the network nodes. For this reason, this
+indirect type of query processing is used when the data purpose of the use of
+data is for data archival. However, \cite{sn-storage02} showes that as a
+consequence of the many-to-one communication between the centralized data sink
+and the other data nodes, this query process does not affect any of the sensor
+nodes in the network and, thus, maximizes the sensor device utilization. 
+Moreover, this strategy better exposes the collected data to the primary users
+raw data, which follows the process of data processing, compression,
+aggregation, and so on \cite{sn-db-modeling02}.
 
-In order to mitigate the problems related flooded nodes in in-network query
-processing, the use of a Data-Centric storage strategy has been shown to be a
-proven alternative for the purpose of energy consumption
-\cite{sn-storage03, sn-storage01}.Its primary goal is to organize the
-collected data based on a particular property, say location or event, in order
-to be sent to individual storage nodes that relate to the observation. As the
-main outcome of this strategy is to create network partitioning strategy, the
-query processor would hit specific sensor nodes with the needed data and,
-therefore, would decrease the load and maximize the capacity on the actual
-sensor devices.
-
-A centralized network query processing processes data in a network node
-specified as the network sink. The network sink usually is a network node with
-a database server with the collection of data delivered by all the sensor
-devices from the network. As a consequence of this many-to-one communication
-strategy \cite{sn-storage02}, the query process does not affect any of the
-sensor nodes in the network and, thus, maximizes the sensor device
-utilization. Moreover, the use of the data for historical purposes is easier
-to manage and provide access to the primary users of the data, following the
-process of data processing, compression, aggregation, etc
-\cite{sn-db-modeling02}.
-
-Although this approach seemed to be appropriate to the point of view of the
-sensor nodes and used as the tradeoff between achieving capacity and energy
-consumption, the centralized data collector may suffer from the unavoidable
-development of a point of traffic concentration \cite{sn-storage02}, also
-referred to as the phenomenon of congestion, or funneling effect
-\cite{sn-storage04}. For this reason, simple distributed system techniques
-such as the use of master-slave or data replication can be used to reduce the
-overhead.
+Although the approach of centralized query processing maximizes the sensor
+nodes capacity and minimize energy consumption, \cite{sn-storage02} explains
+that this trade off imposes the creation of the unavoidable development of a
+point of traffic concentration or the phenomenon of network congestion. For
+this reason, \cite{sn-storage04} describes that different techniques used in 
+distributed system such as the use of master-slave data replication or 
+database partitioning \cite{db-partitioning-relational} can be used to reduce
+or minigate the effects of this funneling effect.
 
 \section{Data Models and Query Engines for Sensor Networks}
 \label{sec:data-models}
 
 Different approaches are used to represent the collected data from sensors. The
 use of basic data descriptors has been used in research groups which expertise
-is not database systems, while others use such technology and the way to
-represent data using more pragmatic approaches. \cite{sn-data-model-survey}
-have shown different data models and the advantages and disadvantages. The 
-following is a overview of these approaches used by the sensor network
-community.
+is not database systems, while others use such technology in pragmatic
+approaches. \cite{sn-programming-language} reports different applications using
+different types of languages to acces the data modeled in different data
+models. \cite{sn-provenance} describes the use of a \textbf{Tabular Data Model}
+\cite{tabular-model} using comma-separated values to model and organized the
+values related to the properties of observed parameters from a given sensor
+device. On the other hand, \cite{sn-db-tinydb} describes the use of the
+\textbf{Relational Data Model} \cite{relational-model} is used in the majority
+of the projects that involves data persistence due to its popularity in other
+different areas of Software Engineering and Distributed Systems. Finally,
+\cite{sn-xml-usage01, sn-xml-usage02} are examples of sensor networks
+application that makes use of XML \cite{xml} to represent the collected data
+on a \textbf{Structured Data Model}.
 
-\begin{itemize}
-  \item \textbf{Tabular Data Model}: comma-separated values are immensely
-  popular due to its simplicity. Although data is not index , it is an easy
-  approach for data exchange among researchers \cite{sn-provenance};
-  \item \textbf{Relational Data Model}: it is used in the majority of the
-  projects. Most of them due to the easy access to database systems, with
-  refactored versions that support the implementation of sensor networks and
-  its requirements \cite{sn-db-tinydb};
-  \item \textbf{Structured Data Model}: similar to the relational model,
-  structured data models are becoming popular due to the Internet. The use of
-  XML data \cite{xml} is not yet popular, but there are a few projects using
-  it \cite{sn-xml-usage01}\cite{sn-xml-usage02}, implementing its query by
-  using a middleware \cite{sn-xml-middleware, sn-xml-query-engines}.
-\end{itemize}
+The following sections describe the application of each of aforenamed data
+models in the context of sensor networks.
 
 \subsection{Tabular Data Model and Query}
 
-Simple use of Comma-Separated Values is an example of sensor network data. Data
-is structured by the top header, and the values are in each line of the file.
-The implementation of the SF-BEAMS \cite{sfbeams2006} uses this approach. In
-summary, in a tabular data model 
+The most basic computer application to process data is through the use of
+spreadsheets, where data is organized into cells \cite{tabular-model}. When
+exported to the so-called comma-separated values (CSV) file format, the
+resulting file is comprised of lines of ascii characters, separated by a
+delimiter. The first line represents a header, with the identification of
+columns of specific data, where the following lines contains the values
+related to each top column. \cite{sn-provenance} reports that the tabular
+data model is commonly used to provide data persistence for sensor networks.
+As a matter of fact, the SF-BEAMS environmental sensor networks
+\cite{sfbeams2006} uses this approach to distribute the collected data over
+the Internet using the OPenDAP \cite{opendap} data format.
 
-\begin{itemize}
-  \item data is represented by columns in a flat file separated by a character
-  that separates the values. One example of such data in sensor networks is the
-  OPenDAP \cite{opendap} format, used by the SF-BEAMS project
-  \cite{sfbeams2006};
-  \item data is queried using a text editor file, without any indexing
-  associated with it.
-\end{itemize}
+This data model can be used in different context, as \cite{sn-provenance}
+describes that the versions of the same document can be easily managed and
+shared among research colleages using a version-control system such as
+Subversion \cite{subversion}.
 
 \subsection{Relational Data Model and its Query Mechanism}
 
-Many different projects have used the relational model \cite{relational-model}
-as the representation of data for sensor networks. In general, the following
-properties apply to sensor networks:
+\cite{sn-db-newop} shows the use of the Relational Data Model
+\cite{relational-model} can be used in sensor networks to describe the
+collected data from sensor devices. As a matter of fact, the project described
+by the authors is based on the TinyDB database system \cite{sn-db-tinydb}, a
+database system specifically built for data nodes of sensor networks. It uses
+the same properties and constraints of regular database system, where the
+entities of the sensor network are required to be modeled and represented by
+tables.
 
-\begin{itemize}
-  \item data is structured in tables, and sensor properties are represented by
-  the columns of these tables. Data instances are represented by tuples or rows
-  of these tables. Finally, table relationships are implemented based on the
-  relational algebra theory, which is the mechanism used to describe the
-  relationship among different data types.
-  \item data is queried using the Structured Query Languange (SQL) and uses the
-  definitions of the tables and columns to extract data.
-\end{itemize}
-
-Before the creation of such a model, a database normalization process is
-necessary to describe the data in a convenient way. An example of such use of
-the relational model is the TinyDB database systems \cite{sn-db-tinydb}, which
-uses the relational model to represent the types of sensors. This is a popular
-choice because of the vast availability of research on relational database
-models.
-
-Although the implementation of a relational database seems to cover the needs
-of data representation, \cite{sn-data-model-survey} described the problems
-related to this approach. One such problem is that the relational model is not
-suited for modeling time series data and metadata related to identify, time
-and location. For problems related to it, came the implementation of different
-approaches that add semantics to data types and different query clauses to the
-Structured Query Language (SQL) to solve join operations \cite{sn-db-newop}. 
+In order to query the data collected from sensor devices, the use of the 
+Structured Query Language (SQL) \cite{sql} is the main language used to extract
+the data managed by the system. As mentioned earlier, the default versions of
+this language have been modified to give support to the constraints of the
+location of the database such as the addition of new SQL operators for TinyDB
+\cite{sn-db-newop}.
 
 \subsection{Structured Data Model and its Query Mechanism}
 
-The use of XML is used to represent data in sensor networks has become popular
-due the popularity of this data format. In general, the use of XML for
-persistence can be summarized as follows:
+XML is an increasing data format used popularized by the applications developed
+for the Internet. \cite{sn-xml-usage01} reports an efficient way to represent
+the collected data from sensors using XML, while the authors of
+\cite{sn-xml-usage02} describe a sensor network using XML for data model
+representation. In general, the collected data is structured into classes of
+relating elements and validated by an XML Schema \cite{xml-schema}.
 
-\begin{itemize}
-  \item data is structured in the collected data properties can be represented
-  through the XML \cite{xml} instances by using tags, having its model validated
-  by the use of XML Schema \cite{xml-schema}.
-  \item in order to extract data from XML-based databases, the use of XML XPath
-  \cite{xml-xpath} is used to query XML documents.
-\end{itemize}
+In order to extract data from XML-based databases, the XML XPath language
+\cite{xml-xpath} is often used to query XML data. However, with the inception
+of hybrid XML-relational database, \cite{sn-xml-usage03} reported the use XML
+as the data model and the use of SQL to query the stored data on the IBM's DB2
+database system. 
 
-Some examples of the application of XML in sensor networks in
-\cite{sn-xml-usage02} some have investigated the effective use of XML in
-sensor networks to represent the collected data \cite{sn-xml-usage01}. An
-example of querying XML data in sensor networks described by
-\cite{sn-xml-query-engines}, while others use XML as a means of data exchange
-by implementing of middleware to query and extract query data
-\cite{sn-xml-middleware}. NetBEAMS is one of such sensor network that contains
-an XML-based communication middleware for data exchange among the sensor nodes
-\cite{netbeams2009}.
+Other examples of the use of the structured data model using XML is the through
+the use of middlewares, as the authors of \cite{sn-xml-query-engines} reports.
+Such approach is used for data exchange by the implementing of a middleware
+capable of query and extract the collected data from sensor devices
+\cite{sn-xml-middleware}. A practical example of the use of XML as a middleware
+to communicate between nodes is the communication mechanism used by NetBEAMS
+\cite{netbeams2009}. See section \ref{sec:dsp-serialization} for details.
 
 \section{Data Provenance: How Collected Data is Described?}
 \label{sec:sn-provenance}
 
-Most of sensor networks implementations use the collected data from the sensor
-devices after they perceive the environment. As shown by
-\cite{sn-data-model-survey}, different data models contains their pros and
-cons to represent data. However, one crucial feature in sensor networks is the
-description of it collected data, as \cite{sn-provenance} discussed the
-properties and nature of sensor networks generated data. First, the device's
-sampling are usually in raw format or without obvious names. In order to
-provide search over the collected sensor data, the data needs first to be
-described and indexed, and this process can be related to Data Provenance
-\cite{db-provenance}. Needless to say, Data Provenance is the
-Metadata\footnote{Data about data} about the collected sensor data.
+As described in the previous section, the collected data from sensor networks
+can be represented by different data models, requiring the knowledge of the
+properties of the data. Not to mention that the low-level or raw data produced
+by a given sensor device might not include vital information regarding the
+origing and identity of the collected data. For this reason,
+\cite{sn-provenance} describes Data Provenance as a technique used to describe
+those essential properties of the collected data from sensors. One typical
+example of the application of Data Provenance is the so-called blackbox of an
+aircraft, which carries the collection of raw data collected from a group of
+sensors placed in different locations of an aircraft, as shown by
+\cite{sn-exemple-blackbox}. Last, but not least, the author describes the
+collected data as used in a process of data recovery and analysis in order to
+identify the probable reason of an aircraft accident, by using the time, and
+location of the aircraft, along with the independent variables from the
+sensors.
+
+In general, sensor devices produce data and either keep them onto its local
+storage or transmit them to data nodes as described earlier in this chapter. It
+is vital to understand that the majority of these devices outputs the data in
+its raw format, containing only a stream of values with any type of
+delimitation between each other. For this reason, the processes of parsing and
+description of each of the values located in the data streams regularly require
+the use of the device's specification documentation. Similarly, in order to
+have access to each of the properties of data collected by a given property
+related to time or space, \cite{sn-provenance} also mentions that 
+Metadata\footnote{Data about data} should be included together with the
+collected data.
 
 An example of Data Provenance application is the use of aggregation of data
 over time to estimate the changing effects of the weather in a given region.
-For this reason, the collected data needs descriptions or annotations that can
-provide enough information to track changes, that is, the history of how and
-when a given data has changed. The following should be the essence of a
-provenance-aware collected data according to \cite{sn-provenance}.
+For this reason, the collected data from sensor devices need meaningful
+annotations to better describe the identity of the collected data, as 
+\cite{sn-provenance} reports. Interesting questions regarding the
+data can be asked such as \textbf{what was collected?}, \textbf{When was the
+data collected?} or \textbf{Where was the data collected?}. Similarly, while
+Data Provenance provides basic mechanisms to describe sensor networks data in
+general, others see the importance of the time space of sensor networks.
+\cite{sn-time-series} describes strategies used to cluster distributed sensor
+data as time series of data, as well as to decrease the size of data streams
+being transmitted in real-time sensor networks when these collected data does
+not need to be transferred \cite{sn-data-reduction}.
 
-\begin{itemize}
-  \item \textbf{what was collected?}: it can be merely one or more low-level
-  observations,  which is a set of values with or without a description;
-  \item \textbf{When was the data collected?}: is the time when the data was
-  collected,  as most sensor data must be used depending on its existence;
-  \item \textbf{Where was the data collected?}: it is typically the value of 
-  the of the location from where the data was collected. However, it is vital to
-  note that the use of this metadata depends on the applicability of the data.
-\end{itemize}
-
-While Data Provenance provides basic mechanisms to describe sensor networks
-data in general, others see the importance of the time space of sensor
-networks. \cite{sn-time-series} describes strategies to used to cluster
-distributed sensor data as time series of data, as well as to decrease the
-size of data streams being transmitted in real-time sensor networks when these
-collected data does not need to be transferred \cite{sn-data-reduction}.
-
-Finally, an indispensable application of collected sensor data is the so-called
-blackbox of an aircraft, which carries the collection of raw data collected
-from a group of sensors placed in different places of the aircraft, as
-described by \cite{sn-exemple-blackbox}. The author describes the data is used
-in a process of data recovery and analysis in order to identify the probable
-reason of an aircraft accident, by using the time, and location of the
-aircraft, along with the independent variables from the sensors.
+Finally, data provenance provides practical use of the collected data from
+different sensor devices and different sensor networks in the process called
+Information Fusison \cite{sn-info-fusion}. An example of the aggregation of
+different data from different devices located in different geographic sensor
+networks is \cite{sn-geo-metadata}, which is capable of process
+spatial-temporal queries of real-time or historical data. The following
+sections describe each of the metadata properties as defined by
+\cite{sn-provenance}, giving different examples of each of them.
 
 \subsection{What was collected?}
 
-Different sensor devices will produce different attribute sets regarding a
-particular observation. In general, these data sets does not have distinct
-names, which leads to difficulties when indices are required in order to make
-the data searchable. Specially for the end of data archival, as described
-earlier in this chapter, the collected data needs to receive and identity,
-which identifies the data by itself in a regular database
-\cite{relational-model}. Equally, \cite{sn-provenance} described that
-traditional sensor networks uses the collected data for analysis long after
-the attribute set has been collected, usually before it is categorized and
-indexed. Annotations and tags are also names given by \cite{sn-provenance} as
-means to describe collected sensor data.
+Different sensor devices produce different sets of attributes based on its
+capabilities and design. In general, these data sets do not have distinct
+names, which leads to difficulties when indices over the properties of the
+collected data are required to make them searchable. Specially for the purpose
+of data archival, the collected data needs to be identified, giving a meaning
+of independence on its own, the same idea behind the unique identification of
+entities on the relational data model \cite{relational-model}. Equally,
+\cite{sn-provenance} describes that traditional sensor networks uses the
+collected data for analysis long after the attributes have been collected,
+usually before it is categorized and indexed. Annotations and tags are also
+names given by \cite{sn-provenance} as means to describe collected sensor data.
 
-In a nutshell, data is described by the name of the observation, when that is
-not provided. For example,
-
-\begin{itemize}
-  \item \textbf{temperature} = 73.45: this is the value of the collected
-  observation, which in general, the attribute name ``temperature" is not
-  provided in the data stream;
-  \item \textbf{temperature-scale} = ``Fahrenheit": the metadata regarding the
-  temperature attribute, which describes the scale of the temperature;
-  \item \textbf{device-version} = 5: the metadata that describes the version of
-  the sensor device, since sensors can be replaced, and as a consequence, data
-  accuracy may be as well be changed.
-\end{itemize} 
+In a nutshell, the collected data is described by the name of the observation
+property. For instance, \textbf{temperature} = 73.45 expresses the value of the
+observation of the temperature. In other words, the string ``temperature'' is
+the property describing the raw collected data 73.45. On the other hand,
+however, the example \textbf{temperature-scale} = ``Fahrenheit": describes
+the metadata regarding the temperature.
 
 \subsection{When was the data collected?}
 
-In order to use historical sensor data, the use of a point in time is the most
-prominent feature of data, as it is considered a pivotal metadata for different
-types of sensor networks such as an aircraft the blackbox
-\cite{sn-exemple-blackbox}. Other projects classify data in time-series
-\cite{sn-time-series-example}, while others provide approaches to decrease
-the creation of data based on clustering data before they are sent to the sink
-\cite{sn-time-series}.
+In order to use the collected data for the purpose of historical analysis, the
+use of a point in time is the most prominent feature of data, as it is
+considered a pivotal metadata for different types of sensor networks such as
+an aircraft the blackbox \cite{sn-exemple-blackbox} or any
+environmental sensor network \cite{sfbeams2006, sn-xml-middleware, sn-ex01}.
+In this way, Other projects classify data in time-series
+\cite{sn-time-series-example}, where data is related to all the
+observations a given sensor device performed over a period of time. The
+apparent implications is that all the produced data is necessary, but
+\cite{sn-time-series} argued that some sorts of sensor networks could decrease
+the creation of ``noisy data sets" based on the proper clustering of
+similar time-series data before before they are sent to the data sink. 
 
-In different areas, temporal databases or time-series are the ones that take
-the real-world time into consideration. In general, data in a temporal database
-can be classified by its dimension, as surveyed by \cite{db-temporal}:
+Based on the guidelines defined by \cite{db-temporal}, the time properties of
+the collected data can be divided into two different dimensions: \textbf{valid
+time} and the \textbf{transaction time}. The former depicts the point in time
+when the observation took place with respect to the real-world space. An
+important aspect of this metadata is that since it captures the time when the
+observation occurred, its value cannot be changed during its existence, as well
+as placing restrictions on the update operations of this constant. Similarly,
+the latter type of is the point in time at which a given fact was transferred
+to the persistence layer.
 
-\begin{itemize}
-  \item \textbf{Valid time}: it is the point in time during which a fact
-  happened with respect to the real world. This value is only used when data is
-  captured, and cannot be changed because of its nature, as well as placing a
-  restriction over Update operations;
-  \item \textbf{Transaction time}: is the point in time at which a fact is
-  collected, transferred or processed in the database. This value is used
-  during Insertion operations, as well as in Update ones.
-\end{itemize}
+When both temporal dimensions are applied, the collected data is referred to as
+Bitemporal \cite{db-temporal}. Usually, the data type of this metadata is a
+regular timestamps, with any supported precision. To clarify, users may be
+interested not only when the temperature of 70 degrees happened, but also when
+it was collected to the data sink. Finally, \cite{sn-provenance} shows that
+the collected data for archival purpose is usually saved in self-described
+files described by file names, containing complex naming conventions using the 
+timestamp as a matter of data index.
 
-When both temporal dimensions are applied, the data is considered to be
-Bitemporal when \cite{db-temporal}. Usually, the data type of the valid and
-transaction time columns are straightforward timestamps, with any supported
-precision. For example, the following set of attribute and values shows a
-temperature of 70 degrees that was observed on ``November 15, 2009'', but
-collected only 3 days later.
-
-\begin{itemize}
-  \item \textbf{temperature} = 70;
-  \item \textbf{fact-time} = ``Nov 15, 2009 10:45 PM PST''
-  \item \textbf{transaction-time} = ``Nov 18, 2009 11:11 PM PST''
-\end{itemize}
-
-When it comes to Data Provenance in sensor networks, \cite{sn-provenance}
-shows that the collected data for archival purpose is usually saved in 
-self-described flat-files by file-names, containing complex naming conventions
-that contain the timestamp information about the data. For this reason, time
-is a central metadata needed in any data model used, since it helps
-identifying data uniquely for a given data set.
-
-\subsection{Where was the data collected from?}
+\subsection{From where was the data collected?}
 
 Depending on the application of the collected sensor data, the location in
-which the data was collected may be needed. For example, the geographic
-location of the collected data is critical to identify the specific
-GPS\footnote{Global Positioning System} coordinates of the sensor device
-\cite{sn-ex02}. Similarly, the position of any  event captured in a black-box
-of an aircraft carries is also used as metadata for the event. It will either
-depend on the sensor device provide such sampling attribute, or entered
-manually on the database.
+which the data was collected may be needed. For example, \cite{sn-geo-metadata}
+shows the geographic location of the collected data is critical to identify
+the locations of the events of the sensor device \cite{sn-ex02}. Similarly,
+the position of any event captured in a black-box of an aircraft carries is
+also used as metadata for the event. For this reason, engineers can open a
+real-world explanation regarding my family.
 
-A correlation between time and location is presented by \cite{sn-time-series}
-as a noteworthy feature to reduce the traffic generated in a sensor network by
-clustering similar data when the sensor devices are placed in concentrated 
-environment.
+All in all, Data Provenance enriches the value of the collected sensor,
+describing its identity creation, taking into account the specific location
+where the data was deployed. Such application ca be seen by having the problems
+and solutions Information Fusion \cite{sn-info-fusion}.

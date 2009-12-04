@@ -93,7 +93,7 @@ the number of nodes deployed and the sensor network lifetime. Therefore,
 sensors are deployed in sparse or dense manners, according to the
 specification of what needs to be covered by the sensor devices. Furthermore,
 considering that some types of sensor devices are very likely to regular
-hardware failures, \cite{sn-intro2} described sensor network examples with 
+hardware failures, \cite{sn-intro02} described sensor network examples with 
 redundant nodes that provide better data coverage and levels of coverage.
 Finally, the coverage of sensor devices also influence on the connectivity
 property of the sensor nodes. In order communicate with redundant nodes, a
@@ -452,11 +452,17 @@ Depending on the application of the collected sensor data, the location in
 which the data was collected may be needed. For example, \cite{sn-geo-metadata}
 shows the geographic location of the collected data is critical to identify
 the locations of the events of the sensor device \cite{sn-ex02}. Similarly,
-the position of any event captured in a black-box of an aircraft carries is
-also used as metadata for the event. For this reason, engineers can open a
-real-world explanation regarding my family.
+the position of any event captured by a black-box of an aircraft carries 
+metadata for the event. Examples of this are the metadata event =
+``high-pressure" of 1304, at the altitude of 1,500 feet above the ocean on GPS
+coordinates of latitude 13.445 and longitude -23,003. This example clearly
+gives necessary identification of where the event of high-pressure occurred.
 
-All in all, Data Provenance enriches the value of the collected sensor,
-describing its identity creation, taking into account the specific location
-where the data was deployed. Such application ca be seen by having the problems
-and solutions Information Fusion \cite{sn-info-fusion}.
+All in all, Data Provenance enriches the value of the collected data from
+sensor devices by describing its identity creation, time of creation and
+specific location where the observation occurred. It is important to note,
+however, that those type of data do not necessarily need to be on the data
+model used, but the specifications of the use of the data determines which
+ones are needed. Finally, collected data that are provenance-aware has a direct
+use on technologies called Information Fusion \cite{sn-info-fusion}, which aims
+at using data from different sensor devices.

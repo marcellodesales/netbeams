@@ -422,9 +422,9 @@ a reference to a MatchCriteria and a MatchTarget. The former identifies the
 rule for matching a given DSP Message based on the producer and consumer's
 message type and location, while the latter describes the DSP Component that
 will receive the DSP Message, and if its delivery is done by means of a gateway
-component. In this way, the DSP Matcher can be seen as a function that takes a
-DSP Message as an input and returns a list of DSP consumers, and the
-matching configuration artifact provided by the administrator. See listing
+component. In this way, the DSP Matcher can be seen as a function, as depicted
+in Table \ref{tab:matching-rule}, that takes a DSP Message as an input and
+returns a list of DSP consumers, and the matching configuration artifact provided by the administrator. See listing
 \ref{file:dsp-matcher-config.xml}) for details.
 
 \begin{table}
@@ -438,7 +438,7 @@ matching configuration artifact provided by the administrator. See listing
           the given message
         \end{tabular}
     \end{center}
-    \label{tab:ysi-data-stream}
+    \label{tab:matching-rule}
 \end{table}
 
 One example of such matching rule used by the DSP installed at the Gumstix can
@@ -482,6 +482,7 @@ a copy of the DSP Message object in two different ways:
 \end{itemize}
 
 \subsection{Sending DSP Messages through the Wire}
+\label{sec:dsp-serialization}
 
 In order to send messages through the wire, the DSP Platform uses two symmetric
 components that serialize and deserialize DSP Messages to XML and back to Java

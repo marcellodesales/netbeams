@@ -6,26 +6,33 @@
 \chapter{Data Persistence for Sensor Networks: A Case Study for NetBEAMS}
 \label{chap:netbeams-overview}
 
-This chapter presents the primary motivation and scope of this paper. The
-infrastructure of SF-BEAMS is presented as a real-world environmental sensor
-network, deployed by the department of Biology at the San Francisco State
-University. It serves as the foundation of the execution of NetBEAMS, a joint
-venture between the department of Biology and the Computer Science. As an
-alternative approach for data collection, NetBEAMS is used to automate the data
-management and collection process of SF-BEAMS. However, it offered different
-open problems, including Data Persistence. Therefore, the realm of the solution
-presented in the following sections and chapters are based in the case study
-presented in this current chapter.
+As discussed in chapter 2, different properties of a sensor network and the
+nature of the collected data must be taken into account in order to provide a
+data persistence layer for a given sensor netwokr. Similarly, in order to
+better assist one analysis of such functionality, chapter 3 proposed a set of
+data persistence taxonomies related to different properties of the collected
+data life cycle. In this way, the goal of this chapter is to describe the
+fundamental properties of the case study used for this work, that is, NetBEAMS,
+in order to ``set the stage'' for the selection of a database technology for it.
+In this way, given the fact that NetBEAMS provides an automated infrastructure
+solution for SF-BEAMS, this last component will be covered first. Then, this
+work proposes a categorization of NetBEAMS to the face of the taxonomies, and
+finally discusses the discusses the requirements for a data persistence.
 
 \section{SF-BEAMS: a Marine Sensor Network for Water Quality Monitoring}
 
-The San Francisco Bay Environmental Assessment and Monitoring Station, or
-SFBEAMS \cite{sfbeams2006}, is a marine sensor network operated by the Romberg Tiburon
-Center (RTC), whose primary focus is the study of complex marine and estuarine
+As described by \cite{netbeams2009}, NetBEAMS is a joint venture between the
+department of Biology and Computer Science at San Francisco State University,
+whose goal was to automate the operational execution of SF-BEAMS. On the other
+hand, the San Francisco Bay Environmental Assessment and Monitoring Station, or
+SFBEAMS \cite{sfbeams2006}, is an instance of an environmental sensor
+network whose primary focus is the study of complex marine and estuarine
 environments using the SF-BEAMS sensors. The network is deployed offshore of
 its pier located on the banks of the San Francisco Bay at the Tiburon Island,
 California, being operated by the department of Biology from San Francisco
-State University.
+State University. In this way, NetBEAMS is an experimental component that
+utilizes the SF-BEAMS infrastructure to operate. This section details SF-BEAMS
+in general, and presents the requirements for data persistence.
 
 \subsection{The SF-BEAMS Infrastructure}
 
@@ -33,31 +40,29 @@ The SF-BEAMS sensor network is responsible for providing data for water quality
 monitoring, as well as weather and surface conditions. Figure
 \ref{fig:sf-beams} shows a picture taken from the SF-BEAMS web-camera.
 
-\begin{figure}[!b]
+\begin{figure}[!t]
   \centering
     \includegraphics[scale=0.7]{../diagrams/cam_image-oct15}
   \caption{Picture of the SF-BEAMS Network, at the RTC pier. Tiburon, CA.}
   \label{fig:sf-beams}
 \end{figure}
 
-In general, the SF-BEAMS network infrastructure contains varying wired and
-wireless devices standing on pylons docked at the pier. Each of them is
-responsible for observing different conditions of the area, having its own
+In general, the SF-BEAMS network infrastructure contains varying a number of
+wired and wireless devices standing on pylons docked at the pier. Each of them
+is responsible for observing different conditions of the area, having its own
 mechanisms for internal storage for the collected data. In this way, data can
 be directly transferred to the labs via Ethernet cables or collected manually
-by a laptop computer.
+with a laptop computer.
 
 \subsection{SF-BEAMS produced data and collection process}
 \label{sec:sfbeams}
 
 As described in section \ref{sec:sn-infrastructure}, sensor devices produce
 its observed data based on properties of measurements defined by its
-manufacturer. SF-BEAMS can be seen a single-hop star sensor network containing
-different instances of sensors. One example of such sensors is the ``YSI 6600
-ESD V2", as seen in Figure \ref{fig:ysi-device}. Therefore, it can be seen as
-a powerful water quality monitoring device that produces around 52 bytes (13x4
-Bytes) on a single real-time data stream as shown on table
-\ref{tab:ysi-data-stream}.
+manufacturer. One example of such sensors is the ``YSI 6600 ESD V2", as seen in
+Figure \ref{fig:ysi-device}. It is a powerful water quality monitoring device,
+capable of producing around 52 bytes on a single real-time data stream reading,
+as shown on Table \ref{tab:ysi-data-stream}.
 
 \begin{figure}[!b]
   \centering
@@ -66,7 +71,7 @@ Bytes) on a single real-time data stream as shown on table
   \label{fig:ysi-device}
 \end{figure}
 
-\begin{table}
+\begin{table}[!b]
     \caption{YSI Data Stream}
     \begin{center}
         \begin{tabular}{lr}
@@ -80,24 +85,24 @@ Bytes) on a single real-time data stream as shown on table
 In order to have access to the observed data, the network staff downloads the
 data using one of the device's connection such as the RS-232 serial connector
 \cite{rs232}. Then, the RTC labs receives the collected data transferred from
-the sensor devices to be used for archival. The data is described, indexed and
-distributed to its main users. According to one of its staff members, the
-infrastructure of the SF-BEAMS in May 2009 was comprised of the following:
+the sensor devices to be used for archival purposes. According to one of its
+staff members, the infrastructure of the SF-BEAMS in was comprised of
+the following components (as of May 2009):
 
 \begin{itemize}
-  \item Among other devices, 5 YSI sondes in operation at the RTC pier;
-  \item Each YSI sonde produces 52 Bytes for each its observations;
-  \item The sampling frequency rate could be configured in ranges of 1, 6 or
+  \item 5 YSI Sonde devices, among others, in operation at the RTC pier;
+  \item The sampling frequency rate is configured in ranges of either 1, 6 or
   15 minutes, depending on the specification;
-  \item Data for final users is published with Provenance Data regarding time,
-  without description of the origin of data.
+  \item The processed data, used for distribution over the Internet, is
+   contains information regarding the time of the data collection.
 \end{itemize}
 
-Considering the infrastructure previously described, the size of the data
-produced by the YSI sonde sensors at the RTC pier can be estimated by its
-measurement frequency as follows:
+Considering the infrastructure aforementioned, the data load in the server-side
+of the RTC's laboratories produced by the YSI sonde sensors devices can be
+estimated by analyzing the data distribution over a period of one year, as
+shown in Table \ref{tab:ysi-data-distribution}:
 
-\begin{table}
+\begin{table}[!b]
     \label{tab:ysi-data-distribution}
     \caption{Amount of data produced by the RTC's YSI sondes}
         \begin{center}
@@ -114,83 +119,84 @@ measurement frequency as follows:
         \end{center}
 \end{table}
 
-As it is shown, the data produced by this type of sensor runs in the order of
-at most hundreds of Megabytes a year for a maximun of \textbf{483,840}
-samples, what can be considered a exceptionally sparse data storage
-requirement as compared to other networks. Upon collecting data from sensors,
-the RTC staff use automation scripts written in Matlab to process, index and
+By analyzing the maximum amount of produced data by the YSI sonde device is
+around hundreds of Megabytes a year, as \textbf{483,840} samples are generated
+by one single device. Upon collecting data from sensors, the RTC staff uses
+automation scripts written in Matlab \cite{matlab} to process, index and
 distribute the raw data in different formats. One of these formats is the
-OPeNDAP \cite{opendap}, a format widely used at research institutions that
-promote easier data exchange among them. The access to the archived data is
-done by using the OPeNDAP server is located at
-http://sfbeams.sfsu.edu:8080/opendap, as a request and the corresponding
-output for one of the YSI devices can be seen in Listing \ref{file:rtc-ysi-opendap}.
+OPeNDAP \cite{opendap}, which is widely used at research institutions that
+promote easier data exchange among them. The SF-BEAMS website provides access
+to the collected data through the Internet at
+http://sfbeams.sfsu.edu:8080/opendap. An example of an HTTP Request from
+accessing the data for a specific YSI is shown in Listing
+\ref{file:rtc-ysi-opendap}.
 
 \subsection{Taxonomic Classification of SF-BEAMS}
 
-In order to distinct each of the properties of the SF-BEAMS sensor networks,
-consider the following list as a classification of the data persistence
-mechanisms from the sensor network used by the project:
+This section classifies the sensor network deployed by SF-BEAMS according to
+the taxonomies proposed in the previous chapter. This classification is
+necessary to better understand the requirements of a data persistence for
+NetBEAMS, which indirectly uses the infrastructure of SF-BEAMS.
 
 \begin{itemize}
   \item \textbf{The Purpose of Sensor Data}: the data from SF-BEAMS is solely
-  used for Data Archival purposes, since they are stored in the RTC's lab as
-  part of the collaboration research project that monitors each part of the
-  California coast. The data sets are distributed by a specific date in an
-  annual calendar;
+  used for the purpose of Data Archival, since they are stored in the RTC's
+  lab;
   \item \textbf{The Location of the Sensor Data}: it is clear that the purpose
   of data is directly related to its location and, as a consequence, the
   strategy of \textbf{External Data Storage} is used to store its collected
   data at the network sink at the RTC's labs;
-  \item \textbf{Data Model}: no data model is used by the RTC's staff to model
-  the data. A straightforward conversion of the data collected from the sensors
-  directly to spreadsheets, using comma-delimited values, is used. That is, the
-  data mode used \textbf{Schema-less};
-  \item \textbf{Data Provenance}: data is stored in files with conventions that
-  take the time when the data was collected. The contents of the files contain
-  the \textbf{Data Identity} and \textbf{Time Dimensions}, as shown in the
-  samples collected and shown in Listing \ref{file:rtc-ysi-opendap};
-  \item \textbf{Query Processing Mechanism}: data is queried in a
-  \textbf{Centralized} fashion, due to the nature of its purpose and locality;
-  \item \textbf{Database System Organization}: there are no databases in use.
-  The SF-BEAMS staff use the OPeNDAP Hyrax server as a middleware used to read
-  and interpret the collected data. 
+  \item \textbf{Data Model}: since the format uses by the RTC staff to share
+  data among researcher is in the OPEnDAP format, it is clear that the data
+  model used is the tabular data model, since it uses the comma-delimited
+  files. In this way, the \textbf{Schema-less} is used;
+  \item \textbf{Data Provenance}: once the collected data reaches the RTC
+  lab, a quality assurance process is executed, and the data is transformed
+  into the format used by OPEnDAP. This conversion carries data regarding
+  the time of the data collection, and therefore, the use of one of the
+  \textbf{Time Dimensions} such as the valid time. Since the files are stored
+  with specific file name structure, using timestamps to describe the data, the
+  use of transaction time may be also considered. Finally, the contents of the
+  files contain the \textbf{Data Identity} as shown in the samples of
+  the collected in Listing \ref{file:rtc-ysi-opendap};
+  \item \textbf{Query Processing Mechanism}: similar to the data stored in a
+  centralized way, the query processing is also \textbf{Centralized}, as the
+  data is stored on file system;
+  \item \textbf{Database System Organization}: there are no databases in use,
+  but the use the OPeNDAP Hyrax server as a middleware that servers the
+  collected data using the Internet.
 \end{itemize}
 
 \section{NetBEAMS: a component-based approach for SF-BEAMS}
 \label{sec:problem-requirements}
 
 Although the execution of the RTC's sensor network can be operated as it
-described in the previous sections, \cite{netbeams2009} described some
-operational challenges faced by the RTC staff during regular activities during
-the data collection process. It was clear to the research group that SF-BEAMS
+described in the previous sections, \cite{netbeams2009} described some of the
+operational challenges faced by the RTC staff during regular activities of
+data collection process. It was clear to the research group that SF-BEAMS
 could have not only its data gathering process automated, but also its data
 management and distribution. By the use of COTS\footnote{Common-Off-The-Shelf
 designates a product that is produced and sold in bulk} embedded devices and
 open-source \cite{open-source} software, the research group developed a second
-version of NetBEAMS, a component-based approach suggested improving
-operational activities from SF-BEAMS using systems automation. In brief, one
-of the open problems of NetBEAMS was regarding Data Persistence, the primary
-motivation of this dissertation.
+version of NetBEAMS, a component-based approach suggested improving operational
+activities from SF-BEAMS using systems automation. In brief, one of the open
+problems of NetBEAMS was regarding Data Persistence, the primary motivation of
+this dissertation.
 
 The Networked Bay Environmental Assessment and Monitoring System, or Net-BEAMS,
-is a work-in-progress joint project proposed by the department of Computer
-Science and the RTC at San Francisco State University. The main reason for the
-inception of NetBEAMS is the potential to reduce operational costs and
-facilitate the data gathering process. In the current state of SF-BEAMS,
-Biologists need to obtain data manually from the sensor devices in order to
-take them to the network sink for further processing. For this reason, the Data
-Sensor Platform (DSP) \cite{netbeams2009} was proposed as the system
+offers the Data Sensor Platform (DSP) \cite{netbeams2009} as the system
 architecture that can address the operation of SF-BEAMS. In this way, in-depth
 documentation describing the DSP Platform, including its architecture and data
-gathering process, is provided in the appendix section \ref{sec:dsp-details}.
+gathering process, is provided startng in the appendix section
+\ref{sec:dsp-details}.
 
 The scope of this work then is defined as to provide a persistence layer for
-NetBEAMS, making a selection of a persistence layer that is a exception to the
+NetBEAMS, making a selection of a persistence layer that is an exception to the
 taxonomical classification of SF-BEAMS. Furthermore, the technology to be
 selected for the persistence layer must take into account the requirements of
 NetBEAMS primary users such as Computer Science researchers, as well as end
-users such as Biologists from the RTC laboratories.
+users such as Biologists from the RTC laboratories. The requirements for the
+data persistece specifically for NetBEAMS is described in the following section.
 
 \section{Requirements for NetBEAMS Data Use}
 
@@ -217,12 +223,17 @@ order to select a database system for the sensor network supported by NetBEAMS.
   Database Systems;
   \item Data Representation must be similar to the ones used by RTC, with a
   more human-readable format;
-  \item Scalable Systema low degree of maintenance, in a way that data
-  gathering service should be able to manage the system with less service interruption;
-  \item Data must be searchable in near-real-time with outstanding performance,
-  as compared to the time when data was collected to the time when they are available;
-  \item Easy data integration and export capabilities must be also taken into
-  account;
+  \item The system must be scalable with a low degree of maintenance, in a
+  way that the data gathering process does not impose less service interruption;
+  \item Data must be searchable in near-real-time with outstanding performance;
+  \item The solution must also give support to export capabilities, which can
+  be possibly used to match the RCT's requirements of the OPeNDAP formatt;
   \item The database system must be free of charge, following the
-  implementation specifications of NetBEAMS.
+  implementation specifications of NetBEAMS for Open-source software.
 \end{itemize}
+
+After presenting NetBEAMS and its infrastructure, the the next step is the
+actual analysis of existing database systems that fits to the requirements
+and characteristics of NetBEAMS. Meanwhile, more details regarding the
+architecture of NetBEAMS, as well as development guidelines, can be reached in
+the appendix of chapter 10.

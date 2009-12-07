@@ -139,4 +139,8 @@ public class PersistentMessageUnit {
     public long getCollectionTimeMilliseconds() {
         return this.collectionDateTime.getTimeInMillis();
     }
+
+    public String toString() {
+        return "Persistence Unit: "+this.getDspMessage().getMessageID() + " (" + this.getMessageType() + ") "; 
+    }
 }

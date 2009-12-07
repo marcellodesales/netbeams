@@ -65,6 +65,10 @@
        </chmod>
     </target>
 
+    <target name="run-futon4mongo" depends="init">
+        <exec command="${THIRDPARTY}/mongodb/futon4mongo-0.2/serve" />
+    </target>
+
     <target name="run-mongodb" depends="init">
         <exec command="${DSP.PERSISTENCE.DB}/mongodb/bin/mongod">
             <arg value="--dbpath ${DSP.PERSISTENCE.DB}/data"/>

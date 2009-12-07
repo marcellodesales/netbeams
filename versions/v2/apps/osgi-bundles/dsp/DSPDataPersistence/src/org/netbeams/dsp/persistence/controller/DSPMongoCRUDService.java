@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import org.netbeams.dsp.demo.mouseactions.MouseAction;
 import org.netbeams.dsp.demo.mouseactions.MouseActionsContainer;
 import org.netbeams.dsp.message.MessageContent;
-import org.netbeams.dsp.persistence.model.TransientPersistenceLayer;
 import org.netbeams.dsp.persistence.model.component.data.PersistentMessageUnit;
 import org.netbeams.dsp.persistence.model.location.SensorLocation;
 import org.netbeams.dsp.ysi.SondeDataContainer;
@@ -52,6 +51,7 @@ public enum DSPMongoCRUDService {
     private static final DecimalFormat TWO_DECIMALS_FORMATTER = new DecimalFormat("###0.00");
     private static final DecimalFormat THREE_DECIMALS_FORMATTER = new DecimalFormat("###0.000");
 
+    private static final boolean SETUP_INDEXES = true;
     /**
      * The default mongoDB database name for the project.
      */
@@ -61,18 +61,17 @@ public enum DSPMongoCRUDService {
      */
     private static final Map<String, DBCollection> netBeamscollectionsCache = new HashMap<String, DBCollection>();
     /**
-     * The IP address of the mongo server. Either the single server of the cluster head when in sharded environment 
+     * The IP address of the mongo server. Either the single server of the cluster head when in sharded environment
      */
     private String serverIpAddress;
+    private int serverPortNumber;
     /**
      * Tracks if the service was initialized before being used. After getting the INSTANCE instance, the method
      * initialize must be called.
      */
-    private boolean initialized;
+    private static boolean initialized;
     /**
-     * The list of properties to be included.
-     * temperature = true
-     * salinity = true
+     * The list of properties to be included. temperature = true salinity = true
      */
     private Map<String, Boolean> includeProperty = new HashMap<String, Boolean>(15);
 
@@ -90,15 +89,16 @@ public enum DSPMongoCRUDService {
      * @throws UnknownHostException
      * @throws MongoException
      */
-    public void initialize(String serverIpAddress, Set<SensorLocation> sensorsLocation, String propertiesList)
+    public void initialize(String serverIpAddress, int serverPortNumber, Set<SensorLocation> sensorsLocation, String propertiesList)
             throws UnknownHostException, MongoException {
-        this.initialized = true;
+        initialized = true;
         this.serverIpAddress = serverIpAddress;
+        this.serverPortNumber = serverPortNumber;
         this.setupSelectedProperties(propertiesList);
         finishedInit = true;
         log.info("Persistence Service Initialized...");
     }
-    
+
     /**
      * @return if the service has been initialized.
      */
@@ -139,7 +139,10 @@ public enum DSPMongoCRUDService {
             DB netbeamsDb = this.getNetbeamMongoDb();
             dbCollection = netbeamsDb.getCollection(persistentMessage.getMessageContentType());
             netBeamscollectionsCache.put(persistentMessage.getMessageContentType(), dbCollection);
-            //this.setupDataIndexes(dbCollection);
+            if (SETUP_INDEXES) {
+                this.setupMetadataIndexes(dbCollection);
+                this.setupDataIndexes(dbCollection);
+            }
         }
         return dbCollection;
     }
@@ -152,94 +155,72 @@ public enum DSPMongoCRUDService {
      * @throws MongoException
      */
     public DB getNetbeamMongoDb() throws UnknownHostException, MongoException {
-        Mongo dbInstance = new Mongo(this.serverIpAddress);
+        Mongo dbInstance = new Mongo(this.serverIpAddress, this.serverPortNumber);
         return dbInstance.getDB(NETBEAMS_DATASTORE_NAME);
     }
 
     /**
-     * Sets up the list of known sensor locations. Only used for designs using DBRef.
+     * Adds the needed indexes for the metadata used for any collected data.
      * 
-     * @param sensors is the set of unique sensor locations identified by an IP address.
-     * @throws UnknownHostException
-     * @throws MongoException
+     * @param dataCollection
      */
-//    private void setUpSensors(Set<SensorLocation> sensors) throws UnknownHostException, MongoException {
-//        DB netbeamsDb = this.getNetbeamMongoDb();
-//        DBCollection dbCollection = netBeamscollectionsCache.get("sensors");
-//        if (dbCollection == null) {
-//            dbCollection = netbeamsDb.getCollection("sensors");
-//        }
-//
-//        // Add all the knowledge about the sensor location in the database
-//        // Start the mongoDB Transaction mechanism
-//        this.getNetbeamMongoDb().requestStart();
-//        for (SensorLocation location : sensors) {
-//            DBObject sensorDoc = new BasicDBObject();
-//            sensorDoc.put("_id", location.getIpAddress());
-//
-//            DBObject locationDoc = new BasicDBObject();
-//            locationDoc.put("latitude", location.getLatitude());
-//            locationDoc.put("longitude", location.getLongitude());
-//            sensorDoc.put("location", locationDoc);
-//            dbCollection.insert(sensorDoc);
-//        }
-//        // Terminate the mongoDB Transaction
-//        this.getNetbeamMongoDb().requestDone();
-//    }
+    private void setupMetadataIndexes(DBCollection dataCollection) {
+        dataCollection.ensureIndex(new BasicDBObject("message_id", "1"), true);
+        dataCollection.ensureIndex(new BasicDBObject("sensor.ip_address", "1"), true);
+        dataCollection.ensureIndex(new BasicDBObject("sensor.location.latitude", "1"), true);
+        dataCollection.ensureIndex(new BasicDBObject("sensor.location.longitude", "1"), true);
+        dataCollection.ensureIndex(new BasicDBObject("time.valid", "1"), true);
+        dataCollection.ensureIndex(new BasicDBObject("time.transaction", "1"), true);
+    }
 
     /**
      * Adds the needed indexes for the sonde data collection
+     * 
      * @param dbCollection
      */
-//    private void setupDataIndexes(DBCollection sondeDataCollection) {
-//        sondeDataCollection.ensureIndex(new BasicDBObject("message_id", "1"), true);
-//        sondeDataCollection.ensureIndex(new BasicDBObject("ip_address", "1"), true);
-//        sondeDataCollection.ensureIndex(new BasicDBObject("latitude", "1"), true);
-//        sondeDataCollection.ensureIndex(new BasicDBObject("longitude", "1"), true);
-//        sondeDataCollection.ensureIndex(new BasicDBObject("valid_time", "1"), true);
-//        sondeDataCollection.ensureIndex(new BasicDBObject("transaction_time", "1"), true);
-//
-//        final String DATA_PREFIX = "data";
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("watertemperature") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".WaterTemperature", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("specificconductivity") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".SpecificConductivity", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("conductivity") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".Conductivity", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("resistivity") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".Resistivity", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("salinity") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".Salinity", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("pressure") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".Pressure", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("depth") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".Depth", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("ph") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".pH", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("phmv") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".pHmV", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("turbidity") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".Turbidity", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("odosaturation") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".ODOSaturation", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("odo") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".ODO", "1"), true);
-//        }
-//        if (this.includeProperty.size() == 0 || this.includeProperty.get("battery") == Boolean.TRUE) {
-//            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + ".Battery", "1"), true);
-//        }
-//    }
+    private void setupDataIndexes(DBCollection sondeDataCollection) {
+
+        final String DATA_PREFIX = "observation.";
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("watertemperature") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "WaterTemperature", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("specificconductivity") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "SpecificConductivity", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("conductivity") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "Conductivity", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("resistivity") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "Resistivity", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("salinity") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "Salinity", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("pressure") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "Pressure", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("depth") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "Depth", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("ph") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "pH", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("phmv") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "pHmV", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("turbidity") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "Turbidity", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("odosaturation") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "ODOSaturation", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("odo") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "ODO", "1"), true);
+        }
+        if (this.includeProperty.size() == 0 || this.includeProperty.get("battery") == Boolean.TRUE) {
+            sondeDataCollection.ensureIndex(new BasicDBObject(DATA_PREFIX + "Battery", "1"), true);
+        }
+    }
 
     /**
      * Inserts the DSP Message Content into the mongoDB as it is extracted and converted from the given
@@ -251,9 +232,9 @@ public enum DSPMongoCRUDService {
      * @throws UnknownHostException
      * @throws MongoException
      */
-    public void insertPersistentUnitMessageContents(Set<PersistentMessageUnit> tranMsgs) throws UnknownHostException,
-            MongoException {
-        if (!this.initialized) {
+    public synchronized void insertPersistentUnitMessageContents(Set<PersistentMessageUnit> tranMsgs)
+            throws UnknownHostException, MongoException {
+        if (!initialized) {
             throw new IllegalStateException("Initialize the service before inserting");
         }
         log.info("Inserting transient DSP Messages: " + tranMsgs.size() + " messages");
@@ -273,8 +254,7 @@ public enum DSPMongoCRUDService {
                     // extract the fact time from the message, adding to the key
                     factTime = sondeData.getDateTime().getTimeInMillis();
                 }
-            } else 
-            if (messageContent instanceof MouseActionsContainer) {
+            } else if (messageContent instanceof MouseActionsContainer) {
                 MouseActionsContainer mouseActionsContainer = (MouseActionsContainer) messageContent;
                 for (MouseAction data : mouseActionsContainer.getMouseAction()) {
                     // build the document value
@@ -287,8 +267,7 @@ public enum DSPMongoCRUDService {
             BasicDBObject docKey = buildKeySegment(tranMsg, factTime, docValue);
             // insert the final collection
             netbeamsDbCollection.insert(docKey);
-            // flush the message from transient 
-            TransientPersistenceLayer.INSTANCE.setMessageToFlushed(tranMsg);
+            // flush the message from transient
         }
         // Terminate the mongoDB Transaction
         this.getNetbeamMongoDb().requestDone();
@@ -305,10 +284,9 @@ public enum DSPMongoCRUDService {
      */
     public BasicDBObject buildKeySegment(PersistentMessageUnit tranMsg, long validTime, BasicDBObject docValue)
             throws UnknownHostException, MongoException {
-        log.debug("Building Key Segment");
         BasicDBObject doc = new BasicDBObject();
         doc.put("message_id", tranMsg.getDspMessage().getMessageID());
-        //doc.put("sensor", new DBRef(this.getNetbeamMongoDb(), "sensors", )); VERY SLOW
+        // doc.put("sensor", new DBRef(this.getNetbeamMongoDb(), "sensors", )); VERY SLOW
 
         BasicDBObject sensorDoc = new BasicDBObject();
         sensorDoc.put("ip_address", tranMsg.getSensorLocation().getIpAddress());
@@ -336,7 +314,6 @@ public enum DSPMongoCRUDService {
      * @return the basic DB Object representation of the sonde data type with all the properties.
      */
     public BasicDBObject buildValueSegment(SondeDataType sondeData) {
-        log.debug("Building Value Segment for YSI");
         BasicDBObject docValue = new BasicDBObject();
         if (this.includeProperty.size() == 0 || this.includeProperty.get("watertemperature") == Boolean.TRUE) {
             docValue.put("WaterTemperature", Double.valueOf(TWO_DECIMALS_FORMATTER.format(sondeData.getTemp())));
@@ -385,7 +362,6 @@ public enum DSPMongoCRUDService {
      * @return the basic DB Object representation of the sonde data type with all the properties.
      */
     public BasicDBObject buildValueSegment(MouseAction mouseData) {
-        log.debug("Building Value Segment for MouseAction");
         BasicDBObject docValue = new BasicDBObject();
         docValue.put("x", mouseData.getX());
         docValue.put("y", mouseData.getY());

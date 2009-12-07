@@ -1,6 +1,7 @@
 package org.netbeams.dsp.persistence.controller;
 
 import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -96,15 +97,17 @@ public class DSPDataPersistence implements DSPComponent {
             try {
                 TransientPersistenceLayer transientLayer = TransientPersistenceLayer.INSTANCE;
                 thLog.debug("Retrieving all transient messages to be flushed...");
-                Set<PersistentMessageUnit> tranMsgs = transientLayer.retrieveTransientMessagesUnitSet();
-
+                Set<PersistentMessageUnit> tranMsgs = Collections.synchronizedSet(transientLayer
+                        .retrieveTransientMessagesUnitSet());
+                
+                DSPMongoCRUDService.INSTANCE.insertPersistentUnitMessageContents(tranMsgs);
                 if (tranMsgs.size() > 0) {
-                    thLog.debug("Preparing to transfer messages " + tranMsgs.size() + " to database...");
-
-                    DSPMongoCRUDService.INSTANCE.insertPersistentUnitMessageContents(tranMsgs);
-                    for (PersistentMessageUnit tranMsg : tranMsgs) {
-                        tranMsg.setStateToFlushed();
+                    synchronized (tranMsgs) {
+                        for (PersistentMessageUnit pmu : tranMsgs) {
+                            transientLayer.setMessageToFlushed(pmu);
+                        }
                     }
+                    thLog.debug("Preparing to transfer messages " + tranMsgs.size() + " to database...");
 
                 } else {
                     thLog.debug("There are no transient messages in the transient persistent layer...");
@@ -140,14 +143,14 @@ public class DSPDataPersistence implements DSPComponent {
         boolean delayHasChanged = false;
         boolean databaseAddressHasChanged = false;
         for (DSProperty property : properties.getProperty()) {
-            if (property.getName().equals("TRANSIENT_DATA_FLUSHER_DELAY") && 
-                    (System.getProperty(property.getName()) == null || 
-                     !System.getProperty(property.getName()).equals(property.getValue()))) {
+            if (property.getName().equals("TRANSIENT_DATA_FLUSHER_DELAY")
+                    && (System.getProperty(property.getName()) == null || !System.getProperty(property.getName())
+                            .equals(property.getValue()))) {
                 delayHasChanged = true;
             }
-            if (property.getName().equals("DATABASE_SERVER_IP_ADDRESS") && 
-                    (System.getProperty(property.getName()) == null ||
-                    !System.getProperty(property.getName()).equals(property.getValue()))) {
+            if (property.getName().equals("DATABASE_SERVER_IP_ADDRESS")
+                    && (System.getProperty(property.getName()) == null || !System.getProperty(property.getName())
+                            .equals(property.getValue()))) {
                 databaseAddressHasChanged = true;
             }
             System.setProperty(property.getName(), property.getValue());
@@ -164,8 +167,9 @@ public class DSPDataPersistence implements DSPComponent {
 
             try {
                 String ipAddress = System.getProperty("DATABASE_SERVER_IP_ADDRESS");
-                String propertiesList =  System.getProperty("YSI_DESIRED_PROPERTIES");
-                DSPMongoCRUDService.INSTANCE.initialize(ipAddress, sensors, propertiesList);
+                int portNumber = Integer.parseInt(System.getProperty("DATABASE_SERVER_PORT_NUMBER"));
+                String propertiesList = System.getProperty("YSI_DESIRED_PROPERTIES");
+                DSPMongoCRUDService.INSTANCE.initialize(ipAddress, portNumber, sensors, propertiesList);
                 log.info("Starting the database service targeting server at IP " + ipAddress);
                 log.info("Sensors Registered: " + sensors);
 

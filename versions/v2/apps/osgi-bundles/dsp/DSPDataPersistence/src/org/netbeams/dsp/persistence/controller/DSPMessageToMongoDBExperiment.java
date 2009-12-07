@@ -192,7 +192,9 @@ public class DSPMessageToMongoDBExperiment {
         long watchExperimentId = Stopwatch.start("Complete Experiene", "entire-experience");
 
         // the needed 3 arguments
-        final String SERVER_IP_ADDRESS = args[0];
+        final String SERVER_IP_ADDRESS = args[0].split(":")[0];
+        ;
+        final int SERVER_PORT_NUMBER = Integer.parseInt(args[0].split(":")[1]);
         final int NUMBER_SAMPLES = Integer.valueOf(args[1]);
         String PROPERTIES_LIST = null;
         if (args.length == 3) {
@@ -268,7 +270,8 @@ public class DSPMessageToMongoDBExperiment {
         };
         status.start();
         watchTransaction = Stopwatch.start("Time for initializing the mongo service", "mongo-service");
-        DSPMongoCRUDService.INSTANCE.initialize(SERVER_IP_ADDRESS, randomLocationsCache, PROPERTIES_LIST);
+        DSPMongoCRUDService.INSTANCE.initialize(SERVER_IP_ADDRESS, SERVER_PORT_NUMBER, randomLocationsCache,
+                PROPERTIES_LIST);
         Stopwatch.stop(watchTransaction);
 
         long end = System.currentTimeMillis();

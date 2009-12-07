@@ -5,37 +5,36 @@
 
 \chapter{DSP Data Persistence: Component Design and Architecture}
 
-In order to provide data to users, the RTC scientists use OPeNDAP \cite{opendap}
-server to distribute collected data over the Internet. As discussed in the
-previous chapter, this work proposes the use a Key-Value database system
-in order to provide an alternative way for data persistence in sensor
-networks, taking into account the taxonomies discussed earlier in chapter 
-\ref{chap:taxonomies}. 
+In order to provide information to users, the RTC scientists use OPeNDAP
+\cite{opendap} server to distribute collected data over the Internet. As
+discussed in the previous chapter, this work proposes a data persistence
+application of a Key-Value database system in order to provide an alternative
+method for data persistence in sensor networks, taking into account the
+taxonomies discussed earlier in chapter \ref{chap:taxonomies}.
 
-Considering our case study being NetBEAMS, and its infrastructure, this chapter
-describes the design and architecture component designed specifically for the
-Data Sensor Platform, DSP, in order to provide a persistence layer for
-NetBEAMS. It is important to note that the technology chosen in the previous
-chapter can be adapted by any alternative that uses the data model and
-infrastructure options presented.
+Considering our case study being NetBEAMS, this chapter describes the design
+and architecture component designed specifically for the Data Sensor Platform,
+DSP, in order to provide a persistence layer for NetBEAMS. It is vital to note
+that the technology chosen in the last chapter can be adapted by any
+alternative that uses the data model and infrastructure options presented.
 
-The proposed DSP Data Persistence component for the DSP Platform was
-implemented by using the same approaches described in chapter
-\ref{chap:netbeams-overview}. The following sections describe the scenarios
-for persistence, analyzes the requirements from RTC, and describes the design
-and architecture of the solution.
+The proposed DSP Data Persistence component for the DSP
+Platform was implemented by using the same approaches described in chapter
+\ref{chap:netbeams-overview}. The following sections describe the scenarios for
+persistence, analyze the requirements from RTC, and describe the design and
+architecture of the solution.
 
 \section{Business Process Analysis}
 \label{sec:business-process-analysis}
+
 As described in section \ref{chap:netbeams-overview}, the DSP Platform was
-designed to support an environmental sensor network based in San Francisco
-Bay, composed by different types of sensors. The process of extracting the
-measurements from the sensors to be reused through the DSP Platform can be
-summarized following the UML Business Process Diagram \cite{uml} depicted in
-figure \ref{fig:dsp-persistence-business-process}. It is important to note
-that this diagrams details remote communication between sensor devices and a
-centralized server, as part of the main scenario to solve the problem of data
-persistence.
+designed to support an environmental sensor network based in San Francisco Bay,
+composed by different types of sensors. The process of extracting the
+measurements from sensors can be summarized following the UML Business Process
+Diagram \cite{uml} depicted in figure
+\ref{fig:dsp-persistence-business-process}. It is important to note that this
+diagram details remote communication between sensor devices and a centralized
+server, as part of the main scenario to solve the problem of data persistence.
 
 \begin{figure}[!b]
   \centering
@@ -45,46 +44,41 @@ persistence.
 \end{figure}
 
 At the event of data collection, the DSP Client receives measurements collected
-from each of the sensor devices. Each of the co-located DSP Client processes
-the collected measurements and transforms them into the so-called DSP Message
+from each of the sensor devices. Each of the co-located DSP Client process the
+collected measurements and transform them into the alleged DSP Message
 (section \ref{sec:dsp-message}), which embodies the actual data values. After
 proper data processing, transformation and categorization, the DSP Message is
-added into temporary outbound queue. Then, as an asynchronous data
-transmission event occurs with an specified rate, transferring all the queued
-messages to be processed by a DSP Server host. As it is detailed in image
-\ref{fig:dsp-persistence-business-process}, the server is centralized and is
-able to concurrently process messages.
+added into temporary outbound queue. Then, as an asynchronous data transmission
+event occurs with a specified rate, transferring all the queued messages to be
+processed by a DSP Server host. As image
+\ref{fig:dsp-persistence-business-process}, the server is centralized and able
+to concurrently process messages.
 
 This work proposes the addition of a database system that is responsible for
 storing the gathered measurement data from sensor nodes of the SF-BEAMS through
-the use of NetBEAMS. Also in figure \ref{fig:dsp-persistence-business-process}, 
+the use of NetBEAMS. Also in figure \ref{fig:dsp-persistence-business-process},
 the processed measurement data from sensors 1 through N must be collected in
-the same fashion and categorized as necessary. In this way, end users such as
-Biologists and/or Programmers can access the collected measurements directly
-from the Database. Furthermore, the same measurement data can be exported to
-different formats as the users find necessary.
+the same style and categorized as necessary. In this way, end users such as
+Biologists or Programmers can access the collected measurements directly
+from the Database. Furthermore, the same collected data can be exported to
+different formats as necessary.
 
 As a matter of fact, the data measurements collected from the sensor devices
-are simple properties with keys and associated values as described in section
+are basic properties with keys and associated values as described in section 
 \ref{sec:sfbeams}, after data has been described. According to the descriptions
 of the DSP Platform and the DSP Messages structure, the data is represented in
 programming language formats such as Java \cite{java} or in a serialized
 version in XML \cite{xml}. Similarly, the collected data contains measurements
-that uniquely identifies them, together with other properties such as time
-stamps of data creation and collected, as well as the the IP
-address\footnote{Internet Protocol Address} of the DSP Client that produced
-the data. Therefore, these are important properties for the proposed solution
-of this work.
+that uniquely identifies them, together with other properties such as
+timestamps of data generation and collected and the IP address of the DSP
+Client that produced the data. Therefore, these are essential properties for
+the proposed solution of this work.
 
 \section{Requirements Specification}
 
 By analyzing the main scenario of collected data in the previous section, as
 well as by collected requirements from the RTC staff, this section lists the
-main use cases that the system and the primary users require. One of the
-primary requirements of the system is to enable the use a persistence system
-that does not promote the use of specialized professionals to deal with data
-modeling, as it is required in most projects using the Structured Query
-Language (SQL) \cite{sql}, used to extract data from a Relational Databases.
+main use cases that the system and the primary users require.
 
 \subsection{Functional Requirements}
 \label{sec:use-cases}
@@ -99,11 +93,6 @@ that the end users can perform with the system.
   \caption{UML Use Case diagram for Persistence Functions}
   \label{fig:DSP-Data-Persistence-UseCases-Diagram-Users}
 \end{figure}
-
-The functional requirements listed in this section are in the format of UML
-User Cases Diagrams \cite{uml}. Figure
-\ref{fig:DSP-Data-Persistence-UseCases-Diagram-System} summarizes the use 
-cases that the system, as the main actor of the system, must perform:
 
 \begin{itemize}
   \item \textbf{Search Measurements by Sensor Properties}: users of the
@@ -127,31 +116,35 @@ cases that the system, as the main actor of the system, must perform:
 
 \subsection{Non-Functional Requirements}
 
+Different constraints are required to execute the functional requirements
+described in the previous section. They are listed as non-functional
+requirements as follows:
+
 \begin{itemize}
   \item The DSP Data Persistence component must maintain the received DSP
-  Measurement Messages in-memory for a specific rate in order to decrease the
-  write load on the database;
+  Measurement Messages in-memory for a specific period of time in order to
+  decrease the write load on the database;
   \item The Persistence storage system must be able to cope with dozens of DSP
-  Messages;
+  Messages received from different sensors;
   \item The Persistence storage system must be able to save measurements quickly;
   \item The Persistence storage system must be able to scale without too much
   architectural changes, or schema changes;
-  \item The Persistence storage system must not impose the knowledge of
-  complicated database system languages such as SQL \cite{sql} or XML XPath
-  \cite{xml-xpath}, but use access through API calls, as it offers better
-  abstractions for non-computer science researchers
+  \item The Persistence storage system must not impose the use of
+  database languages such as SQL \cite{sql} or XML XPath \cite{xml-xpath}
+  related to the data being persisted. Instead, data must be handled through API
+  calls, as better abstractions for non-computer science researchers
   \cite{sn-programming-language}.
 \end{itemize}
 
 \section{Data Model Design}
 \label{sec:dsp-persistence-data-model}
 
-As described in the previous chapter, the data model that might give better
-support for collected data from sensor networks is the Key-Value-Pair Data
-Model. Beyond the data collected from the sensor devices, Data Provenance 
-techniques must also be considered to better describe the collected data
-\cite{sn-provenance}. In general, the data model must include the following
-metadata besed on Data Provenance:
+As described in the previous chapter, the data model chosen to support
+persistence of collected data from sensor networks is the Key-Value-Pair Data
+Model \cite{db-kvp}. Beyond the data collected from the sensor devices, Data
+Provenance techniques must also be considered to better describe the collected
+data \cite{sn-provenance}. In general, the data model must include the
+following metadata besed on Data Provenance:
 
 \begin{itemize}
   \item \textbf{Locality}: properties that describe the location of the data.
@@ -169,7 +162,7 @@ After analyzing the DSP Platform and the structure of the DSP Messages in
 chapter \ref{netbeams-architecture}, the following set of keys are expected to
 be part of the design of the data model. Any key represented by time or
 location are related to the provenance support discussed in section
-\ref{sec:sn-provenance}:
+\ref{sec:sn-data-description}:
 
 \begin{itemize}
   \item \textbf{sensor.ip\underline{ }address}: it is extracted
@@ -178,10 +171,11 @@ location are related to the provenance support discussed in section
   longitude GPS coordinates of the position of the sensor device, captured from
   references of the device. This is currently provided as a parameter in the
   bootstrap message for the component;
-  \item \textbf{message\underline{ }id}: it's extracted from each of the messages contained
-  in the DSP Message Container;
+  \item \textbf{message\underline{ }id}: it's extracted from each of the
+  messages contained in the DSP Message Container;
   \item \textbf{time.transaction}: it is extracted from the DSP
-  message container creation time and it is used to identify when the transaction occurred;
+  message container creation time and it is used to identify when the
+  transaction occurred;
   \item \textbf{time.fact}: it is extracted from the
   SondeDataContainer's date and time, and identifies the time in which the
   collected data occurred.
@@ -195,9 +189,9 @@ defined to accommodate such data:
 
 \begin{itemize}
   \item \textbf{observation}: this key defines the values of the document, and
-  will have every different property of the sensor. For instance, the data key for the
-  properties of the YSI device will contain the set of properties defined for
-  the device, such as battery, temperature, salinity, etc.
+  will have every different property of the sensor. For instance, the data key
+  for the properties of the YSI device will contain the set of properties 
+  defined for the device, such as battery, temperature, salinity, etc.
 \end{itemize}
 
 \section{High-Level System Architecture}
@@ -586,6 +580,3 @@ nodes is defined by a shard-key.
   \caption{UML Deployment Diagram for a sharded server}
   \label{fig:DSP-Data-Persistence-Deployment-Sharded}
 \end{figure}
-
-More details about the implementation of the DSP Data Persistence can be see in
-the next chapter.

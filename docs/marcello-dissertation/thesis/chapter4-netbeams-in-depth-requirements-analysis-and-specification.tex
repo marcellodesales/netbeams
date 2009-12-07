@@ -35,6 +35,7 @@ utilizes the SF-BEAMS infrastructure to operate. This section details SF-BEAMS
 in general, and presents the requirements for data persistence.
 
 \subsection{The SF-BEAMS Infrastructure}
+\label{sec:sfbeams}
 
 The SF-BEAMS sensor network is responsible for providing data for water quality
 monitoring, as well as weather and surface conditions. Figure
@@ -52,17 +53,32 @@ wired and wireless devices standing on pylons docked at the pier. Each of them
 is responsible for observing different conditions of the area, having its own
 mechanisms for internal storage for the collected data. In this way, data can
 be directly transferred to the labs via Ethernet cables or collected manually
-with a laptop computer.
+with a laptop computer. The current data collection process for SF-BEAMS is
+described in figure
+\ref{fig:SF-BEAMS-system-architecture}\cite{sfbeams-current-system}. Upon
+collecting data from sensors, the RTC staff uses automation scripts written in
+Matlab \cite{matlab} to process, index and distribute the raw data in
+different formats. One of these formats is the OPeNDAP \cite{opendap}, which
+is widely used at research institutions that promote easier data exchange
+among them. The SF-BEAMS website provides access to the collected data through
+the Internet at http://sfbeams.sfsu.edu:8080/opendap. An example of an HTTP
+Request from accessing the data for a specific YSI is shown in Listing
+\ref{file:rtc-ysi-opendap}.
 
-\subsection{SF-BEAMS produced data and collection process}
-\label{sec:sfbeams}
+\begin{figure}[!b]
+  \centering
+  \includegraphics[scale=0.5]{../diagrams/SF-BEAMS-system-architecture}
+  \caption{The Current SF-BEAMS Data Collection Process}
+  \label{fig:SF-BEAMS-system-architecture}
+\end{figure}
 
 As described in section \ref{sec:sn-infrastructure}, sensor devices produce
 its observed data based on properties of measurements defined by its
-manufacturer. One example of such sensors is the ``YSI 6600 ESD V2", as seen in
-Figure \ref{fig:ysi-device}. It is a powerful water quality monitoring device,
-capable of producing around 52 bytes on a single real-time data stream reading,
-as shown on Table \ref{tab:ysi-data-stream}.
+manufacturer. NetBEAMS has used ``YSI 6600 ESD V2", as seen in Figure
+\ref{fig:ysi-device}, one of the sensors devices used by SF-BEAMS. It is a
+powerful water quality monitoring device, capable of producing around 52 bytes
+on a single real-time data stream reading, as shown on Table
+\ref{tab:ysi-data-stream}.
 
 \begin{figure}[!b]
   \centering
@@ -71,15 +87,14 @@ as shown on Table \ref{tab:ysi-data-stream}.
   \label{fig:ysi-device}
 \end{figure}
 
-\begin{table}[!b]
-    \caption{YSI Data Stream}
+\begin{table}
     \begin{center}
-        \begin{tabular}{lr}
-  12.20    192    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5  8.83 
-  0.4     8.7
+        \begin{tabular}{|l|}\hline
+  12.20    192    179 5588.40   0.09   0.084   0.059  7.98   -79.6   99.5  8.83  0.4     8.7\\\hline
         \end{tabular}
     \end{center}
     \label{tab:ysi-data-stream}
+    \caption{The Collected Data Stream from the YSI Sonde 6600ESDV2}
 \end{table}
 
 In order to have access to the observed data, the network staff downloads the
@@ -121,15 +136,7 @@ shown in Table \ref{tab:ysi-data-distribution}:
 
 By analyzing the maximum amount of produced data by the YSI sonde device is
 around hundreds of Megabytes a year, as \textbf{483,840} samples are generated
-by one single device. Upon collecting data from sensors, the RTC staff uses
-automation scripts written in Matlab \cite{matlab} to process, index and
-distribute the raw data in different formats. One of these formats is the
-OPeNDAP \cite{opendap}, which is widely used at research institutions that
-promote easier data exchange among them. The SF-BEAMS website provides access
-to the collected data through the Internet at
-http://sfbeams.sfsu.edu:8080/opendap. An example of an HTTP Request from
-accessing the data for a specific YSI is shown in Listing
-\ref{file:rtc-ysi-opendap}.
+by one single device. 
 
 \subsection{Taxonomic Classification of SF-BEAMS}
 
@@ -150,7 +157,7 @@ NetBEAMS, which indirectly uses the infrastructure of SF-BEAMS.
   data among researcher is in the OPEnDAP format, it is clear that the data
   model used is the tabular data model, since it uses the comma-delimited
   files. In this way, the \textbf{Schema-less} is used;
-  \item \textbf{Data Provenance}: once the collected data reaches the RTC
+  \item \textbf{Data Description}: once the collected data reaches the RTC
   lab, a quality assurance process is executed, and the data is transformed
   into the format used by OPEnDAP. This conversion carries data regarding
   the time of the data collection, and therefore, the use of one of the
@@ -162,9 +169,13 @@ NetBEAMS, which indirectly uses the infrastructure of SF-BEAMS.
   \item \textbf{Query Processing Mechanism}: similar to the data stored in a
   centralized way, the query processing is also \textbf{Centralized}, as the
   data is stored on file system;
-  \item \textbf{Database System Organization}: there are no databases in use,
-  but the use the OPeNDAP Hyrax server as a middleware that servers the
-  collected data using the Internet.
+  \item \textbf{Data Volume}: the volume of data produced is in the range of
+  small. It is related to the volume of data produced by the sensor devices,
+  which is numerical data streams, and the total number of sensor devices;
+  \item \textbf{System Organization}: SF-BEAMS runs on a Single System, as
+  the collected data is stored directly in the file-system after previous 
+  processing. However, they provide the collected data to the Internet using
+  the OPeNDAP Hyrax system as a middleware.
 \end{itemize}
 
 \section{NetBEAMS: a component-based approach for SF-BEAMS}
@@ -190,7 +201,7 @@ documentation describing the DSP Platform, including its architecture and data
 gathering process, is provided startng in the appendix section
 \ref{sec:dsp-details}.
 
-The scope of this work then is defined as to provide a persistence layer for
+The scope of this work is defined as to provide a persistence layer for
 NetBEAMS, making a selection of a persistence layer that is an exception to the
 taxonomical classification of SF-BEAMS. Furthermore, the technology to be
 selected for the persistence layer must take into account the requirements of

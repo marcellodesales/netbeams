@@ -792,6 +792,7 @@ the osgi-intro Framework container Knopflerfish \cite{knopflerfish}.
 \subsection{Execution Logs}
 
 \section{mongoDB Deployment}
+\label{sec:mongodb-deployment}
 
 Given that Document-Oriented Model makes a good candidate persist sensors'
 properties and the recently enumerated list technologies in the previous
@@ -841,19 +842,20 @@ times are expressed in milliseconds. The data element contains the complete
 structure of the originating sensor such as the IP address. The collection of
 instances of this document represents the sensor data type.
 
-\subsection{Starting the Database}
+\subsection{MongoDB Database Administration}
 
-\subsection{Stopping the Database}
-
-\subsection{Execution Logs}
+- starting the db
+- Stopping the Database
 
 \section{Experiment Execution}
+\label{sec:experiment-execution}
 
 The experiments conducted using mongoDB can be summarized by the different
 data access methods provided by the technology. Each subsection describes these
 methods.
 
 \subsection{Data Access Using Database Shell}
+\label{sec:mongodb-user-experience}
 
 The mongoDB client can be started by using the following command. Make sure you
 have started the mongoDB server before executing the mongoDB client.
@@ -981,6 +983,8 @@ listing \ref{cmd:mongo-rest-request}.
 
 \lstset{label=cmd:mongo-rest-request,caption=REST HTTP GET Request Example}
 \begin{lstlisting}
+http://192.168.1.2:28017/netbeams/SondeDataContainer/?limit=-3&filter_observation.Conductivity=104.5
+
 HTTP/1.0 200 OK
 x-action:
 x-ns: netbeams.SondeDataContainer
@@ -989,18 +993,9 @@ Content-Type: text/plain;charset=utf-8
 {
   "offset" : 0,
   "rows": [
-    { "_id" : "156f4007e4c3b74a36ed3100", "sensor_ip_address" : "192.168.0.117", "message_id" : "08b02c08-9290-4517-9a28-c6ee7e16509a",
-"transaction_time" : 1253557219486, "fact_time" : 1253557217000, "data" : { "temperature" : "31.44", "sp_condition" : "99.8", "condition" : "53.5",
-"resistence" : "1157.08", "salinity" : "0.0", "pressure" : "1.066", "depth" : "0.161", "ph" : "1.08", "pH_mv" : "-82.0", "odo_sat" : "40.3",
-"odo_condition" : "56.85", "turbidity" : "0.2", "battery" : "8.2" } } ,
-    { "_id" : "156f4007e5c3b74a37ed3100", "sensor_ip_address" : "192.168.0.117", "message_id" : "08b02c08-9290-4517-9a28-c6ee7e16509a",
-"transaction_time" : 1253557219486, "fact_time" : 1253557217000, "data" : { "temperature" : "37.83", "sp_condition" : "176.3", "condition" : "2.6",
-"resistence" : "1324.97", "salinity" : "0.01", "pressure" : "1.36", "depth" : "1.564", "ph" : "0.12", "pH_mv" : "-23.5", "odo_sat" : "104.5",
-"odo_condition" : "19.44", "turbidity" : "0.1", "battery" : "5.0" } } ,
-    { "_id" : "156f4007e5c3b74a38ed3100", "sensor_ip_address" : "192.168.0.117", "message_id" : "08b02c08-9290-4517-9a28-c6ee7e16509a",
-"transaction_time" : 1253557219486, "fact_time" : 1253557217000, "data" : { "temperature" : "74.3", "sp_condition" : "84.0", "condition" : "104.7",
-"resistence" : "4089.13", "salinity" : "0.01", "pressure" : "1.222", "depth" : "2.788", "ph" : "6.56", "pH_mv" : "-78.1", "odo_sat" : "40.0",
-"odo_condition" : "6.02", "turbidity" : "0.3", "battery" : "3.2" } },
+    { "_id" : { "$oid" : "616f400784ba194bc2dee200" }, "message_id" : "c76a9898-1eee-4463-bf5d-d40a7a8af6e3", "sensor" : { "ip_address" : "192.168.0.60", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : { "$date" : 1261229067000 }, "transaction" : { "$date" : 1259977271704 } }, "observation" : { "WaterTemperature" : 51.29, "SpecificConductivity" : 110.7, "Conductivity" : 104.5, "Resistivity" : 1710.07, "Salinity" : 0.01, "Pressure" : 1.094, "Depth" : 1.808, "pH" : 3.04, "pHmV" : -46.4, "Turbidity" : 0.2, "ODOSaturation" : 59, "ODO" : 10.66, "Battery" : 7.1 } } ,
+    { "_id" : { "$oid" : "616f400789ba194bdbe2e200" }, "message_id" : "2eb3f5ca-7a30-4b5d-8d16-c3e80a7b1b7a", "sensor" : { "ip_address" : "192.168.0.24", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : { "$date" : 1261740924000 }, "transaction" : { "$date" : 1259977271704 } }, "observation" : { "WaterTemperature" : 10.98, "SpecificConductivity" : 100.9, "Conductivity" : 104.5, "Resistivity" : 5448.21, "Salinity" : 0.08, "Pressure" : 1.152, "Depth" : 1.289, "pH" : 3.09, "pHmV" : -0.4, "Turbidity" : 0.1, "ODOSaturation" : 72.2, "ODO" : 59.65, "Battery" : 6.3 } } ,
+    { "_id" : { "$oid" : "616f400789ba194b13e5e200" }, "message_id" : "a7804d0a-44a8-4bd9-a9c7-51db84e91f08", "sensor" : { "ip_address" : "192.168.0.236", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : { "$date" : 1260969259000 }, "transaction" : { "$date" : 1259977271704 } }, "observation" : { "WaterTemperature" : 7.97, "SpecificConductivity" : 119.1, "Conductivity" : 104.5, "Resistivity" : 1971.59, "Salinity" : 0.05, "Pressure" : 1.516, "Depth" : 2.187, "pH" : 3.11, "pHmV" : -77.59999999999999, "Turbidity" : 0.2, "ODOSaturation" : 82.90000000000001, "ODO" : 41.99, "Battery" : 0.1 } }
   "total_rows" : 3 ,
   "query" : {} ,
   "millis" : 0
@@ -1060,16 +1055,9 @@ executed to have the exported version of the data in CSV (read the help output
 of the command for details).
 
 An example to export the data in CSV format can be seen in listing
-\ref{cmd:mongoexport}, and an example containing 1 million objects can be
+\ref{file:mongodb-export-command}, and an example containing 1 million objects can be
 downloaded at
 http://netbeams.googlecode.com/files/experiment-1000000-data-exported-20090913-053538.csv.tar.gz.
-
-\lstset{label=cmd:mongoexport,caption=Command to export data in CSV format}
-\begin{lstlisting}
-mongoexport -d netbeams -c SondeDataContainer --dbpath ./data/ --csv -f "_id,sensor_ip_address,transaction_time,fact_time,
-data.temperature,data.sp_condition,data.condition,data.resistence,data.salinitude,data.pressure,data.depth,data.ph,data.pH_mv,data.odo_sat,
-data.odo_condition,data.turbidity,data.battery" -o sonde-data-exported.csv
-\end{lstlisting}
 
 \subsection{Exporting Data to OPeNDAP Format}
 
@@ -1172,14 +1160,25 @@ Message with a YSI sonde data payload}
 \lstinputlisting[language=Bash,label=file:experiment-setup-executor,caption=Experiment
 Main Execution Script]{../../../../netbeams/versions/v2/persistence/run-persistence-experiment}
 
-\lstinputlisting[language=Bash,label=file:experiment-query-scenarios,caption=Experiment
+\lstinputlisting[language=Python,label=file:experiment-setup-mongoshards,caption=Experiment
+Main Execution Script]{../../../../netbeams/versions/v2/persistence/setup-mongo-shards.js}
+
+\lstinputlisting[language=Python,label=file:experiment-export-python,caption=Data
+Export to from mongoDB to OPEnDAP format.]{../../../../netbeams/versions/v2/persistence/data-export-python.py}
+
+\lstinputlisting[language=Python,label=file:experiment-scenarios,caption=Experiment
 Scenarios Implementation]{../../../../netbeams/versions/v2/persistence/experiment-client-scenarios.js}
+
+\lstinputlisting[language=Java,label=file:main-ysi-data-handler,caption=The
+DSP YSI Sonde Data Handler]{../../../../netbeams/versions/v2/apps/xml/jaxb/sonde/java-src/org/netbeams/dsp/ysi/SondeDataType.java}
 
 \lstinputlisting[language=Java,label=file:random-ysi-data-generator,caption=Random
 Test Data Generator]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPSondeProducer/src/org/netbeams/dsp/ysi/SondeTestData.java}
 
 \lstinputlisting[language=Java,label=file:experiment-dsp-java-executor,caption=Inserting
 Random Data to MongoDB]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPMessageToMongoDBExperiment.java}
+
+\subsection{Experiment Execution Output}
 
 \lstset{label=file:mongodb-ysi-data-format,caption=JSON representation of the
 data produced by a YSI sensor on mongoDB}
@@ -1247,7 +1246,9 @@ Sun Nov 29 19:07:04 query netbeams.SondeDataContainer ntoreturn:0 reslen:2258 ns
 Sun Nov 29 19:07:04 getmore netbeams.SondeDataContainer cid:7749363894863150628 ntoreturn:0 query: { query: {}, $snapshot: 1 }  bytes:1048562 nreturned:47661 1767ms
 ...
 ...
-...
 Sun Nov 29 19:10:18 getmore netbeams.SondeDataContainer cid:7749363894863150628 ntoreturn:0 query: { query: {}, $snapshot: 1 }  bytes:793098 nreturned:36049 1975ms
 exported 2419200 records
 \end{lstlisting}
+
+\lstinputlisting[label=file:experiment-export-python-results,caption=Data
+Export to from mongoDB to OPEnDAP format.]{../../../../netbeams/versions/v2/persistence/export-mongodb-to-sfbeams.csv}

@@ -12,6 +12,10 @@ discusses and provides data persistence solutions for sensor networks,
 characterizing the different approaches used to described and model the
 gathered data from sensor devices.
 
+It is important to note that the scope of this literature review is limited to
+the scope of the our case study described in chapter 4 and, therefore, it only
+covers a subset of disciplines in sensor networks and data persistence.
+
 \section{Survey in Sensor Networks and Its Infrastructure}
 
 According to \cite{sn-intro02}, sensor networks are specialized types of
@@ -337,34 +341,37 @@ capable of query and extract the collected data from sensor devices
 to communicate between nodes is the communication mechanism used by NetBEAMS
 \cite{netbeams2009}. See section \ref{sec:dsp-serialization} for details.
 
-\section{Data Provenance: How Collected Data is Described?}
-\label{sec:sn-provenance}
+\section{How collected data is described?}
+\label{sec:sn-data-description}
 
 As described in the previous section, the collected data from sensor networks
 can be represented by different data models, requiring the knowledge of the
 properties of the data. Not to mention that the low-level or raw data produced
-by a given sensor device might not include vital information regarding the
-origing and identity of the collected data. For this reason,
+by a given sensor device might not include vital details regarding the
+origing and identity of the collected data. For this reason, the collected data
+is reported to be described in different ways such as Data Provenance or
+Annotations.
+
 \cite{sn-provenance} describes Data Provenance as a technique used to describe
 those essential properties of the collected data from sensors. One typical
 example of the application of Data Provenance is the so-called blackbox of an
-aircraft, which carries the collection of raw data collected from a group of
-sensors placed in different locations of an aircraft, as shown by
-\cite{sn-exemple-blackbox}. Last, but not least, the author describes the
-collected data as used in a process of data recovery and analysis in order to
-identify the probable reason of an aircraft accident, by using the time, and
-location of the aircraft, along with the independent variables from the
-sensors.
+aircraft, which carries the collection of spacio-temporal data structures
+collected from a group of sensors placed in different locations of an
+aircraft, as shown by \cite{sn-exemple-blackbox}. Last, but not least, the
+author describes the collected data as used in a process of data recovery and
+analysis in order to identify the probable reason of an aircraft accident, by
+using the time, and location of the aircraft, along with the independent
+variables from the sensors.
 
 In general, sensor devices produce data and either keep them onto its local
 storage or transmit them to data nodes as described earlier in this chapter. It
 is vital to understand that the majority of these devices outputs the data in
 its raw format, containing only a stream of values with any type of
 delimitation between each other. For this reason, the processes of parsing and
-description of each of the values located in the data streams regularly require
-the use of the device's specification documentation. Similarly, in order to
-have access to each of the properties of data collected by a given property
-related to time or space, \cite{sn-provenance} also mentions that 
+description of each of the values located in the data streams regularly
+require the use of the device's specification documentation. Similarly, in
+order to have access to each of the properties of data collected by a given
+property related to time or space, \cite{sn-provenance} also mentions that
 Metadata\footnote{Data about data} should be included together with the
 collected data.
 
@@ -381,6 +388,17 @@ general, others see the importance of the time space of sensor networks.
 data as time series of data, as well as to decrease the size of data streams
 being transmitted in real-time sensor networks when these collected data does
 not need to be transferred \cite{sn-data-reduction}.
+
+Another different way to describe sensor devices is through the use of
+Annotations. \cite{sn-annotation} shows the use of tags to describe data
+collected from a physical area monitoring. The sensor network was
+designed to monitor a moving objects, capturing their location while in
+movement and their visual appearance using a video camera. In this way,
+different instants can be described by adding tags particular video frame, and
+therefore, providing an efficient way to search of a particular frame based on
+its visual observations. Similarly, this project also uses data provenance to
+describe its collected data, since each of the collected data contains the
+related GPS coordinates of the observed object.
 
 Finally, data provenance provides practical use of the collected data from
 different sensor devices and different sensor networks in the process called
@@ -415,17 +433,18 @@ the metadata regarding the temperature.
 \subsection{When was the data collected?}
 
 In order to use the collected data for the purpose of historical analysis, the
-use of a point in time is the most prominent feature of data, as it is
-considered a pivotal metadata for different types of sensor networks such as
-an aircraft the blackbox \cite{sn-exemple-blackbox} or any
-environmental sensor network \cite{sfbeams2006, sn-xml-middleware, sn-ex01}.
-In this way, Other projects classify data in time-series
-\cite{sn-time-series-example}, where data is related to all the
-observations a given sensor device performed over a period of time. The
-apparent implications is that all the produced data is necessary, but
-\cite{sn-time-series} argued that some sorts of sensor networks could decrease
-the creation of ``noisy data sets" based on the proper clustering of
-similar time-series data before before they are sent to the data sink. 
+use of a point in time is the most prominent feature of data. Also referred to
+as spatial-temporal data, it is considered a pivotal metadata used in different
+types of sensor networks such as an aircraft the blackbox
+\cite{sn-exemple-blackbox}, environmental sensor network \cite{sfbeams2006},
+and data communications management systems \cite{sn-dataware-house}. In this
+way, Other projects classify data in time-series \cite{sn-time-series-example},
+where data is related to all the observations a given sensor device performed
+over a period of time. The apparent implications is that all the produced data
+is necessary, but \cite{sn-time-series} argued that some sorts of sensor
+networks could decrease the creation of ``noisy data sets" based on the proper
+clustering of similar time-series data before before they are sent to the data
+sink.
 
 Based on the guidelines defined by \cite{db-temporal}, the time properties of
 the collected data can be divided into two different dimensions: \textbf{valid
@@ -435,7 +454,10 @@ important aspect of this metadata is that since it captures the time when the
 observation occurred, its value cannot be changed during its existence, as well
 as placing restrictions on the update operations of this constant. Similarly,
 the latter type of is the point in time at which a given fact was transferred
-to the persistence layer.
+to the persistence layer. Either types of time can be used depending on the
+requirements of the sensor network. For instance, \cite{sn-dataware-house}
+reports that all the data stored by its sensor network uses the time of
+collection, but do not use the transaction time for that purpose.
 
 When both temporal dimensions are applied, the collected data is referred to as
 Bitemporal \cite{db-temporal}. Usually, the data type of this metadata is a
@@ -466,3 +488,43 @@ model used, but the specifications of the use of the data determines which
 ones are needed. Finally, collected data that are provenance-aware has a direct
 use on technologies called Information Fusion \cite{sn-info-fusion}, which aims
 at using data from different sensor devices.
+
+\section{Data Load and Management Systems}
+\label{sec:data-load}
+
+Depending on the amount of data produced by a sensor network, different
+approaches are reported to be taken to support the data management depending on
+the amount of data collected. For example, \cite{sfbeams2006} is a an
+environmental sensor network that produces data regarding the marine life.
+Less than twenty sensor devices produce Megabytes of data in a daily bases,
+whose data is processed and stored in using flat-files directly in the
+operating system's file system with provenance information regarding the time
+of collection.
+
+When the amount of data collected grows to other scales, say, Gigabyes of data
+in a daily basis, data management tends to become more difficult in any type of
+database systems. Examples of sensor networks that produce data under this
+magnitude of data are reported in the literature. For instance, 
+\cite{sn-dataware-house} describes the creation of a Data Warehouse for the
+real-time sensor data management using a cluster of MySQL databases used to
+store data from different sensors such as optical sensors that collect metrics
+from physics experiments using eletromagnetic fields. As the author reported,
+requirements for data management evolved from storing flat files by a
+monolitic system to a robust distributed system using MySQL database.
+Moreover, the the system targed from 5 to 10MB of data per second, whose
+culmulative data reached 1 TB of data every year.
+
+Data management for large scales of data require different techniques to store
+and retrieve data, since it requires more computational power and data
+retrieval efficient algorithms. \cite{sn-data-center} describes the creation of
+a Sensor Data Center designed to store and analyze amounts of data on the range of
+Terabytes to a future Petabyes of data. Its sensor network deals with not only
+numerical sensor readings from transportation managemenet, but also radar
+images, used for historic purposes and data mining that performs traffic
+pattern analysis. In this way, the authors report the use of parallel data
+processing techniques in order to provide processing for the collected
+data, and load-balancing when storing data to minimize the sensor data
+processing delays. For this reason, they suggest the use of concurrent control
+such as snapshot isolation of the current data into separated replicated data.
+In this way, data access from users are not interrupted by the processing of
+the data that is processed.

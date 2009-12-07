@@ -185,7 +185,10 @@ $\mbox{}$
 \end{center}
 \vspace{.5in}
 \begin{quote}
-I certify that I have read {\it \mytitle} by \myname, and that in my opinion this work meets the criteria for approving a thesis submitted in partial fulfillment of the requirements for the degree: Master of Science in Computer Science at San Francisco State University.
+I certify that I have read {\it \mytitle} by \myname, and that in my opinion
+this work meets the criteria for approving a thesis submitted in partial
+fulfillment of the requirements for the degree: Master of Science in Computer
+Science at San Francisco State University.
 \end{quote}
 
 \vspace{1.5in}
@@ -218,7 +221,6 @@ Professor of Computer Science
 San Francisco, California \\  
 \thisyear \\
 }
-
 \end{center}
 
 \vspace{.5in}
@@ -226,22 +228,27 @@ San Francisco, California \\
 %\doublespacing{\noindent
 \onehalfspacing{\noindent      
 Sensor Networks are becoming more and more important to different science
-communities bacause of what it produces: the raw data for different studies.
+communities bacause of what they produce: the raw data for different studies.
 In order to make use the collected data, researchers may have to dissect the
 characteristics of the sensor network in question, regarding different
 properties such as the purpose and location of the observed data, as well as
-how the data is described. In this way, this work first proposes a set of
-taxonomies that can be used to study and classify a given instance of sensor
-network and its produced data. Then, based on the classes of these taxonomies, 
-this work selected a Document-Oriented Database system as a result of an
-empirical evaluation of the requirements for a new persistence layer for 
-NetBEAMS, the case study used in this work. For this reason, the design and
-implementation of a new data persistence component for NetBEAMS show how
-schema-less data models help decreasing the complexity related to the database
-layer, not yet reported by the state of the art. Furthermore, this work also
-proposes the use of Database Shards in order support the implementation of
-Data-Centric sensor networks. 
-}
+how the data is described. For this reason, this work proposes a set of data
+persistence taxonomies based on the state of the art in data persistence for
+sensor networks, which can be used to classify the infrastructure of an
+existing sensor network and the nature of its produced raw data. In order to
+evaluate the proposed taxonomies, this work designs and implements a data
+persistence component for NetBEAMS, a modular sensor network infrastructure
+developed to improve the operation of the SF-BEAMS environmental Sensor
+Network. In this way, based on empirical analysis of the proposed taxonomies
+and the requirements of a persistence layer for the case study, this work
+selected mongoDB, a schema-less document-oriented database system intead of
+the traditional use of relational databases. As a result of the experiments
+conducted with mongoDB, this work concluded that schema-less data models can
+help decreasing the complexity related to the data persistence layer for
+sensor networks with external or data-centric storage mechanism, and whose
+purpose is data archival. Finally, this work proposes different future works
+such a data-centric approach using Database Shards to store the collected
+data and Map Reduce to execute parallel queries over the shards.}
 \vspace*{\fill}
 
 \hspace*{\fill}

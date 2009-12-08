@@ -38,49 +38,54 @@ selection can be summarized as follows:
   schema changes.
 \end{itemize}
 
-\section{Database Systems Contenders}
+\section{Database System ``Contenders''}
 
-This section describes the database systems contenders considered being used
-together with for the implementation of the Data Persistence component for 
-NetBEAMS. As described in the previous chapter, the selection of the
-technologies must be based on the list of functional and non-functional
-requirements specified within the scope this work, defined in the previous
-section.
+This section describes the database systems ``contenders'' considered to be used
+as the persistence technology backend for NetBEAMS. As described in the
+previous chapter, the selection of the technologies must be based on the list
+of functional and non-functional requirements specified within the scope of
+this work.
 
 One of the essential questions related to data persistence is regarding the
-data model and nature of the database, that is, the use of the relational or
-structured models. In addition to that, and given the present time of academic
-research and recent trends distributed computing such as Cloud Computing and
-the Internet \cite{cloud-comp-survey}, the selection of a data persistence for
-sensor networks should maintain a wider spectrum of the types of database 
-systems. Among other intriguing questions, \cite{db-is-rdbs-dommed} reflects
-about the use of alternatives to the relational model for dynamic environments
-such as data persistence for the Web. Similarly, these trends are also related
-to the advances of Cloud Computing and its persistence layer as a solution to
-dynamic systems \cite{cloud-comp-architectures}. For this reason, this work
-also included the overview of alternative data models for the development of
-an experiment that brings data persistence to NetBEAMS. In such a manner, the
-list of the systems considered for assessment is the following:
+data model and breed of the database. That is, the use of the relational or
+any other model to describe data along with its management. Traditionally, the
+relational data model has been used to provide data persistence for different
+types of projects, inclusing sensor networks \cite{sn-dataware-house,
+db-xml-enabled, sn-db-tinydb}. However, tradition does not always get translated
+to efficiency in terms of problem solving. For this reason,
+\cite{db-is-rdbs-dommed} reflects about the use of alternatives to the
+relational model when the data persistence problem in consideration is to
+provide data persistence for dynamic environments as Internet applications. The
+author also suggests that the relational model is hard to maintain in
+ever-changing environments, and thus, proposes the use of the Key-Value-Pair
+(KVP) data model and a different number of technologies. Similarly,
+\cite{cloud-comp-survey} reports similar trends in academic and industrial
+research in distributed computing have used KVP databases in powerful systems
+such as Cloud Computing \cite{cloud-comp-architectures}. For this reason, in
+addition to the different database systems used by projects in the
+literature review, this work also includes the review of a KVP database system
+called mongoDB \cite{mongodb}, since it was among those cited in the surveys.
+In such a manner, the list of the systems considered for assessment is the
+following:
 
 \begin{itemize}
   \item \textbf{MySQL}\cite{mysql}: system used in the implementation of a
   dateware house with sensor network data \cite{sn-dataware-house};
   \item \textbf{TinyDB}\cite{tinydb}: as referred in the literature review,
   TinyDB is a database system used in many different sensor networks
-  implementation \cite{sn-db-tinydb};
-  \item \textbf{MongoDB}\cite{mongodb}: an open-source key-value database
-  system described in the article that questions the use of the relational
-  model \cite{db-is-rdbs-dommed}, as well as the Cloud Computing trends survey
-  \cite{cloud-comp-architectures};
+  implementation such as \cite{sn-db-tinydb};
+  \item \textbf{MongoDB}\cite{mongodb}: an open-source KVP database
+  system suggested by different surveys to be alternatives to relational
+  databases \cite{db-is-rdbs-dommed, cloud-comp-architectures};
   \item \textbf{DB2}\cite{db2}: in the pursuit of an XML database system, DB2
   is listed as a hybrid database system that offers both the relational and the
-  XML models \cite{db-xml-enabled}. It was selected because NetBEAMS can
-  represent the collected data in the XML format as shown in setion 
+  XML models \cite{db-xml-enabled}. Furthermore, it was selected because
+  NetBEAMS represents serialized objects in XML, as shown in section
   \ref{sec:dsp-message}.
 \end{itemize}
 
-These technologies will be reviewed in contrast to their capabilities to adhere
-to the specifications of the taxonomies defined in chapter 3 and the
+The following sections reviews these technologies' capabilities to adhere to
+the specifications of the taxonomies defined in chapter 3, as well as the
 requirements and the scope for a data persistence of NetBEAMS, as defined in
 chapter 4.
 
@@ -91,60 +96,52 @@ automated infrastructure, can be summarized as follows:
 
 \begin{itemize}
   \item Data is generated by sensor devices, such as the YSI sonde
-  \cite{YSI-Sonde}, and manually collected by using a laptop to the network
-  sink at the RTC laboratories;
-  \item Upon data reception, the RTC staff index and archive the data for for
+  \cite{YSI-Sonde}, and manually collected by using a laptop to the data sink
+  at the RTC laboratories;
+  \item Upon data reception, the RTC staff index and archive the data for
   distribution using the OPEnDAP format;
-  \item An automated approach to the data collection procedures is done using 
-  NetBEAMS \cite{netbeams2009}, using software components to obtain and send
-  the data to the network sink. A full description of this approach is
-  described in section \ref{netbeams-architecture}.
+  \item An automated approach to the data collection procedures is performed 
+  using NetBEAMS \cite{netbeams2009}, using software components to obtain and
+  send the data to the data sink node. A complete description of this approach
+  is detailed in section \ref{sec:netbeams-architecture}.
 \end{itemize}
 
 As summarized in the previous section, the nature of data from NetBEAMS through
-SF-BEAMS is used for the purpose of \textbf{Data Archival}. After data is
-collected from the sensors, it needs to be processed and archived for reuse by
-different types of users, ranging from researchers, students, and the public
+SF-BEAMS is used for the purpose of \textbf{Data Archival}. After the
+collected data captured from the sensors, it requires further processing
+in order to be archived for later reuse. Different types of users are expected
+to use the collected data, ranging from researchers, students, and the public 
 over the Internet.
 
 \subsection{Technology Analysis}
 
-As it is supposed to be, all the contenders are developed to support data
-persistence and management, what is the requirement for the Data Archival
-purpose of the sensor network data.
-
-Basically, all the selected database systems support the purpose of the data.
+Since all of developed database systems were implemented with the intension of
+persisting data in long-term storage devices, every single one in the list
+provides support for data persistence and management. Therefore, they are
+compliant to the purpose of Data Archival for the sensor networks.
 
 \section{Analysis of the Location of Sensor Data}
 \label{sec:sn-data-location}
 
-As shown in the previous section, NetBEAMS's architecture is based on a
-single-hop star infrastructure from the SF-BEAMS sensor network, having all the
-data collected from the sensors being immediately sent to the network sink
-(Section \ref{sec:sn-infrastructure}).
-
-Based on the observations also described in the last chapter, the simplest
-position to save the collected data is through the use of an \textbf{External
-Storage}. In addition to that, the use of a Data-Centric Storage strategy is
-also considered in situations where the data load in the network sink reaches
-its storage capacity. The \textbf{Data-Centric Storage} storage separates the
-location of storage of the data based in any property of the data such as the
-value of a given key. Such approach of data partitioning is provided by
-database system in two different flavors.
-
-The Data-Centric storage separates the location of storage of the data based in
-any property of the data such as the value of a given key, etc. Such approach
-of data partitioning is provided by database system in two different flavors
-\cite{db-partitioning-relational}:
+As shown in the previous chapter, NetBEAMS's architecture is based on sensor
+network whose topology is a single-hop star with a centralized data sink. In
+this way, all the collected data is transmitted to that single location
+\ref{sec:sn-infrastructure}. In the same vein, the simplest location to save
+the collected data is through the use of at least an \textbf{External Storage}.
+Similarly, the use of a Data-Centric Storage strategy is considered in
+situations where the data sink is about to reach its storage capacity. As a
+consequence, the \textbf{Data-Centric Storage} separates the collected data
+into dissimilar locations, based on any property of the data. Therefore,
+there are two different approaches to data partitioningThe two different
+flavors: 
 
 \begin{itemize}
-  \item \textbf{Horizontal Partitioning}: the data segmentation is done based
-  on the values of the table rows in different groups allocated to different
-  datasets physically located in different servers. In this way, all the
-  columns defined for a given entity are found on each partition. For instance,
-  horizontal partitioning can be defined as a collection five years worth of
-  historical sensor data being partitioned into five separate servers, where
-  each server has a single year's worth of sensor data;
+  \item \textbf{Horizontal Partitioning}: the data segmentation is implemented
+  based on the values of the table rows. That is, all the values defined by the
+  columns are used in a given table physically located in specific servers.
+  For instance, horizontal partitioning can be defined as a collection of five
+  years worth of historical sensor data, partitioned into five separate
+  servers. In this way, each server contains data related to each of the years;
   \item \textbf{Vertical Partitioning}: data is partitioned vertically in a way
   that the columns of an entity are divided into different database tables. In
   this way, the particular dataset is broken down to different tables. For
@@ -157,28 +154,26 @@ of data partitioning is provided by database system in two different flavors
 
 The External Storage approach is the most common way to implement persistence
 for any breed of systems since data management is usually offered by most
-database systems out-of-the-box. Furthermore, this approach can be accompanied
-with the use of Distributed Systems approaches such as Replication to help a
-system to scaling in terms of performance.
+database systems out-of-the-box. 
 
 \subsection{Disadvantages of the External Storage Approach}
 
 The most common problem related to a single External Data Storage is that 
-resources may run into data management problems such as full-disk space or
-disk failures.
+resources may run into data management problems such reaching the disk storage
+capacity or hardware failure.
 
 \subsection{Advantages of the Data-Centric Approach}
 
 The benefit of the Data-Centric approach can be directly associated with
-database partitioning mechanisms described earlier. Since data is distributed
-into different locations, this approach decreases the size of datasets when the
-database server performs a query processing in a database table. For this
-reason, this approach helps the database administrators to scale their database
-infrastructure and improve the database performance.
+database partitioning mechanisms described earlier. Since the collected data is
+distributed into different locations, this approach decreases the size of
+datasets when the database server performs a query processing in a database
+table. For this reason, this approach helps the database administrators to
+scale their database infrastructure and improve the database performance.
 
 The horizontal or vertical partitioning strategies are also referred to as
 Database Sharding \cite{db-shard-discussion}, or simply Database partitioning
-\cite{db-table-partition, db-partitioning-relational}. Both former and the
+\cite{db-partitioning-relational}. Both the former and the
 latter are used in regular schema-dependent models or schema-less models,
 which uses denormalized data models. There are different approaches to
 partition data \cite{db-shard-schemas, db-partitioning-relational}.
@@ -187,28 +182,16 @@ partition data \cite{db-shard-schemas, db-partitioning-relational}.
   \item \textbf{Directory Based Partitioning}: an ordinary lookup service is
   used to identify which database shard to use, where the lookup table can be
   stored in a secondary area;
-  \item \textbf{Vertical Partitioning}: each feature of the system is usually
-  represented by a table in the relational model and placed in a different
-  server host. For example, each sensor in a given network can be divided by
-  its device type;
   \item \textbf{Key or Hash Based Partitioning}: the value of a given key
-  property can  be used as the key of the shard, or used as an input to a hash
-  function, whose output determines which database shard location the data is
-  going to  be stored;
-  \item \textbf{Range-Based Partitioning}: after partitioning each feature on
-  a different  server host, different multiple shards, or similar hosts, can be
-  added by using  the range of a given key of the entity of a function. For
-  example, different  sensor data can be distributed by geographic origin of
-  the data.
+  property can  be used as the key of the shard. Moreover, it can be used as 
+  an input to a hash function, whose output determines at which database shard
+  the data needs to be stored.
 \end{itemize}
 
-An example of a Data-Centric storage with different shards
-\cite{db-shard-intro} ca n be see in Figure
-\ref{fig:database-sharding-by-region}, where data is segregated by the
-location of data. Each shard is assumed to be placed in different server
-hosts. Since the data model is denormalized, the organization of data is
-entirely placed in each of these shards in a Horizontal partition of the
-entity. As it is shown, the shards by location can be defined by a shard key.
+An example of a Data-Centric storage with different shards can be see in Figure
+\ref{fig:database-sharding-by-region}, where the collected data is segregated
+by its origin. Each shard is assumed to be placed in different server
+hosts, as well as each of them uses the same ``denormalized'' data models.
 
 \begin{figure}
   \centering
@@ -221,24 +204,27 @@ entity. As it is shown, the shards by location can be defined by a shard key.
 \subsection{Disadvantages of the Data-Centric Approach}
 
 The data partitioning is a highly restricted technology, normally available to
-advanced users of distributed database systems. Despite being a capability
-being offered common-off-the-shelf by some popular database systems, this
-strategy requires closer database management. Some of the problems related to
-this strategy are regarding its execution \cite{db-shard-discussion}:
+advanced users of distributed database systems. Despite being offered as a
+common-off-the-shelf functionality by some popular database systems, this
+strategy requires closer database management and configuration. Some of the
+problems related to this strategy are regarding its lifecycle management
+\cite{db-shard-discussion}:
 
 \begin{itemize}
-  \item \textbf{Rebalancing Shards}: If the schema model changes for the
-  shards, the strategy of rebalancing must be done. For instance, when one of
-  the shards out-grows more than the others. As a consequence, the database
-  shards must be rebalanced by transferring data to new locations whenever
-  necessary. This technique is starting to appear as COTS implementations such
-  as mongoDB \cite{mongodb} or MySQL \cite{mysql};
-  \item \textbf{Referential integrity}: any cross-shard queries can represent
-  problems since the application layer is responsible to enforce data
-  integrity. Examples include verifying constraints of foreign keys when the
-  partition is done using Vertical table partitioning, considering that data
-  collections are organized in separate spaces, and physically placed in
-  different shard nodes \cite{db-table-partition}.
+  \item \textbf{Rebalancing Shards}: considering a schema-dependent database
+  system, changes on the schema of one shard requires rebalancing the
+  collected data on each of the shards. As a consequence, the database shards
+  transfers data to new locations whenever necessary. This technique is
+  starting to appear as COTS implementations such as MySQL \cite{mysql} and
+  mongoDB \cite{mongodb};
+  \item \textbf{Referential integrity}: also considering a schema-dependent
+  database system, any cross-shard query may fall into the problem where
+  references do no exist in other shards, since the application layer is
+  responsible for enforcing data integrity. In this way, examples of such
+  include verifying constraints of foreign keys when the partition is done
+  using Vertical table partitioning, considering that data collections are
+  organized in separate spaces, and physically placed in different shard nodes
+  \cite{db-partitioning-relational}.
 \end{itemize}
 
 \subsection{Technology Analysis}
@@ -253,24 +239,28 @@ this strategy are regarding its execution \cite{db-shard-discussion}:
   latter approach is used, the horizontal partition strategy is available with
   automatic shards \cite{db-mongo-partition};
   \item \textbf{DB2}: Supports External and Data-Centric storage. Only supports
-  vertical table partition \cite{db-db2-partition} for the data-centric storage.
+  vertical table partition for the data-centric storage \cite{db-db2-partition}.
 \end{itemize}
 
 All the selected database systems support the External Storage method. However,
-they all differ with the support to Data-Centric Storage support.
+they all differ with the support to Data-Centric Storage support. Therefore,
+MySQL and mongoDB are promising choices, with the difference of the use of the
+data model.
 
-\section{Analysis of the Data Model Taxonomy}
+\section{Analysis of the Data Model}
 
 One of the most common practices in the area of database system is to use the
 relational model to persist data, although the application of the system may
 not fit to solve the problem. In fact, the main users of sensor networks may
-not hold any expertise in database systems or data modeling, given they come
-from different science areas. Taking NetBEAMS as an example, we see a Sensor
-Network managed by Marine Biologists without expertise in Data Management,
-Modeling systems, and for this reason, one of the requirements of the system is
-trying the use of schema-less approaches. The \textbf{Key-Value-Pair Data
-Model} or the \textbf{Document-Oriented Data Model} seems to be the simplest
-choices of the models.
+not possess any expertise in database systems or data modeling, based on the
+fact that they are from different science areas. \cite{sn-programming-language}
+suggested the use of programming languages abstraction instead of regular
+database systems for researchers. For instance, SF-BEAMS is managed by Marine
+Biologists without expertise in Data Management, Modeling systems, and for
+this reason, one of the requirements of the system is trying the use of
+schema-less approaches. The \textbf{Key-Value-Pair Data Model} or the
+\textbf{Document-Oriented Data Model} seems to be the simplest choices of the
+models.
 
 \subsection{Analysis of the Schema-Dependent Models}
 
@@ -301,26 +291,27 @@ considered in this scenario:
 \end{figure}
 
 \begin{itemize}
-  \item Constant data schema changes require constant database normalization
-  process, changes to structure, database management, etc. Schema-Dependent 
-  databases always require refactoring of the schema to accommodate changes to
-  the entites properties;
-  \item The approach of Relational Model might does not fit the nature of
-  collected data from wired or wireless sensor devices, since they tend to
-  change over time \cite{db-is-rdbs-dommed}. They usually does not give
-  support time-series data nor provenance well \cite{sn-provenance};
+  \item Data schema that constantly changes require constant database
+  normalization processes, changes to structure, database management, and all
+  the code that uses the data. Schema-Dependent databases always require
+  refactoring of the schema to accommodate changes to the entites' properties;
+  \item The approach of Relational Model might not fit the nature of the
+  collected data from sensor devices, since they tend to change over time. 
+  Furthermore, the support to time-series or provenance are not better
+  supported \cite{sn-provenance};
   \item Some research have suggested changes to the SQL clauses to better
   support time-series when collecting data using the relational model 
   \cite{sn-db-newop}.
 \end{itemize}
 
-Other projects have been using the XML data models for persistence. It falls
+Other projects have used the XML data models for persistence. It falls
 into the same category as the Relational Model using XML documents \cite{xml},
-being complaint to an XML Schema \cite{xml-schema}. This model uses XPath
-\cite{xml-xpath} technology for querying documents, although some hybrid
-technologies may still use SQL \cite{sql} for that matter \cite{db2}. In this
-way, a materialized version of the data from the defined previous schema can be
-seen in Figure \ref{fig:persistence-example-relational}.
+since XML documents must fulfill the specifications defined by an XML Schema
+\cite{xml-schema}. This model uses XPath \cite{xml-xpath} technology for
+querying documents, although some hybrid \cite{db2} technologies may still use
+SQL \cite{sql} for that matter. In this way, a materialized version of the
+data from the defined previous schema can be seen in Figure
+\ref{fig:persistence-example-relational}.
 
 \begin{figure}[!h]
   \centering
@@ -330,19 +321,19 @@ seen in Figure \ref{fig:persistence-example-relational}.
 \end{figure}
 
 Although this data model has been used in different types of applications,
-developers have tried to use the Relational Model to model an application that
+developers have tried to use the Relational Model to design an application that
 could prevent any database change through the use of a technique that relates a
-key to a value, called Key-Value data model. With the emergence of Internet
-applications, the necessity of such a model that does not require constant
-refactoring led developers to propose such manner using the relational model as
-documented in technical articles such as \cite{db-kvp-in-relational01} and
-\cite{db-kvp-in-relational02}. Based on these articles, consider the
-relational model depicted in Figure \ref{fig:KVP-on-Relational-Model} as a
-data model for persisting data to our case study using the key-value strategy.
-The problem with it is that key repetition occurs, since the nature of
-time-series data requires the use of a timestamp key for each property of the
-sensor. Therefore, this strategy is not well-suited to provide persistence
-data from collected sensor networks.
+key to a value, called Key-Value data model. As mentioned earlier, with the
+emergence of Internet applications, the necessity of such a model that does
+not require constant refactoring led developers to propose such manner using
+the relational model as documented in technical articles such as
+\cite{db-kvp-in-relational01} and \cite{db-kvp-in-relational02}. Based on
+these articles, consider the relational model depicted in Figure
+\ref{fig:KVP-on-Relational-Model} as a data model for persisting data to our
+case study using the key-value strategy. It is clear that this approach
+contains problems: repetition occurs, since the nature of
+time-series data requires the use of a timestamp key for each property of the sensor. Therefore, this strategy is not
+well-suited to provide persistence data from collected sensor networks.
 
 \begin{figure}[!h]
   \centering
@@ -362,7 +353,7 @@ data from collected sensor networks.
 
 The growth of distributed systems and the Internet have enabled the development
 of powerful database servers that can be organized in the context of
-infrastructure and how to represent models. An powerful up-coming approach is
+infrastructure and how to represent models. A powerful up-coming approach is
 the use of database systems that do not use structured language for querying
 its data. One such example is called Key-Value Pair (KVP) data model
 \cite{db-kvp}, which is also known as Document-Oriented, Distributed Hash
@@ -379,12 +370,10 @@ Table. Such a model has the following properties:
 There are no records of the use of this data model with Sensor Networks.
 Different variants of such data model is the document-oriented data model,
 where data is modeled using structured documents. However, these documents
-have a dynamic structure that can be freely described without the use of a
+have a dynamic structure, freely described without the use of a
 schema validation mechanism as used in XML Schema. One example of such
-approach is the use of the JSON data format \cite{json} in the implementation
-of database systems which are becoming popular with the new trend called Cloud
-Computing \cite{cloud-comp-architectures}. Databases implementing this
-strategy is the mongoDB .
+approach is the use of the JSON data format \cite{json}. mongoDB implements the
+following:
 
 \begin{itemize}
   \item entities from the same domains are placed into a ``bucket'';
@@ -394,7 +383,7 @@ strategy is the mongoDB .
 \end{itemize}
 
 For instance, all data needed for the YSI sonde data, as well as all necessary
-provenance data that describe the data, depicted in section
+provenance data that describes the data, depicted in section
 \ref{sec:sn-data-description}, are represented by means of key-value pairs
 \ref{fig:persistence-example-kvp}.
 
@@ -421,12 +410,12 @@ The relational and key-value data models were compared by
       \item Real-world model represented by entities, classified in tables;
       \item Tables composed by columns and rows. Rows are comprised by column
       values, which have the same schema;
-      \item Data Model defined in advance with a schema, which contains
+      \item Data Model is defined in advance with a schema, which contains
       relationships and constraints to enforce data integrity;
       \item Data represents ``natural'' entities, not application specific;
       \item Data Normalization is the data structuring process to remove data
       duplication, as well as establishing data associations through table
-      relationships;
+      relationships \cite{db-normalization};
       \item Data Provenance can be provided through data types such as
       ``Timestamp'' for time or float for the GPS float-based coordinates; 
     \end{enumerate} 
@@ -503,13 +492,62 @@ Since the selected data model is the schema-less one, the following can be seen
 from the technologies:
 
 \begin{itemize}
-  \item \textbf{MySQL}: supports the Relational Model;
-  \item \textbf{TinyDB}: supports the Relational Model; 
-  \item \textbf{MongoDB}: supports Document-Oriented Model;
-  \item \textbf{IBM DB2}: supports the Relational Model and the XML model.
+  \item \textbf{MySQL}: supports the Relational Data Model;
+  \item \textbf{TinyDB}: supports the Relational Data Model; 
+  \item \textbf{MongoDB}: supports Key-Value Pair Data Model;
+  \item \textbf{IBM DB2}: supports the Relational Model and the Structured
+  Data models.
 \end{itemize}
 
-\section{Analysis of the Query Processing Mechanism Taxonomy}
+\section{Analysis of the Data Description}
+
+\textbf{Data Description} is the methods used to describe the collected data
+from sensors, specially those produced by real-time data streams. Since those
+type of data does not include descriptions of its values, data provenance
+offers guidelines to improve the description of the collected data.
+
+An additiona to data provenance, annotations is another technique used to
+better describe the collected data from sensor devices. Its main purposes is to
+provide means of identifying observations, creating indexes based on simple
+keywords. For an environmental sensor networks, this is a valuable type of value
+used to better manage the collected data.
+
+\subsection{Advantages of the Provenance-Aware Data}
+
+The injection of provenance data into the collected data enriches description
+of a given event, and is always useful to determine different aspects of the
+data. As mentioned in chapter 3, data provenance helps identifying the nature
+of the data by the identification of the properties of a given sensor device,
+for example. Similarly, provenance adds spatio-time data in order to correlate
+the observed data with time a given location and time of occurrence.
+
+\subsection{Disadvantages of the Provenance-Aware Data}
+
+Additional data being inserted together with the raw data collected from the
+sensor devices. This additional data may contribute with any decreasing number
+of disk storage for the variable defined. Therefore, the decreasing amount
+of disk space may be one the reasons to not use annotations.
+
+\subsection{Advantages of the Annotations}
+
+Annotations are used to describe the collect data even more, since the
+additional ``notes'' of the data are being stored together with the data. For
+example, the use of tags to a given entity may help identifying and different
+observations regarding the data collected from sensor devices.
+
+\subsection{Disadvantages of the Annotations}
+
+This type of data does not make part of the collected data, nor provenance
+information. 
+
+\subsection{Technology Analysis}
+
+All the database systems technology supports the use of Data Provenance or
+Annotations. The Key-Value Pair data model has the advantage of not maintaining
+a schema design, and therefore, can add any type of data, and therefore,
+mongoDB is the lead in this taxonomy.
+
+\section{Analysis of the Query Processing Mechanism}
 
 As a direct result from the previous section, the use of \textbf{Centralized Query
 Processing} is indicated for NetBEAMS, also given the fact that SF-BEAMS data
@@ -536,9 +574,11 @@ mechanism, techniques such as Data Replication can be used.
 
 \subsection{Technology Analysis}
 
-All the database systems technology support a centralized query system.
+All the database systems technology support a centralized query system. In
+addition to that, they can be distributed into different distributed nodes when
+used in a partioned environement.
 
-\section{Analysis of the System Organization Taxonomy}
+\section{Analysis of the System Organization}
 
 Sensor Network data can be saved in either Centralized or Distributed Systems.
 While Centralized Database Systems are easier to manage, it may
@@ -611,17 +651,23 @@ section.
 \section{Global Analysis Results and Technology Selection}
 
 Each of the databases were scored according to its support to the different
-types of taxonomies, and randomly selected by using the literature review's
-list, as well as the Internet. Since mongoDB is based on a schema-less database
-system, has not been reported in use by the sensor network community, and
-supports most of the taxonomies defined in the previous chapter, it was
-selected for the implementation of the DSP Data Persistence component for
-NetBEAMS.
+types of taxonomies, as well as a different set of requirements. As defined
+in the scope of the database system, the database that can provide a
+programming language abstracton to its data access would be selected.
+Moreover, the database technology should offer the support to schema-less
+databases. As a result, mongoDB was selected because of different reasons.
+First, it is a document-oriented database system, which does require the use of
+SQL languages. Similarly, it had been reported in two different surveys as
+potential database systems. Finally, there were no references in the literature
+regarding the use o KVP databases in sensor networks, and for this reason, this
+proposal was performed, supporting most of the taxonomies defined in the
+previous chapter, it was selected for the implementation of the DSP Data
+Persistence component for NetBEAMS.
 
 \begin{table}
-    \label{tab:ysi-data-distribution}
+    \label{tab:technology-selection}
     \begin{center}
-        \begin{tabular}{|c|c|c|c|c|c|c|}\hline 
+        \begin{tabular}[!h]{|c|c|c|c|c|c|c|}\hline 
         \textbf{Database} & \textbf{MySQL} & \textbf{TinyDB} & \textbf{MongoDB} & \textbf{IBM DB2}\\\hline
         Centralized Query & + & + & + & + \\\hline 
         Distributed System & ++ & - & ++ & +\\\hline 
@@ -629,11 +675,18 @@ NetBEAMS.
         Provenance Support & + & + & + & +\\\hline 
         NO-SQL Query & - & - & + & -\\\hline 
         Partition & + & - & + & +\\\hline 
-        Hot Backup & + & - & + & +\\\hline 
         Export Capability & + & - & + & -\\\hline 
-        Programming Lang. & + & + & + & +\\\hline
-        Script Lang. & + & - & + & +\\\hline
+        Programming Language. & + & + & + & +\\\hline
+        Script Language. & + & - & + & +\\\hline
         Open-Source & + & + & + & -\\\hline
         \end{tabular}
+        \caption{Technologies Selection Grading}
     \end{center}
 \end{table}
+
+To conclude, this chapter evaluated different database systems selected from
+the literature reviews of chapter 2. After presenting the database system
+``contenders'', the analysis of each of the taxonomies were conducted for each
+of the technologies, culminating with the technology selection comparison. In
+this way, the following chapter describes the design of the solution using
+mongoDB as the primary solution for the backend.

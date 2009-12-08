@@ -3,70 +3,54 @@
 
 %\bibliography{thesis}  % uses the references stored in Chapter1Radar.bib
 
-\chapter{Conclusions}
+\chapter{Conclusions and Future Works}
 
-This work presented a collection of taxonomies related to data persistence for
-sensor networks using different approaches ranging from data models and server
-infrastructure organization. The main result of this work was that persistence
-for collected data from sensors are better maintained using schema-less data
-models, since it provides offers an approach to deal with unanticipated data
-types from the sensor devices.
+There were important important remarks covered in this work, including the
+importance that sensor networks are becoming ubiquitous, having their produced
+data available online and other types of media. In this way, in order to
+provide access to the collected data, one must first assess the different
+types of infrastructural characteristics of the studied sensor networks. In
+general, the selection of a technology that provides such a persistence
+solution capabilities can  part of a process of analysis of taxonomies
+proposed by this work, characterized as the first contribution of this
+disseration.
 
-As seen in the state of the art, different approaches can be done in order to
-evaluate data persistence for nsensor networks. T
-
-There are many important features covered in this work, including the
-importance of the sensor networks rely in how users have access to the
-collected data. In order to provide access to the collected data, one must
-first assess the different types of infrastructural characteristics of the
-studied sensor network. In general, the selection of a technology that
-provides such persistence capabilities can be part of a process of analysis of
-taxonomies proposed by this work. However, this work proposes a data model not
-yet used in the sensor network community and, thus, represents an important
-contribution for the area.
-
-Taking into account the software architecture provided by NetBEAMS, as well as
-the requirements for data collection from the RTC research group, this work
-shows a novice way to persist data collected from sensor devices by using a
-schema-less data model, whose query capabilities are based upon programming
-languages, in contrast to the use of the Structured Query Language, SQL. The
-experiment results showed that the implementation of a persistence layer with
-mongoDB can be used to persist data at its maximum rate of one sample per
-minute. However, the evaluation of mongoDB was not used to implement a
-Data-Centric Storage approach, which can decreases the amount of time to search
-data since the process uses parallel search.
+In my own opinion, based on the findings of the taxonomies, together with
+the empirical analysis of the technologies, this work revealed a novel approach
+to provide persistence and access to collected data from sensor devices using
+the Key-Value-Pair data model. Besides the contribution of a new component
+component for the Data Sensor Platform, the evidence that the system improves
+productivity was confirmed during the execution of the experiments, writing
+less source-code to obtain better functionalities when compared to other
+solutions. Similarly, improved work suggests that the abstraction of
+programming language should be used with research groups whose primary
+expertise is not in Computer Science or Database Systems.
 
 All in all, the DSP Data Persistence component implemented for the NetBEAMS
 solution to SF-BEAMS can be used in any network server. The solution for data
 persistence is a novice way to save data into the database, provided by
 mongoDB's ability to cope with the uncertainty of any properties collected from
-any sensor specification. Furthermore, the solution also provides a good
-support to the provenance-related data as the schema-less data model gives the
-ability to .
+any sensor specification.
 
-
-\chapter{Future Works}
-
-0. Todo list for this work
-1. Database System Problems
-2. Software Engineering Problems
-3. Applications
- - plot graphs of collected, 
-
-There are many different directions for future works. First, the
-implementation of a Data-Centric Storage approach can help the system scale
-horizontaly by using the mongoDB's database shards. In this way, this approach
-can reduce the retrieval time by focusing on centralized selection of data over
-a given database shard. Moreover, the overall search through the collected data
+As far as future works, there are many different directions for future works.
+First, the first major release of mongoDB with complete support to shards is
+scheduled for 2010. An important mechanism of mongoDB is the fact that it can
+manage different mongoDB servers spread as a cluster, as it gives support to
+the Data-Centric Storage approach. In this way, this approach can reduce the
+retrieval time by focusing on centralized selection of data over a given
+database shard. Moreover, the overall search through the collected data
 attributes can be drastically decreased by parallel search over the database
-shards using the MapReduce \cite{map-reduce} tools. At this time of
-development, the MapReduce API offered by mongoDB is on its alpha version, and
-therefore, presenting lots of bugs. Figure
-\ref{fig:future-works-data-centric-map-reduce} shows an architectural idea of
-the deployment of a Data-Centric storage approach. When searching for specific
-document attributes, the process is sent in parallel to each of the database
-shards, and the result is collected by the cluster head. After calculating the
-final result, mongoDB server returns the relevant result to the user.
+shards using the MapReduce \cite{map-reduce} tools. At the time of development
+of the experiments, the MapReduce API from mongoDB was also in the alpha
+version, and therefore, presenting lots of bugs. one suggestion for the
+implementation of such functionality is based in Figure
+\ref{fig:future-works-data-centric-map-reduce}, which shows an architectural
+idea of the deployment of a Data-Centric storage approach. When searching for
+specific document attributes, the process is sent in parallel to each of the
+database shards, and the result is collected by the cluster head. After
+calculating the final result, mongoDB server returns the relevant result to
+the user. I was personally expecting to implement the scario of data retrieval
+of collected daa.
 
 \begin{figure}[h]
   \centering

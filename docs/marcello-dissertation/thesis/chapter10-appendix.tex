@@ -1,9 +1,10 @@
 \chapter{Appendix}
 
-This section includes the source-code for the DSP Data Persistence. Each
-section details one single main artifact used on the development of the
-component. However, only the main ones will be added into this document, while
-the remainder can be downloaded directly from the Subversion repository.
+This section includes the source-code for the DSP Data Persistence, as well as
+the experiments artifacts used. Each section details one single main artifact
+used on the development of the component. However, only the main ones will be
+added into this document, while the remainder can be downloaded directly from
+the Subversion repository.
 
 \section{The Data Sensor Platform (DSP)}
 \label{sec:dsp-details}
@@ -48,7 +49,7 @@ details its design and process for extracting data.
 
 This section focus on the development of a Software Platform for the NetBEAMS
 Gateway Embedded System, or on the system developed in the Gumstix device. As
-shown in figure \ref{fig:netbeams-software-stack}, the NetBEAMS Gateway Node is
+shown in Figure \ref{fig:netbeams-software-stack}, the NetBEAMS Gateway Node is
 an embedded system that contains a set of layer found in any computer.
 However, each of the resources described from the system were customized for
 the NetBEAMS system. The main components of such system can be summarized as
@@ -63,7 +64,8 @@ follows:
   \item \textbf{OSGi Framework}: it uses the Knopflerfish implementation of the
   OSGi 4.1 specification. More details in the following sections.
   \item \textbf{DSP Platform and other Bundles}: The plug-and-play DSP
-  Components are based on the OSGi bundles capabilities, which can reuse services registered in the OSGi framework.
+  Components are based on the OSGi bundles capabilities, which can reuse
+  services registered in the OSGi framework.
 \end{itemize}
 
 \begin{figure}[h]
@@ -73,7 +75,7 @@ follows:
   \label{fig:netbeams-software-stack}
 \end{figure}
 
-As depicted in figure \ref{fig:netbeams-software-stack}, the DSP Sonde Data
+As depicted in Figure \ref{fig:netbeams-software-stack}, the DSP Sonde Data
 Producer component opens a serial connection with the device through the Java
 Native Interface (JNI) driver and produces the data flow 1. The data stream
 format at this stage is as described on table \ref{tab:ysi-data-stream}.
@@ -85,7 +87,7 @@ point, the data is ready to be transmitted to the server, which is covered on
 the following sections.
 
 \subsection{The DSP Platform Architecture}
-\label{netbeams-architecture}
+\label{sec:netbeams-architecture}
 
 The architecture of the DSP, aligned with the OSGi capabilities, reuses the
 Service-Oriented Architecture that can easily enable and disable plug-and-play
@@ -177,7 +179,7 @@ depicted by the XML Schema \cite{xml-schema} in figure
 \end{figure}
 
 In order to show an example, consider the DSP Platform on the embedded system
-Gumstix in figure \ref{fig:sf-netbeams-node}. It is started by providing a
+Gumstix in Figure \ref{fig:sf-netbeams-node}. It is started by providing a
 deployment configuration artifact config.xml included in the appendix. It lists
 the components that the DSP Platform needs to install and load for its
 operation. As it is shown, the DSPWireTransportClient and the DSPSondeProducer
@@ -275,8 +277,8 @@ main DSP Messages can be summarized as follows:
   Remote Data delivery section.
 \end{itemize}
 
-These DSP Classes and other can be seen in figure the  UML Class
-Diagram \cite{uml} of figure \ref{fig:DSP-Messages-Classes}. Each DSP Message
+These DSP Classes and other can be seen in Figure the  UML Class
+Diagram \cite{uml} of Figure \ref{fig:DSP-Messages-Classes}. Each DSP Message
 contains an instance of a Header and Body. Whenever a DSP component is ready
 to transmit messages, it wraps up the set of DSP Messages into the instance of
 the Messages Container, which contains information about the collection of
@@ -359,7 +361,7 @@ classes in order to initialize. The UML Sequence Diagram \cite{uml} in figure
 \ref{fig:From-OSGi-DSP-Platform-Start-to-All-Components-Sequence-Diagram}
 depicts the exact moments when the additional the plug-and-play DSP components
 are installed and bootstrapped by the DSP Platform, as the UML State Diagram
-\cite{uml} in figure \ref{fig:DSPPlatform-Install-Usage-State-Diagram}
+\cite{uml} in Figure \ref{fig:DSPPlatform-Install-Usage-State-Diagram}
 described.
 
 \begin{itemize}
@@ -387,7 +389,7 @@ In general, when a DSP Component finishes preparing the DSP Messages Container,
 it contacts an entity responsible for sending and proxying message to other
 components. The DSP Broker acts like a mailman, receiving messages and
 forwarding copies of it to other entities in the system, abstraction in which
-is shown in figure \ref{fig:DSP-Message-Broker-Abstraction}. In this way, the
+is shown in Figure \ref{fig:DSP-Message-Broker-Abstraction}. In this way, the
 DSP Broker receives a DSP Message and makes necessary deliveries to DSP
 components that it has knowledge of.
 
@@ -424,8 +426,8 @@ message type and location, while the latter describes the DSP Component that
 will receive the DSP Message, and if its delivery is done by means of a gateway
 component. In this way, the DSP Matcher can be seen as a function, as depicted
 in Table \ref{tab:matching-rule}, that takes a DSP Message as an input and
-returns a list of DSP consumers, and the matching configuration artifact provided by the administrator. See listing
-\ref{file:dsp-matcher-config.xml}) for details.
+returns a list of DSP consumers, and the matching configuration artifact
+provided by the administrator. See listing \ref{file:dsp-matcher-config.xml}) for details.
 
 \begin{table}
     \caption{DSP Matcher Rule Algorithm to filter Data Consumer components to
@@ -521,7 +523,7 @@ MessagesContainer and its enclosing DSP Messages back to a Java class instance
 and delivers each of the DSP Messages to the DSP Broker, which delivers a
 copy of the message to each DSP Component listed by the maching rule. 
 %This
-%process is depicted by the UML Sequence Diagram \cite{uml} in figure \ref{fig:}
+%process is depicted by the UML Sequence Diagram \cite{uml} in Figure \ref{fig:}
 
 Whenever a DSP bundle producer is ready to transmit messages, they are added
 into a DSP Messages Container (see UML Class Diagram in figure
@@ -789,8 +791,6 @@ the osgi-intro Framework container Knopflerfish \cite{knopflerfish}.
   \label{fig:knopflerfish-execution}
 \end{figure}
 
-\subsection{Execution Logs}
-
 \section{mongoDB Deployment}
 \label{sec:mongodb-deployment}
 
@@ -844,8 +844,7 @@ instances of this document represents the sensor data type.
 
 \subsection{MongoDB Database Administration}
 
-- starting the db
-- Stopping the Database
+In order to start the database, just type ``mongod --dbpath DIRECTORY/
 
 \section{Experiment Execution}
 \label{sec:experiment-execution}
@@ -1016,7 +1015,7 @@ for the YSI data containing 1 million objects.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/view-collections-instance-browser-futondb}
+  \includegraphics[scale=0.45]{../diagrams/view-collections-instance-browser-futondb}
   \caption{Viewing a partial list of data using the Futon for CouchDB/MongoDB}
   \label{fig:view-collections-instance-browser-futondb}
 \end{figure}
@@ -1028,19 +1027,18 @@ defined in the previous chapter, as shown in figure
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/view-collected-data-list-browser-futondb}
+ 
+  \includegraphics[scale=0.45]{../diagrams/view-collected-data-list-browser-futondb}
   \caption{Viewing a partial list of data using the Futon for CouchDB/MongoDB}
   \label{fig:view-collected-data-list-browser-futondb}
 \end{figure}
 
 By clicking in one of the items, one can view the instance of the document, as
-it is shown in figure \ref{fig:view-collections-instance-browser-futondb}.
+it is shown in Figure \ref{fig:view-collections-instance-browser-futondb}.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/view-collected-data-instance-browser-futondb}
-  \caption{Viewing an instance of collected data using the Futon for
-  CouchDB/MongoDB}
+  \includegraphics[scale=0.45]{../diagrams/view-collected-data-instance-browser-futondb} \caption{Viewing an instance of collected data using the Futon for CouchDB/MongoDB}
   \label{fig:view-collected-data-instance-browser-futondb}
 \end{figure}
 
@@ -1163,6 +1161,12 @@ Main Execution Script]{../../../../netbeams/versions/v2/persistence/run-persiste
 \lstinputlisting[language=Python,label=file:experiment-setup-mongoshards,caption=Experiment
 Main Execution Script]{../../../../netbeams/versions/v2/persistence/setup-mongo-shards.js}
 
+\lstinputlisting[language=Bash,label=file:setup-os-shards-step1,caption=Experiment
+Main Execution Script]{../../../../netbeams/versions/v2/persistence/setup-os-shards-step1}
+
+\lstinputlisting[language=Bash,label=file:setup-os-shards-step2,caption=Experiment
+Main Execution Script]{../../../../netbeams/versions/v2/persistence/setup-os-shards-step2}
+
 \lstinputlisting[language=Python,label=file:experiment-export-python,caption=Data
 Export to from mongoDB to OPEnDAP format.]{../../../../netbeams/versions/v2/persistence/data-export-python.py}
 
@@ -1252,3 +1256,11 @@ exported 2419200 records
 
 \lstinputlisting[label=file:experiment-export-python-results,caption=Data
 Export to from mongoDB to OPEnDAP format.]{../../../../netbeams/versions/v2/persistence/export-mongodb-to-sfbeams.csv}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.4]{../diagrams/experiment-mouseactions-dsp}
+  \caption{Experiment showing the mongoDB persisting messages from the DSP
+  Mouse Actions Demo}
+  \label{fig:experiment-mouseactions-dsp}
+\end{figure}

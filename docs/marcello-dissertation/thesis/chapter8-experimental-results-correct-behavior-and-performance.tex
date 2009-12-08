@@ -127,8 +127,11 @@ Snow Leopard 64bit, with a total of 8GB of physical memory. However, in order
 to simulate different shards in different machines, the use of a VirtualBox
 \cite{virtualization} provided the use of guest operating systems to run and
 act as the mongoDB shards. In this way, two different versions of the Ubuntu
-Linux were used: one 8.04 32bits and another 9.04 64bits (see section
-\ref{sec:experiments-difficulties}).
+Linux were used: one 8.04 32bits and another 9.04 64bits. The configuration
+used for the single server only uses the process ``mongod'' to be started,
+while the clustered setup must be enabled in the database, as shown in
+Listing \ref{file:experiment-setup-mongoshards}, Listings
+\ref{file:setup-os-shards-step1} and \ref{file:setup-os-shards-step2}.
 
 \subsection{Planned Scenarios}
 \label{sec:exp-scenarios}
@@ -174,18 +177,19 @@ numerical response time collected from the logs.
 
 The first set of measurements collected were the ones regarding the use case
 R1, shown in Listing \ref{file:dsp-mongo-service}, defined as the insertion of
-instances of the collected data from the sensor devices using Java. The use of
-the mongoDB Java driver, which provides the methods to access the database
-system and the collection. In this way, the construction of the keys and
-respective values were done using a Hash-like object ``BasicDBObject'' such as
-the ones shown in the method ``buildKeySegment''. Similarly, the creation of
-database indexes is performed using the same approach, as shown in the Java
-method ``setupMetadataIndexes''. Finally, the insertion of the documents is
-performed on the service method call ``insertPersistentUnitMessageContents'',
-which delimits the bulk insert using the transaction management mechanism over
-the collection. In this way, different insert times were collected from the
-logs of the different experiments as summarized on Table
-\ref{tab:experiment-insert-avarage}.
+instances of the collected data from the sensor devices using Java. The
+document follows the specification of the keys designed in section
+\ref{sec:dsp-persistence-data-model}. The use of the mongoDB Java driver, which
+provides the methods to access the database system and the collection. In this
+way, the construction of the keys and respective values were done using a
+Hash-like object ``BasicDBObject'' such as the ones shown in the method
+``buildKeySegment''. Similarly, the creation of database indexes is performed
+using the same approach, as shown in the Java method ``setupMetadataIndexes''.
+Finally, the insertion of the documents is performed on the service method
+call ``insertPersistentUnitMessageContents'', which delimits the bulk insert
+using the transaction management mechanism over the collection. In this way,
+different insert times were collected from the logs of the different
+experiments as summarized on Table \ref{tab:experiment-insert-avarage}.
 
 \begin{table}
     \begin{center}
@@ -236,7 +240,7 @@ implemented in Listing \ref{file:experiment-scenarios}.
 
 \begin{table}
     \begin{center}
-        \begin{tabular}{|p{70pt}|p{100pt}|p{250pt}|p{100pt}|}\hline
+        \begin{tabular}{|c|c|c|c|}\hline
         \textbf{Scenario Type} & \textbf{Language} & \textbf{Method Call} & \textbf{Use Case}\\\hline 
         \textbf{Insert} & Java & db.SondeDataContainer.insert() & R0\\\hline
         \textbf{Retrive} & Javascript & db.SondeDataContainer.find() & R1, R2, R3\\\hline 
@@ -256,14 +260,20 @@ seconds when it involved larger data sets with more than 300 thousand
 documents. Similarly, the delete operation took less 
 
 \subsection{User Experience}
+\label{sec:experiments-user-experimence}
 
-Different methods of data access were used after the randomly generated data
-was inserted into mongoDB: using the shell commands mongo and ``mongoexport'', 
-command-line execution developed in Python, through the REST Web Services API,
-and using a web application, written in the Ruby Programming Language
-\ref{ruby}, providing the view over the collected data using a web browser.
-More details about the execution of these commands during the experiments is
-shown in section \ref{sec:mongodb-user-experience}.
+In general, the use experience of mongoDB is related to the use of programming
+languages, since most of the methods to create, access and modify the database
+is performed using the programming language abstraction of objects and method
+calls. The creation of data was the first contact with mongoDB in terms
+of data creation in Java. Later, Different methods of data access were used
+after the randomly generated data was inserted into mongoDB: using the shell
+commands mongo and ``mongoexport'', command-line execution developed in
+Python, through the REST Web Services API, and using a web application,
+written in the Ruby Programming Language \cite{ruby}, providing the view over
+the collected data using a web browser. More details about the execution of
+these commands during the experiments is shown in section
+\ref{sec:mongodb-user-experience}.
 
 First and foremost, the primary method to access to the database is using the
 shell command. Once the user requests an access to the database, he or she can
@@ -297,8 +307,8 @@ see, the IP address and the default port number of the mongoDB REST middleware
 are provided. Then, the REST operation uses the name of the database and
 the collection to correlate with the ones in the database system. In this way,
 querying the collections from mongoDB can be performed using the HTTP Request
-Parameter variables, by adding the prefix ``filter_'' before the name of the
-key of the document. The given example shows the query performed in the
+Parameter variables, by adding the prefix ``filter\underline{ }'' before the
+name of the key of the document. The given example shows the query performed in the
 collected data for the key ``observation.Conductivity'' with the value
 ``104.5''. Similarly, the HTTP Request variable ``limit'' is used to reduce
 the number of documents returned by the query. Finally, the HTTP Response from
@@ -311,7 +321,14 @@ mongoDB database collections and documents. The screenshots of the session used
 to browse through the collection of collected data is shown in Figure
 \ref{fig:view-collections-instance-browser-futondb}.
 
-In order to verify 
+The actual execution of the solution was performed using the demo Mouse
+Actions, which consists of a software sensor that perceives any mouse action in
+a window area. The experiment consisted of moving the mouse around a white
+window, where each action is captured and temporarily saved until a threshold is
+reached, making the component to send the messages to the persistence layer, so
+that it can save on mongoDB. Figure \ref{fig:experiment-mouseactions-dsp} shows
+a screenshot of the moment when the message is sent to mongoDB, being verified
+through the HTTP REST Interface using a web browser.
 
 \section{Discussion}
 
@@ -320,221 +337,244 @@ specifications explained in chapter 4. The purpose of sensor network for
 NetBEAMS is to suport data archival from any collected data, and for this
 reason, mongoDB was selected after an empirical analysis described in chapter
 5. In this way, the requirements described in chapter 4 were expressed as
-examples of use cases in section \ref{sec:exp-scenarios}. 
-
-All the collected data from sensors are stored in a
-given single server, which characterizes an External Storage device
-
-the data. The process to describe the data is done with prior knowledge of the
-sensor device data properties when choosing the relational data model, because
-of the process of database normalization \cite{db-normalization}, which takes
-place after the the entities have been identified. Consequently, the
-introduction of a new sensor device might potentially require changes on the
-database schema structure conceived before, as the process of database
-normalization must follow.
+examples of use cases in section \ref{sec:exp-scenarios}. This chapter
+discusses the experiments in different angles: analysis of the taxonomies, the
+infrastructure and the use cases evaluation.
 
 \subsection{Taxonomic Evaluation}
 
 Any database system covers the purpose of the sensor data for NetBEAMS, which
 is Data Archival, along with the type of storage for the data as an External
 Storage. After selecting mongoDB, the development of the persistence layer met
-the requirements of archiving data after inserting the the randomly generated
-data that represents the data for the YSI sonde. As it is shown in section
-\ref{sec:exp-measurements}, the collected data is archived in files using the
-BSON format \cite{bson}, a binary representation used to store instances of
-the document described in Listing \ref{file:mongodb-ysi-data-format}. Along
-with the purpose of data archival, the use of mongoDB also met the
-specification of an external storage since the data persisted in the file
-system, as well as Data-Centric for the proposal to use mongoDB distributed
-shards. 
+the requirements of archiving data for different types of sensor devices from
+the DSP Platform such as the YSI Data Handler and the Mouse Actions demo data.
+As it is shown in section \ref{sec:exp-measurements}, the collected data is
+archived in files using the BSON format \cite{bson}, a binary representation
+used to store instances of the document described in Listing
+\ref{file:mongodb-ysi-data-format}. Along with the purpose of Data Archival,
+the use of mongoDB also met the specification of an External Storage, since the
+data persisted in the file system, as well as Data-Centric for running mongoDB
+with different  distributed mongo shards (cluster nodes).
 
-SF-BEAMS uses the Tabular Data model to describe the collected data from the
-sensor devices. As discussed in chapter 5, the decision to use mongoDB is the
-fact that the literature review does not mention the use of the Key-Value-Pair
-Data model. For this reason, since mongoDB implements a variation of the 
-key-value data model based on the JSON \cite{json} data format, the Data
-Model taxonomy should be updated, as shown in Figure
-\ref{fig:taxonomy-data-model-modified}.
+SF-BEAMS uses Tabular Data model, Schema-less data model that represents the
+collected data using comma-delimited files, without a database system to manage
+those files, just the OPEnDAP middleware. In contrast, the data persistence
+proposed by this work proposes mongoDB as a schema-less database system to
+manage the collected data collected using NetBEAMS. As described in chapter 5,
+the schema-less data model can provide a better support to Data Provenance
+because the data model gives support to the change of records without affecting
+the others. In this way, the metadata used by the implementation clearly
+describes the three fundamental questions regarding the collected data from
+sensor devices, as described in section \ref{sec:dsp-persistence-data-model}.
+First, the identity of the data is given by the key ``message\underline{
+}id'', in a way that it uniquely identifies the data produced by the sensor
+identified by the key ``sensor.ip\underline{ }address''. In this way, the
+message can be tracked back to the sensor that produced the data for different
+purposes such as tracking the data producer. Second, time dimensions were used
+in order to track two different aspects of the data collection: the valid time
+can be used to correlate observations to the exact moment it occurred, while
+the transaction time can be used to verify when the data was collected, and
+make decisions such as deleting the instances of data were collected in the
+previous two days, etc. Last, but not least, the use of the key
+``sensor.location'' can give the exact location of the data, since researchers
+can be interested in finding data based on a specific location. Finally, the
+most important aspect of the schema-less data model is that the observed data
+is added to the key ``observation'', as any sensor device carries its set of
+attributes of key-value pairs. A good example of the applicability of the
+schema-less model is the scalability regarding changes to the data structure.
+For instance, if an existing sensor device is flushed with a new version of
+the firmware\footnote{Primary machine instructions that run in the hardware},
+changing the format of data types or adding new values, the following instances
+of collected data may be different to the previous one by simply adding the
+new additions of data. For this reason, the DSP Data Persistence gives
+administrators the ability to choose which fields to persist by declaring it
+using a bootstrap message for the component, as shown in the parameter
+``YSI\underline{ }DESIRED\underline{ }PROPERTIES'' of Listing
+\ref{file:dsp-data-persistence-bootstrap.xml}.
 
-\begin{figure}[h]
+In order to access the collected data, the implementation used different APIs
+provided by the mongoDB community. The Centralized Query Mechanism was
+satisfied by the use of those APIs, which is also fultill the requirements
+defined by NetBEAMS. For example, the access of the database using Python or
+Java were based on the needs and the use of the languages for different
+purposes. In this way, the implementation of the persistence model captures
+the instances of any known data collected from NetBEAMS and saves it using the
+document pattern as shown in Listing \ref{file:mongodb-ysi-data-format}. Any
+programming language used was capable of accessing the same collected data by
+their own. 
+
+In the end, the implementation of the data persistence for NetBEAMS was
+developed in both Single and Distributed Systems. The use of regular single
+server execution provided enough computational power for a compatible volume of
+data when compared to the one produced from the SF-BEAMS sensor network. In
+this way, the implementation suggested by this work fulfill the need of a
+persistence system for a Small volume of data being created at the same type
+in a Single Server. Furthermore, mongoDB also provided support for Distributed
+System, when the use of databse shards, in forms of different mongoDB nodes,
+were used as a clustered environment.
+
+\subsection{Infrastructure Evaluation}
+
+Overall, the implementation of the DSP Data Persistence component meets the
+specification of the use cases defined in section \ref{sec:exp-scenarios}.
+From the perspective of disk-space utilization for the compatible volume of
+data for 5 five YSI devices is that it requires a small amount of disk space.
+According to the mongoDB documentation \cite{mongodb}, the claimed amount of
+disk space is related to how mongoDB uses a binary representation of the JSON
+documents, which are composed only of strings, together with the definition of
+the indexes. As a consequence, the size of the keys defined for the YSI sonde
+data suggests additional disk space were used for the storage.
+
+The performance to insert data into the database system using the Java driver
+is documented by mongoDB as the fastest approach, providing persistence
+thousands of documents per second. This capacity is more than necessary for
+NetBEAMS, which can use the Single System environment. On the other hand,
+improvements over the response time can be achieved through the implementation
+of a Data-Centric approach on a Distributed Database environment, or clusters.
+In this approach, the inserted data is stored in different servers based on a
+partition key. Given the fact that less data is concentrated in each
+partition, the centralized query mechanism used is faster, and consequently
+improves the performance as described in the Data Location taxonomy in chapter
+3. In this way, the infrastructural performace during the inserts suggests that
+persisting data collected from the NetBEAMS sensors using a clustered
+environment is an option when the single server capacity is reached.
+
+Different problems and limitations were faced during the execution of
+mongoDB, which were relate to the infrastructure used: the limitations
+regarding disk storage in 32bit operating systems and very slow
+performance when using virtualized servers. During the execution of the
+experiments, mongoDB used memory accordingly, without taking control of the
+operating system's resources. However, when mongoDB is used in a 32bit server
+architecture, there are limitations on the disk space used to store
+collections. In this way, after reaching 2GB of collected data during many
+different runs, mongoDB crashed and did not allow the use of the collected
+data. For this reason, the setup of a new VirtualBox using Ubuntu Linux 64bits
+as a guest to a Mac OS X 64bits was prepared and used throughout the completion
+of this work's experiments. On the other hand, the performance was drastically
+decreased using mongoDB in virtualized servers due to the fact of dynamic
+partition chosen. The performance shell application ``iostat'' was used to
+verify the behavior, and the use of mongoDB was switched to the Host operating
+system.
+
+\subsection{Use Cases Evaluation}
+
+\cite{sn-programming-language} suggested that programming that programming
+languages are easier abstractions to researchers that use collected data from
+sensor devices without background in computer science or database systems. The
+authors have suggested the implementation of a programming language for this
+group of biologists, for instance. However, this suggestion has good
+intentions, but limits the users with a single mechanism to access the
+collected data from sensors. For this reason, this dissertation proposes the
+use of key-value pair databases, such as mongoDB, to provide transparent access
+the the data through the abstraction of any programming language that has a
+driver written for mongoDB. As one can see during the user experience section,
+different programming languages were used to access the collected data, a novel
+mechanism not yet reported in the sensor networks community.
+
+The development of the scenarios were clearly written in different ways, such
+as the ones defined in Listing \ref{file:experiment-scenarios}, which
+implements the use cases for data retrieval, update and deletion. The main
+advantage of this approach is that users do not use the SQL language to extract
+data from the database. Rather, the use of the method calls defined for each
+operation, as well as the concept of dynamic binding and objects, gives simple,
+yet powerful syntax to access data. For example, based on the description
+of the collected data by keys and values shown in Listing
+\ref{file:mongodb-ysi-data-format}, different use cases can evaluate documents
+in this structure. Usually researchers may search the collected data by a given
+range of dates, for their regular activities of data analysis. The scenario
+implemented by R1 in the abovecited listing shows it clearly. Similarly, the
+search for data in a given sensor device is expressed by the search for the IP
+address for them on the use cased defined by R2. Finally, the search for the
+raw data obtained by the sensor devices is used from the key ``observation'',
+as shown by the R3 use case implementation.
+
+Accompanying that non-predictable events might occur during the data
+collection process of sensor devices, and consequently, influence in their
+values, the support to annotations is a feature that can be used to describe
+the data. mongoDB indirectly supports the use of annotation because of its free
+method of updating documents and adding new keys to any of them without
+requiring design changes. Supposing an environmental accident happens, such as
+the San Francisco oil spill of October 2009 \cite{sfbay-oilspill2009}, the
+values of the collected data, and consequently data analysis, be influenced by
+different ranges of values. In this way, the implementation of the scenario U1
+provided the implementation of the addition of a new key called ``tag'', with
+the annotation ``oil spill''. This new key, after properly indexed, provides
+another option to meaningfully search the collected data from the sensor
+devices. Last, but not least, old data can be deleted as expressed by D1, as an
+operation supported by any database system.
+
+One common approach during research is data sharing. Researchers can choose
+the use of spreadsheets to analyze collected data with simpler tools than
+database systems or programming language. For this reason, OPEnDAP is used in
+the community to share data using a comma-delited format. In this way, the
+implementation of the use cases for R4 were developed in two different ways.
+First, the use of the export capabilities to a common-delimited values was
+performed \ref{file:mongodb-export-command}, taking approximaly 3.3 minutes to
+export one year worth of data for 5 YSI devices without indexing. Second, the
+implementation of a custom export utility using Python, as shown in Listing
+\ref{file:experiment-export-python} enabled the creation of the comma-delimited
+files with the same format as the ones used by OPEnDAP. The comparison can be
+done by analyzing the output of the OPEnDAP request from SF-BEAMS on Listing
+\ref{file:rtc-ysi-opendap}, and the output provided from the script written in
+Python, show in Listing \ref{file:experiment-export-python-results}.
+Furthermore, considering research teams with skills in Web Services, an easy
+ubiquos integration with mongoDB can be provided by using the REST Web Services
+APIs provided by mongoDB, still in alpha version. A practical application of
+this API was the created Apache Futon 4 mongoDB web application, used to give
+user friendlier access to the collected data as shown in 
+\ref{fig:view-collections-instance-browser-futondb}. 
+ 
+As discussed in chapter 5, the differences between a traditional database
+system, which uses the relational data model, and a document-oriented database
+system were clearly noticed during the development of this work. As mentioned
+in the section \ref{sec:experiments-user-experimence}, the user experience was
+mostly related to the definition of the keys that describe the sensor device,
+as discussed during the design of the solution in chapter 6. On the contraty,
+the abstraction of objects and collections during the data access using
+different programming languages. Therefore, based on the use of a different
+type of data model in the scope of data persistence for sensor networks, the
+taxonomies defined in chapter 3 could be updated to the one shown in Figure
+\ref{fig:taxonomy-data-model-modified}, including the Key-Value Pair Data
+Model.
+
+\begin{figure}[!h]
   \centering
   \includegraphics[scale=0.5]{../diagrams/taxonomy-data-model-modified}
   \caption{Data Model Taxonomy}
   \label{fig:taxonomy-data-model-modified}
 \end{figure}
 
-Another aspect of the implementation is that provides APIs in different
-languages for the data creation and extraction processes. In this way, the
-implementation of the persistence model captures the instances of any known
-data collected from NetBEAMS and saves it using the document pattern as shown
-in Listing \ref{file:mongodb-ysi-data-format}. One application of a
-schema-less data model is the addition of any new key-value pair to any
-instance of the document, as mongoDB supports update operations to any of the
-collections. It can use tags for the purpose of annotations as described in the
-taxonomy of data description. For example, in case of an oil spill in the San
-Francisco Bay occurs, researchers can update the data set of a given date
-range by adding tags to the relating documents. As a consequence of the use of
-a schema-less data model, these changes do not affect the other data
-instances, since there are no schema changes.
-
-As described in chapter 5, the schema-less data model can provide a better
-support to Data Provenance because the data model gives support to the change
-of records without affecting the others. In this way, the metadata used by the
-implementation clearly describes the three fundamental questions regarding the
-collected data from sensor devices, as described in section
-\ref{sec:keys-definition}. First, the identity of the data is given by the key
-``message\underline{ }id'', in a way that it uniquely identifies the data
-produced by the sensor identified by the key ``sensor.ip\underline{
-}address''. In this way, the message can be tracked back to the sensor that
-produced the data for different purposes such as tracking the data producer.
-Second, time dimensions were used in order to track two different aspects of
-the data collection: the valid time can be used to correlate observations to
-the exact moment it occurred, while the transaction time can be used to verify
-when the data was collected, and make decisions such as deleting the instances
-of data were collected in the previous two days, etc. Last, but not least, the
-use of the key ``sensor.location'' can give the exact location of the data,
-since researchers can be interested in finding data based on a specific
-location. Finally, the most important aspect of the schema-less data model is
-that the observed data is added to the key ``observation'', as any sensor
-device carries its set of attributes of key-value pairs. A good example of the
-applicability of the schema-less data model is the scalability regarding
-changes to the data structure. For instance, if an existing sensor device is
-flushed with a new version of the firmware\footnote{The first set of machine
-instructions to run on the hardware after the application of power stored
-permanently in PROM or ROM or semi-permanently in EPROM}, changing the format
-of data types or adding new values, the following instances of collected data
-may be different to the previous one by simply adding the new additions of
-data. For this reason, the DSP Data Persistence gives administrators the
-ability to choose which fields to persist by declaring it using a bootstrap
-message for the component, as shown in the parameter ``YSI\underline{
-}DESIRED\underline{ }PROPERTIES'' of Listing
-\ref{file:dsp-data-persistence-bootstrap.xml}.
-
-The centralized query processing used by NetBEAMS is a result of the
-infrastructure used by NetBEAMS, as well as the purpose of data and the
-location of the collected data. As a direct result of a schema-less data
-model, the centralized query processing is easily developed using any of the
-available programming languages provided by mongoDB. Considering the fact that
-programming languages are easier abstractions to researchers without computer
-science background \cite{sn-programming-language}, mongoDB's approach to data
-access through API can be seen as an easier task to manage data. As it is shown
-in Listing \ref{file:experiment-query-scenarios}, the scenarios designed to
-evaluate the implementation are written in Javascript, since it is the script
-language by the mongoDB Shell. Therefore, it attends the requirement of not
-using the SQL language as the main query language of the data, giving a better
-data access abstraction similar to programming languages for different users.
-
-One of the most important features of a data persistence for sensor
-networks is the replacement of the SQL by the use of programming
-languages, as they tend to be easier abstraction to users without the
-background in database systems \cite{sn-programming-language}. In this way,
-mongoDB covers the requirements of providing data access to the collected
-sensor data in different languages. For example, the data collected by the DSP
-Data Persistence component is written in Java, while the implementation of the
-experiments scenarios for querying the collected data is given in Javascript. In
-this way, researchers of the RTC may choose one of the enumarated languages
-APIs provided by the mongoDB to access the stored data from NetBEAMS.
-
-Finally, the implementation supported by mongoDB during the experiments was
-following a single dedicated server virtualization using VirtualBox 
-\cite{virtualization}.
-
-\subsection{Infrastructure Evaluation}
-
-Overall, the implementation of the DSP Data Persistence component meets
-the specification of the use cases defined in section \ref{sec:exp-scenarios}.
-The implementation of mongoDB using a single server environment can give
-support to the current workload and infrastructure from the use of NetBEAMS to
-collect data from the sensors devices from SF-BEAMS. From the perspective of
-disk-space utilization and given that aproximaly 1.3 Gigabytes of disk space
-were used to save one year-worth of collected data equivalent to five YSI
-devices. According to the mongoDB documentation \ref{mongodb}, the claimed
-amount of disk space is related to how mongoDB uses a binary representation
-of the JSON documents, which are composed only of strings, together with the
-definition of the indexes also represent in JSON. As a consequence, the size of
-the keys defined for the YSI sonde data defines the amount of disk space used.
-For this reason, different experiments were conducted with different
-definitions of the keys of the documents
-approach when compared the the RTC's OPEnDAP format shown in Listing
-\ref{file:rtc-ysi-opendap}. Then, the second specification used short names
-for the keys. In this way, the amount of storage space utilized by for the
-different workloads define in section \ref{sec:workload} can be summarized as
-follows
-
-The performance to insert data into the database system using the Java driver
-is documented by mongoDB as the fastest approach, providing persistence to
-approximaly 25,091 documents per minute on an indexed database. In contrast,
-when indexes are not used, more then 169,508 documents could be inserted per
-minute. Although the latter approach supports more ducuments than the former,
-the trade off between insertion and selection time is relevant due to the
-activities of retrieval for documents for specific periods of time. Therefore,
-the use of indexes might speed the retrieval time considerably. Considering
-this number of insertions to the database the number of sensors producing data
-and sending to the data sink, mongoDB and NetBEAMS implementation can
-virtually support thousands sensor devices.
-
-Disk utilization is one important characteristic of the selected database
-system. However, the retrieval of the collected data from sensor devices is
-a much more important requirement because most of the utilization of the data
-persistence of a sensor network is regarding the search for the properties on
-the collected data. After analyzing the response times for the scenarios
-described in section \ref{sec:exp-scenarios}, it is clear that the use of
-indexes improves the overall execution of the queries, specially because of the
-amount of data collected over the years. Furthermore, the response times
-described in this scenario is directly related to the use of the External
-Storage strategy. On the other hand, improvements over the response time can be
-achieved through the implementation of a Data-Centric approach on a Distributed
-Database environment, or clusters. In this approach, the inserted data is
-stored in different servers based on a partition key. Given the fact that less
-data is concentrated in each partition, the centralized query mechanism used is
-faster, and consequently improves the performance as described in the Data
-Location taxonomy in chapter 3.
-
-When it comes to re-using the data collected by the DSP Data Persistence,
-different approaches were available. First, the use of the export capabilities
-to a common-delimited values was performed \ref{file:mongodb-export-command},
-taking approximaly 3.3 minutes to export one year worth of data for 5 YSI
-devices without indexing. Second, the use of the client shell gives a
-centralized access to either the single server. However, in order to better
-provide access of data to users without skills in database systems, web
-applications can be built on top of the REST Web Services APIs \cite{http-rest}
-provided by mongoDB. One such example of using the REST API is the adaptation
-of Apache Futon 4 mongoDB, as shown in Figure
-\ref{fig:view-collections-instance-browser-futondb}, where users can navigate
-through the collections of the collected sensor network data categorized by the
-collection. Therefore, RTC staff technicians could take advantage of this tool
-to view and navigate over the collected data from the sensor devices.
-
-\subsection{Use Cases Evaluation}
-
-Supposing an environmental accident such as the San Francisco oil
-  spill happened again \cite{sfbay-oilspill2009}, changing the sampling
-  frequency drastically to different values. 
-
-\section{Difficulties Experienced}
+\subsection{Difficulties Experienced}
 \label{sec:experiments-difficulties}
-As the development of computing system, the inception of the experiments
-described in this chapter had different moments of Software Engineering.
-Particularly speaking about the learning curve, different situations
-contributed to the success of the first experiments. Since the technoogy is
-new, it brought new challenges regarding the usability and user experience.
-Since the technology is relatively new and still under development, many
-different bugs were could be reproduced by random during the execution of the
-experiments, and therefore, sent to the open-source community through use 
-different available communication channels. First, the fastest way to solve an
-issue was through the mongoDB's IRC channel, located at the Freenode server
-(www.freenode.org, channel mongodb). Second, the use of the users group, located
-at http://groups.google.com/group/mongodb-user also helped solving problems.
 
-Physical memory is limited, for this reason, it may not be enough to run the
-experiments for total workloads. In this case, the Java Virtual Memory was
-totally consumed by one of the revisions of the experiments setup. Huge data
-loads require different approach to manage data in memory such as creating
-object pools as temporary cache for objects whose state are similar to others.
+The inception of the experiments described in by this work moments of Software
+Engineering. Particularly speaking about the learning curve, different
+situations contributed to the success of the first experiments. Since the
+technoogy is new, it brought new challenges regarding the usability and user
+experience. The technology is relatively new and still under development,
+which many different bugs were be reproduced by random during the execution of
+the experiments, and therefore, reports were sent to the open-source community
+through use different available communication channels. First, the fastest way
+to solve an issue was through the mongoDB's IRC channel located at the Freenode
+server (www.freenode.org, channel mongodb). Second, the use of the users
+group, located at http://groups.google.com/group/mongodb-user also helped
+solving problems.
 
-While performing the experiments, the 32bit machine reached its limitation of
-2GB of physical data. With know about that, the environment needed to be
-updagred for mongoDB requires a 64-bit operating system when the amount of
-stored data reaches 2 Gigabytes. For this reason, the scenarios with indexes
-used a dedicated virtualized server using Ubuntu Linux 9.04 64 bits with 1 Gb
-of memory.
+Physical memory is limited and, for this reason, it may not be enough to run
+the experiments for total workloads. In this case, the Java Virtual Memory was
+totally consumed by one of the revisions of the experiments setup. Therefore, 
+it was learned that large amount of data loads require different approach to
+manage data in memory accordingly, such as creating different object pools as
+temporary cache for objects whose state are similar to others.
+
+Also related to the difficulties of this work, the fact that mongoDB is not yet
+stable makes the implementation a bit harder. The main mongod process is on its
+1.1.4 version as the time this line is writte, while the shards support is
+still in alpha version. For instance, different work-arounds were performed to
+have shards experimented as described, but the execution was not successful.
+
+To sum up, this chapter described the experimental results of the
+implementation of a data persistence component for NetBEAMS, showing the
+experiment results, the measurement results and finally the discussion about
+the solution in general. The following section brings the conclusions and
+future works for this dissertation.

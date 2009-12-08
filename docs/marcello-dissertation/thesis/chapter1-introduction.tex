@@ -9,7 +9,7 @@
 
 Sensor networks are commonly used in different areas for different purposes
 such as accurate measurements during scientific research \cite{sn-intro01} and
-the general public access such as weather forecast \cite{sn-intro02}. In the
+the general public access such as weather forecasting \cite{sn-intro02}. In the
 scientific community, they serve as tools to watch the state of the environment
 by storing samples of data at particular periods of time. For example, the
 NASA Jet Propulsion Laboratory uses the Volcano SensorWeb \cite{sn-ex02}, a
@@ -17,8 +17,8 @@ sensor network which aims at collecting data from individual volcanoes in
 Alaska and South Pacific to be used with heuristics regarding hazardous
 activities. Similarly, the National Data Buoy Center, a division of the
 National Oceanic and Atmospheric Administration (NOAA) \cite{sn-ex03},
-provides online information from different buoys in different shores around
-the world regarding water quality, current information, etc, what
+provides online information from different buoys located in different shores around
+the world regarding water quality, current information, etc, that
 characterizes sensor network for environmental monitoring \cite{sn-ex01}.
 Therefore, sensor networks can be seen as an extremely valuable tool
 for the scientific and commercial sectors, whose interest is the use of
@@ -27,38 +27,38 @@ the sensor's produced data.
 The first motivation for the inception of this work was to provide a data
 storage system for NetBEAMS \cite{netbeams2009}, a component-based sensor
 network infrastructure that can be used to automate the process of data
-gathering in sensor networks. In this way, the review of the state of the
-art in rewiewed that different approaches can be taken to provide access to the
+gathering in sensor networks. In this way, state of the
+art of data persistence in sensor networks was reviewed for different approaches used to obtain access to the
 collected sensor data: interrogate sensor devices indirectly by accessing its
-data in places called network data sink or simply connect directly to the
+data in places called network data sinks or simply by connecting directly to the
 device. While the collected data is only available in-memory as a data stream
-in the latter approach, it is stored in in any sort of secondary memory
+in the latter approach, it is stored in any sort of secondary memory
 device such as a hard-disk or a flash memory for archival purposes in the
 former approach. Along with the location of the collected data, the data model 
-may also influence in the process of reusing the collected data. In this way,
+may also influence the process of reusing the collected data. In this way,
 the introduction of a persistence layer for existing sensor networks requires
-an understanding about its infrastructure, the nature and the location of the
-collected data is temporalily located after it is produced from the sensor
+an understanding about its infrastructure, the nature and the location of where the
+collected data is temporarily located after it is produced from the sensor
 device. Similarly related to the infrastructure, the data model used to
 represent the collected data is another aspect of the data persistence layer
-implemented to manage the raw data values, and may rise questions. Considering
+implemented to manage the raw data values, and may raise questions. Considering
 that sensor networks devices may change over time, how can a data model take
 into account future additions of new entities to the database schema? Should 
-such a solution take into account the end users' skills in database system or
+such a solution take into account the end users' skills in database systems or
 provide access to the data through programming languages
-\cite{sn-programming-language}? These questions are faced when the solution
-considers the primary users of the collected data such as Biologists from the
-the department of Biology at San Francisco State University, which are
-responsible to maintain SF-BEAMS \cite{sfbeams2006}, a marine sensor network
+\cite{sn-programming-language}? These questions are faced when 
+considering the primary users of the collected data such as Biologists from the
+the department of Biology at San Francisco State University, who are
+responsible for maintaining SF-BEAMS \cite{sfbeams2006}, a marine sensor network
 used by NetBEAMS. While access to the collected data may represent
 difficulties, other technical issues may also be faced such as growth in terms
-of the number of sensor devices and, consequently, the number of data
-produced. In this way, sensot networks engineered with the purpose of data
-archival has to answer questions related to how disk storage can be maximized
-when storing the collected data. Last, but not least, the way to read the data
-for reuse is the most striking features of a sensor network, taking into
+of the number of sensor devices deployed and, consequently, the amount of data
+produced. In this way, sensor networks engineered with the purpose of data
+archival must address questions related to how disk storage can be maximized
+when storing the collected data. Lastly, the way to read the data
+for reuse is the most striking feature of a sensor network, taking into
 account the different data formats used by the primary users of the system.
-How can individual collected sensor data be exported to other formats such as
+How can individually collected sensor data be exported to other formats such as
 spreadsheets in order to be shared among research colleagues? For these and
 other reasons, the inception of a persistence storage for NetBEAMS, and any
 other sensor network, can be an exceptionally challenging problem to solve.
@@ -67,7 +67,7 @@ In view of the fact that the persistence storage of a sensor network imposes
 many different challenges, the assessment of the current state of the art for
 data persistence in sensor networks revealed different alternatives to better
 evaluate database technologies for sensor networks and, specifically speaking,
-to NetBEAMS. As a matter of fact, this first contribution of this work is the
+to NetBEAMS. As a matter of fact, the first contribution of this work is the
 creation of a set of basic taxonomies for data persistence in sensor networks,
 proposed to drive an empirical analysis of different database systems used by
 researchers. In this way, based on the findings of the review of current trends
@@ -81,24 +81,25 @@ After designing and implementing a solution whose technology has not yet been
 used in the sensor network community, experiments were conducted to simulate
 the workload of real-world scenarios used by SF-BEAMS during one year of data
 produced by a specific type of sensor. In conclusion, the implementation
-attends most of the requirements and specifications defined by the taxonomies,
-giving an alternative data mode that solves the problem related to constant
-schema changes, providing an outstanding support for Data Provenance
+fulfills most of the requirements and specifications defined by the taxonomies,
+giving an alternative data model that solves the problem related to constant
+schema changes, providing a good support for Data Provenance
 \cite{sn-provenance} for sensor networks. In addition, the solution provides
 different data access alternatives such as the use of programming languages or
-REST Web Services \cite{http-rest} instead of the Structure Query Language SQL
+REST Web Services \cite{http-rest} instead of the Structure Query Language (SQL)
 \cite{sql} used in relational databases \cite{relational-model}, as well as
 native support to export data to formats used by the SF-BEAMS staff.
 
 This paper is organized as follows: the next chapter describes the literature
-review as the state of art on sensor networks and data persistence, providing
+review of the state of art on sensor networks and data persistence, providing
 the underlying foundation for the design of taxonomies in data persistence for
-sensor networks in chapter 3. Then, chapter 4 examines the selected case study
-and its requirements for a persistence layer, whose technology's properties are
-evaluated against the developed taxonomies in chapter 5. The culmination of
-this work is chapter 6, which details the design and implementation of a data
-persistence solution for the selected case study. Likewise, chapter 7 discusses
+sensor networks in Chapter 3. Then, Chapter 4 examines the selected case study
+and its requirements for a persistence layer, whose technological properties are
+evaluated against the developed taxonomies in Chapter 5. The culmination of
+this work is Chapter 6, which details the design and implementation of a data
+persistence solution for the selected case study. Likewise, Chapter 7 discusses
 the solution by presenting the measurements and results of the conducted
-experiments. Last, but not least, chapter 8 presents the conclusions of this
-work, together with the different possible future works not addressed by this
-dissertation.
+experiments. Lastly, chapter 8 presents the conclusions of this
+project,together with the different possible future work not addressed by this
+report. Chapter 9 presents the appendix with source-code implemented, as well as
+logs collected from experiments.

@@ -6,26 +6,26 @@
 \chapter{Proposal of a Data Persistence in Sensor Networks Taxonomy}
 \label{chap:taxonomies}
 
-As revailed in the previous chapter, data persistence for sensor
+As reveled in the previous chapter, data persistence for sensor
 networks require an understanding of not only the properties of the
 infrastructure of a given sensor network, but also of the properties and nature
-of the collected data themselves. To put things differently, in order to
+of the collected data themselves. In order to
 identify these concepts more clearly, each section of this chapter proposes an
 individual taxonomy based on the aspects described in the literature
 review. Then, it briefly discusses the relationships among them.
 
-A taxonomy is defined as the practice and science of classification and uses
-the taxonomic units of ``taxa'', the plural form of ``taxon''. Similarly, they
-are represented by a hierarchy diagram that relates the main taxonomy to the
-different taxa and their own related ones, if any.
+Taxonomy is defined as the practice and science of classification and uses
+the taxonomic units of ``taxa'', the plural form of ``taxon'' \cite{taxonomy}.
+Similarly, they are represented by a hierarchical diagram that relates the
+main taxonomy to the different taxa and their own related ones, if any.
 
 \section{Purpose of the Sensor Data Taxonomy}
 
 As delineated in section \ref{sec:sn-data-purpose}, the purpose of the
 collected data from sensor devices determines how the collected data is
 retrieved and used in the network. In such a fashion, this taxonomy relates to
-how the collected data is used, and should be the primary question to be
-answered during the analysis of a sensor network. The taxa related to this
+how the collected data is used, and should be the primary question answered 
+during the analysis of a sensor network. The taxa related to this
 taxonomy, depicted in Figure \ref{fig:taxonomy-data-purpose}, is described as
 follows:
 
@@ -49,8 +49,8 @@ follows:
 
 The location where the collected data is stored plays an important role
 in the different aspects of the access to the collected data from sensor
-devices, as shown in section \ref{sec:sn-storage-locations}. In this way,
-Figure \ref{fig:taxonomy-data-location} depicts this taxonomy, which can be
+devices, as shown in section \ref{sec:sn-storage-locations}. Figure 
+\ref{fig:taxonomy-data-location} depicts this taxonomy, which can be
 described as follows:
 
 \begin{figure}[h]
@@ -61,12 +61,12 @@ described as follows:
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{Local Storage}: characterizes the placed of the collected data
+  \item \textbf{Local Storage}: characterizes the place the collected data is
   temporarily located in-memory, or in a secondary storage device on a node
   located in-network;
   \item \textbf{External Storage}: The collected data is usually located in an
   external storage device with a data management system such as a relational
-  database. When the collected data occupies different external storages, the
+  database. When the collected data occupies different external storage devices, the
   strategy is called \textbf{Data-Centric Storage}, being organized by
   categories based on the collected data keys and values. In other words, what
   characterizes this taxon is the presence of a data partitioning strategy to
@@ -77,10 +77,9 @@ described as follows:
 
 One of the fundamental challenges in the development of a persistence storage
 in sensor networks is related to the data model chosen to represent the
-collected data. Different data models were reported in the review of related
-literature in section \ref{sec:data-models}. As a consequence, this taxonomy
-relates to the data model used to design the collected data, as drawn in Figure
-\ref{fig:taxonomy-data-model}, and described as follows.
+collected data. This taxonomy relates to the data model used to design the 
+collected data, as drawn in Figure \ref{fig:taxonomy-data-model}, and is 
+described as follows.
 
 \begin{figure}[h]
   \centering
@@ -91,25 +90,24 @@ relates to the data model used to design the collected data, as drawn in Figure
 
 \begin{itemize}
   \item \textbf{Schema-Dependent Models}: this data model requires the
-  definition of a master schema that describes the data through a rigorous of 
-  data modeling process prior to the insertion of the data. Examples of such
+  definition of a master schema that describes the data through a rigorous
+  data modeling process prior to the insertion of the data. Examples of this
   model is the traditional Relational Data Model\cite{relational-model}, as
  well as the Structured Data Models such as the XML \cite{xml};
   \item \textbf{Schema-less Models}: contrary to the former taxon, schema-less
   data models do not require the definition of a data schema or table
-  definition. Instances of such data model reviewed in the literature review
-  is the use of the Tabular Data model.
+  definition. Instances of such a data model is the use of the 
+  Tabular Data model.
 \end{itemize}
 
 \section{Data Description Taxonomy}
 
-Particulaly related to how the collected data is described, different projects
+Particularly related to how the collected data is described, different projects
 provide data persistence describing the collected data by using its natural
-properties, or associating textual descriptions or keywords of the data. The
-way to describe data can follow different guidelines such as data provenance
-and annotations, discussed in section \ref{sec:sn-data-description}. As
-reported in section \ref{sec:sn-data-description}, the description of the
-properties should take into account different properties of the nature of the
+properties, or associating textual descriptions or keywords for the data. The
+way to describe or label data can follow different guidelines such as data provenance
+and annotations, discussed in section \ref{sec:sn-data-description}. The description of the
+properties should take into account the different values of the nature of the
 data and any other description needed. Therefore, the taxa that composes the
 Data Description taxonomy, shown in Figure
 \ref{fig:taxonomy-data-description}, are described as follows:
@@ -125,7 +123,7 @@ Data Description taxonomy, shown in Figure
   \item \textbf{Provenance-Aware}: when the collected data is categorized based
   on the nature of the data, \textbf{What: Data Identity} is the data type
   that uniquely identifies the collected data from sensors. Similarly, the
-  \textbf{When: Time Dimension}, is related instants of time related to the
+  \textbf{When: Time Dimension}, is related to instances of time relative to the
   collected data: \textbf{fact} and \textbf{transaction} times. The former is
   used to identify when the data was collected, whereas the latter when the data was
   transmitted to the data sink where the query processing acts. Finally, the
@@ -134,16 +132,16 @@ Data Description taxonomy, shown in Figure
   GPS coordinates;
   \item \textbf{Annotations}: the annotation of the collected data, through the
   use of keywords, full-text description, or any other method that helps
-  describing the collected data. It is important to note that this type of data
-  does not make part of the collected data from sensors. Rather, they
-  complement the observations of what was percieved by the sensor devices.
+  describe the collected data. It is important to note that this type of data
+  does not makeup part of the collected data from sensors. Rather, they
+  complement the observations of what was perceived by the sensor devices.
 \end{itemize}
 
 \section{Query Processing Mechanism Taxonomy}
 
 The query processing mechanism in sensor networks is directly related to how
 and where the collected data is used and stored, as shown in section
-\ref{sec:query-process}. As a consequence, the following taxa are related to the
+\ref{sec:query-process}. The following taxa are related to the
 different types of query processing mechanisms and summarized in Figure
 \ref{fig:taxonomy-query-mechanism}:
 
@@ -157,7 +155,7 @@ different types of query processing mechanisms and summarized in Figure
 \begin{itemize}
   \item \textbf{In-Network Query Processing}: when the data node is the
   sensor device itself, and it uses the local storage mechanism, then the
-  sensor node is able to reply to request related to the observations of the 
+  sensor node is able to reply to the request related to the observations of the 
   environment defined by the sensor device. In this way, the query takes 
   place in the network itself, and usually returns values related to the current
   state of the environment;
@@ -170,7 +168,7 @@ different types of query processing mechanisms and summarized in Figure
 \section{Data Volume Taxonomy}
 
 When it comes to the data volume produced during a time frame, different ranges
-were reported from different types of sensor networks. Depending on the types
+are reported from different types of sensor networks. Depending on the types
 of data produced such as numerical or images, they can be in the orders of
 Megabytes (1MB = 1000KB = ~10\superscript{3} bytes), Gigabytes (1GB =
 1000\superscript{3} = 10\superscript{9} bytes) and even Terabytes (1TB =
@@ -190,25 +188,23 @@ different sizes of data produced by a sensor network, summarized in Figure
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{Small}: sensor networks whose yearly produced data is in the
+  \item \textbf{Small}: sensor networks whose annual production of data is in the
   range of MBs or to 1GB of data, usually stored in flat files directly in the
   operating system. They are usually collected from sensor devices that only
   generate numerical data;
-  \item \textbf{Medium}: amount of data that ranges from GBs to 1TB data. In
-  order to manage such amount of data using disk arrays;
-  \item \textbf{Large}: when the amount of data produced by a sensor device
-  reaches amounts of data compatible to data centers, in the orders ranging
-  from TBs to 1PT of data. The construction of a data center specialized for
-  data produced by sensor devices, taking into account the addition of data
-  provenance, among others.
+  \item \textbf{Medium}: amount of data that ranges from GBs to 1TB data and is 
+  managed using disk arrays;
+  \item \textbf{Large}: the amount of data produced by a sensor device ranging 
+  from TBs to 1PT of data necessitates the construction of a data center 
+  specializing in the storage of data produced by sensor devices, taking into 
+  account the addition of data provenance, among others.
 \end{itemize}
 
 \section{System Organization Taxonomy} 
 
-Different approaches of are developed computational systems to deal the data
-produced from sensor networks. As  
-In this way, Figure \ref{fig:taxonomy-database-architecture} describes the
-taxonomy of the database system organization as follows:
+Different approaches have been developed to organize the storage of data
+produced from sensor networks. Figure \ref{fig:taxonomy-database-architecture} 
+describes the taxonomy of the database system organization as follows:
 
 \begin{figure}[h]
   \centering
@@ -219,26 +215,25 @@ taxonomy of the database system organization as follows:
 
 \begin{itemize}
   \item \textbf{Centralized System}: a database system that runs in one single
-  centralized host, being the focal purpose managing the collected data
+  centralized host, the focus being the managing of the collected data
   \cite{sn-intro01};
-  \item \textbf{Distributed System}: a database system that can be composed by
+  \item \textbf{Distributed System}: a database system that can be composed of
   more than one node. Usually, the use of the pattern of Master-Slave
-  mechanism or data ``Replication" is used to aliviate ``hot spots'' during
+  mechanism or data ``Replication" is used to alleviate ``hot spots'' during
   concurrent processes of data collection from the sensor devices and data
-  access from the final users. On the other hand, unique mechanisms can be
-  used to disagragate the produced data from a concentrated one: the use 
-  of database partioning, as related to the data-centric storage, where  
-  each partition is responsible to hand data produced by a given type of 
-  sensor, for instance.
+  access from the final users. Unique mechanisms can be used to disaggregate 
+  the produced data from a concentrated one: the use of database partitioning, 
+  as related to the data-centric storage, where each partition is responsible 
+  to handle data produced by a given type of sensor, for instance.
 \end{itemize}
 
 \section{Relationships among the Taxonomies}
 
 On the whole, the taxonomies described in this chapter were based solely on the
-literature review of described in the previous chapter. They can be helpful in 
-understanding of requirements of a data persistence layer for sensor networks
-with different infrastructures. They are summarized on table
-\ref{tab:taxonomies-list-summary}, and briefly related highlight these
+literature review described in the previous chapter. They can be helpful in 
+understanding the requirements of a data persistence layer for sensor networks
+with different infrastructures. They are summarized on Table
+\ref{tab:taxonomies-list-summary}, and briefly highlight these
 relationships in order to better analyze a problem related to data persistence.
 
 \begin{table}[!b]
@@ -258,13 +253,13 @@ relationships in order to better analyze a problem related to data persistence.
     \caption{Summary of the Data Persistence Taxonomies}
 \end{table}
 
-The taxonomy related to the purpose of the sensor data can be directly related
-to the taxonomy of the location of the sensor data. While the taxon of the 
+The taxonomy related to the purpose of the sensor data can be directly associated 
+with the taxonomy of the location of the sensor data. While the taxon of the 
 real-time data stream relates to the local data storage, the taxon related to
-data archival correlates the storage of the collected data with the an external
+data archival correlates the storage of the collected data with an external
 storage one. In addition to that, the converse is also true.
 
-The taxonomy related to the data model can be related to any taxon from the
+The taxonomy related to the data model can be linked to any taxon from the
 taxon described from the system organization, to data description and query
 processing and location of the collected data. In the former, the data of a
 relational model is stored using SQL messages.
@@ -278,12 +273,11 @@ use of distributed systems is required to cope with high volume of data
 processing. Techniques described for data replication is used to decrease the
 load in hot spots of the architecture. On the other hand, approaches to
 separate the data being written and read can be used such as Load Balancing or
-Database Partition. As a consequence, the use of a Data-Centric storage
-approach is used.
+Database Partition, and the use of a Data-Centric storage approach is used.
 
 In the light of these taxonomies, the classification of the data persistence
 properties of a sensor networks can be studied and reviewed. As described in
-the introduction of this dissertation, one the main motivations for this work
+the introduction of this report, one the main motivations for this work
 was to provide means of data persistence for NetBEAMS, a case study which does
 not contain a data layer. Therefore, the following chapter seeks to describe
 NetBEAMS and its supporting infrastructure.

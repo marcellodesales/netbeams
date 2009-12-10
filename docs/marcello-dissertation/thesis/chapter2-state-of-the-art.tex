@@ -361,7 +361,7 @@ In general, sensor devices produce and preserve data onto their local
 storage or transmit them to data nodes as described earlier in this chapter. It
 is vital to understand that the majority of these devices output the raw data
 in streams of values with any type of delimitation between each other. For
-this reason, the processes of parsing and labeling each of the values located
+this reason, the process of parsing and labeling each of the values located
 in the data stream regularly requires the use of the device's specification
 documentation. Similarly, in order to have access to each of the properties of
 collected data by a given property related to time or space,
@@ -387,7 +387,7 @@ Annotations. \cite{sn-annotation} shows the use of tags to describe data
 collected from a physical area monitoring. The sensor network was
 designed to monitor moving objects, capturing their location while in
 movement and their visual appearance using a video camera. In this way,
-adding tags to particular video frames can describe different them, and
+adding tags to particular video frames can describe each of them, and
 therefore, providing an efficient way to search for a specific frame based on
 its visual observations. Similarly, the above referenced project also uses data
 provenance to describe its collected data, since each of the collected data 
@@ -420,7 +420,7 @@ Briefly, the collected data is described by the name of the observation
 property. For instance, \textbf{temperature} = 73.45 expresses the value of the
 observation of the temperature. In other words, the string ``temperature'' is
 the property describing the raw collected data 73.45. On the other hand,
-the example \textbf{temperature-scale} = ``Fahrenheit" describes the metadata
+the example \textbf{temperature-unit} = ``Fahrenheit" describes the metadata
 regarding the temperature.
 
 \subsection{Time of Data Creation}
@@ -450,7 +450,11 @@ the latter type of is the point in time at which a given fact was transferred
 to the persistence layer. Either types of time can be used depending on the
 requirements of the sensor network. For instance, \cite{sn-dataware-house}
 reports that all the data stored by its sensor network uses the time of
-collection, but do not use the transaction time for that purpose.
+collection, but do not use the transaction time for that purpose. Similarly,
+\cite{sn-provenance} shows a practical examples of critical queries performed
+over the transaction time, when doctors need all the collected data regarding
+the heart beat rate from the moment the patient entered the ambulance until
+the moment of arrival at the hospital.
 
 When both temporal dimensions are applied, the collected data is referred to as
 Bitemporal \cite{db-temporal}. Usually, the data type of this metadata is a
@@ -472,6 +476,14 @@ metadata for the event. Examples of this are the metadata event =
 ``high-pressure" of 1304, at the altitude of 1,500 feet above the ocean on GPS
 coordinates of latitude 13.445 and longitude -23,003. This example clearly
 gives necessary identification of where the event of high-pressure occurred.
+The precision of the location can be important for the collected data because
+it helps researchers correlate different measurements based on exact locations
+of the data. For instance, \ref{sn-provenance} depicts an example where two
+different sensor networks covering the same physical area: one covering the
+reginal traffic and another snowfall. Although each of them has individual
+functions, collectively they could allow real-time navigation service to answer
+queries regarding expected traffic patterns based on the current snowfall and
+advise drivers accordingly by reusing collected data from both sensor networks.
 
 All in all, Data Provenance enriches the value of the collected data from
 sensor devices by describing its identity creation, time of creation and

@@ -29,8 +29,9 @@ marine and estuarine environments using the SF-BEAMS sensors. The sensors are de
 pier located on the San Francisco Bay, in Tiburon, California; and is operated by 
 the Romberg Tiburon Center for Environmental Studies (RTC) a part of San Francisco
 State University. NetBEAMS is an experimental component that utilizes the SF-BEAMS 
-infrastructure to operate. This section details SF-BEAMS in general, and presents 
-the requirements for data persistence.
+infrastructure to operate. This section details SF-BEAMS in general, and
+presents the requirements for data persistence after classifying NetBEAMS based
+on the taxonomies defined in the previous chapter.
 
 \subsection{The SF-BEAMS Infrastructure}
 \label{sec:sfbeams}
@@ -72,10 +73,10 @@ Listing \ref{file:rtc-ysi-opendap}.
 
 As described in section \ref{sec:sn-infrastructure}, sensor devices produce
 the observed data based on properties of measurements defined by its
-manufacturer. NetBEAMS has used ``YSI 6600 ESD V2" \cite{YSI-Sonde}, as seen in
-Figure \ref{fig:ysi-device}, one of the sensors devices used by SF-BEAMS. It is a
-powerful water quality-monitoring device, capable of producing around 52 bytes
-on a single real-time data stream reading, as shown on Table
+manufacturer. NetBEAMS has used ``YSI 6600 ESD V2" \cite{YSI-Sonde}, as seen
+in Figure \ref{fig:ysi-device}, one of the sensors devices used by SF-BEAMS.
+It is a powerful water quality-monitoring device, capable of producing around
+52 bytes on a single real-time data stream reading, as shown on Table
 \ref{tab:ysi-data-stream}.
 
 \begin{figure}[!b]

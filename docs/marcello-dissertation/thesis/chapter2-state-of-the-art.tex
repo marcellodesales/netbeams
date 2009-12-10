@@ -139,7 +139,7 @@ The type of query mechanism used to directly or indirectly interrogate sensor
 devices in a sensor network is directly related to the aforementioned locations
 of the collected data. The in-network query processing is used when the
 location of the collected data is a local storage site \cite{sn-storage01,
-sn-storage03} within the network; a strategy typically used to maximize the
+sn-data-centric-storage} within the network; a strategy typically used to maximize the
 sensor's resources, while minimizing energy consumption \cite{sn-storage04}. On
 the contrary, the a typical centralized query processing is used to search for
 values over the collected data when the location is a centralized data
@@ -177,8 +177,8 @@ hard-disk.
 
 After producing the ``sensed'' values for the observed parameters from the
 environment, the sensor node is responsible for sending the raw data to a specific
-data node defined by the network infrastructure, as delineated in section
-\ref{sec:sn-infrastructure}. Thus, \cite{sn-storage03}
+data node defined by the network infrastructure, as delineated in Section
+\ref{sec:sn-infrastructure}. Thus, \cite{sn-data-centric-storage}
 describes that the destination for the collected sensor data will be one of two
 different types of storage devices: the \textbf{external storage} and the
 \textbf{local storage}. In the former type, the sensor sends the
@@ -190,7 +190,7 @@ for example, \cite{sn-storage02} sees a wireless sensor networks as a many-to-on
 collection pattern, when its organization is based on single-hop or star. On
 the other hand, data may also flow from one intermediate sensor node to another
 until it reaches its final data sink when the data organization is structured
-as a graph, tree \cite{sn-storage01, sn-storage03}.
+as a graph, tree \cite{sn-storage01, sn-data-centric-storage}.
 
 Lastly, the use of different external storage devices can be used
 to partition the collected data. This practice is called \textbf{Data-Centric
@@ -203,7 +203,7 @@ creation.
 
 The query processing in sensor networks is a direct or indirect method of
 accessing the collected data stored at data nodes, whose location is determined
-by different facts described in the previous section. \cite{sn-storage03}
+by different facts described in the previous section. \cite{sn-data-centric-storage}
 describes an example of an \textbf{in-network query processing} when sensor
 nodes, acting as data nodes, provides real-time data stream as a response
 to queries requesting the device's collected data. Likewise, if the collected
@@ -221,7 +221,7 @@ produced data from the network.
 
 Based on the literature review, there are advantages and disadvantages related to
 each of the query processing approaches described with regards to the
-infrastructure of the sensor network. \cite{sn-storage03} argues that the 
+infrastructure of the sensor network. \cite{sn-data-centric-storage} argues that the 
 primary purpose of the in-network query processing is to minimize the amount
 of data transmitted from sensor devices to a data sink, as sensor devices are
 generally limited by energy use. Considering that sensor devices are also used
@@ -250,9 +250,10 @@ nodes capacity and minimize energy consumption, \cite{sn-storage02} explains
 that this trade off imposes the creation of the unavoidable development of a
 point of traffic concentration or the phenomenon of network congestion. For
 this reason, \cite{sn-storage04} describes that different techniques used in 
-distributed systems such as the use of master-slave data replication or 
-database partitioning \cite{db-partitioning-relational} can be used to reduce
-or mitigate the effects of this funneling.
+distributed systems such as the use of master-slave data replication
+\cite{sn-data-center-replication-load-balance} or database partitioning
+\cite{db-partitioning-relational} can be used to reduce or mitigate the
+effects of this funneling.
 
 \section{Data Models and Query Engines for Sensor Networks}
 \label{sec:data-models}
@@ -521,7 +522,7 @@ cumulative data reached 1 TB of data every year.
 
 Data management for large scales of data require different techniques to store
 and retrieve data, since it requires more computational power and data
-retrieval efficient algorithms. \cite{sn-data-center} describes the creation of
+retrieval efficient algorithms. \cite{sn-data-center-replication-load-balance} describes the creation of
 a Sensor Data Center designed to store and analyze amounts of data on the range of
 Terabytes to a future Petabytes of data. Its sensor network deals with not only
 numerical sensor readings from transportation management, but also radar

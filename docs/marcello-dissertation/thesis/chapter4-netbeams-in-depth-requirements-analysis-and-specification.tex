@@ -40,7 +40,7 @@ The SF-BEAMS sensor network is responsible for providing data for water quality
 monitoring, as well as weather and surface conditions. Figure
 \ref{fig:sf-beams} shows a picture taken from the SF-BEAMS web-camera.
 
-\begin{figure}[!t]
+\begin{figure}[!b]
   \centering
     \includegraphics[scale=0.7]{../diagrams/cam_image-oct15}
   \caption{Picture of the SF-BEAMS Network, at the RTC pier. Tiburon, CA.}
@@ -64,7 +64,7 @@ http://sfbeams.sfsu.edu:8080/opendap. An example of an HTTP Request from
 accessing the data for a specific device is shown in Listing
 \ref{file:rtc-ysi-opendap} on page \pageref{file:rtc-ysi-opendap}.
 
-\begin{figure}[!b]
+\begin{figure}[!h]
   \centering
   \includegraphics[scale=0.5]{../diagrams/SF-BEAMS-system-architecture}
   \caption{The Current SF-BEAMS Data Collection Process}
@@ -82,7 +82,7 @@ real-time data stream reading regarding 12 different parameters such as water
 temperature, salinity, turbiny, among others. An example of the data stream is
 as shown in Listing \ref{data:ysi-stream} on page \pageref{data:ysi-stream}.
 
-\begin{figure}[!b]
+\begin{figure}[!h]
   \centering
   \includegraphics[scale=0.7]{../diagrams/ysi-device}
   \caption{Picture of the case study Sonde device: YSI 6600 ESD V2}
@@ -113,9 +113,9 @@ following components (as of May 2009):
 Considering the infrastructure, the data load in the server-side
 of RTC's laboratories produced by the YSI Sonde sensors devices can be
 estimated by analyzing the data distribution over a period of one year, as
-shown in Table \ref{tab:year-data-distribution}.
+shown in Table 4.1.
 
-\begin{table}[!b]
+\begin{table}[!h]
     \label{tab:year-data-distribution}
      \begin{center}
       \begin{tabular}{|c|c|c|c|c|c|c|}\hline 
@@ -245,4 +245,4 @@ infrastructure of NetBEAMS, its the motivation and goals for this project were
 presented. The next chapter is the actual analysis of existing database systems 
 mentioned in Chapter 2, which aligns with the requirements and characteristics of 
 NetBEAMS. Meanwhile, more details regarding the architecture of NetBEAMS, as well as
-the development guidelines can be found in the appendix of chapter 10.
+the development guidelines can be found in the appendix of Chapter 10.

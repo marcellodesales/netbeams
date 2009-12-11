@@ -25,15 +25,27 @@
 %     some numbers for \textheight and \footskip right here, and then change them below, right after
 %     generating the Title Page.
 
-\hoffset=.5in 
-\oddsidemargin=0in
-\evensidemargin=0in
-\topmargin=0.1in 
-\headheight=0in
-\headsep=1in
-\footskip=.8in
-\textwidth=5.9in
-\textheight=7in
+\pdfpagewidth 8.5in
+\pdfpageheight 11in 
+\setlength\topmargin{0in}
+\setlength\headheight{0in}
+\setlength\headsep{0in}
+\setlength\textheight{7.7in}
+\setlength\textwidth{6.5in}
+\setlength\oddsidemargin{0in}
+\setlength\evensidemargin{0in}
+\setlength\headheight{77pt}
+\setlength\headsep{0.25in}
+
+%\hoffset=.5in 
+%\oddsidemargin=0in
+%\evensidemargin=0in
+%\topmargin=0.0in 
+%\headheight=0in
+%\headsep=1in
+%\footskip=.8in
+%\textwidth=6.5in
+%\textheight=7in
 
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
@@ -165,14 +177,12 @@ $\mbox{}$
 \begin{center}
 \singlespace{
     Copyright \copyright{} \thisyear by \myname
-
-    \bigskip
-
-    All rights reserved. No part of the material protected by this
-    copyright notice may be reproduced or utilized in any form or by any
-    means, electronic or mechanical, including photocopying, recording or
-    by any information storage and retrieval system, without the prior
-    permission of the author.
+%    \bigskip
+%    All rights reserved. No part of the material protected by this
+%    copyright notice may be reproduced or utilized in any form or by any
+%    means, electronic or mechanical, including photocopying, recording or
+%    by any information storage and retrieval system, without the prior
+%    permission of the author.
 }
 \end{center}
 
@@ -226,9 +236,9 @@ San Francisco, California \\
 \vspace{.5in}
 
 %\doublespacing{\noindent
-\onehalfspacing{\noindent      
+\onehalfspacing{\noindent
 Sensor Networks are becoming more and more important to different science
-communities bacause of what they produce: the raw data for different studies.
+communities because of what they produce: the raw data for different domains.
 In order to make use the collected data, researchers may have to dissect the
 characteristics of the sensor network in question, regarding different
 properties such as the purpose and location of the observed data, as well as
@@ -236,19 +246,22 @@ how the data is described. For this reason, this work proposes a set of data
 persistence taxonomies based on the state of the art, which can be used to
 classify the properties of the produced raw data. In order to evaluate the
 proposed taxonomies, this work designs and implements a data persistence
-component for NetBEAMS, our case study of modular sensor network infrastructure
+component for NetBEAMS, a modular-based sensor network infrastructure
 developed to improve the operation of the SF-BEAMS environmental sensor
-network. In this way, based on empirical analysis regarding proposed
-taxonomies for the case study, this work selected mongoDB, a schema-less
-document-oriented database instead of the traditional use of relational
-databases. As a result based on the experiments conducted, this work suggests
-that use of Key-Value Pair datasents in orde tor provide External of
-Data-Centric approach. Therefore, the use of a solution of the help decreasing
-the complexity related to the data persistence layer for sensor networks with
-external or data-centric storage mechanism, and whose purpose is data
-archival. Finally, this work proposes different future works such a
-data-centric approach using Databa se Shards to store te collected data and Map
-Reduce to execute parallel queries over the shards.} \vspace*{\fill}
+network. SF-BEAMS is deployed at the Tiburon Island, California, and managed by
+the Department of Biology from SFSU. In this way, based on empirical analysis
+regarding proposed taxonomies for the case study, this work selected mongoDB,
+a schema-less document-oriented database instead of the traditional use of
+relational databases. As a result based of the experiments conducted, this
+work proposes a novel use of the Key-Value Pair databases in order tor provide
+External of Data-Centric approaches. Similarly, this work also agrees to
+related literature that the use of programming languages are better abstraction
+than the use of traditional query languages used to extract data from Relational
+databases, and therefore, it should be the proposed approach to non-technical
+researchers such as the Biologists. Finally, this work proposes different
+future works such a data-centric approach using Databasese Shards to store the
+collected data and Map Reduce to execute parallel queries over distributed
+database nodes.} \vspace*{\fill}
  
 \hspace*{\fill}
 
@@ -261,7 +274,7 @@ I certify that the Abstract is a correct representation of the content of this t
 Chair, Thesis Committee 
 \hspace{2.5in}
 Date
-\doublespacing
+\onehalfspacing
 \newpage
 \[ \]
 \vspace{-1.8in}

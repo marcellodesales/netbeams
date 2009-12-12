@@ -1,9 +1,9 @@
 \chapter{Appendix: Implementation and Experiments Artifacts}
 
-This chapter includes references to the implementation Data Data Persistence
+This chapter includes references to the implementation Data Persistence
 Implementation covering its design and architecture. Also, some of the
 implementation details of the DSP Data Persistence component designed in
-chapter 6 are presented, showing the generated experiment artifacts. While
+Chapter 6 are presented, showing the generated experiment artifacts. While
 this section does not include all the related source-codes, the remainder can
 be downloaded directly from the Subversion repository branch at
 http://code.google.com/p/netbeams/source/browse/\#svn/branches/marcello/persistence/.
@@ -11,11 +11,10 @@ http://code.google.com/p/netbeams/source/browse/\#svn/branches/marcello/persiste
 \section{DSP Platform Deployment Details}
 \label{sec:dsp-data-persistence-implementation}
 
-As described in the previous chapter, the DSP Data Persistence Component was
-implemented using the Java Programming language, on top of the OSGi Framework
-API. This section describes the setup process of the implementation, as well
-as the artifacts use during the implementation, which will be listed in the
-appendix section.
+The DSP Data Persistence component was implemented using the Java Programming
+language, on top of the OSGi Framework. This section describes the setup
+process of the implementation, as well as the artifacts use during the
+implementation, which will be listed in the appendix section.
 
 The structure of the artifacts implemented for the DSP Data Persistence
 Component follow the conventions of the NetBEAMS implementation
@@ -27,9 +26,9 @@ artifacts.
 \begin{itemize}
   \item \textbf{DSPDataPersistence}: Main directory with the build.xml (Listing
   \ref{file:dsp-build.xml}) and other Eclipse-related artifacts. The other
-  major directories are also listed:
+  major directories are also listed;
   \item \textbf{META-INF}: this directory contains the descriptor file for
-  the OSGi Framework, this this case the MANIFEST.MF;
+  the OSGi Framework, in this case, the MANIFEST.MF;
   \item \textbf{src}: the main directory structure for the source-code
   implemented. Note that it follows the Java specification for packaging, and
   therefore, lists the package org.netbeams.dsp.persistence as the main
@@ -38,142 +37,141 @@ artifacts.
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/dsp-data-persistence-dir-checkedout}
+  \includegraphics[scale=0.65]{../diagrams/dsp-data-persistence-dir-checkedout}
   \caption{The DSP Data Persistence Directory Structure}
   \label{fig:dsp-data-persistence-dir-checkedout}
 \end{figure}
 
 \subsection{OSGi Deployment Process}
+\label{sec:dsp-component-osgi-deployment}
 
 Since each NetBEAMS component is managed by an OSGi component and its
 infrastructure, this section describes the basic functionality of the
 OSGi platform \cite{osgi}, a framework was conceived to support
 modularity in terms resources-limited environments such mobile devices and
-vehicles, but it was first widely deployed on Eclipe IDE\footnote{Integrated
-Development Environment}, because it promotes the use of reusable
-loosely-coupled modules using the Java Programming Language \cite{java}. The
-most basic layer of the OSGi Framework depicted in Figure
-\ref{fig:layering-osgi} are as follows:
+vehicles, but it was first widely deployed on Eclipse IDE\footnote{Integrated
+Development Environment}. It promotes reusable loosely-coupled modules to be
+integrated using the Java Programming Language \cite{java}. The most basic
+layers of the OSGi Framework depicted in Figure \ref{fig:layering-osgi} are as
+follows:
 
 \begin{itemize}
   \item \textbf{Module Layer}: manages the OSGi bundles deployed on the
   OSGi Platform, providing the necessary "wiring" of the components. In other words,
   the modules, called OSGi Bundles, can export and/or import packages in the
   level of a Java Class managed by the OSGi Framework;
-  \item \textbf{Service Layer}: resposible for the interoperability between 2
+  \item \textbf{Service Layer}: responsible for the interoperability between two
   or more bundles, enabling the bundles to register services offered by
   the its specification;
   \item \textbf{Execution Layer}: executes the bundles, managing and changing
-  their life cycle through the bundle execution.
+  their lifecycle through the bundle execution.
 \end{itemize}
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/layering-osgi}
+  \includegraphics[scale=0.65]{../diagrams/layering-osgi}
   \caption{The OSGi Framework Layers}
   \label{fig:layering-osgi}
 \end{figure}
 
 NetBEAMS uses the concept of the modularization through the use of the
 Producer-Consumer paradigm described in the previous section. Since the DSP
-Components are essentially osgi bundles, the interoperability between
-them are given in the implementation and reuse existing bundles in the
-OSGi Framework and the DSP Platform, described by an artifact called
-MANIFEST.MF as seen in Listing \ref{file:OSGi-manifest}. In general, an
-OSGi bundle must provide specifications that describes the module to be
-published into the OSGi Framework. In this way, the main properties of
-the OSGi MANIFEST.MF artifact can used by the DSP Data Persistence can
-be summarized as follows:
+Components are essentially OSGi bundles, the interoperability between
+them is given by the OSGi Framework, described by an artifact called
+MANIFEST.MF (Listing \ref{file:OSGi-manifest}). In general, an OSGi bundle must
+provide specifications that describe the module to be published into the OSGi
+Framework. In this way, the main properties of the OSGi MANIFEST.MF artifact
+can used by the DSP Data Persistence can be summarized as follows:
 
 \begin{itemize}
   \item \textbf{Bundle-Activator}: The name of the instance of an OSGi
   Activator class, responsible to manage the bundle. The implemented class
   ``DataPersistenceActivator'' provides the activation mechanisms for the
-  services provided by the DSP Data Persistence Component;
+  services of the DSP Data Persistence Component;
   \item \textbf{Bundle-ClassPath}: the necessary Java Jars list needed to run
   the bundle. It lists the mongoDB Java driver as one of the required
   dependencies deployed in the same package;
   \item \textbf{Import-Package}: the Java Packages needed by the DSP Data
   Persistence Component Bundle. These Java Packages must be provided by other
-  DSP components, forcing the execution to be dependent on those package.
-  They are provided through a ``Export-Package'' section in other OSGi
-  bundles and, as it is shown in Listing \ref{file:OSGi-manifest}, they
-  are from different packages.
+  DSP components, forcing the execution to be dependent on those packages.
+  They are provided through a section called ``Export-Package'', in other
+  OSGi bundles and as it is shown in Listing \ref{file:OSGi-manifest}, they
+  are can be from different packages.
 \end{itemize}
 
 Once the OSGi bundle is installed into the OSGi Platform, it will be managed by
-the OSGi Execution layer and change the bundle state according to its lify
-cycle, as described in the previous chapter. Therefore, the packaging of the
-osgi into source-code is done using a JAR\footnote{Java Archival Repository}
-artifact specification \cite{java-tutorial}. In this way, the DSP Data
-Platform osgi into bundle JAR is created by the Apache ANT build script
-\cite{apache-ant} in Listing \ref{file:dsp-build.xml}. The task 
-``dsp-data-persistence.all'' compiles all the source-code created from the
-design of the previous chapter and packages everything into the artifact
-``DSPDataPersistence-x.x.jar'', where x.x is the version of the bundle. Figure
-\ref{fig:dsp-runtime-dir} shows the DSP Data Persistence file under the
-directory ``\textbf{RUNTIME-DIR}/deployment/''.
+the OSGi Execution layer and change the bundle state according to its
+lifecycle. Therefore, the packaging of the OSGi source-code is done using a
+JAR\footnote{Java Archival Repository} artifact specification
+\cite{java-tutorial}. The DSP Platform is bundled into a JAR created by the
+Apache ANT build script \cite{apache-ant}, as shown in Listing
+\ref{file:dsp-build.xml}. The task ``dsp-data-persistence.all'' compiles all
+the source-code created from the design of Chapter 6 and packages
+everything into an artifact name ``DSPDataPersistence-x.x.jar'', where x.x is
+the version of the bundle. Figure \ref{fig:dsp-runtime-dir} shows the DSP Data
+Persistence file under the directory ``\textbf{RUNTIME-DIR}/deployment/''.
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/dsp-runtime-dir}
+  \includegraphics[scale=0.65]{../diagrams/dsp-runtime-dir}
   \caption{The DSP Runtime Dir}
   \label{fig:dsp-runtime-dir}
 \end{figure}
 
 \subsection{DSP Data Persistence into the DSP Platform}
+\label{sec:dsp-persistence-boostrap}
 
-Once the new component was developed, the DSP Data Persistence component was
-deployed by editing two main descriptors, as well as the optional bootstrap
-message, as described in chapter 5:
+When the new component was developed and deployed by editing two main
+configuration descriptors:
 
 \begin{itemize}
   \item \textbf{config.xml}: the DSP Data Persistence is added to the DSP
-  Platform adding an entry for the component;
+  Platform by adding an entry for the component's OSGi Bundle artifact. This
+  artifact can be seen in Listing \ref{file:dsp-config.xml};
   \item \textbf{matcher\underline{ }config.xml}: the addition of the rules that
-  filters the messages to the DSP Data Persistence;
+  filters DSP Messages to the DSP Data Persistence component;
   \item \textbf{DSPDataPersistence\underline{ }001.xml}: depicts the bootstrap
   message for the DSP Data Persistence Component, as shown in Listing 
   \ref{file:dsp-data-persistence-bootstrap.xml}.
 \end{itemize}
 
-The first configuration artifact enables NetBEAMS to initialize contain the
+The first configuration artifact enables NetBEAMS to initialize the
 descriptor of the component, as shown in Listing \ref{file:dsp-config.xml}.
 The component is added with the highest priority, since it contains
-dependencies to other DSP Components. 
+dependencies to other DSP Components.
 
 \section{mongoDB Deployment Details}
 \label{sec:mongodb-deployment}
 
-MongoDB was the selected technology described in chapter 5 because of its
+MongoDB was the selected technology described in Chapter 5 because of its
 features. It provides data persistence based on collections of data, stored
 using BSON \cite{bson}, a binary representation the JSON data representation
-format. mongoDB uses the abstraction of programming language to
-represent the basic CRUD operators, as well as the regular functionalities
-provided by any type of database system such as indexing, users management,
-etc. As it's stated in their web site, mongoDB "bridges the gap between
-key/value stores, which are fast and highly scalable, traditional RDBMS
-systems (deep in functionality)".
+format. mongoDB uses the abstraction of programming language to represent the
+basic CRUD operators, as well as the regular functionalities provided by any
+type of database system such as indexing and users management. As it's stated
+in their web site, mongoDB "bridges the gap between key/value stores, which
+are fast and highly scalable, traditional RDBMS systems (deep in
+functionality)".
 
 \begin{itemize}
   \item mongoDB implements a document-oriented structure, which is similar to
-  KVP;
+  Key-Value Pairs;
   \item mongoDB is written in C++, and therefore, can is available in any major
   platform, as well as offers a broad range of API drivers written in
   different languages such as Java, Python, Perl and Ruby;
-  \item mongoDB has support to distributed systems properties such as
-  Master-Slave replication, and database partitioning, referred to as Database
+  \item mongoDB has support to distributed systems such as Master-Slave
+  Replication, and horizontal database partitioning, referred to as Database
   Shards.
 \end{itemize}
 
-The artifacts of the mongoDB are located in the thirdparty directory of the
-NetBEAMS resources. However, the build script from the DSP Data Persistence
+The artifacts of the mongoDB are located in the ``thirdparty'' directory of the
+NetBEAMS resources directory. The build script from the DSP Data Persistence
 component can be executed to produce the persistence directory structure for
 NetBEAMS, as described in Figure \ref{fig:dsp-persistence-system-dir}.
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/dsp-persistence-system-dir}
+  \includegraphics[scale=0.65]{../diagrams/dsp-persistence-system-dir}
   \caption{DSP Data Persistence directory}
   \label{fig:dsp-persistence-system-dir}
 \end{figure}
@@ -237,7 +235,7 @@ Usage: ./run-persistence-experiment X, where X is the size of the workload to be
 
 The iterative mongo client shell offers users to verify and navigate on a
 given database and its collections. This first section shows the connection of
-the mongo client to the database netbeams as on Listing
+the mongo client to the database ``netbeams'' as on Listing
 \ref{cmd:mongodb-server-start}. The execution of the operation to count the
 existing number of documents in the mongoDB collection ``netbeams'' is shown in
 Listing \ref{cmd:mongodb-count}. It highlights the query for the collections
@@ -256,11 +254,11 @@ system.indexes
 2419200
 \end{lstlisting}
 
-An example about retrieving a random document from the collection ``netbeams'',
-just type the ``findOne()'' in the shell shown in Listing
-\ref{cmd:mongo-findone}. The output is the actual instance of a document,
-showing all the collected data in the key ``observation'', and the provenance
-metadata in the keys ``sensor.location'' and ``sensor.time''.
+An example about data retrieving of a random document from the collection
+``netbeams'', ``findOne()'' is documented to provide this support as shown in
+Listing \ref{cmd:mongo-findone}. The output is the actual instance of a
+document, showing all the collected data in the key ``observation'', and the
+provenance metadata in the keys ``sensor.location'' and ``sensor.time''.
 
 \lstset{label=cmd:mongo-findone,caption=Querying the database: one item}
 \begin{lstlisting}
@@ -297,10 +295,10 @@ metadata in the keys ``sensor.location'' and ``sensor.time''.
 }
 \end{lstlisting}
 
-The query based on attributes can be done using the "dot" notation, as you
-navigate through the JSON documents. Additionally, you can use the functions
-as aggregated on the result of others. The example in listing
-\ref{cmd:mongo-find-list} counts the number of documents with the key
+The query based on attributes can be done using the "dot" notation, as the user
+can navigate through the JSON documents. Additionally, the use of internal
+functions is provided by mongoDB on the result of others. The example in
+Listing \ref{cmd:mongo-find-list} counts the number of documents with the key
 "data.ph" equals to "5.64".
 
 \lstset{label=cmd:mongo-find-list,caption=Execution of mongo client}
@@ -310,8 +308,9 @@ as aggregated on the result of others. The example in listing
 \end{lstlisting}
 
 The following example is the output of the first 2 documents from the same
-previous query using the limit() function, as shown in Figure
-\ref{cmd:mongo-find-limit}.
+previous query using the function ``limit()``, as shown in Figure
+\ref{cmd:mongo-find-limit}. The function ``limit()'' is used to decrease the
+number of items returns by the given number.
 
 \lstset{label=cmd:mongo-find-limit,caption=Query Element with specific
 projection limiting the result set size}
@@ -332,12 +331,10 @@ projection limiting the result set size}
 \label{sec:dsp-mongodb-rest-ws}
 
 The mongoDB server offers different drivers to access the data, as well as the
-REST Web Services.
-
-In order to get the results using the REST Web Services interdace, the request
-can be issued using a web browser. For instance, the request to the documents
-using the HTTP Request Variables to filter by the fields as shown in Listing 
-\ref{cmd:mongo-rest-request}.
+REST Web Services. In order to get the results using the REST Web Services
+interdace, the request can be issued using a web browser. For instance, the
+request to the documents using the HTTP Request Variables to filter by the
+fields as shown in Listing \ref{cmd:mongo-rest-request}.
 
 \lstset{label=cmd:mongo-rest-request,caption=REST HTTP Interface Example}
 \begin{lstlisting}
@@ -374,51 +371,47 @@ Content-Type: text/plain;charset=utf-8
    "total_rows" : 3 , "query" : {} , "millis" : 91 }
 \end{lstlisting}
 
-\subsection{Visualizing Data on The Browser}
+\subsection{Visualizing Data on the Browser}
 
 Data visualisation tools for mongoDB is slowly being developed by open-source
-developers. The next picture shows the database "netbeams" and the collection
-"SondeDataContainer  ?" being rendered by futon4mongodb, one of the
-open-source tools developed to visualise mongoDB data. Futon4Mongo is an
-adaptation of another software developed for CouchDB \cite{couchdb}. First, the
-collections list is shown. Figure
-\ref{fig:view-collections-instance-browser-futondb} shows one single
-collection for the YSI data containing 1 million objects.
+developers. Futon4mongodb, one of the open-source tools developed to visualise
+mongoDB data, is an adaptation of another software developed for CouchDB
+\cite{couchdb}. Figure \ref{fig:view-collections-instance-browser-futondb}
+shows one single collection for the YSI data containing of 1 million objects.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/view-collections-instance-browser-futondb}
+  \includegraphics[scale=0.6]{../diagrams/view-collections-instance-browser-futondb}
   \caption{Viewing a partial list of data using the Futon for CouchDB/MongoDB}
   \label{fig:view-collections-instance-browser-futondb}
 \end{figure}
 
-The collection is composed by instances of documents of representing the YSI
+The collection is composed by instances of documents that represents the YSI
 Sonde type, being indexed by a document ID and the values being the keys
-defined in the previous chapter, as shown in Figure
-\ref{fig:view-collected-data-list-browser-futondb}.
+defined, as shown in Figure \ref{fig:view-collected-data-list-browser-futondb}.
 
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
- 
-  \includegraphics[scale=0.5]{../diagrams/view-collected-data-list-browser-futondb}
+  \includegraphics[scale=0.65]{../diagrams/view-collected-data-list-browser-futondb}
   \caption{Viewing a partial list of data using the Futon4CouchDB/MongoDB}
   \label{fig:view-collected-data-list-browser-futondb}
 \end{figure}
 
-By clicking in one of the items, one can view the instance of the document, as
-it is shown in Figure \ref{fig:view-collections-instance-browser-futondb}.
+By clicking in one of the items, the document properties are shown for
+navigation purposes as shown in Figure
+\ref{fig:view-collections-instance-browser-futondb}.
 
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/view-collected-data-instance-browser-futondb} 
+  \includegraphics[scale=0.6]{../diagrams/view-collected-data-instance-browser-futondb}
   \caption{Viewing an instance of collected data using the Futon4CouchDB/MongoDB}
   \label{fig:view-collected-data-instance-browser-futondb}
 \end{figure}
 
 \subsection{Exporting Data to Spreadsheets}
 
-mongoDB has an export facility shell called mongoexport. It can export the data
-in JSON format or CSV. One may also write its own export tool in any of the
+mongoDB has an export facility shell called ``mongoexport''. It can export the
+data in JSON format or CSV. One may also write its own export tool in any of the
 languages such as Java, PHP, Python, Perl, Ruby, among others. A list of the
 existing drivers in different languages is provided
 athttp://www.mongodb.org/display/DOCS/Drivers. The following command can be
@@ -426,25 +419,26 @@ executed to have the exported version of the data in CSV (read the help output
 of the command for details).
 
 An example to export the data in CSV format can be seen in listing
-\ref{file:mongodb-export-command}, and an example containing 1 million objects
-can be downloaded at
+\ref{file:mongodb-export-command}, and the resulting example containing, 1
+million objects can be downloaded at
 http://netbeams.googlecode.com/files/experiment-1000000-data-exported-20090913-053538.csv.tar.gz.
 
 \subsection{Exporting Data to OPeNDAP Format}
 
-During the experiments of this work, the implementation of the export utility
-to OPeNDAP was written in Python, as shown in Listing
-\ref{file:experiment-export-python}. In order to execute the
-command, the python programming language \cite{python} must be installed in the
-system. In this way, some limited documents are exported. The following command
-is an example of the execution of the export utility
-\ref{cmd:mongo-python-export}:
+During the experiments conducted for this work, the implementation of the
+export utility to OPeNDAP was written in Python, as shown in Listing
+\ref{file:experiment-export-python}. In order to execute the command, the
+python programming language \cite{python} must be installed in the system. In
+this way, some limited documents are exported. The following command is an
+example of the execution of the export utility \ref{cmd:mongo-python-export}:
 
 \lstset{label=cmd:mongo-python-export,caption=Query Element with specific
 projection limiting the result set size}
 \begin{lstlisting}
 marcello@netbeams-dev:~/workspaces/netbeams/versions/v2/persistence$ python data-export-python.py 192.168.1.2:20000
 \end{lstlisting}
+
+Complete source-code listing can be reviewed in the next sections.
 
 \section{Source-Code and Implemented Artifacts}
 
@@ -482,7 +476,7 @@ Service - Component]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPD
 Mongo DB
 Service]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPMongoCRUDService.java}
 
-\lstset{language=XML,morecomment=[s]{!--}{--},label=file:dsp-message-serialized-ysi,caption=DSP
+\lstset{language=XML,morecomment=[s]{!--}{--},label=stream:dsp-message-serialized-ysi,caption=DSP
 Message with a YSI sonde data payload}
 \begin{lstlisting}
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>

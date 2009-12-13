@@ -1,0 +1,55 @@
+marcello-de-saless-macbook-pro:persistence marcello$ ifconfig
+en1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	inet6 fe80::226:8ff:fee3:5538%en1 prefixlen 64 scopeid 0x5 
+	inet 192.168.1.2 netmask 0xffffff00 broadcast 192.168.1.255
+	ether 00:26:08:e3:55:38 
+	media: autoselect status: active
+	supported media: autoselect
+
+marcello-de-saless-macbook-pro:persistence marcello$ mongod --dbpath /mongo-data/shard-1/ --port 20001 | tee logs/shard1.log &
+[4] 4365
+marcello-de-saless-macbook-pro:persistence marcello$ Sat Dec 12 16:38:42 Mongo DB : starting : pid = 4364 port = 20001 dbpath = /mongo-data/shard-1/ master = 0 slave = 0  64-bit 
+Sat Dec 12 16:38:42 db version v1.2.0, pdfile version 4.5
+Sat Dec 12 16:38:42 git version: 2add01f37ddf5a262dbc66f81353e88f38723dc6
+Sat Dec 12 16:38:42 sys info: Darwin erh2.10gen.cc 9.6.0 Darwin Kernel Version 9.6.0: Mon Nov 24 17:37:00 PST 2008; root:xnu-1228.9.59~1/RELEASE_I386 i386 BOOST_LIB_VERSION=1_37
+Sat Dec 12 16:38:42 waiting for connections on port 20001
+
+marcello-de-saless-macbook-pro:persistence marcello$ mongod --dbpath /mongo-data/shard-2/ --port 20002 | tee logs/shard2.log &
+[3] 4341
+Sat Dec 12 16:38:27 db version v1.2.0, pdfile version 4.5
+Sat Dec 12 16:38:27 git version: 2add01f37ddf5a262dbc66f81353e88f38723dc6
+Sat Dec 12 16:38:27 sys info: Darwin erh2.10gen.cc 9.6.0 Darwin Kernel Version 9.6.0: Mon Nov 24 17:37:00 PST 2008; root:xnu-1228.9.59~1/RELEASE_I386 i386 BOOST_LIB_VERSION=1_37
+Sat Dec 12 16:38:27 waiting for connections on port 20002
+
+marcello-de-saless-macbook-pro:persistence marcello$ ps aux | grep mongo
+marcello  1461   4.3 18.6  4359300 1556880   ??  S     2:54PM   8:29.60 /Applications/VirtualBox.app/Contents/MacOS/../Resources/VirtualBoxVM.app/Contents/MacOS/VirtualBoxVM --comment NetBEAMS + 
+
+marcello-de-saless-macbook-pro:persistence marcello$ ps aux | grep shard
+marcello  5100   0.0  0.0  2435468    320 s000  R+    4:50PM   0:00.00 grep shard
+marcello  4365   0.0  0.0  2434756    432 s000  S     4:38PM   0:00.00 tee logs/shard1.log
+marcello  4364   0.0  0.0  2452168   2416 s000  S     4:38PM   0:00.02 mongod --dbpath /mongo-data/shard-1/ --port 20001
+marcello  4341   0.0  0.0  2434756    432 s000  S     4:38PM   0:00.00 tee logs/shard2.log
+marcello  4340   0.0  0.0  2452168   2464 s000  S     4:38PM   0:00.03 mongod --dbpath /mongo-data/shard-2/ --port 20002
+
+marcello-de-saless-macbook-pro:persistence marcello$ ls -lah /mongo-data/shard-1/
+total 8
+drwxr-xr-x  3 marcello  staff   102B Dec 12 01:49 .
+drwxr-xr-x  4 marcello  admin   136B Dec 12 15:00 ..
+-rwxr-xr-x  1 marcello  staff     5B Dec 12 15:01 mongod.lock
+
+marcello-de-saless-macbook-pro:persistence marcello$ ls -lah /mongo-data/shard-2
+total 20865032
+drwxr-xr-x  13 marcello  staff   442B Dec 12 14:53 .
+drwxr-xr-x   4 marcello  admin   136B Dec 12 15:00 ..
+-rwxr-xr-x   1 marcello  staff     5B Dec 12 15:02 mongod.lock
+-rw-------   1 marcello  staff    64M Dec 12 15:31 netbeams.0
+-rw-------   1 marcello  staff   128M Dec 12 15:31 netbeams.1
+-rw-------   1 marcello  staff   256M Dec 12 15:31 netbeams.2
+-rw-------   1 marcello  staff   512M Dec 12 15:31 netbeams.3
+-rw-------   1 marcello  staff   1.0G Dec 12 15:31 netbeams.4
+-rw-------   1 marcello  staff   2.0G Dec 12 15:31 netbeams.5
+-rw-------   1 marcello  staff   2.0G Dec 12 15:31 netbeams.6
+-rw-------   1 marcello  staff   2.0G Dec 12 15:31 netbeams.7
+-rw-------   1 marcello  staff   2.0G Dec 12 04:10 netbeams.8
+-rw-------   1 marcello  staff    16M Dec 12 15:31 netbeams.ns
+

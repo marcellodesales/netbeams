@@ -1,0 +1,25 @@
+Sat Dec 12 04:48:32 Mongo DB : starting : pid = 23708 port = 10000 dbpath = data/shards/config master = 0 slave = 0  64-bit 
+Sat Dec 12 04:48:32 db version v1.2.0, pdfile version 4.5
+Sat Dec 12 04:48:32 git version: 2add01f37ddf5a262dbc66f81353e88f38723dc6
+Sat Dec 12 04:48:32 sys info: Linux ofc-n1.10gen.com 2.6.23.17-88.fc7 #1 SMP Thu May 15 00:02:29 EDT 2008 x86_64 BOOST_LIB_VERSION=1_33_1
+Sat Dec 12 04:48:32 waiting for connections on port 10000
+Sat Dec 12 04:48:32 connection accepted from 127.0.0.1:46735 #1
+Sat Dec 12 04:48:32 allocating new datafile data/shards/config/config.ns, filling with zeroes...
+Sat Dec 12 04:48:32 done allocating datafile data/shards/config/config.ns, size: 16MB, took 0.049 secs
+Sat Dec 12 04:48:32 allocating new datafile data/shards/config/config.0, filling with zeroes...
+Sat Dec 12 04:48:32 done allocating datafile data/shards/config/config.0, size: 64MB, took 0.075 secs
+Sat Dec 12 04:48:32 building new index on { _id: ObjId(000000000000000000000000) } for config.version...
+Sat Dec 12 04:48:32 Buildindex config.version idxNo:0 { name: "_id_", ns: "config.version", key: { _id: ObjId(000000000000000000000000) } }
+Sat Dec 12 04:48:32 done for 0 records 0secs
+Sat Dec 12 04:48:32 insert config.version 141ms
+Sat Dec 12 04:48:33 building new index on { _id: ObjId(000000000000000000000000) } for config.databases...
+Sat Dec 12 04:48:33 Buildindex config.databases idxNo:0 { name: "_id_", ns: "config.databases", key: { _id: ObjId(000000000000000000000000) } }
+Sat Dec 12 04:48:33 done for 0 records 0secs
+Sat Dec 12 04:48:33 building new index on { _id: ObjId(000000000000000000000000) } for config.shards...
+Sat Dec 12 04:48:33 Buildindex config.shards idxNo:0 { name: "_id_", ns: "config.shards", key: { _id: ObjId(000000000000000000000000) } }
+Sat Dec 12 04:48:33 done for 0 records 0secs
+Sat Dec 12 04:48:33 building new index on { _id: ObjId(000000000000000000000000) } for config.chunks...
+Sat Dec 12 04:48:33 Buildindex config.chunks idxNo:0 { name: "_id_", ns: "config.chunks", key: { _id: ObjId(000000000000000000000000) } }
+Sat Dec 12 04:48:33 done for 0 records 0.001secs
+Sat Dec 12 04:48:35 connection accepted from 127.0.0.1:46740 #2
+Sat Dec 12 17:51:51 query config.shards ntoreturn:0 reslen:184 nscanned:3 {}  nreturned:3 321ms

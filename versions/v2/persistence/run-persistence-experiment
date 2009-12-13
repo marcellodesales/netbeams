@@ -2,6 +2,12 @@
 
 #Make sure to run the steps 1 and 2 if running the experiment with sharded environment.
 echo "#######  NetBEAMS Experiments - Persistence on MongoDB  ########\n"
+
+if [ -z "$1" ]; then 
+   echo "Usage: $0 X, where X is the size of the workload to be inserted from NetBEAMS YSI Data Handler to mongoDB"
+   exit
+fi
+
 DATA_DIR=data
 LOG_SUFIX_DATE=$(date +%Y%m%d-%H%M%S)
 NUMBER_SAMPLES=$1
@@ -11,7 +17,7 @@ COLLECTION_NAME=SondeDataContainer
 JAVA_MEM_MIN=-Xms200m
 JAVA_MEM_MAX=-Xmx1800m
 MONGO_JAVA=../thirdparty/mongodb/drivers/mongo-1.0.jar
-MONGO_SERVER_IP=127.0.0.1
+MONGO_SERVER_IP=192.168.1.10:27017
 PROPERTIES_LIST=$3
 JAVA_EXPERIMENT_CLASSPATH=../runtime/deployment/DSPDataPersistence-0.1.jar:../runtime/deployment/DSPSondeProducer-0.1.jar:../apps/xml/jaxb/message/dist/message.jar:../apps/xml/jaxb/sonde/dist/sonde.jar:$MONGO_JAVA:../thirdparty/stopwatch/stopwatch-0.4-with-deps.jar
 JAVA_EXPERIMENT_CLASS=org.netbeams.dsp.persistence.controller.DSPMessageToMongoDBExperiment
@@ -23,29 +29,33 @@ MONGO_DATA_EXPORT_CSV=logs/experiment-$NUMBER_SAMPLES-data-exported-$LOG_SUFIX_D
 
 echo "########### Netbeams to MongoDB Experiment $LOG_SUFIX ############# "
 echo "\n# 1. Cleaning any existing MongoDB data at '$DATA_DIR'\n"
-rm -rf $DATA_DIR/*
+#rm -rf $DATA_DIR/*
 #ls -lah $DATA_DIR/shard-a
 #ls -lah $DATA_DIR/shard-b
 
 echo "\n# 2. Starting MongoDB Server with 2 local shards (1 remote)... NetBEAMS data will be saved at dir '$DATA_DIR'\n"
 
-mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG & 
+############ Single Server Environment #################
+#mongod --dbpath $DATA_DIR | tee $MONGO_SERVER_LOG & 
 
+############ Data-Centric Cluster - Sharded Environment ##################
+##############  Shards #################
 #mongod --dbpath data/shard-a/ --port 10000 | tee logs/shard-a.log &
 #mongod --dbpath data/shard-b/ --port 10001 | tee logs/shard-b.log &
 #mongod --dbpath data/shards-config/ --port 20000 | tee logs/shards-config.log &
-
-# when running sharded version of experiment, uncomment this line
+####################
+############# Main Cluster Head #########################
 #mongos --configdb localhost:20000 | tee $MONGO_SERVER_LOG &
+#########################################################
 
 echo "\n# 3. Ready to run Java experiment with $NUMBER_SAMPLES samples\n"
 
 java $JAVA_MEM_MIN $JAVA_MEM_MAX -classpath $JAVA_EXPERIMENT_CLASSPATH $JAVA_EXPERIMENT_CLASS $MONGO_SERVER_IP $NUMBER_SAMPLES $PROPERTIES_LIST | tee $NETBEAMS_2_MONGO_LOG
 
 echo "\n* 4. Exporting the generated mongoDB data in CSV file format\n"
-echo "Executing the export command \nmongoexport -d $DATABASE_NAME -c $COLLECTION_NAME --dbpath $DATA_DIR --csv -f \"_id,sensor_ip_address,transaction_time,fact_time,data.temperature,data.sp_condition,data.condition,data.resistence,data.salinitude,data.pressure,data.depth,data.ph,data.pH_mv,data.odo_sat,data.odo_condition,data.turbidity,data.battery\" -o $MONGO_DATA_EXPORT_CSV\n"
+echo "Executing the export command \nmongoexport -h $MONGO_SERVER_IP -d $DATABASE_NAME -c $COLLECTION_NAME --query \"{\"time.valid\" : { $gte:new Date(2009,11,1) , $lt:new Date(2009,11,8) }\" --csv -f \"_id,sensor.ip_address,time.valid,observation.WaterTemperature,observation.SpecificConductivity,observation.Conductivity,observation.Resistivity,observation.Salinity,observation.Pressure,observation.Depth,observation.pH,observation.pHmV,observation.Turbidity,observation.ODOSaturation,observation.ODO,observation.Battery\" -o $MONGO_DATA_EXPORT_CSV\n"
 
-mongoexport -d $DATABASE_NAME -c $COLLECTION_NAME --dbpath $DATA_DIR --csv -f "_id,sensor_ip_address,transaction_time,fact_time,data.temperature,data.sp_condition,data.condition,data.resistence,data.salinitude,data.pressure,data.depth,data.ph,data.pH_mv,data.odo_sat,data.odo_condition,data.turbidity,data.battery" -o $MONGO_DATA_EXPORT_CSV
+#mongoexport -h $MONGO_SERVER_IP -d $DATABASE_NAME -c $COLLECTION_NAME --query "{\"time.valid\" : { \"$gte\":{\"$date\":1257829200000}, $lt:{\"$date\" : 1257829200100}}}" --csv -f "_id,sensor.ip_address,time.valid,observation.WaterTemperature,observation.SpecificConductivity,observation.Conductivity,observation.Resistivity,observation.Salinity,observation.Pressure,observation.Depth,observation.pH,observation.pHmV,observation.Turbidity,observation.ODOSaturation,observation.ODO,observation.Battery" -o $MONGO_DATA_EXPORT_CSV
 
 echo "\n* 5. Experiments Results on the following logs:"
 echo "- mongoDB Server log output: $MONGO_SERVER_LOG"
@@ -54,15 +64,15 @@ echo "- NetBEAMS to mongoDB data transfer log output: $NETBEAMS_2_MONGO_LOG (aft
 echo "- mongoDB data exported in CSV format: $MONGO_DATA_EXPORT_CSV"
 
 echo "\n* 6. mongoDB data dir '$DATA_DIR' size after experiments...\n" 
-du -h $DATA_DIR/shard-a/
-ls -lah $DATA_DIR/shard-b/
+#du -h $DATA_DIR/shard-a/
+#ls -lah $DATA_DIR/shard-b/
 
 echo "\n* 7. Accessing the persisted sensor data after the experiments...\n"
 echo " - Through the mongoDB Client using via command line \"mongo $DATABASE_NAME\""
 echo " - Through the mongoDB REST Web Services client using HTTP GET Requests http://$MONGO_SERVER_IP:28017/$DATABASE_NAME/$COLLECTION_NAME/?limit=-5"
 echo " - Through Futon2Mongo, the check the web client at http://127.0.0.1:4567/_utils/index.html"
 
-echo "\n* 7. Running the mongDB client after the experiments...\n"
+echo "\n* 8. Running the mongDB client after the experiments...\n"
 echo " - The database name is '$DATABASE_NAME'. The collection name is '$COLLECTION_NAME'"
 echo " - Type 'show collections' to show all the collections in the current database"
 echo " - Type 'use $DATABASE_NAME' to change to that database."
@@ -75,4 +85,7 @@ echo " -     'db.$COLLECTION_NAME.find( {\"data.ph\":1.45} ).limit(4)' = returns
 echo " -      db.$COLLECTION_NAME.dataSize() = returns the size of the collection in bytes"
 echo " -   More details on how to use the mongo client shell at http://www.mongodb.org/display/DOCS/dbshell+Reference"
 
-mongo $DATABASE_NAME | tee $MONGO_CLIENT_LOG
+#mongo -h $MONGO_SERVER_IP $DATABASE_NAME | tee $MONGO_SERVER_IP-$MONGO_CLIENT_LOG
+
+echo "\n* 9. Execute the scenarios defined"
+mongo MONGO_SERVER_IP < experiment-client-scenarios.js | tee scenarios-execution.log

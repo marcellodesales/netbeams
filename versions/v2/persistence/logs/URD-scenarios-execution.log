@@ -1,0 +1,265 @@
+marcello@netbeams-dev:~/workspaces/netbeams/versions/v2/persistence$ mongo 192.168.1.10 < experiment-client-scenarios.js | tee scenarios-execution.log
+MongoDB shell version: 1.1.4
+url: 192.168.1.10
+connecting to: 192.168.1.10/test
+type "help" for help
+> //Select the database NetBEAMS to be used
+> use netbeams
+switched to db netbeams
+> 
+> //Each collected data from the sersor devices are
+> //stored on separate collections. Show all of them 
+
+Show all the collections of collected data (sensor devices' data)
+> show collections
+SondeDataContainer
+system.indexes
+
+Show the statistics of the collection for the collected data for the YSI Sonde device
+> db.SondeDataContainer.stats()
+{
+	"ns" : "netbeams.SondeDataContainer",
+	"count" : 2422043,
+	"size" : 1175737304,
+	"storageSize" : 1416246240,
+	"nindexes" : 39,
+	"ok" : 1
+}
+
+Verify some of the values using command abstraction shortcuts
+> db.SondeDataContainer.count()
+2422043
+> db.SondeDataContainer.dataSize()
+1175737304
+> 
+
+Show one random sample from the database using the findOne method      
+... db.SondeDataContainer.findOne()
+
+{
+	"_id" : ObjectId("e26f40072f68234b6af3d600"),
+	"message_id" : "b405e634-fd4b-450c-9466-82dc0555ea06",
+	"sensor" : {
+		"ip_address" : "192.168.0.178",
+		"location" : {
+			"latitude" : 37.89155,
+			"longitude" : -122.4464
+		}
+	},
+	"time" : {
+		"valid" : "Sun Dec 06 2009 10:18:22 GMT-0800 (PST)",
+		"transaction" : "Sat Dec 12 2009 01:52:42 GMT-0800 (PST)"
+	},
+	"observation" : {
+		"WaterTemperature" : 23.45,
+		"SpecificConductivity" : 35.4,
+		"Conductivity" : 139.6,
+		"Resistivity" : 899.07,
+		"Salinity" : 0.02,
+		"Pressure" : 0.693,
+		"Depth" : 2.224,
+		"pH" : 6.25,
+		"pHmV" : -76,
+		"Turbidity" : 0.2,
+		"ODOSaturation" : 31.3,
+		"ODO" : 54.83,
+		"Battery" : 1.1
+	}
+}
+
+
+... 
+< date class in javascript is defined as [0-11]. Therefore, 10 is November.  
+
+<new Date(2009,11,8) , $lt:new Date(2009,11,15) }} ).count()                 
+519112
+
+<new Date(2009,11,8) , $lt:new Date(2009,11,15) }} ).limit(3)                
+{ "_id" : ObjectId("a96f40070178244beb640b00"), "message_id" : "10358fa1-53e4-4187-aef5-034b732189cf", "sensor" : { "ip_address" : "192.168.0.87", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Tue Dec 08 2009 04:51:29 GMT-0800 (PST)", "transaction" : "Sat Dec 12 2009 21:12:26 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 48.03, "SpecificConductivity" : 127.4, "Conductivity" : 133.1, "Resistivity" : 2925.15, "Salinity" : 0.05, "Pressure" : 0.419, "Depth" : 2.218, "pH" : 2.85, "pHmV" : -90.8, "Turbidity" : 0, "ODOSaturation" : 110.9, "ODO" : 42.96, "Battery" : 8.3 } }
+{ "_id" : ObjectId("a96f40070178244bfa640b00"), "message_id" : "9933d4fc-350c-44b8-9e72-b344fa7520c6", "sensor" : { "ip_address" : "192.168.0.149", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Tue Dec 08 2009 04:51:29 GMT-0800 (PST)", "transaction" : "Sat Dec 12 2009 21:12:26 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 41.73, "SpecificConductivity" : 126.8, "Conductivity" : 93.1, "Resistivity" : 3305.75, "Salinity" : 0.02, "Pressure" : 1.674, "Depth" : 1.004, "pH" : 3.48, "pHmV" : -54, "Turbidity" : 0.3, "ODOSaturation" : 83.9, "ODO" : 36.61, "Battery" : 0.5 } }
+{ "_id" : ObjectId("a96f40070178244b00650b00"), "message_id" : "8de2e398-3ffe-4ef8-81c1-a2cb942398ed", "sensor" : { "ip_address" : "192.168.0.137", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Tue Dec 08 2009 04:51:29 GMT-0800 (PST)", "transaction" : "Sat Dec 12 2009 21:12:26 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 5.05, "SpecificConductivity" : 12.9, "Conductivity" : 114.2, "Resistivity" : 4991.7, "Salinity" : 0.05, "Pressure" : 0.167, "Depth" : 1.827, "pH" : 4.36, "pHmV" : -31.4, "Turbidity" : 0.3, "ODOSaturation" : 76.4, "ODO" : 45.91, "Battery" : 3.2 } }
+
+Explain the search over the shards for R1)
+<new Date(2009,11,8) , $lt:new Date(2009,11,15) }} ).explain()               
+{
+	"cursor" : "BtreeCursor time.valid_1",
+	"startKey" : {
+		"time.valid" : "Tue Dec 08 2009 00:00:00 GMT-0800 (PST)"
+	},
+	"endKey" : {
+		"time.valid" : "Tue Dec 15 2009 00:00:00 GMT-0800 (PST)"
+	},
+	"nscanned" : 519112,
+	"n" : 519112,
+	"millis" : 1262,
+	"oldPlan" : {
+		"cursor" : "BtreeCursor time.valid_1",
+		"startKey" : {
+			"time.valid" : "Tue Dec 08 2009 00:00:00 GMT-0800 (PST)"
+		},
+		"endKey" : {
+			"time.valid" : "Tue Dec 15 2009 00:00:00 GMT-0800 (PST)"
+		}
+	},
+	"allPlans" : [
+		{
+			"cursor" : "BtreeCursor time.valid_1",
+			"startKey" : {
+				"time.valid" : "Tue Dec 08 2009 00:00:00 GMT-0800 (PST)"
+			},
+			"endKey" : {
+				"time.valid" : "Tue Dec 15 2009 00:00:00 GMT-0800 (PST)"
+			}
+		}
+	]
+}
+> 
+
+Execute Scenario R2) search all the documents for a given sensor device by IP address. Count and Limit retrieval result
+> db.SondeDataContainer.find( {"sensor.ip_address":"192.168.0.102"} ).count()
+9707
+<d( {"sensor.ip_address":"192.168.0.102"} ).limit(3)                         
+{ "_id" : ObjectId("e26f40072f68234b11f4d600"), "message_id" : "b7712746-9a87-4ad3-abce-9a89efc1ef44", "sensor" : { "ip_address" : "192.168.0.102", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Mon Dec 07 2009 07:42:56 GMT-0800 (PST)", "transaction" : "Sat Dec 12 2009 01:52:42 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 33.78, "SpecificConductivity" : 146.5, "Conductivity" : 69.1, "Resistivity" : 3113.28, "Salinity" : 0.02, "Pressure" : 0.487, "Depth" : 0.722, "pH" : 1.77, "pHmV" : -79.1, "Turbidity" : 0.1, "ODOSaturation" : 2.2, "ODO" : 46.95, "Battery" : 5.4 } }
+{ "_id" : ObjectId("e26f40072f68234b51f4d600"), "message_id" : "b0e67b21-9721-4441-81e6-543d472334f7", "sensor" : { "ip_address" : "192.168.0.102", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Fri Dec 18 2009 07:33:55 GMT-0800 (PST)", "transaction" : "Sat Dec 12 2009 01:52:42 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 93.6, "SpecificConductivity" : 23.5, "Conductivity" : 163.1, "Resistivity" : 4705.03, "Salinity" : 0.04, "Pressure" : 0.287, "Depth" : 1.878, "pH" : 5.79, "pHmV" : -37.8, "Turbidity" : 0.1, "ODOSaturation" : 46.2, "ODO" : 35.76, "Battery" : 2.5 } }
+{ "_id" : ObjectId("e26f40072f68234b4bf5d600"), "message_id" : "f373b2db-9f66-4af6-8a7f-1c873776fecf", "sensor" : { "ip_address" : "192.168.0.102", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Sun Dec 06 2009 08:25:52 GMT-0800 (PST)", "transaction" : "Sat Dec 12 2009 01:52:42 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 0.3, "SpecificConductivity" : 101.6, "Conductivity" : 41.9, "Resistivity" : 2874.45, "Salinity" : 0.05, "Pressure" : 0.354, "Depth" : 2.305, "pH" : 7.13, "pHmV" : -57.1, "Turbidity" : 0, "ODOSaturation" : 92.8, "ODO" : 26.24, "Battery" : 5.4 } }
+
+
+Explain the search over the shards for R2
+<d( {"sensor.ip_address":"192.168.0.102"} ).explain()                        
+{
+	"cursor" : "BtreeCursor sensor.ip_address_1",
+	"startKey" : {
+		"sensor.ip_address" : "192.168.0.102"
+	},
+	"endKey" : {
+		"sensor.ip_address" : "192.168.0.102"
+	},
+	"nscanned" : 9707,
+	"n" : 9707,
+	"millis" : 26,
+	"oldPlan" : {
+		"cursor" : "BtreeCursor sensor.ip_address_1",
+		"startKey" : {
+			"sensor.ip_address" : "192.168.0.102"
+		},
+		"endKey" : {
+			"sensor.ip_address" : "192.168.0.102"
+		}
+	},
+	"allPlans" : [
+		{
+			"cursor" : "BtreeCursor sensor.ip_address_1",
+			"startKey" : {
+				"sensor.ip_address" : "192.168.0.102"
+			},
+			"endKey" : {
+				"sensor.ip_address" : "192.168.0.102"
+			}
+		}
+	]
+}
+> 
+<n values. Salinity = .01, Water Temperature = 46.47")                       
+
+Execute Scenario R3) search all the documents that has some observation values. Salinity = .01, Water Temperature = 46.47
+<:0.01, "observation.WaterTemperature":46.47} ).count()                      
+36
+<:0.01, "observation.WaterTemperature":46.47} ).limit(3)                     
+{ "_id" : ObjectId("e26f40073368234b5e0ad600"), "message_id" : "6b9ef47e-756c-4fdd-8984-cd73f56b6ab8", "sensor" : { "ip_address" : "192.168.0.155", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Mon Dec 07 2009 07:42:56 GMT-0800 (PST)", "transaction" : "Sat Dec 12 2009 01:52:42 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 46.47, "SpecificConductivity" : 78, "Conductivity" : 108.1, "Resistivity" : 2056.15, "Salinity" : 0.01, "Pressure" : 1.132, "Depth" : 0.665, "pH" : 0.83, "pHmV" : -25.6, "Turbidity" : 0, "ODOSaturation" : 35.6, "ODO" : 23.06, "Battery" : 6.1 } }
+{ "_id" : ObjectId("e26f4007ef68234b2d9eda00"), "message_id" : "70d5bfde-4c80-42ba-b864-4e163e6b5593", "sensor" : { "ip_address" : "192.168.0.142", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Sun Dec 27 2009 09:18:17 GMT-0800 (PST)", "transaction" : "Sat Dec 12 2009 01:52:42 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 46.47, "SpecificConductivity" : 71.8, "Conductivity" : 58, "Resistivity" : 2567.23, "Salinity" : 0.01, "Pressure" : 1.591, "Depth" : 2.236, "pH" : 7.19, "pHmV" : -23.7, "Turbidity" : 0.1, "ODOSaturation" : 107.1, "ODO" : 13.94, "Battery" : 2.2 } }
+{ "_id" : ObjectId("e26f40075c69234b0031db00"), "message_id" : "5f242c0f-e051-4d76-b437-9e8100674c53", "sensor" : { "ip_address" : "192.168.0.59", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Sun Dec 13 2009 01:34:00 GMT-0800 (PST)", "transaction" : "Sat Dec 12 2009 01:52:42 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 46.47, "SpecificConductivity" : 42, "Conductivity" : 10.2, "Resistivity" : 5162.14, "Salinity" : 0.01, "Pressure" : 1.223, "Depth" : 2.667, "pH" : 5.41, "pHmV" : -21.5, "Turbidity" : 0.2, "ODOSaturation" : 24.1, "ODO" : 41.59, "Battery" : 5.1 } }
+
+
+Explain the search over the shards for R3
+<:0.01, "observation.WaterTemperature":46.47} ).explain()                    
+{
+	"cursor" : "BtreeCursor observation.WaterTemperature_1",
+	"startKey" : {
+		"observation.WaterTemperature" : 46.47
+	},
+	"endKey" : {
+		"observation.WaterTemperature" : 46.47
+	},
+	"nscanned" : 226,
+	"n" : 36,
+	"millis" : 2,
+	"oldPlan" : {
+		"cursor" : "BtreeCursor observation.WaterTemperature_1",
+		"startKey" : {
+			"observation.WaterTemperature" : 46.47
+		},
+		"endKey" : {
+			"observation.WaterTemperature" : 46.47
+		}
+	},
+	"allPlans" : [
+		{
+			"cursor" : "BtreeCursor observation.WaterTemperature_1",
+			"startKey" : {
+				"observation.WaterTemperature" : 46.47
+			},
+			"endKey" : {
+				"observation.WaterTemperature" : 46.47
+			}
+		},
+		{
+			"cursor" : "BtreeCursor observation.Salinity_1",
+			"startKey" : {
+				"observation.Salinity" : 0.01
+			},
+			"endKey" : {
+				"observation.Salinity" : 0.01
+			}
+		},
+		{
+			"cursor" : "BtreeCursor observation.WaterTemperature_",
+			"startKey" : {
+				"observation.WaterTemperature" : 46.47
+			},
+			"endKey" : {
+				"observation.WaterTemperature" : 46.47
+			}
+		},
+		{
+			"cursor" : "BtreeCursor observation.Salinity_",
+			"startKey" : {
+				"observation.Salinity" : 0.01
+			},
+			"endKey" : {
+				"observation.Salinity" : 0.01
+			}
+		},
+		{
+			"cursor" : "BasicCursor",
+			"startKey" : {
+				
+			},
+			"endKey" : {
+				
+			}
+		}
+	]
+}
+> 
+
+Execute Scenario U1) update all the documents for a given date December 12, by annotating them using tags
+> db.SondeDataContainer.ensureIndex( { "tag":1 } )
+
+Number of Observations from December 12
+<":new Date(2009,11,12) , "$lt":new Date(2009,11,13) }}).count()             
+9085
+> print ("How many with the tag 'oil spill'")
+How many with the tag 'oil spill'
+> db.SondeDataContainer.find( { "tag": "oil spill" }  ).count()
+9085
+<) }} ,  {"$set": {"tag": "oil spill"}} , false, true) 
+<notated with the tag 'oil spil' are as follows...")                         
+Some documents annotated with the tag 'oil spil' are as follows...
+<:new Date(2009,11,12) , $lt:new Date(2009,11,13) }} ).limit(1)              
+{ "_id" : ObjectId("cf6f40072cbc194b9ac1fd00"), "message_id" : "d7a63936-482c-449d-b870-a28e4786beb1", "sensor" : { "ip_address" : "192.168.0.209", "location" : { "latitude" : 37.89155, "longitude" : -122.4464 } }, "time" : { "valid" : "Sat Dec 05 2009 04:45:27 GMT-0800 (PST)", "transaction" : "Fri Dec 04 2009 17:48:13 GMT-0800 (PST)" }, "observation" : { "WaterTemperature" : 93.74, "SpecificConductivity" : 144.7, "Conductivity" : 79.6, "Resistivity" : 1501.75, "Salinity" : 0.08, "Pressure" : 1.825, "Depth" : 2.85, "pH" : 0.53, "pHmV" : -69.9, "Turbidity" : 0.1, "ODOSaturation" : 56, "ODO" : 56.68, "Battery" : 8.8 }, "tag" : "oil spill" }
+
+Execute Scenario D1) deleting all documents with for a given day (say Dec 13)
+<new Date(2009,11,13) , $lt:new Date(2009,11,14) }} ).count()                
+207823
+<e:new Date(2009,11,13) , $lt:new Date(2009,11,14) }} ) 
+0

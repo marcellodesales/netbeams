@@ -1,0 +1,69 @@
+Sat Dec 12 16:38:27 Mongo DB : starting : pid = 4340 port = 20002 dbpath = /mongo-data/shard-2/ master = 0 slave = 0  64-bit 
+Sat Dec 12 16:38:27 db version v1.2.0, pdfile version 4.5
+Sat Dec 12 16:38:27 git version: 2add01f37ddf5a262dbc66f81353e88f38723dc6
+Sat Dec 12 16:38:27 sys info: Darwin erh2.10gen.cc 9.6.0 Darwin Kernel Version 9.6.0: Mon Nov 24 17:37:00 PST 2008; root:xnu-1228.9.59~1/RELEASE_I386 i386 BOOST_LIB_VERSION=1_37
+Sat Dec 12 16:38:27 waiting for connections on port 20002
+Sat Dec 12 16:58:17 connection accepted from 192.168.1.10:45202 #1
+Sat Dec 12 16:58:17 allocating new datafile /mongo-data/shard-2/netbeams.ns, filling with zeroes...
+Sat Dec 12 16:58:17 done allocating datafile /mongo-data/shard-2/netbeams.ns, size: 16MB, took 0.028 secs
+Sat Dec 12 16:58:18 allocating new datafile /mongo-data/shard-2/netbeams.0, filling with zeroes...
+Sat Dec 12 16:58:18 done allocating datafile /mongo-data/shard-2/netbeams.0, size: 64MB, took 0.099 secs
+Sat Dec 12 16:58:19 building new index on { _id: ObjId(000000000000000000000000) } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:0 { name: "_id_", ns: "netbeams.SondeDataContainer", key: { _id: ObjId(000000000000000000000000) } }
+Sat Dec 12 16:58:19 allocating new datafile /mongo-data/shard-2/netbeams.1, filling with zeroes...
+Sat Dec 12 16:58:19 done for 0 records 0.051secs
+Sat Dec 12 16:58:19 info: creating collection netbeams.SondeDataContainer on add index
+Sat Dec 12 16:58:19 building new index on { sensor.location.latitude: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:1 { name: "sensor.location.latitude_", ns: "netbeams.SondeDataContainer", key: { sensor.location.latitude: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:17 insert netbeams.system.indexes 2235ms
+Sat Dec 12 16:58:19 building new index on { sensor.location.longitude: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:2 { name: "sensor.location.longitude_", ns: "netbeams.SondeDataContainer", key: { sensor.location.longitude: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0.063secs
+Sat Dec 12 16:58:19 building new index on { time.valid: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:3 { name: "time.valid_", ns: "netbeams.SondeDataContainer", key: { time.valid: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { time.transaction: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:4 { name: "time.transaction_", ns: "netbeams.SondeDataContainer", key: { time.transaction: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.WaterTemperature: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:5 { name: "observation.WaterTemperature_", ns: "netbeams.SondeDataContainer", key: { observation.WaterTemperature: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.SpecificConductivity: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:6 { name: "observation.SpecificConductivity_", ns: "netbeams.SondeDataContainer", key: { observation.SpecificConductivity: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.Conductivity: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:7 { name: "observation.Conductivity_", ns: "netbeams.SondeDataContainer", key: { observation.Conductivity: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0.001secs
+Sat Dec 12 16:58:19 building new index on { observation.Resistivity: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:8 { name: "observation.Resistivity_", ns: "netbeams.SondeDataContainer", key: { observation.Resistivity: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.Salinity: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:9 { name: "observation.Salinity_", ns: "netbeams.SondeDataContainer", key: { observation.Salinity: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.Pressure: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:10 { name: "observation.Pressure_", ns: "netbeams.SondeDataContainer", key: { observation.Pressure: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.Depth: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:11 { name: "observation.Depth_", ns: "netbeams.SondeDataContainer", key: { observation.Depth: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.pH: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:12 { name: "observation.pH_", ns: "netbeams.SondeDataContainer", key: { observation.pH: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.pHmV: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:13 { name: "observation.pHmV_", ns: "netbeams.SondeDataContainer", key: { observation.pHmV: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.Turbidity: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:14 { name: "observation.Turbidity_", ns: "netbeams.SondeDataContainer", key: { observation.Turbidity: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0.002secs
+Sat Dec 12 16:58:19 building new index on { observation.ODOSaturation: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:15 { name: "observation.ODOSaturation_", ns: "netbeams.SondeDataContainer", key: { observation.ODOSaturation: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.ODO: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:16 { name: "observation.ODO_", ns: "netbeams.SondeDataContainer", key: { observation.ODO: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 building new index on { observation.Battery: "1" } for netbeams.SondeDataContainer...
+Sat Dec 12 16:58:19 Buildindex netbeams.SondeDataContainer idxNo:17 { name: "observation.Battery_", ns: "netbeams.SondeDataContainer", key: { observation.Battery: "1" }, unique: false }
+Sat Dec 12 16:58:19 done for 0 records 0secs
+Sat Dec 12 16:58:19 done allocating datafile /mongo-data/shard-2/netbeams.1, size: 128MB, took 0.256 secs
+

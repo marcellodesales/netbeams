@@ -120,9 +120,8 @@ to simulate different shards in different machines, the use of a VirtualBox
 act as the mongoDB shards. In this way, two different versions of the Ubuntu
 Linux were used: one 8.04 32bits and another 9.04 64bits. The configuration
 used for the single server only uses the process ``mongod'' to be started,
-while the clustered setup must be enabled in the database, as shown in
-Listing \ref{file:experiment-setup-mongoshards}, Listings
-\ref{file:setup-os-shards-step1} and \ref{file:setup-os-shards-step2}.
+while the clustered setup must be enabled in the database, as in Section
+\ref{sec:experiments-setup-single-distributed}.
 
 \subsection{Planned Scenarios}
 \label{sec:exp-scenarios}
@@ -537,7 +536,7 @@ Model.
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.5]{../diagrams/taxonomy-data-model-modified}
+  \includegraphics[scale=0.65]{../diagrams/taxonomy-data-model-modified}
   \caption{Data Model Taxonomy}
   \label{fig:taxonomy-data-model-modified}
 \end{figure}
@@ -606,7 +605,15 @@ totally consumed by one of the revisions of the experiments setup. Therefore,
 it was learned that large amount of data loads require different techniques to
 manage data in memory accordingly, such as creating different object pools as
 temporary caches for objects whose internal state are similar to others in the
-Java Virtual Machine.
+JVM. Also, operations that involve writing in disk, such as during the bulk
+``Create'' operations, may lead to different database performance. First, the
+experiment seemed to stop inserting objects in one shard while it ran for over
+2 minutes without inserting any documents. The reason was that the partition
+was ``/home'', completely full, leading to the problem. The mongos cluster
+header did not realize that it was the time to switch to another shard.
+Similarly, any global ``Retreave'' operation on a cluster blocks all the
+shards. For this reason, dividing the write from the read load was necessary in
+order to decouple these two operations.
 
 Also related to the difficulties of this work, mongoDB is not yet stable, and
 therefore, harder to implement. The main production version of mongoDB is

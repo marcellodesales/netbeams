@@ -212,13 +212,75 @@ connecting to: 192.168.1.2:20000/netbeams
 type "help" for help
 \end{lstlisting}
 
+The description of a distributed system can be seen next section.
+
 \section{Experiments Execution}
 \label{sec:experiment-execution}
 
 The experiments conducted using mongoDB can be summarized by the different data
-access methods provided by the technology. Each subsection describes these 
+access methods provided by the technology. Each subsection describes these
 methods. The server could be started using the commands specified in the
 previous section.
+
+\subsection{Setting Up the Single and the Distributed Cluster Servers}
+\label{sec:experiments-setup-single-distributed}
+mongoDB can be used in two different ways: as a single server, using the single
+process ``mongod'', or as a distributed cluster where each cluster node runs on
+``mongod'' managed by a cluster head ``mongos''. 
+
+Before starting the main cluster head, all cluster nodes must be started.
+Listing \ref{file:shard-setup-192.168.1.2.log} shows the manual setup process
+performed in the Mac OS X 64bits Host. It starts two different shards, with
+their own respective directory, and starts the process ``mongod'' for each of
+them, forwarding the execution output to their respective log artifacts. Note
+that the IP address is capture in the beginning of the process because it will
+be used while setting up the cluster head.
+
+In order to automate the manual process, different automation scripts were
+written using the Linux shell bash execution, as well as the ones used to setup
+mongoDB using Javascript, the language used by mongoDB shell client. First, the
+scripts to setup the mongoDB distributed cluster is shown in Listing
+\ref{file:setup-mongo-shards.js}. It enables shard support for the different
+shards that must be already running, and then enable it on the collection
+``SondeDataContainer'' for the database ``netbeams''. As it is shown in the
+script, the declaration of the shards are executed in the ``admin'' database,
+while shards are in the database ``config'', since it is the main cluster
+metadata server.
+
+The first script created was the automated shell bash script to setup local
+shards directories and processes, as well as the cluster head metadata server
+(config) and the start of the cluster head ``mongos''. Each local shard can be
+candidates to store the collected data, depending on the decisions made by the
+mongos cluster head. Listing \ref{file:setup-experiment-shards.sh} expects to be
+executed by passing the number of local shards as a parameter to create the
+local directories and start the processes described. Listing
+\ref{file:shards-and-mongos-cluster-head-setup-execution.log} shows the output
+of the exeuction of the setup script, incorporating the output of the Listing
+\ref{file:setup-mongo-shards.js}. Note that the same IP address, shown in the
+setup of the cluster nodes, is also shown in the list of the shards.
+
+\subsection{Running the Experiments}
+
+After setting up the infrastructure, the main experiment script can be executed
+in the client-side. Considering the distributed server approach, the process
+``mongos'' must be running in the server host. The infrastructure for the
+execution of the experiments used Sun Microsystem's VirtualBox to run different
+operating systems at the same time. The cluster head ``mongos'' was running on
+a Ubuntu Linux 9.04 64 bits together with the cluster metadata server
+``mongod'' referred to as ``config'' server. The cluster nodes were running on
+the Mac OS X 64 bits on the host server, running two different shards. Finally,
+the execution of the experiments used Ubuntu Linux 8.04 32 Bits.
+
+As developed for the infrastructure setup, the execution of the experiments
+were performed using automation scripts written in different languages.
+First, the experiments for the ``Create" operations was written in Java
+as shown in Listing \ref{file:experiment-dsp-java-executor}. Similarly,
+remaining operations ``Retrieve, Update and Delete" were written in
+Javascript, as shown in Listing \ref{file:experiment-scenarios}. Then, the
+execution of this Java class is performed by the main experiment shell script
+displayed in Listing \ref{file:experiment-setup-executor}. It requires the
+number of randomly created YSI Sonde data to be executed, as shown in Listing
+\ref{cmd:run-persistence-experiment}.
 
 \lstset{label=cmd:run-persistence-experiment,caption=Running main experiment
 shell script}
@@ -229,6 +291,13 @@ marcello@netbeams-dev:~/workspaces/netbeams/versions/v2/persistence$ ./run-persi
 Usage: ./run-persistence-experiment X, where X is the size of the workload to be inserted from NetBEAMS YSI Data Handler to mongoDB
 \end{lstlisting}
 
+The first experiment conducted was running the main experiment script of Listing
+\ref{file:experiment-setup-executor}, as one of the execution runs shown in
+Listing \ref{file:experiment-run.log}. The total number of inserted documents
+measured every 20 seconds is displayed. Then, the execution of the use cases
+was performed, as shown in Listing \ref{file:URD-scenarios-execution.log}.
+Additional execution logs are shown in Section
+\ref{sec:experiment-execution-logs}.
 
 \subsection{Data Access Using Database Shell}
 \label{sec:mongodb-user-experience}
@@ -408,6 +477,8 @@ navigation purposes as shown in Figure
   \label{fig:view-collected-data-instance-browser-futondb}
 \end{figure}
 
+\newpage
+
 \subsection{Exporting Data to Spreadsheets}
 
 mongoDB has an export facility shell called ``mongoexport''. It can export the
@@ -440,6 +511,8 @@ marcello@netbeams-dev:~/workspaces/netbeams/versions/v2/persistence$ python data
 
 Complete source-code listing can be reviewed in the next sections.
 
+\newpage
+
 \section{Source-Code and Implemented Artifacts}
 
 \lstinputlisting[language=Ant,label=file:dsp-build.xml,caption=Build
@@ -463,8 +536,6 @@ Gumstix]{../../../../netbeams/versions/v2/config/deployment/matcher_config-gumst
 \lstinputlisting[language=XML,label=file:dsp-data-persistence-bootstrap.xml,caption=DSP
 Message used to bootstrap the DSP Data Persistence Component]
 {../../../../netbeams/versions/v2/apps/xml/samples/DSPDataPersistence_001.xml}
-
-%TODO: add bootstrap message in case it is implemented
 
 \lstinputlisting[language=Java,label=file:dsp-activator,caption=OSGi
 Activator]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/osgi/DataPersistenceActivator.java}
@@ -533,34 +604,56 @@ Message with a YSI sonde data payload}
 
 \section{Experiment Implementation}
 
-\lstinputlisting[language=Bash,label=file:experiment-setup-executor,caption=Experiment
-Main Execution Script]{../../../../netbeams/versions/v2/persistence/run-persistence-experiment}
+\lstinputlisting[language=Bash,label=file:shard-setup-192.168.1.2.log,caption=Remote
+Shards Setup Execution Log]{../../../../netbeams/versions/v2/persistence/logs/shard-setup-192.168.1.2.log}
 
-\lstinputlisting[language=Python,label=file:experiment-setup-mongoshards,caption=Experiment
-Main Execution Script]{../../../../netbeams/versions/v2/persistence/setup-mongo-shards.js}
+\lstinputlisting[language=Bash,label=file:setup-experiment-shards.sh,caption=Remote
+Shards Cluster Head and Metadata Setup Bash Script]{../../../../netbeams/versions/v2/persistence/setup-experiment-shards.sh}
 
-\lstinputlisting[language=Bash,label=file:setup-os-shards-step1,caption=Experiment
-Main Execution Script]{../../../../netbeams/versions/v2/persistence/setup-os-shards-step1}
+\lstinputlisting[label=file:setup-mongo-shards.js,caption=Shards
+Setup in Javascript]{../../../../netbeams/versions/v2/persistence/setup-mongo-shards.js}
 
-\lstinputlisting[language=Bash,label=file:setup-os-shards-step2,caption=Experiment
-Main Execution Script]{../../../../netbeams/versions/v2/persistence/setup-os-shards-step2}
+\lstinputlisting[language=Bash,label=file:experiment-setup-executor,caption=Main Client
+Experiment Execution Bash Script]{../../../../netbeams/versions/v2/persistence/run-persistence-experiment}
+
+\lstinputlisting[label=file:experiment-scenarios,caption=Experiment
+Scenarios Implementation in Javascript]{../../../../netbeams/versions/v2/persistence/experiment-client-scenarios.js}
 
 \lstinputlisting[language=Python,label=file:experiment-export-python,caption=Data
-Export to from mongoDB to OPeNDAP format.]{../../../../netbeams/versions/v2/persistence/data-export-python.py}
-
-\lstinputlisting[language=Python,label=file:experiment-scenarios,caption=Experiment
-Scenarios Implementation]{../../../../netbeams/versions/v2/persistence/experiment-client-scenarios.js}
+Export to from mongoDB to OPeNDAP Format Python Script]{../../../../netbeams/versions/v2/persistence/data-export-python.py}
 
 \lstinputlisting[language=Java,label=file:main-ysi-data-handler,caption=The
-DSP YSI Sonde Data Handler]{../../../../netbeams/versions/v2/apps/xml/jaxb/sonde/java-src/org/netbeams/dsp/ysi/SondeDataType.java}
+DSP YSI Sonde Data Java Handler]{../../../../netbeams/versions/v2/apps/xml/jaxb/sonde/java-src/org/netbeams/dsp/ysi/SondeDataType.java}
 
 \lstinputlisting[language=Java,label=file:random-ysi-data-generator,caption=Random
-Test Data Generator]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPSondeProducer/src/org/netbeams/dsp/ysi/SondeTestData.java}
+Test Data Java Generator]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPSondeProducer/src/org/netbeams/dsp/ysi/SondeTestData.java}
 
 \lstinputlisting[language=Java,label=file:experiment-dsp-java-executor,caption=Inserting
-Random Data to MongoDB]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPMessageToMongoDBExperiment.java}
+Random Data to MongoDB Java Experiment]{../../../../netbeams/versions/v2/apps/osgi-bundles/dsp/DSPDataPersistence/src/org/netbeams/dsp/persistence/controller/DSPMessageToMongoDBExperiment.java}
 
-\subsection{Experiment Execution Output}
+\subsection{Experiment Execution Output Logs}
+\label{sec:experiment-execution-logs}
+
+\lstinputlisting[language=Bash,label=file:shards-and-mongos-cluster-head-setup-execution.log,caption=Execution
+of Shards Setup Log]{../../../../netbeams/versions/v2/persistence/logs/shards-and-mongos-cluster-head-setup-execution.log}
+
+\lstinputlisting[language=Bash,label=file:experiment-run.log,caption=Main Client
+Experiment Execution Log]{../../../../netbeams/versions/v2/persistence/experiment-run.log}
+
+\lstinputlisting[language=Bash,label=file:URD-scenarios-execution.log,caption=RUD
+Scenarios Execution Log]{../../../../netbeams/versions/v2/persistence/logs/URD-scenarios-execution.log}
+
+\lstinputlisting[language=Bash,label=file:mongos-shards-cluster-head-metadata-config-server-192.168.1.10:10000.log,caption=Remote
+Shards Cluster Head Execution Log]{../../../../netbeams/versions/v2/persistence/logs/mongos-shards-cluster-head-metadata-config-server-192.168.1.10:10000.log}
+
+\lstinputlisting[language=Bash,label=file:mongos-shards-cluster-head-192.168.1.10.log,caption=Remote
+Shards Cluster Head Execution]{../../../../netbeams/versions/v2/persistence/logs/mongos-shards-cluster-head-192.168.1.10.log}
+
+\lstinputlisting[language=Bash,label=file:shard-192.168.1.2:20002.log,caption=Remote
+Shard Execution Log]{../../../../netbeams/versions/v2/persistence/logs/shard-192.168.1.2:20002.log}
+
+\lstinputlisting[label=file:experiment-export-python-results,caption=Data
+Export to from mongoDB to OPeNDAP format.]{../../../../netbeams/versions/v2/persistence/export-mongodb-to-sfbeams.csv}
 
 \lstset{label=file:mongodb-ysi-data-format,caption=JSON representation of the
 data produced by a YSI sensor on mongoDB}
@@ -631,6 +724,3 @@ Sun Nov 29 19:07:04 getmore netbeams.SondeDataContainer cid:7749363894863150628 
 Sun Nov 29 19:10:18 getmore netbeams.SondeDataContainer cid:7749363894863150628 ntoreturn:0 query: { query: {}, $snapshot: 1 }  bytes:793098 nreturned:36049 1975ms
 exported 2419200 records
 \end{lstlisting}
-
-\lstinputlisting[label=file:experiment-export-python-results,caption=Data
-Export to from mongoDB to OPeNDAP format.]{../../../../netbeams/versions/v2/persistence/export-mongodb-to-sfbeams.csv}

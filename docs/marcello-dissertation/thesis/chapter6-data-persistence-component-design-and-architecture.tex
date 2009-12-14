@@ -5,18 +5,31 @@
 
 \chapter{DSP Data Persistence: Component Design and Architecture}
 
-The mongoDB database system was selected, as stated in chapter 5, to store 
+The mongoDB database system was selected, as stated in Chapter 5, to store 
 the collected data from the SF-BEAMS sensor network. NetBEAMS is based on a 
 component-based architecture, where each of the components can play different
 roles during their lifecycle. It uses the abstraction of Data Producers and 
 Data Consumers: while a component produces data to the system, the latter 
 consumes \cite{netbeams2009}. In this way, a DSP Data Component was designed
-and implemented to provide the integration between NetBEAM and the mongoDB 
+and implemented to provide the integration between NetBEAMS and the mongoDB 
 database. This integration is based on the Data Sensor Platform (DSP), the
 kernel software stack provided by NetBEAMS, as documented in
-\cite{netbeams-dsp-architecture}. Finally, details about the implementation of
-this design are located in the Appendix Section
-\ref{sec:dsp-data-persistence-implementation}.
+\cite{netbeams-dsp-architecture}. 
+
+This chapter follows the steps taken in Software Engineering guidelines to
+analyze and design a software component using Object-Oriented Analysis and 
+Design \cite{oop} using the techniques from the Agile and XP Scrum
+\cite{agile-scrum} processes. First, Section \ref{sec:business-process-analysis} gives an
+overview of the problem by analyzing a basic scenario of the data collection process used in NetBEAMS.
+Then, the Section \ref{sec:requirements-specs} describes the requirements for
+the design of the new component, followed by the specifications of the data
+model used for the mongoDB database in Section
+\ref{sec:dsp-persistence-data-model}. Lastly, the high-level architecture
+of Section \ref{sec:system-architecture} gives the foundation of the
+DSP Data Persistence component design of Section \ref{sec:dsp-data-comp-design}.
+
+Details about the implementation of this design are located in the
+Appendix Section \ref{sec:dsp-data-persistence-implementation}.
 
 \section{Business Process Analysis}
 \label{sec:business-process-analysis}
@@ -32,9 +45,9 @@ data from the associated sensor device. Each DSP Message is added into a local
 temporary outbound queue that waits to be transmitted. Then, an asynchronous 
 data transmission event occurs at a specified rate, packaging all DSP
 Messages into the body of a DSP Messages Container in order to be serialized
-into XML (shown in Listing \ref{stream:dsp-message-serialized-ysi}) and
-transferred to the DSP Server host, a centralized server that receives all the
-collected data embodied into each of the DSP Messages.
+into XML (shown in Listing \ref{stream:dsp-message-serialized-ysi} on page
+\pageref{stream:dsp-message-serialized-ysi}) and transferred to the DSP Server
+host, a centralized server that receives all the collected data embodied into each of the DSP Messages.
 
 \begin{figure}[!b]
   \centering
@@ -55,7 +68,7 @@ Exporting specific observation parameters to different formats of their
 interest.
 
 \section{Requirements Specification}
-
+\label{sec:requirements-specs}
 This section outlines the functionalities and constraints that the developed
 solution must perform and follow, respectively, obtained by analyzing the main
 data collection scenario described in the previous section and reviewing the
@@ -105,7 +118,7 @@ requirements gathering pattern defined in Scrum \cite{agile-scrum}:
   \item \textbf{Export Data to OPeNDAP format}: "As a biologist, I would 
   like to export the collected data produced during this month using the
   OPeNDAP data format, so that I can collaborate with other research groups
-  that uses this data format.";
+  that use this data format.";
   \item \textbf{Access the data through API, Programming Languages}: "As a
   marine biologist who learned the Python scripting language, I would like to
   write a software that connects directly to the database, so that I can
@@ -169,10 +182,11 @@ non-functional requirements as follows:
   of \cite{sn-programming-language} proposed.
 \end{itemize}
 
-Driven by the requirements defined, the foundation of the integration between
-the DSP Data Persistence component and the mongoDB database system is the
-specification of the Keys that comprise a set of observations collected from
-the sensor devices.
+Driven by the requirements defined, the definition of the keys of the key-value
+pairs model, used to describe the collected data from the sensor devices and
+their associated metadata, is the foundation for the integration between the
+DSP Data Persistence component and the mongoDB database. Next section details
+the data model design that specifies those keys.
 
 \section{Data Model Design}
 \label{sec:dsp-persistence-data-model}
@@ -180,11 +194,10 @@ the sensor devices.
 MongoDB is defined as a Document-Oriented Database system, which is based on 
 the abstraction of the Key-Value-Pair data model, using a binary version of JSON
 \cite{json} as its main data representation. MongoDB does not require the creation 
-of a database schema, rather the definition of key descriptions that comprises
-a document on the database organized into separate collections of relating
-documents. In order to describe the keys of a document, the specifications
-detail the use of Data Provenance as guidelines to the description of the
-collected data. Therefore, the key-value pairs of any instance of the
+of a database schema, rather the definition of keys that comprise a document on
+the database organized into separate collections of relating documents. In
+order to describe the keys of a document, the guidelines provided by the Data
+Provenance taxonomy was used. The key-value pairs of any instance of the
 collected data must include the following key properties:
 
 \begin{itemize}
@@ -198,12 +211,11 @@ collected data must include the following key properties:
   \cite{db-provenance} and when the transaction occurred \cite{sn-time-series}.
 \end{itemize}
 
-After analyzing the DSP Platform and the structure of the DSP Messages in
-\cite{netbeams-dsp-architecture}, the values of the collected data must be
-categorized into two different sets of data: the ``Key Segment'' and the
-``Value Segment''. The key segment provides the necessary metadata 
-used to describe the collected data. An instance of the design of the 
-keys is shown in Listing \ref{file:mongodb-ysi-data-format}:
+After analyzing the DSP Message Structure, as well as the YSI Sonde Data
+Handler of the DSP Platform architecture documentation
+\cite{netbeams-dsp-architecture}, the design of the document developed to
+identify both the data and metadata of the collected data is organized as
+follows:
 
 \begin{itemize}
   \item \textbf{message\underline{ }id}: Defines the DSP Message ID that
@@ -233,20 +245,40 @@ keys is shown in Listing \ref{file:mongodb-ysi-data-format}:
          transaction, which transferred the message from the DSP Gateway Client
          to the DSP Server, occurred;
     \end{itemize} 
+    \item \textbf{observation}: carries the observations of a given sensor
+    device. For example, the observation key of for the YSI device
+    \cite{YSI-Sonde} may contains all the subsets of the properties defined
+    for the device, such as battery, temperature and salinity, among others.
 \end{itemize}
 
-An associated ``Value Segment'' for the aforementioned ``Key Segment'' carries
-the observations of a given sensor device. The key \textbf{observation} stores
-the values of the collected data. For instance, the observation key of
-for the YSI device \cite{YSI-Sonde} may contains all the subsets of 
-the properties defined for the device, such as battery, temperature and
-salinity, among others. An example of such use of the segments is shown in
-Listing \ref{file:mongodb-ysi-data-format}.
+MongoDB uses JSON data structure \cite{json} to represent a document, as the
+example shown in Figure \ref{fig:kvp-json-viewer} on page
+\pageref{fig:kvp-json-viewer}. Any number of keys can be in the root branch of
+the tree, as well as in sub branches of the document structure. The values of
+the tree are concentrated in the leaves of the tree. Listing
+\ref{file:mongodb-ysi-data-format}, on page
+\pageref{file:mongodb-ysi-data-format}, shows the instance of this design on
+mongoDB database. Based on this foundation, the design of the DSP Data
+Persistence component evolved from a top-down approach to meet this data model
+design.
 
-Based on this foundation, the design of the DSP Data Persistence component
-evolved from a top-down approach.
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.65]{../diagrams/kvp-json-viewer}
+  \caption{Data Design using JSON Data Structure}
+  \label{fig:kvp-json-viewer}
+\end{figure}
+
+It is important to note that mongoDB does not use any structure language, like
+the use of the SQL in relational databases, to access the persisted data. In
+order to access the values of the documents, the ``dot notation''
+\cite{db-mongo-data-access} is used to reach each of the tree nodes. For
+example, the use of ``observation.WaterTemperature'' and
+``sensor.location.latitude'' give the values of the data ``water temperature'' and
+the metadata ``latitude'' of the collected data, respectively.
 
 \section{High-Level System Architecture}
+\label{sec:system-architecture}
 
 Considering the business analysis described in Section
 \ref{sec:business-process-analysis}, the addition of a data persistence layer
@@ -256,7 +288,7 @@ Requirements specification, this component must be responsible for the
 extraction process that takes the payload of the body of a filtered DSP
 Measurement Message and converts it to the key-value data model defined
 in the previous section. This process guarantees that the collected data is
-inserted to a running mongoDB database system and gives covers the use cases
+inserted to a running mongoDB database system and covers the use cases
 defined. Figure \ref{fig:NetBEAMS-Persistence-Server-Node-Components}
 provides an architectural overview of the DSP Server node with the
 loosely-coupled components, highlighting the inclusion of a new DSP Component
@@ -294,13 +326,14 @@ environment used, are given in the Appendix section
 The following sections focus on the DSP Data Persistence component 
 design in the context of an OSGi bundle \cite{osgi}.
 
-\section{DSP Data Persistence: OSGi-DSP Bundle Design}
+\section{DSP Data Persistence Component Design}
+\label{sec:dsp-data-comp-design}
 
 The proposed Data Persistence component must follow the DSP Component
 requirements, which specifies the design-pattern of Data Producer and Consumer
 mentioned earlier in this chapter. As seen in the UML Package  Dependency
 Diagram in Figure \ref{fig:DSP-Data-Persistence-Packages-Dependency}, a new
-DSP Component has dependency on three different packages: the OSGi Framework
+DSP Component has dependencies on three different packages: the OSGi Framework
 and the DSP Platform responsible to integrate a new component into the
 micro-kernel, and the mongoDB Java driver API that connects to the mongoDB
 server.
@@ -338,7 +371,7 @@ activation of the class DSPDataPersistence, as it extends from the OSGi
 class BundleActivator. The BundleActivator maintains references to the classes
 BundleContext and ServiceReference, both from the OSGi Framework, in order to
 maintain the component managed by the OSGi Framework and register the class
-DSPDataPersistece as a service to the OSGi environment. Therefore, the class
+DSPDataPersistence as a service to the OSGi environment. Therefore, the class
 DSPDataPersistenceActivator is the main communication interface between the 
 DSP Platform and the OSGi Framework, are responsible for the orchestration of
 the application lifecycle.
@@ -360,7 +393,7 @@ roles played by the class DSPDataPersistence are defined as follows:
 
 The class DSPDataPersistenceActivator is responsible for starting and stopping,
 the services provided by the DSPDataPersistence component, as this behavior is
-inherited from the OSGi class BundleActivator from OSGi Framework. Following
+inherited from the OSGi class BundleActivator from the OSGi Framework. Following
 the specification of the DSP Architecture \cite{netbeams-dsp-architecture},
 Figure
 \ref{fig:From-OSGi-Framework-to-DSP-Data-PersistenceActivator-Sequence-Diagram} 
@@ -377,7 +410,8 @@ DSP component, and summarized as follows:
 \begin{enumerate}
   \item During its activation, the DSP Platform will get the name of the
   DSP Data Persistence component from the configuration artifact config.xml as
-  seen in Listing \ref{file:dsp-config.xml};
+  seen in Listing \ref{file:dsp-config.xml} on page
+  \pageref{file:dsp-config.xml};
   \item After being selected based on the configuration priority, the 
   DSPBundle artifact is identified and installed by creating an instance of the
   class DSPDataPersistenceActivator, making a call to the method start();
@@ -398,9 +432,11 @@ DSP component, and summarized as follows:
 
 Any configuration parameter required by a DSP Component is sent during its
 bootstrap process through the use of an optional DSP Update Message, as shown
-in Listing \ref{file:dsp-data-persistence-bootstrap.xml}. The initialization of
-the DSP Component Activator and the DSP Component registration are also shown
-in Figure \ref{fig:From-OSGi-Framework-to-DSP-Data-PersistenceActivator-Sequence-Diagram}.
+in Listing \ref{file:dsp-data-persistence-bootstrap.xml} on page
+\pageref{file:dsp-data-persistence-bootstrap.xml}. The initialization of the
+DSP Component Activator and the DSP Component registration are also shown in
+Figure
+\ref{fig:From-OSGi-Framework-to-DSP-Data-PersistenceActivator-Sequence-Diagram}.
 
 As soon as the process "Start DSP Activator Gate" is executed, an instance of
 the class DSPDataPersistence component is created to be registered into the
@@ -430,11 +466,12 @@ Messages, a new filter must be provided. As explained in
 \cite{netbeams-dsp-architecture}, the DSP Broker uses the DSP Matcher's rules
 to select to Data Consumers configured in a given DSP. For this reason, a rule
 that filters any remote measurement message received by running DSP Server is
-used, as shown in Listing \ref{file:dsp-matcher-config.xml}. The rule defined
-in line 63 express that all messages created by any producer on any DSP Host,
-either client or sever, has as delivery target the DSP Data Persistence
-component. In this way, when DSP Measurement Messages are delivered, the DSP
-Broker delivers the DSP Message to the DSP Data Persistence Component.
+used, as shown in Listing \ref{file:dsp-matcher-config.xml} on page
+\pageref{file:dsp-matcher-config.xml}. The rule defined in line 63 express
+that all messages created by any producer on any DSP Host, either client or
+sever, has as delivery target the DSP Data Persistence component. In this way,
+when DSP Measurement Messages are delivered, the DSP Broker delivers the DSP
+Message to the DSP Data Persistence Component.
 
 The UML Class Diagram for the participating classes of the DSP Data
 Persistence component is shown in Figure
@@ -492,15 +529,18 @@ different moments of message delivery:
   flush temporary messages into the database at the rate of
   TRANSIENT\underline{ }DATA\underline{ }FLUSHER\underline{ }DELAY, defined in 
   seconds. 
-  Listing \ref{file:dsp-data-persistence-bootstrap.xml} shows an
-  implementation of a bootstrap message for the DSP Data Persistence;
+  Listing \ref{file:dsp-data-persistence-bootstrap.xml}, on page
+  \pageref{file:dsp-data-persistence-bootstrap.xml}, shows an implementation of
+  a bootstrap message for the DSP Data Persistence;
   \item Any DSP Measure Message can be persisted by the DSP Data Persistence
   component. The component will add the message to a temporary memory location
   to decrease I/O on the database, when the DSP Broker delivers a DSP
-  MeasureMessage to this component, as depicted by the gate "create
-  PersistentMessageUnit Gate". This last gate describes the simple procedure
-  to add the message into the transient persistent layer. Listing
-  \ref{stream:dsp-message-serialized-ysi}.
+  MeasureMessage to this component, as depicted by the UML Gate element
+  \cite{uml-seq-gate} "create PersistentMessageUnit Gate". This last Gate
+  describes the simple procedure to add the message into the transient
+  persistent layer, as shown in Listing
+  \ref{stream:dsp-message-serialized-ysi} on page
+  \pageref{stream:dsp-message-serialized-ysi}.
 \end{itemize}
 
 The class PersistenceMessageUnit is the major transient persistence unit that
@@ -541,10 +581,10 @@ PersistentMessageUnit is placed in the state ``TRANSIENT''.
 \end{figure}
 
 At this point, the DSP Data Persistence component maintains a set of DSP
-Messages in a local cache during the specific ``flush rate'' specified during
-the bootstrap message. When the class DSPDataFlusher finds any number of
-instances of PersistentMessageUnit in cache, it starts the process of flushing
-them into the mongoDB database, described in the following section.
+Messages in a local cache during the specific ``flush rate'' specified in
+the bootstrap message parameter. When the class DSPDataFlusher finds any number
+of instances of PersistentMessageUnit in cache, it starts the process of
+flushing them into the mongoDB database, described in the following section.
 
 \subsection{Flushing data into the Database}
 
@@ -559,11 +599,11 @@ depicted in Figure \ref{fig:DSP-DataPersistence-Flusher-State-Diagram}:
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{TIMED\underline{ }WAITING}: the initial state of a Java thread
+  \item \textbf{Waiting}: the initial state of a Java thread
   after its initialization, waiting to be on the ``runnable'' state. This
   period of time is defined by the ``flush rate''  specified in the bootstrap
   message of the DSP Data Persistence component;
-  \item \textbf{RUNNABLE}: the class DSPDataFlusher contacts the class
+  \item \textbf{Running}: the class DSPDataFlusher contacts the class
   TransientPersistenceLayer, in order to verify if there are any instance of
   the class PersistentMessageUnit waiting to be transmitted from the temporary
   cache to the Database service. If the cache is not empty, the DSPDataFlusher 
@@ -577,9 +617,8 @@ depicted in Figure \ref{fig:DSP-DataPersistence-Flusher-State-Diagram}:
 
 The main participating classes from the DSPMongoCRUDService are shown in the
 UML Class Diagram \ref{fig:DSP-Data-Persistence-Mongo-Classes}. It keeps references
-to all types of sensor devices such as the SondeDataContainer and the
-MouseActionsContainer. Furthermore, it is responsible to implement the CRUD
-methods to modify the mongoDB database state. The class Mongo is used to acquire
+to all types of sensor devices. Furthermore, it is responsible to implement the
+CRUD methods to modify the mongoDB database state. The class Mongo is used to acquire
 an instance of the connection with mongoDB server and provide Factory Methods 
 \cite{gof} to create instances of the classes DB, DBCollection and
 BasicDBObject. The class DB is used as a reference to a database namespace, 
@@ -620,35 +659,35 @@ chosen database system as shown in Figure
 
 \subsubsection{Creating mongoDB Document instance of Key-Values}
 
-In order to build the document key and value segments, as described in
-section \ref{sec:dsp-persistence-data-model}, the reference to the DSP message
-is used, as the value key is built by extracting the DSP Message Content from
-the body of the DSP Message. Similarly, the key is built by gathering
-information from the DSP Message and the PersistenceMessageUnit class. Each of
-the properties collected from the YSI Sonde sensor device is collected and
-associated with the keys defined for the Value Segment.
+In order to build the mongoDB document described in section
+\ref{sec:dsp-persistence-data-model}, the reference to the DSP Message is
+used to extracted the metadata, while the reference to the DSP Message Content 
+from the body of the DSP Message is used to extract the collected data from
+sensors.
 
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.6]{../diagrams/From-Creating-Value-Segment-Sequence}
-  \caption{UML Sequence diagram showing the creation of the value document segment}
+  \caption{UML Sequence diagram showing the creation of the keys for the
+  collected data}
   \label{fig:From-Creating-Value-Segment-Sequence}
 \end{figure}
 
 \newpage
 
-Once the Value Segment is created, the Key Segment is prepared as described in
-the UML Sequence Diagram in Figure
+After the keys for the collected data are created, the keys for the metadata
+are captured as shown in the UML Sequence Diagram in Figure
 \ref{fig:From-Creating-Key-Segment-Sequence}.
 
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.65]{../diagrams/From-Creating-Key-Segment-Sequence}
-  \caption{UML Sequence diagram showing the creation of the key document segment}
+  \caption{UML Sequence diagram showing the creation of the keys for the
+  metadata}
   \label{fig:From-Creating-Key-Segment-Sequence}
 \end{figure}
 
-To Summarize, the DSP Data Persistence Component is added into the DSP Platform
+To summarize, the DSP Data Persistence Component is added into the DSP Platform
 by introducing a new component that provides service to the transfer any
 collected data from sensor devices to mongoDB, the Key-Value Pair database
 technology. The general dependencies of the system can be seen in UML
@@ -666,7 +705,7 @@ expands the UML Package Dependency Diagram shown in Figure
 Next section analyzes the deployment details for the DSP Platform and the
 mongoDB integration.
 
-\section{DSP Data Persistence Deployment}
+\subsection{DSP Data Persistence Deployment}
 
 The deployment of the persistence layer is accomplished by the addition of two
 new components to the DSP Platform: the DSP Data Persistence component and MongoDB
@@ -676,9 +715,10 @@ going to be stored, as a result of the technology selection on the previous chap
 
 The deployment of the DSP Data Persistence follows the deployment specifications
 of a DSP Component over an OSGi Framework. For the development of this work,
-the Knopflerfish OSGi Container was used. The details of implementation are described
-in section \ref{sec:dsp-data-persistence-implementation}. The deployment of the 
-mongoDB can be accomplished in different approaches, summarized as follows: 
+the Knopflerfish OSGi Container \cite{knopflerfish} was used. The details of the
+implementation are described in Section
+\ref{sec:dsp-data-persistence-implementation}. The deployment of the mongoDB
+can be accomplished in different approaches, summarized as follows:
 
 \begin{itemize}
   \item \textbf{Single Server}: a regular deployment of a database system as it
@@ -705,7 +745,7 @@ by deploying different mongoDB instances in a distributed cluster, where each
 node can hold different collections of data. mongoDB provides Horizontal
 Partition with automatic distribution based on the ranges of a given key of
 the document. For NetBEAMS collected data, a good candidate for partitioning is
-the time when the data was created, and separate each shard in groups of month
+the time when the data was created, and separate each shard in groups of months
 of the year.
 
 \begin{figure}[!h]
@@ -718,7 +758,7 @@ of the year.
 The design of the DSP Data Persistence uses the DSP Component specification
 defined by the DSP Platform. First, the analysis of the business process
 helped to understand the requirements of the system. The data model design
-followed the specifications defined in chapter 5. Each of the layers of the
+followed the specifications defined in Chapter 5. Each of the layers of the
 system was described using UML Diagrams, having partial details regarding the
 OSGi implementation. The next chapter entails the experiments conducted to
 evaluate the designs discussed in this chapter, and walks through the

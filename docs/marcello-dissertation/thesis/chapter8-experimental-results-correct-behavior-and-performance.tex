@@ -18,9 +18,16 @@ proposed implementation, showing the measurement results collected from the
 simulation log and based on the user experience while reusing the collected
 data. The pertinent discussion of this work is divided up into different
 sections, each of them analyzing different aspects related to data persistence
-for NetBEAMS, among others.
+for NetBEAMS. Section \ref{sec:exp-setup} makes the introduction about the
+experiments setup and methods used for the evaluation such as the artifacts
+used, the definition of the workload to be used during the evaluation of the
+planned scenarios of evaluation. Then, Section \ref{sec:exp-measurements} shows
+the measurement results of the experiment detailing the operations performed by
+each of the scenarios and user experience, to finally proceed with the final
+analysis and discussions.
 
 \section{Experiment Setup}
+\label{sec:exp-setup}
 
 The experiment was designed to support different scenarios of regular use of
 the mongoDB system infrastructure, simulating the activities of data collection
@@ -35,47 +42,45 @@ in the Ruby Programming language \cite{ruby}, was also used. The experiment
 scripts were written using Shell Bash Script Language \cite{bashshell} and is
 responsible for orchestrating the execution of one single experimental ``run''.
 
-In order to evaluate the DSP Data Persistence component, experiments were
-conducted using the DSP Mouse Actions component, a software sensor simulator
-that captures the actions performed by the mouse pointer.
-
 \subsection{Experiments Artifacts}
 
 Different artifacts were created to perform the different experiments regarding
 the CRUD operations. The ``Create'' operation' was developed in Java, isolating
 the services provided by the class DSPMongoCRUDService (Listing
-\ref{file:dsp-mongo-service}). It is responsible for the connection handling
-with mongoDB, as well as the insertion operation from NetBEAMS. As described
-\cite{netbeams-dsp-architecture}, the current version of NetBEAMS supports the
-data collection for the YSI Sonde device \cite{YSI-Sonde}, among others used
-for demo purposes. After evaluating the database with the YSI Sonde data
-handler, the use of the demo component DSP Mouse Actions was used. It captures
-the mouse pointer activities performed over a window, for example, mouse clicks
-and mouse grag over coordinates x and y.
+\ref{file:dsp-mongo-service}, page \pageref{file:dsp-mongo-service}). It is
+responsible for the connection handling with mongoDB, as well as the insertion
+operation from NetBEAMS. As described \cite{netbeams-dsp-architecture}, the
+current version of NetBEAMS supports the data collection for the YSI Sonde
+device \cite{YSI-Sonde}, among others used for demo purposes.
 
 In order to exercise mongoDB with the same data collected from NetBEAMS, the
 existing Java class TestSondeData (Listing
-\ref{file:random-ysi-data-generator}), was refactored to provide a random
+\ref{file:random-ysi-data-generator}, page
+\pageref{file:random-ysi-data-generator}), was refactored to provide a random
 instance generator for the YSI Data handler implemented in the Java class
-SondeDataType (Listing \ref{file:main-ysi-data-handler}). When the Insert
-function is executed, the created instances are transferred from the JVM to
-the mongoDB, and stored in the collection ``SondeDataContainer''. Specific
-details about the execution of mongoDB are depicted in Section
-\ref{sec:mongodb-deployment}. Finally, the implementation of the experiment
-in the Java class DSPMessageToMongoDBExperiment (Listing
-\ref{file:experiment-dsp-java-executor}) was responsible for managing the
+SondeDataType (Listing \ref{file:main-ysi-data-handler} on page
+\pageref{file:main-ysi-data-handler}). When the Insert function is executed,
+the created instances are transferred from the JVM to the mongoDB, and stored
+in the collection ``SondeDataContainer''. Specific details about the execution
+of mongoDB are depicted in Section \ref{sec:mongodb-deployment}. Finally, the
+implementation of the experiment in the Java class
+DSPMessageToMongoDBExperiment (Listing
+\ref{file:experiment-dsp-java-executor}, page
+\pageref{file:experiment-dsp-java-executor}) was responsible for managing the
 creation and insertion of any workload composed by instances of the class
 SondeDataType in a bulk manner.
 
 Similarly, the support for the Retrieve, Update and Delete operations against
 the inserted workload were implemented using Javascript, as shown in Listing
-\ref{file:experiment-scenarios}, respectively by the function calls ``find'',
-``update'' and ``remove'' over the collection ``SondeDataContainer''.
-Similarly, in order to implement a customizable export system that converts
-from mongoDB into the format OpenDAP, a simpler prototype script was developed
-in Python, as shown in Listing \ref{file:experiment-export-python}. As a result
-of the execution of this script, the exported artifact has the same format as
-described in Listing \ref{file:rtc-ysi-opendap}. 
+\ref{file:experiment-scenarios} on page \pageref{file:experiment-scenarios},
+respectively by the function calls ``find'', ``update'' and ``remove'' over
+the collection ``SondeDataContainer''. Similarly, in order to implement a
+customizable export system that converts from mongoDB into the format OpenDAP,
+a simpler prototype script was developed in Python, as shown in Listing
+\ref{file:experiment-export-python} on page
+\pageref{file:experiment-export-python}. As a result of the execution of this
+script, the exported artifact has the same format as described in Listing
+\ref{file:rtc-ysi-opendap}, page \pageref{file:rtc-ysi-opendap}.
 
 On the other hand, the execution of the main experiment shell script requires
 the user to provide the size of the workload, as shown in listing
@@ -147,7 +152,8 @@ brief, the use cases were chosen to run with random values such as follows:
   December 7th, 2009.
   \item (R4) Export the produced data of the week to CSV files, using the same
   tabular format sequence used in the files distributed by SF-BEAMS using the 
-  the OPeNDAP format, as in Listing \ref{file:rtc-ysi-opendap}.
+  the OPeNDAP format, as in Listing \ref{file:rtc-ysi-opendap} on page
+  \pageref{file:rtc-ysi-opendap}.
 \end{itemize}
 
 \section{Measurement Results}
@@ -166,19 +172,19 @@ numerical response time collected from the logs.
 \subsection{Insert Operation}
 
 The first set of measurements collected were the ones regarding the use case
-R1, shown in Listing \ref{file:dsp-mongo-service}, defined as the insertion of
-instances of the collected data from the sensor devices using Java. The
-document follows the specification of the keys designed in Section
-\ref{sec:dsp-persistence-data-model}. The construction of the keys
-and respective values were done using a Hash-like object ``BasicDBObject''
-such as the ones shown in the method ``buildKeySegment''. Similarly, the
-creation of database indexes was performed using the same approach, as shown in
-the Java method ``setupMetadataIndexes''. Then, the insertion of the
-documents was performed on the service method call
-``insertPersistentUnitMessageContents'', which delimits the bulk creation using
-the transaction management mechanism over the collection. In this way,
-different insert times were collected from the logs of the different
-experiments as summarized on Table 7.1.
+R1, shown in Listing \ref{file:dsp-mongo-service} page
+\pageref{file:dsp-mongo-service}, defined as the insertion of instances of the
+collected data from the sensor devices using Java. The document follows the
+specification of the keys designed in Section
+\ref{sec:dsp-persistence-data-model}. The construction of the keys and
+respective values were done using a Hash-like object ``BasicDBObject'' such as
+the ones shown in the method ``buildKeySegment''. Similarly, the creation of
+database indexes was performed using the same approach, as shown in the Java
+method ``setupMetadataIndexes''. Then, the insertion of the documents was
+performed on the service method call ``insertPersistentUnitMessageContents'',
+which delimits the bulk creation using the transaction management mechanism
+over the collection. In this way, different insert times were collected from
+the logs of the different experiments as summarized on Table 7.1.
 
 \begin{table}[!h]
     \begin{center}
@@ -250,12 +256,12 @@ Similarly, the delete operation took less than 13 seconds to perform.
 \subsection{User Experience}
 \label{sec:experiments-user-experimence}
 
-In general, the user experience of mongoDB is related the methods used to
+In general, the user experience of mongoDB is related to the methods used to
 access and modify the state of the database using a different approach when
 compared to traditional Relational databases. Since most of the methods to
 create, access and modify the database were performed using the programming
 language abstraction of objects and method calls, the transition from the use
-of a relational data model is very smooth. The creation of data was the first
+of a relational data model is very easy. The creation of data was the first
 contact with mongoDB in terms of data creation in Java. Later, different
 methods of data access were used after the randomly generated data was
 inserted into mongoDB: using the shell commands mongo and ``mongoexport'',
@@ -268,68 +274,54 @@ shown in Section \ref{sec:mongodb-user-experience}.
 The primary method used to access the mongoDB database is using the shell
 command. Once the user requests access to the database, he or she can issue an
 operation over the collection of documents using regular the abstraction
-programming language, as the shown in Listing \ref{file:experiment-scenarios}.
-The CRUD operations are available to the user and can be used at any time to
-any database collection. Aggregation operations such as to count the returned
-result set is also provided via programming languages abstraction.
+programming language, as the shown in Listing \ref{file:experiment-scenarios}
+on page \pageref{file:experiment-scenarios}. The CRUD operations are available
+to the user and can be used at any time to any database collection.
+Aggregation operations such as to count the returned result set is also
+provided via programming languages abstraction.
 
 In order to export the collected data to other data formats, the  command
 ``mongoexport'' and the developed export script written in Python were used.
 The ``mongoexport'', exports the collected data from the database using the
 native support to comma-delimited values. As shown in Listing
-\ref{file:mongodb-export-command}, the actual execution describe how mongo is
-querying the data from the database. As a result, the total number of documents
-exported is shown in on line 8. In addition to the regular command that
-exports the entire database, the user can provide a query string during the
-execution of the command in order to filter the dataset returned and,
-consequently, the number of documents exported. Similar to the use of the
-default export capabilities of mongoDB, a script written in Python to export
-data from mongoDB was written as shown in Listing
-\ref{file:experiment-export-python}. It uses the package ``pymongo'' to create
-a comma-delimited file with the same header and line format as shown in Listing
-\ref{file:experiment-export-python-results}. The results can be compared with
-the example the output of the HTTP Response body of Listing
-\ref{file:rtc-ysi-opendap}, requested directly to the OPeNDAP server of RTC.
-Therefore, the experiment is capable of reproducing theat the OPeNDAP can.
+\ref{file:mongodb-export-command}, page \pageref{file:mongodb-export-command},
+the actual execution describe how mongo is querying the data from the
+database. As a result, the total number of documents exported is shown in on
+line 8. In addition to the regular command that exports the entire database,
+the user can provide a query string during the execution of the command in
+order to filter the dataset returned and, consequently, the number of
+documents exported. Similar to the use of the default export capabilities of
+mongoDB, a script written in Python to export data from mongoDB was written as
+shown in Listing \ref{file:experiment-export-python}, page
+\pageref{file:experiment-export-python}. It uses the package ``pymongo'' to
+create a comma-delimited file with the same header and line format as shown in
+Listing \ref{file:experiment-export-python-results}, page
+\pageref{file:experiment-export-python-results}. The results can be compared
+with the example the output of the HTTP Response body of Listing
+\ref{file:rtc-ysi-opendap} on page \pageref{file:rtc-ysi-opendap}, requested
+directly to the OPeNDAP server of RTC. Therefore, the experiment is capable of
+reproducing the targeted OPeNDAP format used by the RTC server.
 
 While the access to the database using the shell command gives full access to 
 the CRUD operations, the access to the data was also performed using the REST
-Web Services API, as shown in Listing \ref{cmd:mongo-rest-request}. As one can
-see, the IP address and the default port number of the mongoDB REST middleware
-are provided. Then, the REST operation uses the name of the database and
-the collection to correlate with the ones in the database system. Thus,
-querying the collections from mongoDB can be performed using the HTTP Request
-Parameter variables, by adding the prefix ``filter\underline{ }'' before the
-name of the key of the document. The given example shows the query performed
-in the collected data for the key ``observation.Conductivity'' with the value
-``104.5''. Similarly, the HTTP Request variable ``limit'' is used to reduce
-the number of documents returned by the query. The HTTP Response from mongoDB
-returns the result using the JSON format, similar to the ones printed in the
-command-shell.
+Web Services API, as shown in Listing \ref{cmd:mongo-rest-request} on page
+\pageref{cmd:mongo-rest-request}. As one can see, the IP address and the
+default port number of the mongoDB REST middleware are provided. Then, the
+REST operation uses the name of the database and the collection to correlate
+with the ones in the database system. Thus, querying the collections from
+mongoDB can be performed using the HTTP Request Parameter variables, by adding
+the prefix ``filter\underline{ }'' before the name of the key of the document.
+The given example shows the query performed in the collected data for the key
+``observation.Conductivity'' with the value ``104.5''. Similarly, the HTTP
+Request variable ``limit'' is used to reduce the number of documents returned
+by the query. The HTTP Response from mongoDB returns the result using the JSON
+format, similar to the ones printed in the command-shell.
 
 Finally, the access of the collected data was performed using Futon4Mongo,
 an open-source web-based application written in Ruby that provides access to the
 mongoDB database collections and documents. The screenshots of the session used
 to browse through the collection of collected data is shown in Figure
 \ref{fig:view-collections-instance-browser-futondb}.
-
-The actual execution of the solution was performed using the demo Mouse
-Actions, which consists of a software sensor that perceives any mouse action in
-a window area. The experiment consisted of moving the mouse around a white
-window, where each action is captured and temporarily saved until a threshold is
-reached, making the component to send the messages to the persistence layer, so
-that it can be saved on mongoDB. Figure \ref{fig:experiment-mouseactions-dsp}
-shows a screenshot of the moment when the message is sent to mongoDB, being
-verified through the HTTP REST Interface using a web browser
-\ref{sec:dsp-mongodb-rest-ws}.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[scale=0.4]{../diagrams/experiment-mouseactions-dsp}
-  \caption{Experiment showing the mongoDB persisting messages from the DSP
-  Mouse Actions Demo}
-  \label{fig:experiment-mouseactions-dsp}
-\end{figure}
 
 \section{Discussion}
 
@@ -344,18 +336,17 @@ infrastructure, the use cases evaluation and applicability in other projects.
 
 \subsection{Taxonomic Evaluation}
 
-Any database system covers the purpose of the sensor data for NetBEAMS, which
-is Data Archival, along with the type of storage for the data as an External
-Storage. After selecting mongoDB, the development of the persistence layer met
-the requirements of archiving data for different types of sensor devices from
-the DSP Platform such as the YSI Data Handler and the Mouse Actions demo data.
-As it is shown in Section \ref{sec:exp-measurements}, the collected data is
-archived in files using the BSON format \cite{bson}, a binary representation
-used to store instances of the document described in Listing
-\ref{file:mongodb-ysi-data-format}. Along with the purpose of Data Archival,
-the use of mongoDB also met the specification of External Storage, since the
-data persisted in the file system, as well as Data-Centric for running mongoDB
-with different  distributed mongo shards (cluster nodes).
+After selecting mongoDB as the best candidate for the persistence
+infrastructure for NetBEAMS, the development of the persistence layer met the
+requirements of archiving data for different types of sensor devices from the
+DSP Platform such as the YSI Data Handler. As it is shown in Section
+\ref{sec:exp-measurements}, the collected data is archived in files using the
+BSON format \cite{bson}, a binary representation used to store instances of
+the document described in Listing \ref{file:mongodb-ysi-data-format} on page
+\pageref{file:mongodb-ysi-data-format}. Along with the purpose of Data
+Archival, the use of mongoDB also met the specification of External Storage,
+since the data persisted in the file system, as well as Data-Centric for
+running mongoDB with different distributed mongo shards (cluster nodes).
 
 SF-BEAMS uses Tabular Data model, a schema-less data model that represents the
 collected data using comma-delimited files, without a database system to manage
@@ -368,8 +359,7 @@ others. In this way, the metadata used by the implementation clearly describes
 the three fundamental questions regarding the collected data from sensor
 devices, as described in Section \ref{sec:dsp-persistence-data-model}. The 
 identity of the data is given by the key ``message\underline{ }id'', in a way
-that it uniquely identifies the data produced by the sensor identified by the
-key ``sensor.ip\underline{ }address''. Thus, the message can be tracked
+that it uniquely identifies the data produced. Thus, the message can be tracked
 back to the sensor that produced the data for different purposes such as
 tracking the data producer. Then, time dimensions were used in order to
 track two different aspects of the data collection: the valid time can be used
@@ -390,7 +380,8 @@ from the previous one by simply adding the new additions of data. For this
 reason, the DSP Data Persistence gives administrators the ability to choose
 which fields to persist by declaring it using a bootstrap message for the
 component, as shown in the parameter ``YSI\underline{ }DESIRED\underline{
-}PROPERTIES'' of Listing \ref{file:dsp-data-persistence-bootstrap.xml}.
+}PROPERTIES'' of Listing \ref{file:dsp-data-persistence-bootstrap.xml}, page
+\pageref{file:dsp-data-persistence-bootstrap.xml}.
 
 In order to access the collected data, the implementation used different APIs
 provided by the mongoDB community. The Centralized Query Mechanism was
@@ -399,15 +390,15 @@ defined by NetBEAMS. For example, the accesses of the database using Python or
 Java were based on the needs and the use of the languages for different
 purposes. In this way, the implementation of the persistence model captures
 the instances of any known data collected from NetBEAMS and saves it using the
-document pattern as shown in Listing \ref{file:mongodb-ysi-data-format}. Any
-programming language used was capable of accessing the same collected data by
-their own. 
+document pattern as shown in Listing \ref{file:mongodb-ysi-data-format} on page
+\pageref{file:mongodb-ysi-data-format}. Any programming language used was
+capable of accessing the same collected data by their own. 
 
 In the end, the implementation of the data persistence for NetBEAMS was
-developed in both Single and Distributed Systems. The use of regular single
+developed in both Centralized and Distributed Systems. The use of regular single
 server execution provided enough computational power for a compatible volume of
 data when compared to the one produced from the SF-BEAMS sensor network. The
-implementation suggested by this work fulfill the needs of a persistence system
+implementation suggested by this work fulfills the needs of a persistence system
 for a Small volume of data being created at the same time in a Single Server.
 Furthermore, mongoDB also provided support for a Distributed System, when the
 use of database shards, in forms of different mongoDB nodes, was used as a 
@@ -426,8 +417,8 @@ the indexes. The size of the keys defined for the YSI Sonde data suggests
 additional disk space was used for the storage.
 
 The performance to insert data into the database system using the Java driver
-is documented by mongoDB as the fastest approach, providing persistence
-thousands of documents per second. This capacity is more than necessary for
+is documented by mongoDB as the fastest approach, providing persistence for
+thousands of documents per second. This capacity is more than adequate for
 NetBEAMS, which can use the Single System environment. Improvements over the
 response time can be achieved through the implementation of a Data-Centric
 approach on a Distributed Database environment, or clusters. In this approach,
@@ -471,15 +462,16 @@ were used to access the collected data, a novel mechanism not yet reported in
 the sensor networks community.
 
 The development of the scenarios were clearly written in different ways, such
-as the ones defined in Listing \ref{file:experiment-scenarios}, which
-implements the use cases for data Retrieval, Update and Deletion operations. The
-main advantage of this approach is that users do not use the SQL language to extract
-data from the database, but use method calls defined for each the
-abovementioned operations. For example, based on the description of the
-collected data by keys and values shown in Listing
-\ref{file:mongodb-ysi-data-format}, different use cases can evaluate documents
-in this structure. Usually researchers may search the collected data by a
-given range of dates, for their regular activities of data analysis. The
+as the ones defined in Listing \ref{file:experiment-scenarios} on page
+\pageref{file:experiment-scenarios}, which implements the use cases for data
+Retrieval, Update and Deletion operations. The main advantage of this approach
+is that users do not use the SQL language to extract data from the database,
+but use method calls defined for each the abovementioned operations. For
+example, based on the description of the collected data by keys and values
+shown in Listing \ref{file:mongodb-ysi-data-format}, page
+\pageref{file:mongodb-ysi-data-format}, different use cases can evaluate
+documents in this structure. Usually researchers may search the collected data
+by a given range of dates, for their regular activities of data analysis. The
 scenario implemented by R1 in the above cited listing shows it clearly.
 Similarly, the search for data in a given sensor device is expressed by the
 search for the IP address for them on the use cased defined by R2. Finally,
@@ -507,20 +499,25 @@ database systems or programming language. For this reason, OPeNDAP is used in
 the community to share data using a comma-delimited format. In this way, the
 implementation of the use cases for R4 was developed in two different ways.
 First, the use of the export capabilities to a common-delimited values was
-performed \ref{file:mongodb-export-command}, taking proximally 3.3 minutes to
-export one year's worth of data for 5 YSI devices without indexing. Second, the
+performed (Listing \ref{file:mongodb-export-command}, page
+\pageref{file:mongodb-export-command}), taking proximally 3.3 minutes to export
+one year's worth of data for 5 YSI devices without indexing. Second, the
 implementation of a custom export utility using Python, as shown in Listing
-\ref{file:experiment-export-python} enabled the creation of the comma-delimited
-files with the same format as the ones used by OPeNDAP. The comparison can be
-done by analyzing the output of the OPeNDAP request from SF-BEAMS on Listing
-\ref{file:rtc-ysi-opendap}, and the output provided from the script written in
-Python, show in Listing \ref{file:experiment-export-python-results}.
-Furthermore, considering research teams with skills in Web Services, an easy
-ubiquitous integration with mongoDB can be achieved by using the REST Web
-Services APIs provided by mongoDB, still in alpha version. A practical application of
-this API was the created Apache Futon4mongoDB web application, used to give
-user friendlier access to the collected data as shown in 
-\ref{fig:view-collections-instance-browser-futondb}. 
+\ref{file:experiment-export-python}, page
+\pageref{file:experiment-export-python}, enabled the creation of the
+comma-delimited files with the same format as the ones used by OPeNDAP. The
+comparison can be done by analyzing the output of the OPeNDAP request from
+SF-BEAMS on Listing \ref{file:rtc-ysi-opendap}, page
+\pageref{file:rtc-ysi-opendap}, and the output provided from the script
+written in Python, show in Listing \ref{file:experiment-export-python-results}
+page \pageref{file:experiment-export-python-results}. Furthermore, considering
+research teams with skills in Web Services, an easy ubiquitous integration
+with mongoDB can be achieved by using the REST Web Services APIs provided by
+mongoDB, still in alpha version. A practical application of this API was the
+created Apache Futon4mongoDB web application, used to give user friendlier
+access to the collected data as shown in Figure
+\ref{fig:view-collections-instance-browser-futondb}, on page
+\pageref{fig:view-collections-instance-browser-futondb}.
  
 As discussed in Chapter 5, the differences between a traditional database
 system, which uses the relational data model, and document-oriented database
@@ -537,20 +534,19 @@ Model.
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.65]{../diagrams/taxonomy-data-model-modified}
-  \caption{Data Model Taxonomy}
+  \caption{Updated Data Model Taxonomy, adding the KVP Data Model}
   \label{fig:taxonomy-data-model-modified}
 \end{figure}
 
 \subsection{Applicability and Recommendations}
 
-This work can be used to evaluate data persisten in sensor networks in
+This work can be used to evaluate data persistence in sensor networks in
 different ways. The use of the data persistence taxonomies through this work
-and guided both the evaluation and implementation of the data model using
-mongoDB. In order to use the guidelines proposed by this work, one may first
-determine the properties of the sensor network in question. Considering that
-sensor devices produce streams of non-described data, the use of key-value
-pairs data model did not require changes throughout different application
-layers.
+guided both the evaluation and implementation of the data model using mongoDB.
+In order to use the guidelines proposed by this work, one may first determine
+the properties of the sensor network in question. Considering that sensor
+devices produce streams of non-described data, the use of key-value pairs data
+model did not require changes throughout different application layers.
 
 Focusing on the different layers of an application, consider the different
 multi-tier application approaches where each layer implements a functionality
@@ -560,7 +556,7 @@ languages require ``data plumbing'' from the table relations from
 the database system to the object instances. In order to implement all the
 CRUD operations to a relational database without an ORM \cite{orm} offering,
 the implementation of the data model potentially uses the Structured-Query
-Language (SQL) for the problem of data plumbing, what results in a
+Language (SQL) for the problem of data plumbing, which results in a
 tightly-coupled implementation. On the other hand, mongoDB eliminates the use
 of an additional query language because it uses declarative approach on top of
 the programming language drivers it support, decreasing the complexity of the
@@ -582,7 +578,7 @@ Particularly speaking about the learning curve, different situations
 contributed to the success of the first experiments. The first problem to be
 solved was the selection of the data model to be used during the technology
 selection. Since relational database systems are the ``traditional'' way to
-provide data persitence, the investigations started by creating a relational
+provide data persistence, the investigations started by creating a relational
 model described in Chapter 5. Then, the technique using KVP data models in
 relational databases were attempted without success. Only after reviewing the
 technical article \cite{db-is-rdbs-dommed}, suggested the advisor of this 
@@ -605,6 +601,17 @@ totally consumed by one of the revisions of the experiments setup. Therefore,
 it was learned that large amount of data loads require different techniques to
 manage data in memory accordingly, such as creating different object pools as
 temporary caches for objects whose internal state are similar to others in the
+<<<<<<< .mine
+JVM. Also, operations that involve writing to disk, such as during the bulk
+``Create'' operations, may lead to different database performance. First, the
+experiment seemed to stop inserting objects in one shard while it ran for over
+2 minutes without inserting any documents. The reason was that the partition
+was ``/home'', completely full, leading to the problem. The mongos cluster
+header did not realize that it was the time to switch to another shard.
+Similarly, any global ``Retrieve'' operation on a cluster blocks all the
+shards. For this reason, dividing the write from the read load was necessary in
+order to decouple these two operations.
+
 JVM. Also, operations that involve writing in disk, such as during the bulk
 ``Create'' operations, may lead to different database performance. First, the
 experiment seemed to stop inserting objects in one shard while it ran for over
@@ -614,15 +621,16 @@ header did not realize that it was the time to switch to another shard.
 Similarly, any global ``Retreave'' operation on a cluster blocks all the
 shards. For this reason, dividing the write from the read load was necessary in
 order to decouple these two operations.
+>>>>>>> .r704
 
 Also related to the difficulties of this work, mongoDB is not yet stable, and
-therefore, harder to implement. The main production version of mongoDB is
-is on version 1.1.4 at this time, while the shards support is still in alpha
+therefore, harder to implement. The main production version of mongoDB
+is on version 1.2 at this time, while the shards support is still in alpha
 version. For instance, different work-arounds were performed to have shards
 experimented as described, but the execution was not successful.
 
 To sum up, this chapter described the experimental results of the
 implementation of a data persistence component for NetBEAMS, showing the
 experiment results, the measurement results and finally the discussion about
-the solution in general. The following section brings the conclusions and
+the solution in general. The following Chapter brings the conclusions and
 future works for this report.

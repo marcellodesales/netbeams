@@ -35,6 +35,13 @@ Taxonomic-Empirical Analysis For Real-World Applications}
 %\include{chapter7-data-persistence-component-implementation}
 \include{chapter8-experimental-results-correct-behavior-and-performance}
 \include{chapter9-conclusions-and-future-works}
+
+%% Configuration of the header strings for the Appendices
+\renewcommand{\chaptermark}[3]{%
+  \markboth{\MakeUppercase{\appendixname\ \thechapter}}%
+  {\MakeUppercase{#1}}
+}
+\appendix
 \include{chapter10-appendix}
 
 % Bibliography (calls up the entries in thesis.bib if you run bibTeX):

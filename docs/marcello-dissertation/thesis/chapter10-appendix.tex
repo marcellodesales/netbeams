@@ -78,8 +78,9 @@ NetBEAMS uses the concept of the modularization through the use of the
 Producer-Consumer paradigm described in the previous section. Since the DSP
 Components are essentially OSGi bundles, the interoperability between
 them is given by the OSGi Framework, described by an artifact called
-MANIFEST.MF (Listing \ref{file:OSGi-manifest}). In general, an OSGi bundle must
-provide specifications that describe the module to be published into the OSGi
+MANIFEST.MF (Listing \ref{file:OSGi-manifest} on page
+\pageref{file:OSGi-manifest}). In general, an OSGi
+bundle must provide specifications that describe the module to be published into the OSGi
 Framework. In this way, the main properties of the OSGi MANIFEST.MF artifact
 can used by the DSP Data Persistence can be summarized as follows:
 
@@ -95,8 +96,8 @@ can used by the DSP Data Persistence can be summarized as follows:
   Persistence Component Bundle. These Java Packages must be provided by other
   DSP components, forcing the execution to be dependent on those packages.
   They are provided through a section called ``Export-Package'', in other
-  OSGi bundles and as it is shown in Listing \ref{file:OSGi-manifest}, they
-  are can be from different packages.
+  OSGi bundles and as it is shown in Listing \ref{file:OSGi-manifest}, page
+  \pageref{file:OSGi-manifest}, they are can be from different packages.
 \end{itemize}
 
 Once the OSGi bundle is installed into the OSGi Platform, it will be managed by
@@ -127,7 +128,8 @@ configuration descriptors:
 \begin{itemize}
   \item \textbf{config.xml}: the DSP Data Persistence is added to the DSP
   Platform by adding an entry for the component's OSGi Bundle artifact. This
-  artifact can be seen in Listing \ref{file:dsp-config.xml};
+  artifact can be seen in Listing \ref{file:dsp-config.xml}, page
+  \pageref{file:dsp-config.xml};
   \item \textbf{matcher\underline{ }config.xml}: the addition of the rules that
   filters DSP Messages to the DSP Data Persistence component;
   \item \textbf{DSPDataPersistence\underline{ }001.xml}: depicts the bootstrap
@@ -136,9 +138,9 @@ configuration descriptors:
 \end{itemize}
 
 The first configuration artifact enables NetBEAMS to initialize the
-descriptor of the component, as shown in Listing \ref{file:dsp-config.xml}.
-The component is added with the highest priority, since it contains
-dependencies to other DSP Components.
+descriptor of the component, as shown in Listing \ref{file:dsp-config.xml},
+page \pageref{file:dsp-config.xml}. The component is added with the highest
+priority, since it contains dependencies to other DSP Components.
 
 \section{mongoDB Deployment Details}
 \label{sec:mongodb-deployment}
@@ -190,7 +192,8 @@ the DSP Data Persistence bootstrap message, as shown in Listing
 option to run with its specific default port number, it is recommended to
 assign different ports, once the use of shards requires different port numbers
 for each of the shard servers. An example of accessing mongoDB using a shell
-client is shown in Listing \ref{cmd:mongodb-client-start}.
+client is shown in Listing \ref{cmd:mongodb-client-start} page
+\pageref{cmd:mongodb-client-start}.
 
 \lstset{label=cmd:mongodb-server-start,caption=Starting the Server}
 \begin{lstlisting}
@@ -307,8 +310,8 @@ given database and its collections. This first section shows the connection of
 the mongo client to the database ``netbeams'' as on Listing
 \ref{cmd:mongodb-server-start}. The execution of the operation to count the
 existing number of documents in the mongoDB collection ``netbeams'' is shown in
-Listing \ref{cmd:mongodb-count}. It highlights the query for the collections
-available \cite{mongodb} in the netbeams database.
+Listing \ref{cmd:mongodb-count}, page \pageref{cmd:mongodb-count}. It
+highlights the query for the collections available in the netbeams database.
 
 \lstset{label=cmd:mongodb-count,caption=Starting the Server}
 \begin{lstlisting}
@@ -325,9 +328,10 @@ system.indexes
 
 An example about data retrieving of a random document from the collection
 ``netbeams'', ``findOne()'' is documented to provide this support as shown in
-Listing \ref{cmd:mongo-findone}. The output is the actual instance of a
-document, showing all the collected data in the key ``observation'', and the
-provenance metadata in the keys ``sensor.location'' and ``sensor.time''.
+Listing \ref{cmd:mongo-findone}, page \pageref{cmd:mongo-findone}. The output
+is the actual instance of a document, showing all the collected data in the
+key ``observation'', and the provenance metadata in the keys
+``sensor.location'' and ``sensor.time''.
 
 \lstset{label=cmd:mongo-findone,caption=Querying the database: one item}
 \begin{lstlisting}
@@ -367,8 +371,8 @@ provenance metadata in the keys ``sensor.location'' and ``sensor.time''.
 The query based on attributes can be done using the "dot" notation, as the user
 can navigate through the JSON documents. Additionally, the use of internal
 functions is provided by mongoDB on the result of others. The example in
-Listing \ref{cmd:mongo-find-list} counts the number of documents with the key
-"data.ph" equals to "5.64".
+Listing \ref{cmd:mongo-find-list}, page \pageref{cmd:mongo-find-list} counts
+the number of documents with the key "data.ph" equals to "5.64".
 
 \lstset{label=cmd:mongo-find-list,caption=Execution of mongo client}
 \begin{lstlisting}
@@ -403,7 +407,8 @@ The mongoDB server offers different drivers to access the data, as well as the
 REST Web Services. In order to get the results using the REST Web Services
 interdace, the request can be issued using a web browser. For instance, the
 request to the documents using the HTTP Request Variables to filter by the
-fields as shown in Listing \ref{cmd:mongo-rest-request}.
+fields as shown in Listing \ref{cmd:mongo-rest-request}, page
+\pageref{cmd:mongo-rest-request}.
 
 \lstset{label=cmd:mongo-rest-request,caption=REST HTTP Interface Example}
 \begin{lstlisting}

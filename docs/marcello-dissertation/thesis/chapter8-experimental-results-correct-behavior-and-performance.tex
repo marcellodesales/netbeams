@@ -13,18 +13,17 @@ developed using the infrastructure provided by the online version-control
 system repository from NetBEAMS, whose documentation is detailed in Section
 \ref{sec:dsp-data-persistence-implementation}.
 
-This chapter details the experiment setup designed to evaluate the
-proposed implementation, showing the measurement results collected from the
-simulation log and based on the user experience while reusing the collected
-data. The pertinent discussion of this work is divided up into different
-sections, each of them analyzing different aspects related to data persistence
-for NetBEAMS. Section \ref{sec:exp-setup} makes the introduction about the
-experiments setup and methods used for the evaluation such as the artifacts
-used, the definition of the workload to be used during the evaluation of the
-planned scenarios of evaluation. Then, Section \ref{sec:exp-measurements} shows
-the measurement results of the experiment detailing the operations performed by
-each of the scenarios and user experience, to finally proceed with the final
-analysis and discussions.
+This chapter details the experiment setup designed to evaluate the proposed
+implementation, showing the measurement results collected from the simulation
+log and based on the user experience while reusing the collected data. The
+pertinent discussion of this work is divided up into different sections, each
+of them analyzing different aspects related to data persistence for NetBEAMS.
+Section \ref{sec:exp-setup} introduces the experiments setup and methods used
+for the evaluation such as the artifacts used, the definition of the workload
+to be used during the evaluation of the planned scenarios of evaluation. Then,
+Section \ref{sec:exp-measurements} shows the measurement results of the
+experiment detailing the operations performed by each of the scenarios and
+user experience, to finally proceed with the final analysis and discussions.
 
 \section{Experiment Setup}
 \label{sec:exp-setup}
@@ -601,17 +600,6 @@ totally consumed by one of the revisions of the experiments setup. Therefore,
 it was learned that large amount of data loads require different techniques to
 manage data in memory accordingly, such as creating different object pools as
 temporary caches for objects whose internal state are similar to others in the
-<<<<<<< .mine
-JVM. Also, operations that involve writing to disk, such as during the bulk
-``Create'' operations, may lead to different database performance. First, the
-experiment seemed to stop inserting objects in one shard while it ran for over
-2 minutes without inserting any documents. The reason was that the partition
-was ``/home'', completely full, leading to the problem. The mongos cluster
-header did not realize that it was the time to switch to another shard.
-Similarly, any global ``Retrieve'' operation on a cluster blocks all the
-shards. For this reason, dividing the write from the read load was necessary in
-order to decouple these two operations.
-
 JVM. Also, operations that involve writing in disk, such as during the bulk
 ``Create'' operations, may lead to different database performance. First, the
 experiment seemed to stop inserting objects in one shard while it ran for over
@@ -619,9 +607,8 @@ experiment seemed to stop inserting objects in one shard while it ran for over
 was ``/home'', completely full, leading to the problem. The mongos cluster
 header did not realize that it was the time to switch to another shard.
 Similarly, any global ``Retreave'' operation on a cluster blocks all the
-shards. For this reason, dividing the write from the read load was necessary in
-order to decouple these two operations.
->>>>>>> .r704
+shards. For this reason, dividing the write from the read load was necessary
+in order to decouple these two operation.
 
 Also related to the difficulties of this work, mongoDB is not yet stable, and
 therefore, harder to implement. The main production version of mongoDB
@@ -632,5 +619,5 @@ experimented as described, but the execution was not successful.
 To sum up, this chapter described the experimental results of the
 implementation of a data persistence component for NetBEAMS, showing the
 experiment results, the measurement results and finally the discussion about
-the solution in general. The following Chapter brings the conclusions and
+the solution in general. The following chapter brings the conclusions and
 future works for this report.

@@ -52,16 +52,15 @@ version, and therefore, presented many bugs. One suggestion for the
 implementation of such functionality is based in Figure
 \ref{fig:future-works-data-centric-map-reduce} (\cite{map-reduce-notes}), which
 shows an architectural idea of the deployment of a Data-Centric storage
-approach. One scenario of data retrieval is to process search results
-required to be executed in parallel. The task of querying broken down into
-two phases: the definition of the reduced problem as the parts, and the
-map of the final result calculated with the response from each part. If
-``Task" is considered to be a query (arrow 1) to the server, then the
-execution of the same query occurs in all different partitions (arrow 2), or
-mongoDB shards. After processing the request, each node returns the result of
-the query to the server (arrow 3), whose responsibility is to process each
-individual result and return the final one to the client application (arrow
-4).
+approach. One scenario of data retrieval is to process search results required
+to be executed in parallel. The task of querying broken down into two phases:
+the definition of the reduced problem as the parts, and the map of the final
+result calculated with the response from each part. If ``Task" is considered
+to be a query (arrow 1) to the server, then the execution of the same query
+occurs in all different partitions (arrow 2), or mongoDB shards. After
+processing the request, each node returns the result of the query to the
+server (arrow 3), whose responsibility is to process each individual result
+and return the final one to the client application (arrow 4).
 
 \begin{figure}[!h]
   \centering

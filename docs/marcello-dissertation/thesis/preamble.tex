@@ -151,7 +151,7 @@
 
 \vspace{1.4in}
 
-\singlespace{A thesis presented to the faculty of\\
+\singlespace{A report presented to the faculty of\\
 San Francisco State University\\
 In partial fulfillment of\\
 The requirements for\\ The degree}
@@ -196,8 +196,8 @@ $\mbox{}$
 \vspace{.5in}
 \begin{quote}
 I certify that I have read {\it \mytitle} by \myname, and that in my opinion
-this work meets the criteria for approving a thesis submitted in partial
-fulfillment of the requirements for the degree: Master of Science in Computer
+this work meets the criteria for approving a culminating experience submitted in
+partial fulfillment of the requirements for the degree: Master of Science in Computer
 Science at San Francisco State University.
 \end{quote}
 
@@ -237,36 +237,35 @@ San Francisco, California \\
 
 %\doublespacing{\noindent
 \onehalfspacing{\noindent
-Sensor Networks are becoming more and more important to different science
-communities because of what they produce: the raw data for different domains.
-In order to make use the collected data, researchers may have to dissect the
+Sensor Networks are becoming important to different scientific and industrial
+communities because of what they produce: the raw data of diverse domains. In
+order to make use of the collected data, researchers may have to dissect the
 characteristics of the sensor network in question, regarding different
 properties such as the purpose and location of the observed data, as well as
-how the data is described. For this reason, this work proposes a set of data
-persistence taxonomies based on the state of the art, which can be used to
-classify the properties of the produced raw data. In order to evaluate the
-proposed taxonomies, this work designs and implements a data persistence
-component for NetBEAMS, a modular-based sensor network infrastructure
-developed to improve the operation of the SF-BEAMS environmental sensor
-network. SF-BEAMS is deployed at the Tiburon Island, California, and managed by
-the Department of Biology from SFSU. In this way, based on empirical analysis
-regarding proposed taxonomies for the case study, this work selected mongoDB,
-a schema-less document-oriented database instead of the traditional use of
-relational databases. As a result based of the experiments conducted, this
-work proposes a novel use of the Key-Value Pair databases in order tor provide
-External of Data-Centric approaches. Similarly, this work also agrees to
-related literature that the use of programming languages are better abstraction
-than the use of traditional query languages used to extract data from Relational
-databases, and therefore, it should be the proposed approach to non-technical
-researchers such as the Biologists. Finally, this work proposes different
-future works such a data-centric approach using Databasese Shards to store the
-collected data and Map Reduce to execute parallel queries over distributed
-database nodes.} \vspace*{\fill}
- 
-\hspace*{\fill}
+how the data is described. For this reason, this work's first contribution is
+a set of data persistence taxonomies based on the state of the art of Data
+Persistence for Sensor Networks, which can be used to classify the properties
+of the produced raw data. In order to evaluate the proposed taxonomies, a data
+persistence component for NetBEAMS was designed and implemented. NetBEAMS is a
+component-based sensor network infrastructure developed to improve the
+operation of the SF-BEAMS environmental sensor network. SF-BEAMS is deployed
+in Tiburon, California, and managed by the Romberg Tiburon Center (RTC). Based
+on an empirical analysis regarding proposed taxonomies, a Key-Value Data Model
+is proposed as an alternative to the Relational Data Model traditionally used.
+Furthermore, the mongoDB database, a schema-less document-oriented database,
+was selected for evaluation. Results based on the experiments suggest a novel
+approach to provide External or Data-Centric persistence for networks.
+Similarly, the literature supports programming languages as a better
+abstraction when it comes to data access and modification by non-technical
+users such as biologists. Finally, this report lends itself to future work in
+the area of data persistence in sensor networks.} \vspace*{\fill}
 
+\textbf{Keywords:} Environmental Sensor Network, Data Persistence, Taxonomies,
+KVP Data Model, Document-Oriented Databases, KVP Databases, SF-BEAMS, NetBEAMS
+\hspace*{\fill}
 \noindent
-I certify that the Abstract is a correct representation of the content of this thesis.
+I certify that the Abstract is a correct representation of the content of this
+report.
 
 \vspace{.5in} 
 
@@ -281,10 +280,108 @@ Date
 \begin{center}{ACKNOWLEDGMENTS}\end{center}
 
 \vspace{.5in}
+
+\noindent
+\textit{``The brick walls are not there to keep us out. The brick walls are there
+to give us a chance to show how badly we want something. Because the brick walls
+are there to stop the people who don't want it badly enough.''} Dr. Randy
+Pausch
+
 \begin{quote}
 \noindent
-Acknowledgments
+
+As Dr. Randy Pausch's last lecture reminded me after the first quarter of the
+program, there are purposes for the difficult things in life as the brick walls
+will always be standing one after the other in course of your life. As my
+childhood dream was to become a scientist and study in America, I can say that
+I might have crossed a good percentage of those brick walls. This program gave
+me the wings necessary to keep dreaming and believing that anything is
+possible. You've just got to dream.
+
+I have been fortunate in these twenty-four months to meet many people who have
+given me more of their personal and professional time, their companionship,
+their help, and above all, their patience. They all contributed, directly or
+indirectly, for the success of this work, which I kindly refer to as one of my
+childhood dreams.
+
+The academic professors were fundamental in different moments during this
+program. First, I would like to thank my adviser, Dr. Arno Puder, who not only
+had to put up with the times my laptop PC broke and I delayed the delivery of
+components, but also the times I was just late for the meetings. He was the 
+first one who believed on my work in the program and accepted me in the
+team. A big thanks to him, someone whose expertise and professionalism I have
+learned to admired. Dr. Dragutin Petkovic also played an important role
+throughout my life during the program, advising me about work schedule,
+interviews, etc. Finally, Prof. Murphy offered the hardest classes of the
+program, and I must say that my writing skills were improved because of her
+class.
+
+There are four fellow researchers whom I would like to specifically thank:
+Kleber Sales, who have developed the core of NetBEAMS, and for many times
+explained and helped me during development. Many were the afternoons and weeks
+of revisions to have a working demo. Teresa Johnson was also important for the
+development of NetBEAMS and provided her feedbacks. William Murad helped me a
+lot during the classes of Biology and Algorithms, while Ivan Weiss was a great
+co-worker during the Operating Systems class developing TOS as one of the best
+teammates during school time.
+
+A special word of gratitude goes to the ones who made everything possible.
+My co-workers from CollabNet, in special for Richard, Jack, and Adam because
+their great recommendations, and to Connie, Edgar, Yiping, Norah, Kathryn and
+Andres (Facebook) who I had more contact with during the first and second
+times I worked over there as a full-time and an Intern, respectively.
+Subversion is part of my life today! Also, Eliot from 10gen for the
+innumerous days and nights on the #mongodb IRC channel and mailing list,
+helping me figure out the value of mongoDB. This work was only presented
+because of the help of three VERY important people I believe are important to
+me: Niki is the angel that appears from nowhere to salve you! I decided to
+start the program because I was very welcomed by her. During the entire
+program she was always there for each of us, I am sure, and now towards the
+end she stepped up and started reading and fixing the entire chapters. Niki,
+there are no words to thank you. In addition, Ivan also kindly offered his
+help to review the technical chapters for the gramatical errors. Man, I'm very
+lucky to have you around. And finally Kleber, who suffered with the first
+drafts of this work by reading so many errors and gramatical mistakes. I thank
+him a lot for the help and I will definitely have a better version for him from
+now on!
+
+Moving towards to more personal acknowledgements, I would like to execute a big
+of annotated thanks towards all my family and friends. They are roommates,
+friends, landlords, distant friends, that I have lived with, had been with,
+etc. These showed they cared about me (at least I felt it) in
+what I wanted to accomplish. My gratitude to people here in the California
+goes to Rhea, Sonia, Demian and Maria, Eduardo, Paula, Amanda and Eric,
+Leanna, Ivan, Julie, Diane and in special to Michelle, who believed on me
+since even before being in the program. The ones in Seattle who are also worth
+mentioning are Eduardo and Renata, for receiving me during the attempts to
+interview with Microsoft, and Wade and Fran for their friendship and support.
+When it comes to the West Coast, a lot of important people are in New York and New
+Jersey. Patricia is always available to talk about family, all the guys from
+the Focolare Movement, who I haven't been physically in contact, but online.
+Ricardo for being the best roommate and close friend, and finally Regina from
+Boston, who have belived in my potential since I first arrived in this
+country. My second-degree cousin Thamires with whom I have enjoyed hanging out
+in the night life of San Francisco!
+
+\medskip
+
+I am, for sure, particularly indebted to my parents and my brothers for their
+monumental, unwavering support and encouragement during these months of
+dedication. For all my anties, uncles, cousins (Kaline, Nicinho and
+Fernanda), they all have truly always been there for me since even before the
+program started. Without my mom and dad, or my brothers Leandro and Thiago,
+none of this dream would have been even possible remotely. I love you all and
+I will always remember your support during these two years of less phone calls
+and visits. Some brick walls were hard to climb, some of them were even more
+difficult, but none of them were impossible, because I have faith in the God
+of the impossible, who helped me stand up when I fell so many times. That's
+why I thank God Jesus Christ for bringing another of my oldest childhood
+dreams alive.
 \end{quote}
+
+\textit{``It's not about how to achieve your dreams. It's about how to lead
+your life. If you lead your life the right way, the karma will take care of
+itself. The dreams will come to you."} Dr. Randy Pausch
 
 \renewcommand{\contentsname}{\vspace{-1.7in} \begin{center} \normalsize \rm TABLE OF CONTENTS \end{center}}
 \renewcommand{\listfigurename}{\vspace{-1.7in} \begin{center} \normalsize \rm LIST OF FIGURES \end{center}}

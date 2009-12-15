@@ -3,8 +3,7 @@
 
 % Frontmatter shortcuts; note the extra space at the end, which is unfortunately necessary:
 \newcommand\myname{Marcello Alves de Sales Junior }
-\newcommand\mytitle{Data Persistence for Sensor Networks: A
-Taxonomic-Empirical Analysis For Real-World Applications} 
+\newcommand\mytitle{A Key-Value-based Persistence Model for Sensor Networks} 
 \newcommand\thismonth{December } 
 \newcommand\thisyear{2009 }
 
@@ -26,6 +25,12 @@ Taxonomic-Empirical Analysis For Real-World Applications}
 
 % Main body of work:
 
+%% Configuration of the header strings for the Appendices
+%\renewcommand{\chaptermark}[3]{%
+%  \markboth{\MakeUppercase{\appendixname\ \thechapter}}%
+% {\MakeUppercase{#1}}
+%}
+
 \include{chapter1-introduction}
 \include{chapter2-state-of-the-art}
 \include{chapter3-taxonomic-classification-of-persistence-storage-for-sensor-networks}
@@ -36,11 +41,6 @@ Taxonomic-Empirical Analysis For Real-World Applications}
 \include{chapter8-experimental-results-correct-behavior-and-performance}
 \include{chapter9-conclusions-and-future-works}
 
-%% Configuration of the header strings for the Appendices
-\renewcommand{\chaptermark}[3]{%
-  \markboth{\MakeUppercase{\appendixname\ \thechapter}}%
-  {\MakeUppercase{#1}}
-}
 \appendix
 \include{chapter10-appendix}
 

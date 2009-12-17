@@ -443,7 +443,26 @@ a Mac OS X 64bits was prepared and used throughout the completion of these
 experiments. On the other hand, the performance was drastically decreased 
 using mongoDB in virtualized servers due to the fact of dynamic partition
 chosen. The performance shell application ``iostat'' was used to verify the
-behavior, and the use of mongoDB was switched to the host operating system.
+behavior, and the use of mongoDB was switched to the host operating system,
+whose hardware specifications are summarized on Table \ref{tab:mac-os-setup}.
+
+\begin{table}[!h] 
+    \label{tab:mac-os-setup}
+    \caption{Experiment Host Machine Hardware Specifications}
+    \begin{center}
+        \begin{tabular}{|c|c|}\hline 
+        \textbf{Model Name} &  MacBook Pro\\\hline
+        \textbf{Model Identifier} & MacBookPro5,3\\\hline 
+        \textbf{Processor Name} & Intel Core 2 Duo\\\hline 
+        \textbf{Processor Speed} & 2.66 GHz\\\hline 
+        \textbf{Number Of Processors} & 1\\\hline 
+        \textbf{Total Number Of Cores} & 2\\\hline 
+        \textbf{L2 Cache} & 3 MB\\\hline 
+        \textbf{Memory} & 8 GB\\\hline 
+        \textbf{Bus Speed} & 1.07 GHz\\\hline
+        \end{tabular}
+    \end{center}
+\end{table}
 
 \subsection{Use Cases Evaluation}
 

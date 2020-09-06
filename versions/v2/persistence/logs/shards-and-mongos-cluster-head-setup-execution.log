@@ -1,0 +1,90 @@
+marcello@netbeams-mongo-dev02:~/development/workspaces/netbeams/persistence$ more logs/mongos-cluster-head.log 
+Sat Dec 12 04:48:32 shardObjTest passed
+Sat Dec 12 04:48:32 mongos v0.2.6 (alpha 2f) starting (--help for usage)
+Sat Dec 12 04:48:32 git version: 2add01f37ddf5a262dbc66f81353e88f38723dc6
+Sat Dec 12 04:48:32 sys info: Linux ofc-n1.10gen.com 2.6.23.17-88.fc7 #1 SMP Thu May 15 00:02:29 EDT 2008 x86_
+64 BOOST_LIB_VERSION=1_33_1
+Sat Dec 12 04:48:32 creating new connection for pool to:localhost:10000
+Sat Dec 12 04:48:32 waiting for connections on port 27017
+
+Sat Dec 12 04:48:33 connection accepted from 127.0.0.1:54814 #1
+
+Sat Dec 12 04:48:33 couldn't find database [admin] in config db
+Sat Dec 12 04:48:33 	 put [admin] on: localhost:10000
+Sat Dec 12 04:48:33 Request::process ns: admin.$cmd msg id:1807425400 attempt: 0
+Sat Dec 12 04:48:33 single query: admin.$cmd  { addshard: "192.168.1.2:20001" }  ntoreturn: -1
+Sat Dec 12 04:48:33 creating new connection for pool to:192.168.1.2:20001
+Sat Dec 12 04:48:33 Request::process ns: admin.$cmd msg id:1807425401 attempt: 0
+Sat Dec 12 04:48:33 single query: admin.$cmd  { addshard: "192.168.1.2:20002" }  ntoreturn: -1
+Sat Dec 12 04:48:33 creating new connection for pool to:192.168.1.2:20002
+Sat Dec 12 04:48:33 Request::process ns: admin.$cmd msg id:1807425402 attempt: 0
+Sat Dec 12 04:48:33 single query: admin.$cmd  { addshard: "localhost:20001", allowLocal: true }  ntoreturn: -1
+Sat Dec 12 04:48:33 creating new connection for pool to:localhost:20001
+Sat Dec 12 04:48:33 Request::process ns: admin.$cmd msg id:1807425403 attempt: 0
+Sat Dec 12 04:48:33 single query: admin.$cmd  { listshards: 1.0 }  ntoreturn: -1
+Sat Dec 12 04:48:33 Request::process ns: admin.$cmd msg id:1807425404 attempt: 0
+Sat Dec 12 04:48:33 single query: admin.$cmd  { enablesharding: "netbeams" }  ntoreturn: -1
+
+Sat Dec 12 04:48:33 couldn't find database [netbeams] in config db
+Sat Dec 12 04:48:33 	 put [netbeams] on: 192.168.1.2:20002
+Sat Dec 12 04:48:33 Request::process ns: admin.$cmd msg id:1807425405 attempt: 0
+Sat Dec 12 04:48:33 single query: admin.$cmd  { shardcollection: "netbeams.SondeDataContainer", key: { observa
+tion.pH: 1.0 } }  ntoreturn: -1
+Sat Dec 12 04:48:33 no chunks for:netbeams.SondeDataContainer so creating first: shard  ns:netbeams.SondeDataC
+ontainer shard: 192.168.1.2:20002 min: { observation.pH: MinKey } max: { observation.pH: MaxKey }
+Sat Dec 12 04:48:33 before: { _id: ObjId(4b2366f19aa4e6dfcf750197) }	shard  ns:netbeams.SondeDataContainer 
+shard: 192.168.1.2:20002 min: { observation.pH: MinKey } max: { observation.pH: MaxKey }
+Sat Dec 12 04:48:33 after : { _id: ObjId(4b2366f19aa4e6dfcf750197) }	shard  ns:netbeams.SondeDataContainer 
+shard: 192.168.1.2:20002 min: { observation.pH: MinKey } max: { observation.pH: MaxKey }
+Sat Dec 12 04:48:33 Request::process ns: netbeams.system.indexes msg id:1807425406 attempt: 0
+Sat Dec 12 04:48:33  .system.indexes write for: netbeams.system.indexes
+Sat Dec 12 04:48:33 Request::process ns: netbeams.$cmd msg id:1807425407 attempt: 0
+Sat Dec 12 04:48:33 single query: netbeams.$cmd  { getlasterror: 1.0 }  ntoreturn: -1
+Sat Dec 12 04:48:34 couldn't find database [test] in config db
+Sat Dec 12 04:48:34 	 put [test] on: 192.168.1.2:20002
+
+Sat Dec 12 04:48:34 Request::process ns: test.$cmd msg id:1807425408 attempt: 0
+Sat Dec 12 04:48:34 single query: test.$cmd  { getlasterror: 1.0 }  ntoreturn: -1
+Sat Dec 12 04:48:34 Request::process ns: netbeams.system.indexes msg id:1807425409 attempt: 0
+Sat Dec 12 04:48:34  .system.indexes write for: netbeams.system.indexes
+Sat Dec 12 04:48:34 Request::process ns: netbeams.$cmd msg id:1807425410 attempt: 0
+Sat Dec 12 04:48:34 single query: netbeams.$cmd  { getlasterror: 1.0 }  ntoreturn: -1
+Sat Dec 12 04:48:34 Request::process ns: test.$cmd msg id:1807425411 attempt: 0
+Sat Dec 12 04:48:34 single query: test.$cmd  { getlasterror: 1.0 }  ntoreturn: -1
+Sat Dec 12 04:48:34 Request::process ns: netbeams.system.indexes msg id:1807425412 attempt: 0
+Sat Dec 12 04:48:34  .system.indexes write for: netbeams.system.indexes
+Sat Dec 12 04:48:34 Request::process ns: netbeams.$cmd msg id:1807425413 attempt: 0
+Sat Dec 12 04:48:34 single query: netbeams.$cmd  { getlasterror: 1.0 }  ntoreturn: -1
+
+
+Sat Dec 12 04:53:09  have to set shard version for conn: 0x1976f90 ns:netbeams.SondeDataContainer my last seq: 0  current: 3
+Sat Dec 12 04:53:09     setShardVersion  192.168.1.2:20002  netbeams.SondeDataContainer  { setShardVersion: "netbeams.SondeDataContainer", configdb: "localhost:10000", version: Timestamp 1260611313000|1
+, serverID: ObjId(4b2366f09aa4e6dfcf750194) } 0x1976f90
+Sat Dec 12 04:53:09        setShardVersion failed!
+{ need_authoritative: true, errmsg: "first setShardVersion", ok: 0.0 }
+Sat Dec 12 04:53:09 reloading shard info for: netbeams.SondeDataContainer
+Sat Dec 12 04:53:09  have to set shard version for conn: 0x1976f90 ns:netbeams.SondeDataContainer my last seq: 0  current: 4
+Sat Dec 12 04:53:09     setShardVersion  192.168.1.2:20002  netbeams.SondeDataContainer  { setShardVersion: "netbeams.SondeDataContainer", configdb: "localhost:10000", version: Timestamp 1260611313000|1
+, serverID: ObjId(4b2366f09aa4e6dfcf750194), authoritative: true } 0x1976f90
+Sat Dec 12 04:53:09       setShardVersion success!
+
+Sat Dec 12 19:47:15     setShardVersion  192.168.1.2:20002  netbeams.SondeDataContainer  { setShardVersion: "netbeams.SondeDataContainer", configdb: "localhost:10000", version: Timestamp 1260611313000|1, serverID: ObjId(4b2366f09aa4e6dfcf750194), authoritative: true } 0x1b1b8a0
+Sat Dec 12 19:47:16       setShardVersion success!
+Sat Dec 12 19:47:16 Request::process ns: netbeams.SondeDataContainer msg id:21 attempt: 0
+Sat Dec 12 19:47:16 write: netbeams.SondeDataContainer
+Sat Dec 12 19:47:16 Request::process ns: netbeams.SondeDataContainer msg id:22 attempt: 0
+Sat Dec 12 19:47:16 write: netbeams.SondeDataContainer
+Sat Dec 12 19:47:16 Request::process ns: netbeams.SondeDataContainer msg id:23 attempt: 0
+Sat Dec 12 19:47:16 write: netbeams.SondeDataContainer
+Sat Dec 12 19:47:16 Request::process ns: netbeams.SondeDataContainer msg id:24 attempt: 0
+...
+...
+Sat Dec 12 04:25:03 Request::process ns: netbeams.SondeDataContainer msg id:483857 attempt: 0
+Sat Dec 12 04:25:03 write: netbeams.SondeDataContainer
+Sat Dec 12 04:25:03 Request::process ns: netbeams.SondeDataContainer msg id:483858 attempt: 0
+Sat Dec 12 04:25:03 write: netbeams.SondeDataContainer
+Sat Dec 12 04:25:03 Request::process ns: netbeams.SondeDataContainer msg id:483859 attempt: 0
+Sat Dec 12 04:25:03 write: netbeams.SondeDataContainer
+Sat Dec 12 04:25:14 end connection 192.168.1.13:60950
+
+

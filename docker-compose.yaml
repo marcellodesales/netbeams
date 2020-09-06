@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+
+  thesis-pdf:
+    image: blang/latex:ubuntu
+    working_dir: /netbeams/docs/marcello-dissertation/thesis
+    command: sh gen.sh
+    volumes:
+      - .:/netbeams

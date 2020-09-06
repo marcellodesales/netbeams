@@ -1,0 +1,9 @@
+*.aux
+*.bbl
+*.blg
+*.lof
+*.lot
+*.toc
+*.DS_Store
+docs/marcello-dissertation/thesis/thesis.log
+docs/marcello-dissertation/thesis/thesis.pdf
